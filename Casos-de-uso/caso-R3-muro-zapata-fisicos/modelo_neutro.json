@@ -1,0 +1,178 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N",
+    "momento": "N*m"
+  },
+  "origen": "puente_fisico_analitico",
+  "materiales": {
+    "C25/30": {
+      "E": 31000000000.0,
+      "G": 12916666666.666668,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 25000000.0,
+      "fctm": 2600000.0
+    },
+    "C30/37": {
+      "E": 32840000000.0,
+      "G": 13680000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "secciones": {},
+  "nodos": {},
+  "barras": {},
+  "superficies": [
+    {
+      "nombre": "Muro_carga",
+      "clase_ifc": "IfcWall",
+      "esquinas_coords": [
+        [
+          0.75,
+          1.25,
+          0.6
+        ],
+        [
+          1.75,
+          1.25,
+          0.6
+        ],
+        [
+          1.75,
+          1.25,
+          3.6
+        ],
+        [
+          0.75,
+          1.25,
+          3.6
+        ]
+      ],
+      "z_medio": 2.1,
+      "orientacion": "vertical",
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "largo": 1.0,
+      "altura": 3.0,
+      "espesor": 0.2,
+      "espesor_origen": "IfcMaterialLayerSet",
+      "material": "C25/30",
+      "malla": 0.5,
+      "apoyo": "",
+      "cargas": [],
+      "vigas_asociadas": [],
+      "muros_asociados": [],
+      "zapata_asociada": "Zapata_aislada",
+      "cabeza": [
+        {
+          "caso": "G",
+          "N_N_m": 250000.0,
+          "M_Nm_m": 6250.0
+        },
+        {
+          "caso": "Q",
+          "N_N_m": 120000.0,
+          "M_Nm_m": 3000.0
+        }
+      ],
+      "e_cabeza_m": 0.025,
+      "arriostrado": true
+    },
+    {
+      "nombre": "Zapata_aislada",
+      "clase_ifc": "IfcFooting",
+      "esquinas_coords": [
+        [
+          0.0,
+          0.0,
+          0.3
+        ],
+        [
+          2.5,
+          0.0,
+          0.3
+        ],
+        [
+          2.5,
+          2.5,
+          0.3
+        ],
+        [
+          0.0,
+          2.5,
+          0.3
+        ]
+      ],
+      "z_medio": 0.3,
+      "orientacion": "horizontal",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "largo": 2.5,
+      "altura": 0.0,
+      "espesor": 0.6,
+      "espesor_origen": "IfcMaterialLayerSet",
+      "material": "C30/37",
+      "malla": 0.5,
+      "apoyo": "",
+      "cargas": [],
+      "vigas_asociadas": [],
+      "muros_asociados": [
+        "Muro_carga"
+      ],
+      "zapata_asociada": null
+    }
+  ],
+  "cargas": [],
+  "hipotesis": {
+    "apoyos": [
+      {
+        "elemento": "Muro_carga",
+        "clase_ifc": "IfcWall",
+        "cota_z": 0.6,
+        "tipo": "base_empotrada_cabeza_arriostrada",
+        "ubicacion": "pie_del_muro_sobre_zapata"
+      },
+      {
+        "elemento": "Zapata_aislada",
+        "clase_ifc": "IfcFooting",
+        "cota_z": 0.0,
+        "tipo": "lecho_elastico_winkler",
+        "ubicacion": "base_de_la_zapata"
+      }
+    ],
+    "cargas": [
+      {
+        "muro": "Muro_carga",
+        "caso": "G",
+        "N_kN_m": 250.0,
+        "excentricidad_m": 0.025,
+        "M_kNm_m": 6.25,
+        "direccion": "-Z",
+        "tipo": "cabeza_muro",
+        "descripcion": "carga vertical de cabeza del muro de carga (forjados) con excentricidad"
+      },
+      {
+        "muro": "Muro_carga",
+        "caso": "Q",
+        "N_kN_m": 120.0,
+        "excentricidad_m": 0.025,
+        "M_kNm_m": 3.0,
+        "direccion": "-Z",
+        "tipo": "cabeza_muro",
+        "descripcion": "carga vertical de cabeza del muro de carga (forjados) con excentricidad"
+      }
+    ]
+  }
+}

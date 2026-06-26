@@ -1,0 +1,79 @@
+VALIDACION IFC caso-10.ifc  (schema IFC4)
+
+EDIFICIO INTEGRADO -- UN solo IfcStructuralAnalysisModel con los CUATRO sistemas
+estructurales del catalogo, separados en planta. El agente debe ITERAR todos los
+elementos y CLASIFICAR/ENRUTAR CADA uno a su modulo (culminacion de INC-03).
+
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralCurveMember           5   (2 pilares HEB + dintel IPE + viga mixta IPE + pilar HA)
+  IfcStructuralSurfaceMember         3   (losa mixta horiz + muro vertical + zapata horiz)
+  IfcStructuralPointConnection       13
+  IfcBoundaryNodeCondition           8   (bases biarticuladas + 4 esquinas de lecho de zapata)
+  IfcIShapeProfileDef                4   (HEB 240 x2, IPE 360, IPE 400)
+  IfcRectangleProfileDef             1   (pilar HA 0,40x0,40)
+  IfcMaterialProfileSet              5
+  IfcStructuralPointAction           4   (cabeza de muro G/Q + cabeza de pilar de zapata G/Q)
+  IfcStructuralCurveAction           2   (carga de linea G/Q en el dintel del portico)
+  IfcStructuralSurfaceAction         4   (losa mixta: G/Q construccion + G/Q mixta)
+  IfcStructuralLoadGroup             6   (G, Q, G_construccion, Q_construccion, G_mixta, Q_mixta)
+  IfcRelConnectsStructuralActivity   10
+  IfcRelAssociatesMaterial           8
+Materiales: ['C25/30', 'C30/37', 'S275']
+
+Lectura con el parser generico ortodoxo (laminas/ifc_to_model_3d):
+  nodos=13  barras=5  superficies=3
+  barra PORT_pilar_1   tipo=pilar  sec=HEB 240        mat=S275
+  barra PORT_pilar_2   tipo=pilar  sec=HEB 240        mat=S275
+  barra PORT_dintel    tipo=viga   sec=IPE 360        mat=S275
+  barra MIX_viga       tipo=viga   sec=IPE 400        mat=S275
+  barra ZAP_pilar      tipo=pilar  sec=Pilar 400x400  mat=C30/37
+  superficie MIX_losa         t=0,12  mat=C25/30  horizontal
+  superficie MURO_carga       t=0,20  mat=C30/37  vertical
+  superficie ZAPATA_aislada   t=0,60  mat=C30/37  horizontal
+
+Modelo (sintetico, realista) -- edificio de una cruja con los 4 sistemas:
+  A) PORTICO DE ACERO (modulo `barras`, EC3): 2 pilares HEB 240 + dintel IPE 360
+     (S275), luz 6 m, altura 4 m; carga de linea en el dintel G=12 / Q=10 kN/m.
+     Marcador Pset_Estructurando_Portico.
+  B) FORJADO MIXTO / viga mixta (modulo `mixtas`, EC4): viga IPE 400 (S275) L=8 m
+     + losa colaborante C25/30 t=0,12 (hp58/hc62, chapa perpendicular, sin apear),
+     sep=3,0 m; cargas por FASE (grupos *_construccion y *_mixta). Conectores y
+     chapa en Pset_Estructurando_Conectores/_Losa (sin entidad de analisis estandar).
+     Marcador Pset_Estructurando_Mixta.
+  C) MURO DE CARGA / nucleo (modulo `laminas`, EC2 esbeltez): superficie vertical
+     C30/37 H=3,0 t=0,20, faja 1,0, arriostrado; carga de cabeza excentrica
+     N_G=250 / N_Q=120 kN, e=25 mm (IfcStructuralPointAction N + M).
+     Marcador Pset_Estructurando_MuroCarga.
+  D) CIMENTACION superficial (modulo `cimentaciones`, EC2 + EC7): pilar HA
+     0,40x0,40 (IfcRectangleProfileDef) sobre zapata aislada 2,5x2,5 t=0,60 en
+     lecho ks=40 MN/m3 (IfcBoundaryNodeCondition en las 4 esquinas), Rd=250 kPa;
+     carga de cabeza del pilar N_G=700 / N_Q=250 kN + M=80/40 kNm.
+     Pset_Estructurando_Suelo (ks, Rd) + _Zapata (geometria).
+
+Datos SIN entidad de analisis estandar (Pset, igual que casos 5/6/8/9):
+  Mixta    -> Pset_Estructurando_Conectores / _Losa (perno, chapa nervada)
+  Muro     -> Pset_Estructurando_MuroCarga (faja, arriostrado, excentricidad)
+  Zapata   -> Pset_Estructurando_Suelo (ks, Rd) + _Zapata (B, L, canto, lado pilar)
+
+CLASIFICACION/ENRUTADO esperado del agente (regla geometria + seccion + material + Pset):
+  barra vertical de acero I               -> barras (pilar EC3)         [PORT_pilar_1/2]
+  barra horizontal de acero I (sola)      -> barras (viga/dintel EC3)   [PORT_dintel]
+  barra horizontal de acero I + losa C    -> mixtas (viga mixta EC4)    [MIX_viga + MIX_losa]
+  superficie vertical de hormigon + Naxil -> laminas (muro de carga EC2)[MURO_carga]
+  superficie horizontal de hormigon+lecho -> cimentaciones (zapata EC7) [ZAPATA + ZAP_pilar]
+  barra vertical de hormigon rectangular  -> cimentaciones (pilar->zapata)[ZAP_pilar]
+
+OK: el IFC abre con ifcopenshell (IFC4) y el parser generico lee las 5 barras y
+las 3 superficies con su seccion/material, mas las cargas (linea, superficie por
+fase y puntuales) y los apoyos/lecho. Listo para el caso 10.
+
+BRECHA del caso 10 (lo que hay que cerrar en el proximo hilo):
+  1. ITERAR todos los elementos del IFC y CLASIFICAR/ENRUTAR CADA uno (no
+     `by_type[0]`): generalizar la clasificacion por geometria+Pset ya probada en
+     los casos 7 (muro carga/contencion) y 9 (pilote/pantalla/encepado) a un grafo
+     completo con cargas y apoyos compartidos.
+  2. Orquestador multi-elemento que llame a barras / mixtas / laminas /
+     cimentaciones para cada subsistema y consolide una memoria integrada.
+  3. Asociacion viga<->losa para la viga mixta (por nombre/posicion) y
+     pilar<->zapata para la cadena de cimentacion, dentro del mismo IFC.

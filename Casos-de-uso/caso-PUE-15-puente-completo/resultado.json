@@ -1,0 +1,35 @@
+{
+  "caso": "PUE-15",
+  "tipologia": "puente_completo",
+  "modo": "acoplado",
+  "reacciones_tablero": {
+    "pila": {
+      "N_G_N": 5148632.8125,
+      "N_LM1_N": 2574316.40625,
+      "H_frenado_N": 514863.28125,
+      "H_viento_N": 80000.0,
+      "H_termica_N": 120000.0
+    },
+    "estribo": {
+      "N_G_N": 128715.8203125,
+      "N_LM1_N": 64357.91015625,
+      "H_frenado_N": 10297.265625
+    }
+  },
+  "tablero": {
+    "veredicto": "CUMPLE",
+    "aprov": 0.8364848602770957,
+    "f1_Hz": 2.5653940987939197
+  },
+  "pila_central": {
+    "veredicto": "CUMPLE",
+    "aprov": 0.769449120923734,
+    "cim": "zapata"
+  },
+  "estribos": {
+    "veredicto": "CUMPLE",
+    "aprov": 0.4975571968533542
+  },
+  "veredicto_global": "CUMPLE",
+  "aprovechamiento_max": 0.8364848602770957
+}

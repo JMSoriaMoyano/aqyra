@@ -1,0 +1,70 @@
+VALIDACION DEL IFC caso-R5.ifc  -  IFC FISICO 'REAL-SUCIO' (exportador)
+========================================================================
+
+1) EL IFC ABRE Y SU RECUENTO DE ENTIDADES
+   esquema: IFC4
+   IfcProject                 1
+   IfcBuildingStorey          1
+   IfcColumn                  2
+   IfcBeam                    2
+   IfcRailing                 1
+   IfcBuildingElementProxy    1
+   IfcMaterialProfileSetUsage 4
+   IfcSIUnit                  2
+   unidad de longitud: METRE MILLI  (el fichero esta en MILIMETRO)
+
+2) 'SUCIEDADES' INYECTADAS A PROPOSITO (parametrizadas, para medir robustez)
+   a) UNIDADES en MILIMETRO (no metro)            -> escala 1e-3 a recuperar
+   b) EJES NO CENTRADOS (CardinalPoint != 5):
+        Pilar_1 CardinalPoint=1 (esquina inf-izq) ecc nominal ~141 mm
+        Pilar_2 CardinalPoint=3 (esquina inf-der) ecc nominal ~141 mm
+        Dintel  CardinalPoint=8 (cara sup. ala)   ecc nominal ~165 mm
+   c) BARRAS QUE NO SE CORTAN EN EL NUDO:
+        pilares barridos 40 mm de MAS (solape, 'pasan de largo')
+        dintel arranca/termina 30 mm ANTES del eje de cada pilar (hueco)
+   d) ELEMENTOS NO ESTRUCTURALES / NO CONECTADOS:
+        IfcRailing (barandilla), IfcBuildingElementProxy (mobiliario)
+        IfcBeam suelto y aislado (componente sin apoyo)
+   e) NOMENCLATURA DE EXPORTADOR:
+        nombres autogenerados (GUID/categoria), PredefinedType variados
+        perfiles por catalogo del exportador: 'HE 200 B' y 'IPE330' (alias)
+        placements anidados Project->Site->Building->Storey->elemento
+
+3) METRICA DE RECUPERACION DEL PUENTE (limpieza, modelo_neutro.json)
+   factor de escala IFC aplicado : 0.001  (mm -> m)
+   tolerancia de snap usada      : 0.060 m (Pset_Estructurando_Puente)
+   nudos fusionados              : 2
+   huecos/solapes puenteados     : 2  [('N2', 0.05), ('N4', 0.05)]
+   cruces troceados (T/X)        : 0 (en el portico no hay; demostrado en micro-test)
+   elementos filtrados           : 3
+        - Elemento generico (mobiliario) [IfcBuildingElementProxy]: clase no estructural (descartada)
+        - Baranda decorativa [IfcRailing]: clase no estructural (descartada)
+        - B2 [IfcBeam]: componente no conectada (sin apoyo) -> descartada
+   EXCENTRICIDAD recuperada por barra (eje fisico <-> analitico):
+        C1 (CardinalPoint=1): 0.1414 m
+        C2 (CardinalPoint=3): 0.1414 m
+        B1 (CardinalPoint=8): 0.1650 m
+        B2 (CardinalPoint=5): 0.0000 m
+
+4) MODELO ANALITICO DERIVADO (tras la limpieza) = MODELO LIMPIO R1
+   nodos=4  barras=3  (de 8 nodos/4 barras del IFC crudo)
+     N1 (0.000, 0.000, 0.000)  [APOYO biarticulado]
+     N2 (0.000, 0.000, 4.040)
+     N3 (6.000, 0.000, 0.000)  [APOYO biarticulado]
+     N4 (6.000, 0.000, 4.040)
+     C1  N1->N2  HEB 200  S275
+     C2  N3->N4  HEB 200  S275
+     B1  N2->N4  IPE 330  S275
+
+5) RESULTADO (reproduce el caso limpio R1 / caso 1)
+   reaccion vertical ELU: N1=93.60 kN/apoyo  N3=93.60 kN/apoyo  (R1: 93,60)
+   horizontales ELU: N1=12.01  N3=-12.01 kN (balanceadas)
+   C1 [HEB 200]: CUMPLE  aprov 31.8%
+   C2 [HEB 200]: CUMPLE  aprov 31.8%
+   B1 [IPE 330]: CUMPLE  aprov 44.8%
+   validacion cruzada PyNite vs anaStruct: CONFORME
+   diferencias util. (31,8/44,8 vs 32,0/44,6 %): pilares 4,04 m (solape 40 mm
+   recuperado y documentado); la reaccion 93,60 kN/apoyo es EXACTA.
+
+VEREDICTO: el puente LIMPIA el IFC real-sucio y reproduce el caso limpio.
+Predimensionado; a revisar y firmar por tecnico competente. NDP [confirmar AN].

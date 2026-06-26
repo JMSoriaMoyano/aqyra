@@ -1,0 +1,64 @@
+{
+  "nombre": "TABLERO",
+  "tablero": {
+    "L": 26.0,
+    "n_vigas": 6,
+    "sep": 2.0,
+    "voladizo": 1.0,
+    "ne": 24,
+    "n_riostras": 4,
+    "g2_N_m2": 3000.0,
+    "q_viento_N_m": 3000.0,
+    "posiciones": 49,
+    "alpha_termico": 1e-05,
+    "dT_uniforme": 15.0,
+    "dT_gradiente": 10.0,
+    "fck_transferencia": 32000000.0,
+    "material": {
+      "E": 34000000000.0,
+      "nu": 0.2,
+      "G": 14200000000.0,
+      "rho": 2500.0,
+      "fck": 45000000.0,
+      "fctm": 3800000.0
+    },
+    "viga_sec": {
+      "A": 1.1,
+      "Iy": 0.5,
+      "Iz": 0.07,
+      "J": 0.03,
+      "h": 1.9,
+      "c_sup": 0.92,
+      "c_inf": 0.98,
+      "bw": 0.32
+    },
+    "riostra_sec": {
+      "A": 0.2,
+      "Iy": 0.01,
+      "Iz": 0.005,
+      "J": 0.002
+    }
+  },
+  "tendon": {
+    "P0": 8600000.0,
+    "Ap": 0.0069,
+    "e_centro": 0.72,
+    "e_apoyo": 0.0,
+    "A": 1.1,
+    "Ic": 0.5,
+    "zcp": 0.72,
+    "M_g_qp": 1500000.0,
+    "fpk": 1860000000.0,
+    "Ep": 195000000000.0,
+    "Ecm": 34000000000.0,
+    "mu": 0.19,
+    "k": 0.0075,
+    "slip": 0.006,
+    "phi": 2.0,
+    "eps_cs": 0.0003,
+    "rho1000": 0.025,
+    "n_tendones": 2.0,
+    "rho_l": 0.012
+  },
+  "_tipologia": "vigas_pretensadas"
+}

@@ -1,0 +1,37 @@
+{
+  "materiales": {
+    "C30/37": {
+      "E": 32840000000.0,
+      "G": 13680000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "muro": {
+    "H": 3.5,
+    "L": 4.0,
+    "espesor": 0.2,
+    "malla": 0.25,
+    "beta": 1.0,
+    "material": "C30/37",
+    "cargas": [
+      {
+        "tipo": "top_vertical",
+        "caso": "G",
+        "valor": -900000.0
+      },
+      {
+        "tipo": "top_vertical",
+        "caso": "Q",
+        "valor": -300000.0
+      },
+      {
+        "tipo": "viento_normal",
+        "caso": "Q",
+        "valor": 1000.0
+      }
+    ]
+  }
+}

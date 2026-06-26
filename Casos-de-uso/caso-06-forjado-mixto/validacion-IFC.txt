@@ -1,0 +1,21 @@
+VALIDACION IFC caso-06.ifc  (schema IFC4)
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralCurveMember           1
+  IfcStructuralSurfaceMember         1
+  IfcStructuralPointConnection       2
+  IfcBoundaryNodeCondition           2
+  IfcFaceSurface                     1
+  IfcPolyLoop                        1
+  IfcIShapeProfileDef                1
+  IfcMaterialProfileSet              1
+  IfcStructuralLoadGroup             4
+  IfcStructuralSurfaceAction         4
+  IfcStructuralLoadPlanarForce       4
+  IfcRelConnectsStructuralActivity   4
+  IfcRelAssociatesMaterial           2
+  IfcMaterialProperties              2
+Materiales: ['S275', 'C25/30']
+  Barra 'Viga_mixta': V0->VL tipo=viga sec=IPE360 mat=S275  (A=69.95 cm2 Iy=15524 cm4 fuente=geometria)
+  Losa 'Losa_colaborante' t=0.12 m mat=C25/30 esquinas=4 cargas=[('G_construccion', -2.5), ('Qc_construccion', -0.75), ('G2_mixta', -1.5), ('Q_mixta', -3.0)]
+OK: el IFC abre correctamente con ifcopenshell y el parser ortodoxo lo lee.

@@ -1,0 +1,26 @@
+# Texto de inicio del Caso 6 — para pegar en un hilo nuevo
+
+> Copia y pega el bloque siguiente al iniciar el hilo del Caso 6 en el proyecto
+> **Estructurando**. Da todo el contexto necesario sin información adicional.
+
+---
+
+Proyecto Estructurando. Ejecuta el **Caso 6** del programa de aprendizaje. Lee primero `Casos-de-uso/PROGRAMA-aprendizaje.md`, `REPOSITORIO-aprendizaje.md` y `CHANGELOG-plugin.md`; luego `Casos-de-uso/caso-06-forjado-mixto/ENUNCIADO.md` y trabaja sobre `caso-06.ifc` con el agente `ingeniero-estructurista`.
+
+**Punto de partida:** plugin **motor-calculo-estructural v0.7.0**. El parser genérico (`scripts/laminas/ifc_to_model_3d.py`) ya lee la viga mixta de forma ortodoxa —verificado sobre `caso-06.ifc` (ver `validacion-IFC.txt`)—: la **viga de acero IPE 360 S275** como barra horizontal (`tipo="viga"`, sección desde `IfcMaterialProfileSet`→`IfcIShapeProfileDef`; por geometría A≈69,95 cm² frente a 72,73 de catálogo, ≈3,8 % menor → INC-06), la **losa colaborante C25/30** como superficie (`IfcStructuralSurfaceMember`/`IfcFaceSurface`, canto 0,12 m, ancho 3,0 m, material por `IfcRelAssociatesMaterial`) y las **4 cargas por fase** (`IfcStructuralLoadGroup`+`IfcStructuralSurfaceAction`: `G_construccion` −2,5; `Qc_construccion` −0,75; `G2_mixta` −1,5; `Q_mixta` −3,0 kN/m²). Pero `scripts/mixtas/solver_mixta.py` **todavía lee** luz, separación, perfil, geometría, losa, conectores y cargas de `Pset_Estructurando_VigaMixta`/`_Losa`/`_Conectores`/`_Cargas_Mixta` (no de las entidades estándar).
+
+**El modelo (sintético, realista):** viga mixta secundaria biapoyada, **construcción sin apear (unpropped)**, con forjado colaborante de chapa nervada perpendicular. Viga **IPE 360 S275, L=8,0 m**; losa **C25/30, ht=0,12 m**, ancho tributario **SEP=3,0 m**. Datos sin entidad IFC estándar (se mantienen como Pset, como el R_d/k_s del caso 5): **conectores** (perno d=19 mm, h=100 mm, f_u=450 MPa, separación longitudinal 207 mm ≈ 1/nervio) y **chapa nervada** (hp=58, hc=62, b0=100 mm, perpendicular, nr=1, apeado=0). Cargas por fase: en construcción el acero solo resiste el hormigón fresco (2,5 kN/m²) + sobrecarga de ejecución (0,75); en fase mixta la sección mixta resiste la carga muerta adicional (1,5) + sobrecarga de uso (3,0 kN/m²) `[confirmar AN]`.
+
+**Trabajo del hilo:**
+
+1. Amplía el parser/solver de `mixtas` con una **vía ortodoxa** que: (a) tome el **perfil de acero** de `IfcMaterialProfileSet`→`IfcIShapeProfileDef` reutilizando `perfiles_db` y **añada IPE 360 al catálogo** para no perder el ~4 % de los acuerdos (INC-06); (b) tome la **losa** (canto, material, ancho = luz lateral de la superficie) del `IfcStructuralSurfaceMember`; (c) lea las **cargas por fase** de los `IfcStructuralLoadGroup`+`IfcStructuralSurfaceAction`, **clasificando construcción vs mixta por el nombre del grupo** (`*_construccion`/`*_mixta`); (d) mantenga **conectores y chapa** del Pset; manteniendo el Pset como respaldo (igual que casos 1–5).
+
+2. Resuelve la viga mixta (EC4): **ancho eficaz** b_eff (≤ L/4 y ≤ separación), **sección mixta y M_pl,Rd** por fibras (eje neutro plástico), **conexión a cortante** (nº de conectores, **grado de conexión η** y **M_Rd con conexión parcial** si η<1: `M_Rd = M_a,Rd + η·(M_pl,Rd − M_a,Rd)`, η ≥ η_min), **cortante** del alma EC3, **fase de construcción** (comprobación EC3 del acero solo) y **flecha** por fases (acero en construcción + mixta con n₀/n_L), con diagramas.
+
+3. Valida contra los criterios del enunciado: modelo neutro (1 viga IPE 360 horizontal, 1 losa C25/30 t=0,12 ancho 3,0, cargas de las dos fases); coherencia de M/V biapoyados (q·L²/8, q·L/2); aprovechamientos ≤ 1; flecha dentro de límites (L/250 total, L/350 activa).
+
+4. Registra: lección del caso 6 (viga mixta ortodoxa; fases de construcción; conexión parcial; IPE 360 en catálogo) y fila de métricas en `REPOSITORIO-aprendizaje.md`, corrección en `CHANGELOG-plugin.md`, sube el plugin a **v0.7.1** (patch) o **v0.8.0** (minor: lectura ortodoxa de viga mixta + perfil en catálogo) según el alcance, y reempaqueta el `.plugin` (excluyendo `node_modules`/`__pycache__`).
+
+5. Prepara el caso 7: `caso-07-muros/` con `ENUNCIADO.md`, generador del IFC ortodoxo (muro de carga `laminas` + muro de contención ménsula `muros-contencion`, EC2 esbeltez + EC7 estabilidad DA-2*) y `validacion-IFC.txt`.
+
+**Notas de método (casos 1–5):** escribe el código del plugin por heredoc en el sandbox y valida con `ast.parse` (el editor trunca líneas largas, INC‑04); empaqueta el `.plugin` con el módulo `zipfile` de Python construyéndolo en `/tmp` como `.zip` con un nombre nuevo y copiándolo después con extensión `.plugin`; instala `ifcopenshell`/`PyNiteFEA`/`numpy`/`matplotlib` (pip `--break-system-packages`) y `docx` localmente (no global) para la memoria; clasifica el sistema estructural antes de enrutar (aquí viga mixta acero-hormigón con conexión parcial, no losa ni cimentación); no uses el pico singular como esfuerzo de diseño y calcula la fisuración con el diámetro realmente dispuesto; coloca la armadura principal en la capa exterior; el cálculo con malla fina o varias fases es lento en el sandbox (ejecuta solver / verificación / mapas por separado si el orquestador supera el límite de 45 s).

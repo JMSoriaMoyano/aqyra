@@ -1,0 +1,12 @@
+{ "proyecto":"Demo v0.6 — forjado unidireccional + escalera U (zanca/meseta) + rampa peldañeada", "esquema":"IFC4X3",
+  "niveles":[{"nombre":"Planta Baja","cota":0.0},{"nombre":"Planta Primera","cota":3.5}],
+  "losas":[
+    {"nombre":"Forjado_unidir","nivel":"Planta Primera","contorno":[[0,0],[6,0],[6,5],[0,5]],
+     "tipo":"unidireccional","capa":0.05,"canto":0.30,"intereje":0.72,"b_nervio":0.12,"direccion":"x","material":"HA-30"}
+  ],
+  "escaleras":[
+    {"nombre":"Escalera_U","nivel":"Planta Baja","pos":[9,0],"ancho":1.2,"n_escalones":20,"huella":0.28,"contrahuella":0.175,"meseta":true,"giro":180,"zanca":true}
+  ],
+  "rampas":[
+    {"nombre":"Rampa_pelda","nivel":"Planta Baja","inicio":[14,0,0],"fin":[14,6,1.0],"ancho":1.5,"espesor":0.2,"peldaneada":true,"paso_peldano":0.4,"alto_peldano":0.05,"material":"HA-25"}
+  ] }

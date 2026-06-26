@@ -1,0 +1,85 @@
+{
+  "elementos": {
+    "VIGA_0": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 2744.3,
+        "M_LM1_max_kNm": 304.2,
+        "M_Ed_ELU_kNm": 4115.6,
+        "V_Ed_ELU_kN": 618.2,
+        "M_Rd_kNm": 17074.8,
+        "Aprovechamiento_flexion": 0.241,
+        "Aprovechamiento_max": 0.807,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "VIGA_1": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 2744.3,
+        "M_LM1_max_kNm": 1212.1,
+        "M_Ed_ELU_kNm": 5341.2,
+        "V_Ed_ELU_kN": 770.0,
+        "M_Rd_kNm": 17074.8,
+        "Aprovechamiento_flexion": 0.313,
+        "Aprovechamiento_max": 0.807,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "VIGA_2": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 2744.3,
+        "M_LM1_max_kNm": 2718.1,
+        "M_Ed_ELU_kNm": 7374.3,
+        "V_Ed_ELU_kN": 1311.3,
+        "M_Rd_kNm": 17074.8,
+        "Aprovechamiento_flexion": 0.432,
+        "Aprovechamiento_max": 0.807,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "VIGA_3": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 2744.3,
+        "M_LM1_max_kNm": 3426.2,
+        "M_Ed_ELU_kNm": 8330.2,
+        "V_Ed_ELU_kN": 1630.7,
+        "M_Rd_kNm": 17074.8,
+        "Aprovechamiento_flexion": 0.488,
+        "Aprovechamiento_max": 0.807,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "VIGA_4": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 2744.3,
+        "M_LM1_max_kNm": 2311.9,
+        "M_Ed_ELU_kNm": 6826.0,
+        "V_Ed_ELU_kN": 1108.7,
+        "M_Rd_kNm": 17074.8,
+        "Aprovechamiento_flexion": 0.4,
+        "Aprovechamiento_max": 0.807,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "VIGA_5": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 2744.3,
+        "M_LM1_max_kNm": 1055.5,
+        "M_Ed_ELU_kNm": 5129.8,
+        "V_Ed_ELU_kN": 737.8,
+        "M_Rd_kNm": 17074.8,
+        "Aprovechamiento_flexion": 0.3,
+        "Aprovechamiento_max": 0.807,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "TABLERO": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Perdidas_pretensado_pct": 23.2,
+        "P0_kN": 8600.0,
+        "P_inf_kN": 6608.0,
+        "Frecuencia_fundamental_Hz": 2.87,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

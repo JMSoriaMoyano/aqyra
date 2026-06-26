@@ -1,0 +1,94 @@
+{
+  "materiales": {
+    "C30/37": {
+      "E": 33000000000.0,
+      "G": 13750000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "pilares": [
+    {
+      "nombre": "P1",
+      "x": 0.0,
+      "y": 0.0,
+      "lado": 0.4,
+      "posicion": "corner"
+    },
+    {
+      "nombre": "P2",
+      "x": 5.0,
+      "y": 0.0,
+      "lado": 0.4,
+      "posicion": "edge"
+    },
+    {
+      "nombre": "P3",
+      "x": 10.0,
+      "y": 0.0,
+      "lado": 0.4,
+      "posicion": "corner"
+    },
+    {
+      "nombre": "P4",
+      "x": 0.0,
+      "y": 5.0,
+      "lado": 0.4,
+      "posicion": "edge"
+    },
+    {
+      "nombre": "P5",
+      "x": 5.0,
+      "y": 5.0,
+      "lado": 0.4,
+      "posicion": "interior"
+    },
+    {
+      "nombre": "P6",
+      "x": 10.0,
+      "y": 5.0,
+      "lado": 0.4,
+      "posicion": "edge"
+    },
+    {
+      "nombre": "P7",
+      "x": 0.0,
+      "y": 10.0,
+      "lado": 0.4,
+      "posicion": "corner"
+    },
+    {
+      "nombre": "P8",
+      "x": 5.0,
+      "y": 10.0,
+      "lado": 0.4,
+      "posicion": "edge"
+    },
+    {
+      "nombre": "P9",
+      "x": 10.0,
+      "y": 10.0,
+      "lado": 0.4,
+      "posicion": "corner"
+    }
+  ],
+  "superficie": {
+    "espesor": 0.28,
+    "malla": 0.5,
+    "material": "C30/37",
+    "cargas": [
+      {
+        "caso": "G",
+        "qz": -8500.0
+      },
+      {
+        "caso": "Q",
+        "qz": -3000.0
+      }
+    ],
+    "incluye_pp": true
+  }
+}

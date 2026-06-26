@@ -1,0 +1,186 @@
+{
+  "version": "1.0",
+  "georef": {
+    "crs": "EPSG:25830",
+    "desc": "ETRS89 / UTM zone 30N",
+    "eastings": 440000,
+    "northings": 4474000,
+    "height": 650
+  },
+  "disciplinas": {
+    "estructura": {
+      "label": "Estructura",
+      "color": "#4e79a7"
+    },
+    "MEP": {
+      "label": "Instalaciones (MEP)",
+      "color": "#f28e2b"
+    },
+    "lineal": {
+      "label": "Obra lineal",
+      "color": "#59a14f"
+    }
+  },
+  "models": [
+    {
+      "id": "demo-v06",
+      "label": "Catálogo — Forjado unidireccional (bovedillas) + escalera U (zanca/meseta) + rampa peldañeada",
+      "disciplina": "estructura",
+      "frag": "models/demo-v06.frag",
+      "props": "models/demo-v06.props.json",
+      "load": true
+    },
+    {
+      "id": "demo-v05",
+      "label": "Catálogo — Muro con hueco real + forjado reticular + escalera",
+      "disciplina": "estructura",
+      "frag": "models/demo-v05.frag",
+      "props": "models/demo-v05.props.json",
+      "load": false
+    },
+    {
+      "id": "familias",
+      "label": "Catálogo — Familias realistas (viga I, pilar, zapata, puerta, ventana)",
+      "disciplina": "estructura",
+      "frag": "models/familias.frag",
+      "props": "models/familias.props.json",
+      "load": false
+    },
+    {
+      "id": "galeria",
+      "label": "Catálogo — Galería IfcElement IFC4X3 (150 clases, bsDD+Psets+URI)",
+      "disciplina": "estructura",
+      "frag": "models/galeria.frag",
+      "props": "models/galeria.props.json",
+      "load": false
+    },
+    {
+      "id": "parking",
+      "label": "Estructura — Parking 4 plantas 25×150 (rampas óptimas)",
+      "disciplina": "estructura",
+      "frag": "models/parking.frag",
+      "props": "models/parking.props.json",
+      "load": false
+    },
+    {
+      "id": "edificio-oficinas",
+      "label": "Estructura — Edificio oficinas 18×12 (narración→spec→IFC)",
+      "disciplina": "estructura",
+      "frag": "models/edificio-oficinas.frag",
+      "props": "models/edificio-oficinas.props.json",
+      "load": false
+    },
+    {
+      "id": "edificio-demo",
+      "label": "Estructura — Edificio demo (narración→IFC, Ruta 1)",
+      "disciplina": "estructura",
+      "frag": "models/edificio-demo.frag",
+      "props": "models/edificio-demo.props.json",
+      "load": false
+    },
+    {
+      "id": "nucleo-lateral",
+      "label": "Estructura — Núcleo Lateral (real)",
+      "disciplina": "estructura",
+      "frag": "models/nucleo-lateral.frag",
+      "props": "models/nucleo-lateral.props.json",
+      "load": false
+    },
+    {
+      "id": "qto-demo",
+      "label": "Estructura — demo con cantidades (Qto)",
+      "disciplina": "estructura",
+      "frag": "models/qto-demo.frag",
+      "props": "models/qto-demo.props.json",
+      "load": false
+    },
+    {
+      "id": "clasif-demo",
+      "label": "Estructura — demo clasificado (Uniclass + GuBIMClass)",
+      "disciplina": "estructura",
+      "frag": "models/clasif-demo.frag",
+      "props": "models/clasif-demo.props.json",
+      "load": false
+    },
+    {
+      "id": "cmp-A",
+      "label": "Comparación — versión A (base, sin Viga_3)",
+      "disciplina": "estructura",
+      "frag": "models/cmp-A.frag",
+      "props": "models/cmp-A.props.json",
+      "load": false
+    },
+    {
+      "id": "cmp-B",
+      "label": "Comparación — versión B (sin Viga_4, Pilar_2 movido, forjado modificado)",
+      "disciplina": "estructura",
+      "frag": "models/cmp-B.frag",
+      "props": "models/cmp-B.props.json",
+      "load": false
+    },
+    {
+      "id": "estructura",
+      "label": "Estructura — edificio (demo)",
+      "disciplina": "estructura",
+      "frag": "models/estructura.frag",
+      "props": "models/estructura.props.json",
+      "load": false
+    },
+    {
+      "id": "mep",
+      "label": "MEP — instalaciones (demo)",
+      "disciplina": "MEP",
+      "frag": "models/mep.frag",
+      "props": "models/mep.props.json",
+      "load": false
+    },
+    {
+      "id": "lineal",
+      "label": "Obra lineal — viario anexo (demo)",
+      "disciplina": "lineal",
+      "frag": "models/lineal.frag",
+      "props": "models/lineal.props.json",
+      "load": false
+    },
+    {
+      "id": "caso-R4",
+      "label": "Caso R4 — edificio (v0.5)",
+      "disciplina": "estructura",
+      "frag": "models/caso-R4.frag",
+      "props": "models/caso-R4.props.json",
+      "load": false
+    },
+    {
+      "id": "red-pci",
+      "label": "Red PCI — MEP (v0.5, sólo datos)",
+      "disciplina": "MEP",
+      "frag": "models/red-pci.frag",
+      "props": "models/red-pci.props.json",
+      "load": false
+    },
+    {
+      "id": "caso-15",
+      "label": "Caso 15 — núcleo sísmico (v0.5, sólo datos)",
+      "disciplina": "estructura",
+      "frag": "models/caso-15.frag",
+      "props": "models/caso-15.props.json",
+      "load": false
+    },
+    {
+      "id": "res-estr",
+      "label": "Resultados — estructura (aprovechamiento demo)",
+      "disciplina": "estructura",
+      "frag": "models/res-estr.frag",
+      "props": "models/res-estr.props.json",
+      "load": false
+    },
+    {
+      "id": "res-mep",
+      "label": "Resultados — MEP (presión/velocidad demo)",
+      "disciplina": "MEP",
+      "frag": "models/res-mep.frag",
+      "props": "models/res-mep.props.json",
+      "load": false
+    }
+  ]
+}

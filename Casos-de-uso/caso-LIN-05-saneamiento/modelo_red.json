@@ -1,0 +1,139 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "caudal": "l/s",
+    "presion": "kPa",
+    "potencia": "W"
+  },
+  "sistema": {
+    "tipo": "SEWAGE",
+    "fluido": null,
+    "nombre": "Red de saneamiento residual",
+    "clase_riesgo": null,
+    "demanda": null
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 100.5,
+      "tipo": "terminal",
+      "cota_solera": 100.5
+    },
+    "N2": {
+      "x": 50.0,
+      "y": 50.0,
+      "z": 100.0,
+      "tipo": "union",
+      "cota_solera": 100.0
+    },
+    "N3": {
+      "x": 0.0,
+      "y": 100.0,
+      "z": 100.5,
+      "tipo": "terminal",
+      "cota_solera": 100.5
+    },
+    "N4": {
+      "x": 100.0,
+      "y": 50.0,
+      "z": 99.5,
+      "tipo": "vertido",
+      "cota_solera": 99.5
+    },
+    "N5": {
+      "x": 120.0,
+      "y": 0.0,
+      "z": 100.2,
+      "tipo": "terminal",
+      "cota_solera": 100.2
+    }
+  },
+  "tramos": {
+    "T1": {
+      "ni": "N1",
+      "nj": "N2",
+      "dn": 315.0,
+      "material": "hormigon",
+      "rugosidad": null,
+      "longitud": 70.7124,
+      "elemento": "COL-1",
+      "clase": "IfcFlowSegment"
+    },
+    "T2": {
+      "ni": "N3",
+      "nj": "N2",
+      "dn": 315.0,
+      "material": "hormigon",
+      "rugosidad": null,
+      "longitud": 70.7124,
+      "elemento": "COL-2",
+      "clase": "IfcFlowSegment"
+    },
+    "T3": {
+      "ni": "N2",
+      "nj": "N4",
+      "dn": 400.0,
+      "material": "hormigon",
+      "rugosidad": null,
+      "longitud": 50.0025,
+      "elemento": "COL-3",
+      "clase": "IfcFlowSegment"
+    },
+    "T4": {
+      "ni": "N5",
+      "nj": "N4",
+      "dn": 315.0,
+      "material": "hormigon",
+      "rugosidad": null,
+      "longitud": 53.8562,
+      "elemento": "COL-4",
+      "clase": "IfcFlowSegment"
+    }
+  },
+  "terminales": [
+    {
+      "id": "ACO-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N1",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null,
+      "habitantes_eq": 2600.0
+    },
+    {
+      "id": "ACO-2",
+      "tipo": "USERDEFINED",
+      "nodo": "N3",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null,
+      "habitantes_eq": 2600.0
+    },
+    {
+      "id": "ACO-3",
+      "tipo": "USERDEFINED",
+      "nodo": "N5",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null,
+      "habitantes_eq": 1700.0
+    }
+  ],
+  "fuentes": [],
+  "vertidos": [
+    {
+      "id": "VERTIDO",
+      "nodo": "N4",
+      "tipo": "vertido"
+    }
+  ],
+  "metricas": {
+    "nudos_fusionados": 3,
+    "huecos_puenteados": [],
+    "cruces_troceados": [],
+    "segmentos_sin_puerto": [],
+    "factor_escala_ifc": 1.0,
+    "tol_snap_m": 0.001
+  }
+}

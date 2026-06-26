@@ -1,0 +1,16 @@
+CASO 15 - Nucleo de pantallas acopladas + sismico EC8 - validacion del IFC
+schema: IFC4
+  IfcStructuralSurfaceMember       4
+  IfcStructuralPointConnection     10
+  IfcStructuralPointAction         6
+  IfcStructuralLoadGroup           1
+  IfcBoundaryNodeCondition         4
+  IfcMaterial                      1
+  IfcPropertySet                   12
+
+Pantallas (4): 2 machones de alma (Lw=2.0, plano YZ, resisten Y, ACOPLADOS por dintel)
+               2 alas (Lw=4.0, plano XZ, resisten X)
+Masas: 6 IfcStructuralPointAction (ForceZ<0) en nodos de diafragma (CM) -> W=4000 kN
+Psets: Pset_Estructurando_Pantalla (Rol/ResisteDir/ParAcoplado), _Sismo (q=3.6, ag=0.20g,
+       suelo C, espectro tipo 1), _Nucleo (dintel b/h/ln, abertura, edificio Lx/Ly, CM)
+ABRE CORRECTAMENTE

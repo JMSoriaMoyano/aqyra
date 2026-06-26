@@ -1,0 +1,61 @@
+{
+  "elementos": {
+    "VIGA_0": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 1853.9,
+        "M_LM1_max_kNm": 1363.0,
+        "M_Ed_ELU_kNm": 4342.9,
+        "V_Ed_ELU_kN": 546.1,
+        "M_Rd_kNm": 8253.5,
+        "Aprovechamiento_flexion": 0.526,
+        "Aprovechamiento_max": 0.675,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "VIGA_1": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 1853.9,
+        "M_LM1_max_kNm": 2558.1,
+        "M_Ed_ELU_kNm": 5956.2,
+        "V_Ed_ELU_kN": 1106.5,
+        "M_Rd_kNm": 8253.5,
+        "Aprovechamiento_flexion": 0.722,
+        "Aprovechamiento_max": 0.722,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "VIGA_2": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 1853.9,
+        "M_LM1_max_kNm": 2558.3,
+        "M_Ed_ELU_kNm": 5956.5,
+        "V_Ed_ELU_kN": 1441.4,
+        "M_Rd_kNm": 8253.5,
+        "Aprovechamiento_flexion": 0.722,
+        "Aprovechamiento_max": 0.813,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "VIGA_3": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "M_perm_kNm": 1853.9,
+        "M_LM1_max_kNm": 2167.5,
+        "M_Ed_ELU_kNm": 5428.9,
+        "V_Ed_ELU_kN": 633.3,
+        "M_Rd_kNm": 8253.5,
+        "Aprovechamiento_flexion": 0.658,
+        "Aprovechamiento_max": 0.675,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "TABLERO_PUE01": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Perdidas_pretensado_pct": 21.2,
+        "P0_kN": 5200.0,
+        "P_inf_kN": 4098.0,
+        "Frecuencia_fundamental_Hz": 2.24,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

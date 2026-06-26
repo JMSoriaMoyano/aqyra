@@ -1,0 +1,166 @@
+{
+  "veredicto": "CUMPLE",
+  "metodo": "Darcy-Weisbach (friccion Swamee-Jain) [confirmar AN]",
+  "topologia": {
+    "n_nodos": 5,
+    "n_tramos": 5,
+    "n_lazos": 1,
+    "tipo": "malla"
+  },
+  "hardy_cross": {
+    "metodo": "Hardy-Cross (correccion por lazo, n=2) [confirmar criterio]",
+    "n_lazos": 1,
+    "iteraciones": 6,
+    "residuo_lazo_max_kPa": 0.0,
+    "residuos_lazo_kPa": [
+      0.0
+    ],
+    "convergio": true
+  },
+  "hipotesis": {
+    "rho_kg_m3": 998.0,
+    "nu_m2_s": 1.01e-06,
+    "k_accesorios": 1.2,
+    "v_max_m_s": 2.0,
+    "rugosidad_def_mm": 0.045
+  },
+  "simultaneos": [
+    "ACO-1",
+    "ACO-2",
+    "HIDRANTE-1"
+  ],
+  "presion_fuente_disponible_kPa": 0.0,
+  "presion_fuente_requerida_kPa": -40.45,
+  "margen_fuente_kPa": 40.45,
+  "velocidad_pico_m_s": 1.0298,
+  "tramos": {
+    "T1": {
+      "caudal_l_s": 24.8018,
+      "caudal_signed_l_s": 24.8018,
+      "sentido": "ni->nj",
+      "dn": 200.0,
+      "longitud_m": 30.0,
+      "velocidad_m_s": 0.7895,
+      "Re": 156329.9,
+      "f": 0.01939,
+      "dp_kPa": 1.0854,
+      "ni": "N1",
+      "nj": "N2",
+      "elemento": "COND-0"
+    },
+    "T2": {
+      "caudal_l_s": 12.6378,
+      "caudal_signed_l_s": 12.6378,
+      "sentido": "ni->nj",
+      "dn": 125.0,
+      "longitud_m": 120.0167,
+      "velocidad_m_s": 1.0298,
+      "Re": 127453.2,
+      "f": 0.02111,
+      "dp_kPa": 12.8728,
+      "ni": "N2",
+      "nj": "N3",
+      "elemento": "COND-1"
+    },
+    "T3": {
+      "caudal_l_s": 8.0082,
+      "caudal_signed_l_s": 8.0082,
+      "sentido": "ni->nj",
+      "dn": 125.0,
+      "longitud_m": 120.0167,
+      "velocidad_m_s": 0.6526,
+      "Re": 80763.4,
+      "f": 0.02214,
+      "dp_kPa": 5.4206,
+      "ni": "N3",
+      "nj": "N4",
+      "elemento": "COND-2"
+    },
+    "T4": {
+      "caudal_l_s": 8.6918,
+      "caudal_signed_l_s": -8.6918,
+      "sentido": "nj->ni",
+      "dn": 125.0,
+      "longitud_m": 120.0375,
+      "velocidad_m_s": 0.7083,
+      "Re": 87657.2,
+      "f": 0.02193,
+      "dp_kPa": 6.3268,
+      "ni": "N4",
+      "nj": "N5",
+      "elemento": "COND-3"
+    },
+    "T5": {
+      "caudal_l_s": 12.164,
+      "caudal_signed_l_s": -12.164,
+      "sentido": "nj->ni",
+      "dn": 125.0,
+      "longitud_m": 120.0042,
+      "velocidad_m_s": 0.9912,
+      "Re": 122674.6,
+      "f": 0.02119,
+      "dp_kPa": 11.9667,
+      "ni": "N5",
+      "nj": "N2",
+      "elemento": "COND-4"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "presion_kPa": 0.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "presion_kPa": 292.626,
+      "tipo": "union"
+    },
+    "N3": {
+      "presion_kPa": 299.334,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "presion_kPa": 313.494,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "presion_kPa": 290.45,
+      "tipo": "terminal"
+    }
+  },
+  "terminales": [
+    {
+      "id": "ACO-1",
+      "nodo": "N3",
+      "activo": true,
+      "caudal_l_s": 4.6296,
+      "presion_disponible_kPa": 299.334,
+      "presion_min_kPa": 250.0,
+      "margen_kPa": 49.334,
+      "cumple": true
+    },
+    {
+      "id": "ACO-2",
+      "nodo": "N5",
+      "activo": true,
+      "caudal_l_s": 3.4722,
+      "presion_disponible_kPa": 290.45,
+      "presion_min_kPa": 250.0,
+      "margen_kPa": 40.45,
+      "cumple": true
+    },
+    {
+      "id": "HIDRANTE-1",
+      "nodo": "N4",
+      "activo": true,
+      "caudal_l_s": 16.7,
+      "presion_disponible_kPa": 313.494,
+      "presion_min_kPa": 250.0,
+      "margen_kPa": 63.494,
+      "cumple": true
+    }
+  ],
+  "errores": [],
+  "avisos": [
+    "Red MALLADA: 1 lazo(s) resuelto(s) por Hardy-Cross (6 iter, residuo max 0.00000 kPa, converge)."
+  ]
+}

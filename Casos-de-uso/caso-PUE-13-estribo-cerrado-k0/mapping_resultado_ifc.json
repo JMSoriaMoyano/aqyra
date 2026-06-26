@@ -1,0 +1,17 @@
+{
+  "elementos": {
+    "ESTRIBO": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "estribo",
+        "Empuje": "reposo",
+        "Ka": 0.47,
+        "Aprov_vuelco": 0.179,
+        "Aprov_deslizamiento": 0.417,
+        "Aprov_hundimiento": 0.469,
+        "As_alzado_cm2_m": 24.5,
+        "Aprovechamiento_max": 0.912,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

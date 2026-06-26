@@ -1,0 +1,17 @@
+{
+  "veredicto": "CUMPLE",
+  "residuo_nudo_max_pct": 0.0,
+  "cierre_lazo_max_m": 0.0,
+  "caudal_total_vertido_l_s": 31.9444,
+  "velocidad_pico_m_s": 1.1054,
+  "llenado_pico_pct": 24.35,
+  "n_tramos_no_cumple": 0,
+  "errores": [],
+  "avisos": [],
+  "info": [
+    "Residuo maximo de continuidad por nudo: 0.0000 % (caudal con signo, vertido recoge el total)",
+    "Red en arbol (sin lazos): no aplica cierre por lazo.",
+    "Todos los tramos: llenado/velocidad/pendiente/DN dentro de limites.",
+    "Velocidad pico 1.1054 m/s | llenado pico 24.35 % | caudal vertido 31.9444 l/s"
+  ]
+}

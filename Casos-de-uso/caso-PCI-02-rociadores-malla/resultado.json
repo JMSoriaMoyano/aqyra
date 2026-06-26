@@ -1,0 +1,375 @@
+{
+  "veredicto": "CUMPLE",
+  "metodo": "Darcy-Weisbach (friccion Swamee-Jain) [confirmar AN]",
+  "topologia": {
+    "n_nodos": 14,
+    "n_tramos": 16,
+    "n_lazos": 3,
+    "tipo": "malla"
+  },
+  "hardy_cross": {
+    "metodo": "Hardy-Cross (correccion por lazo, n=2) [confirmar criterio]",
+    "n_lazos": 3,
+    "iteraciones": 9,
+    "residuo_lazo_max_kPa": 5e-06,
+    "residuos_lazo_kPa": [
+      -5e-06,
+      -2e-06,
+      -1e-06
+    ],
+    "convergio": true
+  },
+  "hipotesis": {
+    "rho_kg_m3": 998.0,
+    "nu_m2_s": 1.01e-06,
+    "k_accesorios": 1.2,
+    "v_max_m_s": 6.0,
+    "rugosidad_def_mm": 0.045
+  },
+  "simultaneos": [
+    "ROC-1",
+    "ROC-2",
+    "ROC-3",
+    "ROC-4",
+    "ROC-5",
+    "ROC-6"
+  ],
+  "presion_fuente_disponible_kPa": 300.0,
+  "presion_fuente_requerida_kPa": 58.913,
+  "margen_fuente_kPa": 241.087,
+  "velocidad_pico_m_s": 1.2434,
+  "tramos": {
+    "T1": {
+      "caudal_l_s": 3.9899,
+      "caudal_signed_l_s": 3.9899,
+      "sentido": "ni->nj",
+      "dn": 100.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.508,
+      "Re": 50297.9,
+      "f": 0.02243,
+      "dp_kPa": 0.2773,
+      "ni": "N1",
+      "nj": "N2"
+    },
+    "T2": {
+      "caudal_l_s": 2.2501,
+      "caudal_signed_l_s": 2.2501,
+      "sentido": "ni->nj",
+      "dn": 100.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.2865,
+      "Re": 28364.9,
+      "f": 0.02498,
+      "dp_kPa": 0.0982,
+      "ni": "N2",
+      "nj": "N3"
+    },
+    "T3": {
+      "caudal_l_s": 1.0472,
+      "caudal_signed_l_s": 1.0472,
+      "sentido": "ni->nj",
+      "dn": 100.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.1333,
+      "Re": 13201.3,
+      "f": 0.02962,
+      "dp_kPa": 0.0252,
+      "ni": "N3",
+      "nj": "N4"
+    },
+    "T4": {
+      "caudal_l_s": 2.0101,
+      "caudal_signed_l_s": 2.0101,
+      "sentido": "ni->nj",
+      "dn": 100.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.2559,
+      "Re": 25340.1,
+      "f": 0.02556,
+      "dp_kPa": 0.0802,
+      "ni": "N5",
+      "nj": "N6"
+    },
+    "T5": {
+      "caudal_l_s": 1.7499,
+      "caudal_signed_l_s": 1.7499,
+      "sentido": "ni->nj",
+      "dn": 100.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.2228,
+      "Re": 22060.4,
+      "f": 0.02633,
+      "dp_kPa": 0.0626,
+      "ni": "N6",
+      "nj": "N7"
+    },
+    "T6": {
+      "caudal_l_s": 0.9528,
+      "caudal_signed_l_s": 0.9528,
+      "sentido": "ni->nj",
+      "dn": 100.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.1213,
+      "Re": 12011.4,
+      "f": 0.03032,
+      "dp_kPa": 0.0214,
+      "ni": "N7",
+      "nj": "N8"
+    },
+    "T7": {
+      "caudal_l_s": 2.0101,
+      "caudal_signed_l_s": 2.0101,
+      "sentido": "ni->nj",
+      "dn": 80.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.3999,
+      "Re": 31675.1,
+      "f": 0.02474,
+      "dp_kPa": 0.2369,
+      "ni": "N1",
+      "nj": "N5"
+    },
+    "T8": {
+      "caudal_l_s": 0.7398,
+      "caudal_signed_l_s": 0.7398,
+      "sentido": "ni->nj",
+      "dn": 80.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.1472,
+      "Re": 11658.4,
+      "f": 0.03075,
+      "dp_kPa": 0.0399,
+      "ni": "N2",
+      "nj": "N6"
+    },
+    "T9": {
+      "caudal_l_s": 0.2029,
+      "caudal_signed_l_s": 0.2029,
+      "sentido": "ni->nj",
+      "dn": 80.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.0404,
+      "Re": 3196.6,
+      "f": 0.04416,
+      "dp_kPa": 0.0043,
+      "ni": "N3",
+      "nj": "N7"
+    },
+    "T10": {
+      "caudal_l_s": 0.0472,
+      "caudal_signed_l_s": 0.0472,
+      "sentido": "ni->nj",
+      "dn": 80.0,
+      "longitud_m": 8.0,
+      "velocidad_m_s": 0.0094,
+      "Re": 743.7,
+      "f": 0.08606,
+      "dp_kPa": 0.0005,
+      "ni": "N4",
+      "nj": "N8"
+    },
+    "T11": {
+      "caudal_l_s": 1.0,
+      "caudal_signed_l_s": 1.0,
+      "sentido": "ni->nj",
+      "dn": 32.0,
+      "longitud_m": 3.0,
+      "velocidad_m_s": 1.2434,
+      "Re": 39394.8,
+      "f": 0.02607,
+      "dp_kPa": 2.2622,
+      "ni": "N2",
+      "nj": "N9"
+    },
+    "T12": {
+      "caudal_l_s": 1.0,
+      "caudal_signed_l_s": 1.0,
+      "sentido": "ni->nj",
+      "dn": 32.0,
+      "longitud_m": 3.0,
+      "velocidad_m_s": 1.2434,
+      "Re": 39394.8,
+      "f": 0.02607,
+      "dp_kPa": 2.2622,
+      "ni": "N3",
+      "nj": "N10"
+    },
+    "T13": {
+      "caudal_l_s": 1.0,
+      "caudal_signed_l_s": 1.0,
+      "sentido": "ni->nj",
+      "dn": 32.0,
+      "longitud_m": 3.0,
+      "velocidad_m_s": 1.2434,
+      "Re": 39394.8,
+      "f": 0.02607,
+      "dp_kPa": 2.2622,
+      "ni": "N4",
+      "nj": "N11"
+    },
+    "T14": {
+      "caudal_l_s": 1.0,
+      "caudal_signed_l_s": 1.0,
+      "sentido": "ni->nj",
+      "dn": 32.0,
+      "longitud_m": 3.0,
+      "velocidad_m_s": 1.2434,
+      "Re": 39394.8,
+      "f": 0.02607,
+      "dp_kPa": 2.2622,
+      "ni": "N6",
+      "nj": "N12"
+    },
+    "T15": {
+      "caudal_l_s": 1.0,
+      "caudal_signed_l_s": 1.0,
+      "sentido": "ni->nj",
+      "dn": 32.0,
+      "longitud_m": 3.0,
+      "velocidad_m_s": 1.2434,
+      "Re": 39394.8,
+      "f": 0.02607,
+      "dp_kPa": 2.2622,
+      "ni": "N7",
+      "nj": "N13"
+    },
+    "T16": {
+      "caudal_l_s": 1.0,
+      "caudal_signed_l_s": 1.0,
+      "sentido": "ni->nj",
+      "dn": 32.0,
+      "longitud_m": 3.0,
+      "velocidad_m_s": 1.2434,
+      "Re": 39394.8,
+      "f": 0.02607,
+      "dp_kPa": 2.2622,
+      "ni": "N8",
+      "nj": "N14"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "presion_kPa": 300.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "presion_kPa": 299.723,
+      "tipo": "union"
+    },
+    "N3": {
+      "presion_kPa": 299.624,
+      "tipo": "union"
+    },
+    "N4": {
+      "presion_kPa": 299.599,
+      "tipo": "union"
+    },
+    "N5": {
+      "presion_kPa": 299.763,
+      "tipo": "union"
+    },
+    "N6": {
+      "presion_kPa": 299.683,
+      "tipo": "union"
+    },
+    "N7": {
+      "presion_kPa": 299.62,
+      "tipo": "union"
+    },
+    "N8": {
+      "presion_kPa": 299.599,
+      "tipo": "union"
+    },
+    "N9": {
+      "presion_kPa": 297.46,
+      "tipo": "terminal"
+    },
+    "N10": {
+      "presion_kPa": 297.362,
+      "tipo": "terminal"
+    },
+    "N11": {
+      "presion_kPa": 297.337,
+      "tipo": "terminal"
+    },
+    "N12": {
+      "presion_kPa": 297.421,
+      "tipo": "terminal"
+    },
+    "N13": {
+      "presion_kPa": 297.358,
+      "tipo": "terminal"
+    },
+    "N14": {
+      "presion_kPa": 297.337,
+      "tipo": "terminal"
+    }
+  },
+  "terminales": [
+    {
+      "id": "ROC-1",
+      "nodo": "N9",
+      "activo": true,
+      "caudal_l_s": 1.0,
+      "presion_disponible_kPa": 297.46,
+      "presion_min_kPa": 56.25,
+      "margen_kPa": 241.21,
+      "cumple": true
+    },
+    {
+      "id": "ROC-2",
+      "nodo": "N10",
+      "activo": true,
+      "caudal_l_s": 1.0,
+      "presion_disponible_kPa": 297.362,
+      "presion_min_kPa": 56.25,
+      "margen_kPa": 241.112,
+      "cumple": true
+    },
+    {
+      "id": "ROC-3",
+      "nodo": "N11",
+      "activo": true,
+      "caudal_l_s": 1.0,
+      "presion_disponible_kPa": 297.337,
+      "presion_min_kPa": 56.25,
+      "margen_kPa": 241.087,
+      "cumple": true
+    },
+    {
+      "id": "ROC-4",
+      "nodo": "N12",
+      "activo": true,
+      "caudal_l_s": 1.0,
+      "presion_disponible_kPa": 297.421,
+      "presion_min_kPa": 56.25,
+      "margen_kPa": 241.171,
+      "cumple": true
+    },
+    {
+      "id": "ROC-5",
+      "nodo": "N13",
+      "activo": true,
+      "caudal_l_s": 1.0,
+      "presion_disponible_kPa": 297.358,
+      "presion_min_kPa": 56.25,
+      "margen_kPa": 241.108,
+      "cumple": true
+    },
+    {
+      "id": "ROC-6",
+      "nodo": "N14",
+      "activo": true,
+      "caudal_l_s": 1.0,
+      "presion_disponible_kPa": 297.337,
+      "presion_min_kPa": 56.25,
+      "margen_kPa": 241.087,
+      "cumple": true
+    }
+  ],
+  "errores": [],
+  "avisos": [
+    "Red MALLADA: 3 lazo(s) resuelto(s) por Hardy-Cross (9 iter, residuo max 0.00001 kPa, converge)."
+  ]
+}

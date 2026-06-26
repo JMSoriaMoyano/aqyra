@@ -1,0 +1,537 @@
+{
+  "proyecto": "Edificio oficinas — narración→IFC (Ruta 1, compilador)",
+  "esquema": "IFC4",
+  "unidades": "m",
+  "niveles": [
+    {
+      "nombre": "Planta Baja",
+      "cota": 0.0
+    },
+    {
+      "nombre": "Planta 1",
+      "cota": 3.2
+    },
+    {
+      "nombre": "Planta 2",
+      "cota": 6.4
+    }
+  ],
+  "pilares": [
+    {
+      "nombre": "Of_Pil1_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil2_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil3_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        12.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil4_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        6.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil5_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        6.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil6_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        6.0,
+        12.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil7_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        12.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil8_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        12.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil9_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        12.0,
+        12.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil10_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        18.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil11_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        18.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil12_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        18.0,
+        12.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil1_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil2_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil3_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        12.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil4_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        6.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil5_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        6.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil6_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        6.0,
+        12.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil7_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        12.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil8_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        12.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil9_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        12.0,
+        12.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil10_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        18.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil11_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        18.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Pil12_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        18.0,
+        12.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.2,
+      "material": "HA-30"
+    }
+  ],
+  "muros": [
+    {
+      "nombre": "Of_Muro1_N0",
+      "nivel": "Planta Baja",
+      "inicio": [
+        0.0,
+        0.0
+      ],
+      "fin": [
+        18.0,
+        0.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.2,
+      "material": "HA-30",
+      "exterior": true
+    },
+    {
+      "nombre": "Of_Muro2_N0",
+      "nivel": "Planta Baja",
+      "inicio": [
+        18.0,
+        0.0
+      ],
+      "fin": [
+        18.0,
+        12.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.2,
+      "material": "HA-30",
+      "exterior": true
+    },
+    {
+      "nombre": "Of_Muro3_N0",
+      "nivel": "Planta Baja",
+      "inicio": [
+        18.0,
+        12.0
+      ],
+      "fin": [
+        0.0,
+        12.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.2,
+      "material": "HA-30",
+      "exterior": true
+    },
+    {
+      "nombre": "Of_Muro4_N0",
+      "nivel": "Planta Baja",
+      "inicio": [
+        0.0,
+        12.0
+      ],
+      "fin": [
+        0.0,
+        0.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.2,
+      "material": "HA-30",
+      "exterior": true
+    },
+    {
+      "nombre": "Of_Muro1_N1",
+      "nivel": "Planta 1",
+      "inicio": [
+        0.0,
+        0.0
+      ],
+      "fin": [
+        18.0,
+        0.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.2,
+      "material": "HA-30",
+      "exterior": true
+    },
+    {
+      "nombre": "Of_Muro2_N1",
+      "nivel": "Planta 1",
+      "inicio": [
+        18.0,
+        0.0
+      ],
+      "fin": [
+        18.0,
+        12.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.2,
+      "material": "HA-30",
+      "exterior": true
+    },
+    {
+      "nombre": "Of_Muro3_N1",
+      "nivel": "Planta 1",
+      "inicio": [
+        18.0,
+        12.0
+      ],
+      "fin": [
+        0.0,
+        12.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.2,
+      "material": "HA-30",
+      "exterior": true
+    },
+    {
+      "nombre": "Of_Muro4_N1",
+      "nivel": "Planta 1",
+      "inicio": [
+        0.0,
+        12.0
+      ],
+      "fin": [
+        0.0,
+        0.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.2,
+      "material": "HA-30",
+      "exterior": true
+    }
+  ],
+  "losas": [
+    {
+      "nombre": "Of_Forjado_N1",
+      "nivel": "Planta 1",
+      "contorno": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          18.0,
+          0.0
+        ],
+        [
+          18.0,
+          12.0
+        ],
+        [
+          0.0,
+          12.0
+        ]
+      ],
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Of_Forjado_N2",
+      "nivel": "Planta 2",
+      "contorno": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          18.0,
+          0.0
+        ],
+        [
+          18.0,
+          12.0
+        ],
+        [
+          0.0,
+          12.0
+        ]
+      ],
+      "espesor": 0.3,
+      "material": "HA-30"
+    }
+  ]
+}

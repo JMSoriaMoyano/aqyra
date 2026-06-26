@@ -1,0 +1,43 @@
+VALIDACION IFC caso-08.ifc  (schema IFC4)
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralSurfaceMember         1   (Losa_cimentacion, horizontal z=0)
+  IfcStructuralCurveMember           6   (6 pilares verticales, reticula 3x2)
+  IfcStructuralPointConnection      16   (4 esquinas de losa + 6 base + 6 cabeza)
+  IfcBoundaryNodeCondition           4   (lecho elastico: TranslationalStiffnessZ)
+  IfcFaceSurface                     1
+  IfcPolyLoop                        1
+  IfcRectangleProfileDef             1   (0.40 x 0.40, seccion de pilar)
+  IfcMaterialProfileSet              6   (uno por pilar)
+  IfcStructuralPointAction          12   (axil de cabeza de cada pilar: G y Q)
+  IfcStructuralLoadSingleForce      12
+  IfcStructuralLoadGroup             2   (G permanente, Q variable)
+  IfcRelConnectsStructuralActivity  12
+  IfcRelAssociatesMaterial           7   (losa + 6 pilares)
+  IfcMaterialProperties              1
+Materiales: ['C30/37']
+
+Lectura con el parser generico ortodoxo (laminas/ifc_to_model_3d):
+  nodos=16  barras=6 (todas tipo 'pilar')  superficies=1
+  Superficie 'Losa_cimentacion' horizontal (z=0) BX=6,0 LY=4,0 t=0,60 mat=C30/37
+  6 pilares 0,40x0,40 (IfcRectangleProfileDef) en x={1,3,5}, y={1,3}
+
+Cargas de cabeza de cada pilar (IfcStructuralPointAction, como el pilar del caso 5):
+  P11,P31,P12,P32 (esquina): N_G=-550 kN  N_Q=-180 kN
+  P21,P22         (central): N_G=-850 kN  N_Q=-300 kN   -> ASIENTO DIFERENCIAL
+  Suma N_G=3.900 kN  Suma N_Q=1.320 kN
+
+Datos sin entidad de analisis estandar (Pset, igual que R_d/k_s del caso 5 y
+conectores/chapa del caso 6):
+  Losa_cimentacion -> Pset_Estructurando_Suelo (Rd_suelo_Pa=300000, ModuloBalasto_N_m3=40e6)
+                      Pset_Estructurando_Losa  (BX, LY, Espesor, TamanoMalla, LadoPilar, ks, Rd)  [respaldo]
+                      Pset_Estructurando_Pilar_1..6 (x, y, Lado, N_G_N, N_Q_N)                     [respaldo]
+
+OK: el IFC abre correctamente con ifcopenshell y el parser ortodoxo lee la losa
+(superficie horizontal), los 6 pilares (barras verticales con seccion rectangular)
+y las 12 cargas de cabeza. El lecho elastico esta en los 4 nodos de esquina
+(IfcBoundaryNodeCondition, TranslationalStiffnessZ = ks*(BX/2)*(LY/2)). Brecha del
+caso 8: dar al modulo 'cimentaciones/solver_raft.py' una via ortodoxa que lea la
+losa, identifique los pilares y baje sus cargas de cabeza, reconstruyendo el ks de
+la rigidez de los nodos de borde (como el caso 5), generalizado a la malla
+multipilar; manteniendo terreno (Rd/ks) y geometria en Pset como respaldo.

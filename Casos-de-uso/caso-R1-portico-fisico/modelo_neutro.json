@@ -1,0 +1,176 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N",
+    "momento": "N*m"
+  },
+  "origen": "puente_fisico_analitico",
+  "materiales": {
+    "S275": {
+      "E": 210000000000.0,
+      "G": 80770000000.0,
+      "nu": 0.3,
+      "rho": 7850.0,
+      "fy": 275000000.0
+    }
+  },
+  "secciones": {
+    "HEB 200": {
+      "A": 0.007808,
+      "Iy": 5.696e-05,
+      "Iz": 2.003e-05,
+      "Wely": 0.0005696,
+      "Wply": 0.0006425,
+      "Welz": 0.0002003,
+      "Wplz": 0.0003058,
+      "J": 5.928e-07,
+      "Avz": 0.002483,
+      "h": 0.2,
+      "clase": 1,
+      "fuente": "catalogo"
+    },
+    "IPE 330": {
+      "A": 0.006261,
+      "Iy": 0.0001177,
+      "Iz": 7.881e-06,
+      "Wely": 0.0007131,
+      "Wply": 0.0008043,
+      "Welz": 9.852e-05,
+      "Wplz": 0.0001537,
+      "J": 2.815e-07,
+      "Avz": 0.003081,
+      "h": 0.33,
+      "clase": 1,
+      "fuente": "catalogo"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N2": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 4.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "N3": {
+      "x": 6.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N4": {
+      "x": 6.0,
+      "y": 0.0,
+      "z": 4.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "barras": {
+    "C1": {
+      "ni": "N1",
+      "nj": "N2",
+      "seccion": "HEB 200",
+      "material": "S275",
+      "tipo": "pilar",
+      "elemento_fisico": "Pilar_1",
+      "clase_ifc": "IfcColumn"
+    },
+    "C2": {
+      "ni": "N3",
+      "nj": "N4",
+      "seccion": "HEB 200",
+      "material": "S275",
+      "tipo": "pilar",
+      "elemento_fisico": "Pilar_2",
+      "clase_ifc": "IfcColumn"
+    },
+    "B1": {
+      "ni": "N2",
+      "nj": "N4",
+      "seccion": "IPE 330",
+      "material": "S275",
+      "tipo": "viga",
+      "elemento_fisico": "Dintel",
+      "clase_ifc": "IfcBeam"
+    }
+  },
+  "cargas": [
+    {
+      "caso": "G",
+      "barra": "B1",
+      "direccion": "GZ",
+      "qz": -12000.0
+    },
+    {
+      "caso": "Q",
+      "barra": "B1",
+      "direccion": "GZ",
+      "qz": -10000.0
+    }
+  ],
+  "hipotesis": {
+    "apoyos": [
+      {
+        "nodo": "N1",
+        "cota_z": 0.0,
+        "tipo": "biarticulado"
+      },
+      {
+        "nodo": "N3",
+        "cota_z": 0.0,
+        "tipo": "biarticulado"
+      }
+    ],
+    "cargas": [
+      {
+        "barra": "B1",
+        "elemento_fisico": "Dintel",
+        "caso": "G",
+        "q_kN_m": 12.0,
+        "direccion": "-Z",
+        "descripcion": "carga gravitatoria de servicio sobre el dintel"
+      },
+      {
+        "barra": "B1",
+        "elemento_fisico": "Dintel",
+        "caso": "Q",
+        "q_kN_m": 10.0,
+        "direccion": "-Z",
+        "descripcion": "carga gravitatoria de servicio sobre el dintel"
+      }
+    ]
+  }
+}

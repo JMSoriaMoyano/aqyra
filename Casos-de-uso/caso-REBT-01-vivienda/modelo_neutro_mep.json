@@ -1,0 +1,235 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "caudal": "l/s",
+    "presion": "kPa",
+    "potencia": "W"
+  },
+  "sistema": {
+    "tipo": "ELECTRICAL",
+    "fluido": null,
+    "nombre": "Instalacion electrica vivienda",
+    "demanda": null
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "x": 15.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N3": {
+      "x": 0.0,
+      "y": 15.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "x": -15.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "x": 0.0,
+      "y": -15.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N6": {
+      "x": 12.0,
+      "y": 12.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N7": {
+      "x": -12.0,
+      "y": 12.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N8": {
+      "x": -12.0,
+      "y": -12.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N9": {
+      "x": 12.0,
+      "y": -12.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    }
+  },
+  "tramos": {
+    "T1": {
+      "ni": "N1",
+      "nj": "N2",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 15.0,
+      "elemento": "C1-Iluminacion",
+      "clase": "IfcFlowSegment"
+    },
+    "T2": {
+      "ni": "N1",
+      "nj": "N3",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 15.0,
+      "elemento": "C2-Tomas-generales",
+      "clase": "IfcFlowSegment"
+    },
+    "T3": {
+      "ni": "N1",
+      "nj": "N4",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 15.0,
+      "elemento": "C3-Cocina-horno",
+      "clase": "IfcFlowSegment"
+    },
+    "T4": {
+      "ni": "N1",
+      "nj": "N5",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 15.0,
+      "elemento": "C4-Lavadora-termo",
+      "clase": "IfcFlowSegment"
+    },
+    "T5": {
+      "ni": "N1",
+      "nj": "N6",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 16.9706,
+      "elemento": "C5-Tomas-bano-cocina",
+      "clase": "IfcFlowSegment"
+    },
+    "T6": {
+      "ni": "N1",
+      "nj": "N7",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 16.9706,
+      "elemento": "C8-Calefaccion",
+      "clase": "IfcFlowSegment"
+    },
+    "T7": {
+      "ni": "N1",
+      "nj": "N8",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 16.9706,
+      "elemento": "C9-Aire-acondicionado",
+      "clase": "IfcFlowSegment"
+    },
+    "T8": {
+      "ni": "N1",
+      "nj": "N9",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 16.9706,
+      "elemento": "C12-Adicional",
+      "clase": "IfcFlowSegment"
+    }
+  },
+  "terminales": [
+    {
+      "id": "C1-Iluminacion",
+      "tipo": "USERDEFINED",
+      "nodo": "N2",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "C2-Tomas-generales",
+      "tipo": "USERDEFINED",
+      "nodo": "N3",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "C3-Cocina-horno",
+      "tipo": "USERDEFINED",
+      "nodo": "N4",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "C4-Lavadora-termo",
+      "tipo": "USERDEFINED",
+      "nodo": "N5",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "C5-Tomas-bano-cocina",
+      "tipo": "USERDEFINED",
+      "nodo": "N6",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "C8-Calefaccion",
+      "tipo": "USERDEFINED",
+      "nodo": "N7",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "C9-Aire-acondicionado",
+      "tipo": "USERDEFINED",
+      "nodo": "N8",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "C12-Adicional",
+      "tipo": "USERDEFINED",
+      "nodo": "N9",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    }
+  ],
+  "fuentes": [
+    {
+      "id": "Cuadro general vivienda",
+      "nodo": "N1",
+      "presion": null,
+      "caudal": null,
+      "tipo": "controlador"
+    }
+  ],
+  "metricas": {
+    "nudos_fusionados": 7,
+    "huecos_puenteados": [],
+    "cruces_troceados": [],
+    "segmentos_sin_puerto": [],
+    "factor_escala_ifc": 1.0,
+    "tol_snap_m": 0.001
+  }
+}

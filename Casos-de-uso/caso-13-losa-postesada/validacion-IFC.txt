@@ -1,0 +1,32 @@
+VALIDACION IFC - Caso 13 (losa plana postesada, EC2 5.10 + 6.4.4)
+Esquema: IFC4
+
+Recuento de entidades de analisis:
+  IfcStructuralSurfaceMember : 1 (losa t=0.250 m, Losa postesada)
+  IfcStructuralCurveMember   : 9 (pilares 0,45x0,45)
+  IfcStructuralPointConnection: 18 (9 cabezas + 9 bases empotradas)
+  IfcStructuralSurfaceAction : 2   IfcStructuralLoadGroup: 2 (G,Q)
+
+Geometria: losa 16,0 x 16,0 m, vanos 8,0 m, 3x3 pilares en {0,8,16} m; L/h=32.
+Material: C40/50 (E=35 GPa, fck=40 MPa, fctm=3,5 MPa).
+Cargas ortodoxas: G(muerta g2)=2,75 kN/m2, Q=5,0 kN/m2; p.p. g0=t*25=6,25 lo anade el solver.
+
+Pset_Estructurando_Pretensado (en la SUPERFICIE) - 29 propiedades:
+  Sistema                = postesado_no_adherente_monotoron
+  tipo_cordon            = Y1860S7 0.6"
+  Ap_cordon_mm2          = 150.0
+  fpk_MPa                = 1860.0
+  trazado                = parabolico
+  drape_m                = 0.17
+  layout                 = banded_X + distribuido_Y
+  P_m_X_kN               = 212.0
+  P_m_Y_kN               = 212.0
+  sigma_cp_MPa           = 0.85
+  sigma_p0_MPa           = 1339.0
+  sigma_pm_inf_MPa       = 1116.0
+  w_balance_kN_m2        = 9.0
+  mu_rozamiento          = 0.06
+  k_desviacion           = 0.005
+  penetracion_cuna_mm    = 6.0
+
+Abre correctamente con ifcopenshell 0.8.5. IFC ORTODOXO + Pset de pretensado.

@@ -1,0 +1,207 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "angulo": "rad",
+    "pendiente": "m/m"
+  },
+  "georref": {
+    "epsg": "EPSG:25830",
+    "descripcion_crs": "ETRS89 / UTM zone 30N",
+    "datum_geodesico": "ETRS89",
+    "datum_vertical": "EGM2008",
+    "map_projection": "UTM",
+    "map_zone": "30N",
+    "origen_e": 337000.0,
+    "origen_n": 4610000.0,
+    "altura": 700.0,
+    "rotacion_rad": 0.0,
+    "escala": 1.0
+  },
+  "infraestructura": {
+    "clase": "IfcRoad",
+    "nombre": "Carretera C-001"
+  },
+  "eje": {
+    "nombre": "Eje C-001",
+    "global_id": "2VrALScSj5NPRJHDT7TlMe"
+  },
+  "alineacion": {
+    "planta": [
+      {
+        "pk_ini": 0.0,
+        "tipo": "LINE",
+        "longitud": 100.0,
+        "x_ini": 0.0,
+        "y_ini": 0.0,
+        "acimut_ini_rad": 0.0,
+        "radio_ini": null,
+        "radio_fin": null,
+        "A_clotoide": null
+      },
+      {
+        "pk_ini": 100.0,
+        "tipo": "CLOTHOID",
+        "longitud": 60.0,
+        "x_ini": 100.0,
+        "y_ini": 0.0,
+        "acimut_ini_rad": 0.0,
+        "radio_ini": null,
+        "radio_fin": 300.0,
+        "A_clotoide": 134.1641
+      },
+      {
+        "pk_ini": 160.0,
+        "tipo": "CIRCULARARC",
+        "longitud": 80.0,
+        "x_ini": 159.94,
+        "y_ini": 1.9986,
+        "acimut_ini_rad": 0.1,
+        "radio_ini": 300.0,
+        "radio_fin": 300.0,
+        "A_clotoide": null
+      },
+      {
+        "pk_ini": 240.0,
+        "tipo": "CLOTHOID",
+        "longitud": 60.0,
+        "x_ini": 237.5417,
+        "y_ini": 20.4415,
+        "acimut_ini_rad": 0.36666667,
+        "radio_ini": 300.0,
+        "radio_fin": null,
+        "A_clotoide": 134.1641
+      },
+      {
+        "pk_ini": 300.0,
+        "tipo": "LINE",
+        "longitud": 100.0,
+        "x_ini": 291.9717,
+        "y_ini": 45.6244,
+        "acimut_ini_rad": 0.46666667,
+        "radio_ini": null,
+        "radio_fin": null,
+        "A_clotoide": null
+      }
+    ],
+    "alzado": [
+      {
+        "pk_ini": 0.0,
+        "tipo": "CONSTANTGRADIENT",
+        "longitud_h": 150.0,
+        "cota_ini": 100.0,
+        "pendiente_ini": 0.02,
+        "pendiente_fin": 0.02,
+        "kv": null
+      },
+      {
+        "pk_ini": 150.0,
+        "tipo": "PARABOLICARC",
+        "longitud_h": 100.0,
+        "cota_ini": 103.0,
+        "pendiente_ini": 0.02,
+        "pendiente_fin": -0.03,
+        "kv": 2000.0
+      },
+      {
+        "pk_ini": 250.0,
+        "tipo": "CONSTANTGRADIENT",
+        "longitud_h": 150.0,
+        "cota_ini": 102.5,
+        "pendiente_ini": -0.03,
+        "pendiente_fin": -0.03,
+        "kv": null
+      }
+    ],
+    "peralte": [
+      {
+        "pk_ini": 0.0,
+        "tipo": "CONSTANTCANT",
+        "longitud": 100.0,
+        "peralte_ini_pct": 0.0,
+        "peralte_fin_pct": 0.0,
+        "cant_ini_m": 0.0,
+        "cant_fin_m": 0.0
+      },
+      {
+        "pk_ini": 100.0,
+        "tipo": "LINEARTRANSITION",
+        "longitud": 60.0,
+        "peralte_ini_pct": 0.0,
+        "peralte_fin_pct": 7.0,
+        "cant_ini_m": 0.0,
+        "cant_fin_m": 0.245
+      },
+      {
+        "pk_ini": 160.0,
+        "tipo": "CONSTANTCANT",
+        "longitud": 80.0,
+        "peralte_ini_pct": 7.0,
+        "peralte_fin_pct": 7.0,
+        "cant_ini_m": 0.245,
+        "cant_fin_m": 0.245
+      },
+      {
+        "pk_ini": 240.0,
+        "tipo": "LINEARTRANSITION",
+        "longitud": 60.0,
+        "peralte_ini_pct": 7.0,
+        "peralte_fin_pct": 0.0,
+        "cant_ini_m": 0.245,
+        "cant_fin_m": 0.0
+      },
+      {
+        "pk_ini": 300.0,
+        "tipo": "CONSTANTCANT",
+        "longitud": 100.0,
+        "peralte_ini_pct": 0.0,
+        "peralte_fin_pct": 0.0,
+        "cant_ini_m": 0.0,
+        "cant_fin_m": 0.0
+      }
+    ]
+  },
+  "pk_inicio": 0.0,
+  "pk_fin": 400.0,
+  "longitud_total": 400.0,
+  "secciones_tipo": {
+    "plataforma": {
+      "calzada_m": 7.0,
+      "arcen_ext_m": 1.5,
+      "arcen_int_m": 0.5,
+      "n_carriles": 2
+    },
+    "peralte_max_pct": 7.0,
+    "nota": "Seccion tipo basica (anchos por defecto). NDP [confirmar AN]."
+  },
+  "firme": {
+    "categoria_trafico": "T2",
+    "explanada": "E2",
+    "codigo_seccion": "221",
+    "tipo_firme": "flexible (MB sobre zahorra artificial)",
+    "paquete": [
+      {
+        "capa": "Mezcla bituminosa",
+        "material": "MB",
+        "espesor_cm": 18
+      },
+      {
+        "capa": "Zahorra artificial",
+        "material": "ZA",
+        "espesor_cm": 30
+      }
+    ],
+    "espesor_total_cm": 48,
+    "imdp_veh_pesados_dia": 480.0,
+    "ev2_mpa": 150.0,
+    "norma": "6.1-IC",
+    "nota": "Predimensionado 6.1-IC (catalogo). NDP [confirmar AN]."
+  },
+  "terreno": null,
+  "metricas": {
+    "n_planta": 5,
+    "n_alzado": 3,
+    "n_peralte": 5,
+    "factor_escala_ifc": 1.0,
+    "esquema": "IFC4X3"
+  }
+}

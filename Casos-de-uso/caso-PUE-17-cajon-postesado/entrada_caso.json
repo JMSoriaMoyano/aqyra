@@ -1,0 +1,9 @@
+{ "nombre":"PUE-17-CAJON",
+  "cajon": {"L":40.0,"n_vanos":3,"bs":11.0,"bi":6.0,"h":2.5,
+            "t_top":0.30,"t_bot":0.25,"t_web":0.45,
+            "nx":12,"nyt":6,"nyb":3,"nz":3,"posiciones":17,"n_carriles":3,
+            "g2_N_m2":3000.0,"fck_transferencia":28000000.0,
+            "V_Ed_N":6000000.0,"T_Ed_Nm":4000000.0,
+            "material":{"E":35000000000.0,"nu":0.2,"rho":2500.0,"fck":40000000.0,"fctm":3510000.0}},
+  "postesado": {"P0_N":70000000.0,"perdidas_pct":18.0,"e_p":1.0,"f_sag":1.1,
+                "Ap_m2":0.042,"fpk":1860000000.0,"As_pas_m2":0.02,"d_p":2.3} }

@@ -1,0 +1,19 @@
+name: golden-gate
+# Puerta de compatibilidad: la golden C5 v0 debe estar VERDE en cada push/PR y antes de un tag de release.
+on:
+  push:
+    branches: [ "**" ]
+    tags: [ "*-v*" ]
+  pull_request:
+jobs:
+  golden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Instalar dependencias del oraculo
+        run: pip install PyNiteFEA numpy scipy
+      - name: Ejecutar la golden (puerta de compatibilidad)
+        run: python "Estructurando 2.0/qa/run_golden.py"
+        # exit!=0 => la golden esta ROJA => el job falla => se bloquea el merge/adopcion

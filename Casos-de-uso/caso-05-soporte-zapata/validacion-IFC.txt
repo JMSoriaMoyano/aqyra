@@ -1,0 +1,26 @@
+VALIDACION IFC caso-05.ifc  (schema IFC4)
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralCurveMember           1
+  IfcStructuralSurfaceMember         1
+  IfcStructuralPointConnection       6
+  IfcBoundaryNodeCondition           4
+  IfcFaceSurface                     1
+  IfcPolyLoop                        1
+  IfcRectangleProfileDef             1
+  IfcMaterialProfileSet              1
+  IfcStructuralLoadGroup             2
+  IfcStructuralPointAction           2
+  IfcStructuralLoadSingleForce       2
+  IfcRelConnectsStructuralActivity   2
+  IfcRelAssociatesMaterial           2
+  IfcMaterialProperties              1
+  IfcPlane                           1
+Materiales: ['C30/37']
+Nodos: ['Z1', 'Z2', 'Z3', 'Z4', 'P_base', 'P_cabeza']
+  Barra 'Pilar': P_base->P_cabeza tipo=pilar sec=0.40x0.40 mat=C30/37
+  Zapata 'Zapata' t=0.60 m mat=C30/37 esquinas z=[0.0, 0.0, 0.0, 0.0]
+Lecho elastico: TranslationalStiffnessZ por esquina = 6.250e+07 N/m (= ks*(B/2)^2)
+  Carga 'N_G': FZ=-700 kN MX=80 kN.m
+  Carga 'N_Q': FZ=-250 kN MX=0 kN.m
+OK: el IFC abre correctamente con ifcopenshell.

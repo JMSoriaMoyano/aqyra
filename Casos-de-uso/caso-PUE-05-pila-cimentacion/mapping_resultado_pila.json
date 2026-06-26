@@ -1,0 +1,33 @@
+{
+  "elementos": {
+    "PILA_fuste": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "pila",
+        "Aprovechamiento_max": 0.495,
+        "Veredicto": "CUMPLE",
+        "M_Ed_ELU_kNm": 6011.3,
+        "M_Rd_kNm": 12137.8,
+        "N_Ed_ELU_kN": 8291.0
+      }
+    },
+    "CIMENTACION_zapata": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "pila",
+        "Aprovechamiento_max": 0.785,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "PILA_PUE05": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "pila",
+        "Cimentacion": "zapata",
+        "Aprov_cimentacion": 0.785,
+        "Delta_2orden": 1.016,
+        "Desplazamiento_cabeza_mm": 62.6,
+        "Frecuencia_fundamental_Hz": 4.51,
+        "Aprovechamiento_max": 0.785,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

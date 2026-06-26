@@ -1,0 +1,213 @@
+{
+  "autodiagnostico": {
+    "valido": true,
+    "checks": {
+      "M (kN·m)": [
+        90.0,
+        90.0,
+        0.0
+      ],
+      "V (kN)": [
+        60.0,
+        60.0,
+        0.0
+      ],
+      "flecha (mm)": [
+        13.652897940228957,
+        13.654569729336085,
+        0.00012243440403215944
+      ]
+    }
+  },
+  "barras": {
+    "C1": {
+      "seccion": "HEB 200",
+      "material": "S275",
+      "tipo": "pilar",
+      "L": 4.04,
+      "fy": 275000000.0,
+      "compresion": true,
+      "comprobaciones": {
+        "Flexion Mc,Rd": {
+          "Ed": 48529.6228139175,
+          "Rd": 176687.5,
+          "u": 0.2746635886178564,
+          "ok": true,
+          "art": "EC3 6.2.5"
+        },
+        "Cortante Vpl,Rd": {
+          "Ed": 12012.282874732056,
+          "Rd": 394229.1975594062,
+          "u": 0.03047030242584184,
+          "ok": true,
+          "art": "EC3 6.2.6"
+        },
+        "Axil Nc,Rd": {
+          "Ed": 93600.00000000001,
+          "Rd": 2147200.0,
+          "u": 0.04359165424739196,
+          "ok": true,
+          "art": "EC3 6.2.4"
+        },
+        "Interaccion N+M": {
+          "Ed": null,
+          "Rd": null,
+          "u": 0.31825524286524837,
+          "ok": true,
+          "art": "EC3 6.2.1 (lineal, conservadora)"
+        },
+        "Pandeo Nb,Rd": {
+          "Ed": 93600.00000000001,
+          "Rd": 1854667.891848548,
+          "u": 0.05046725638125372,
+          "ok": true,
+          "art": "EC3 6.3.1",
+          "lambda_bar": 0.5449204425291279,
+          "chi": 0.8637611269786457
+        },
+        "Flecha total L/300": {
+          "Ed": 1.9326441378483307e-05,
+          "Rd": 0.013466666666666667,
+          "u": 0.0014351317855309386,
+          "ok": true,
+          "art": "EC0 7.4 / criterio despacho"
+        },
+        "Flecha activa L/500": {
+          "Ed": 8.78474608112919e-06,
+          "Rd": 0.00808,
+          "u": 0.0010872210496447017,
+          "ok": true,
+          "art": "criterio despacho"
+        }
+      },
+      "aprovechamiento_max": 0.31825524286524837,
+      "veredicto": "CUMPLE"
+    },
+    "C2": {
+      "seccion": "HEB 200",
+      "material": "S275",
+      "tipo": "pilar",
+      "L": 4.04,
+      "fy": 275000000.0,
+      "compresion": true,
+      "comprobaciones": {
+        "Flexion Mc,Rd": {
+          "Ed": 48529.62281391753,
+          "Rd": 176687.5,
+          "u": 0.27466358861785656,
+          "ok": true,
+          "art": "EC3 6.2.5"
+        },
+        "Cortante Vpl,Rd": {
+          "Ed": 12012.282874732062,
+          "Rd": 394229.1975594062,
+          "u": 0.030470302425841853,
+          "ok": true,
+          "art": "EC3 6.2.6"
+        },
+        "Axil Nc,Rd": {
+          "Ed": 93600.00000000003,
+          "Rd": 2147200.0,
+          "u": 0.04359165424739197,
+          "ok": true,
+          "art": "EC3 6.2.4"
+        },
+        "Interaccion N+M": {
+          "Ed": null,
+          "Rd": null,
+          "u": 0.31825524286524853,
+          "ok": true,
+          "art": "EC3 6.2.1 (lineal, conservadora)"
+        },
+        "Pandeo Nb,Rd": {
+          "Ed": 93600.00000000003,
+          "Rd": 1854667.891848548,
+          "u": 0.050467256381253725,
+          "ok": true,
+          "art": "EC3 6.3.1",
+          "lambda_bar": 0.5449204425291279,
+          "chi": 0.8637611269786457
+        },
+        "Flecha total L/300": {
+          "Ed": 0.002976733287234197,
+          "Rd": 0.013466666666666667,
+          "u": 0.22104455103224235,
+          "ok": true,
+          "art": "EC0 7.4 / criterio despacho"
+        },
+        "Flecha activa L/500": {
+          "Ed": 0.001353060585106454,
+          "Rd": 0.00808,
+          "u": 0.1674579932062443,
+          "ok": true,
+          "art": "criterio despacho"
+        }
+      },
+      "aprovechamiento_max": 0.31825524286524853,
+      "veredicto": "CUMPLE"
+    },
+    "B1": {
+      "seccion": "IPE 330",
+      "material": "S275",
+      "tipo": "viga",
+      "L": 6.000000000000001,
+      "fy": 275000000.0,
+      "compresion": true,
+      "comprobaciones": {
+        "Flexion Mc,Rd": {
+          "Ed": 91870.37718608257,
+          "Rd": 221182.5,
+          "u": 0.415360063233224,
+          "ok": true,
+          "art": "EC3 6.2.5"
+        },
+        "Cortante Vpl,Rd": {
+          "Ed": 93600.00000000003,
+          "Rd": 489174.4493276402,
+          "u": 0.19134278196388063,
+          "ok": true,
+          "art": "EC3 6.2.6"
+        },
+        "Axil Nc,Rd": {
+          "Ed": 12012.282874732064,
+          "Rd": 1721775.0,
+          "u": 0.006976685614979927,
+          "ok": true,
+          "art": "EC3 6.2.4"
+        },
+        "Interaccion N+M": {
+          "Ed": null,
+          "Rd": null,
+          "u": 0.42233674884820394,
+          "ok": true,
+          "art": "EC3 6.2.1 (lineal, conservadora)"
+        },
+        "Pandeo Nb,Rd": {
+          "Ed": 12012.282874732064,
+          "Rd": 1519254.359482969,
+          "u": 0.00790669633412806,
+          "ok": true,
+          "art": "EC3 6.3.1",
+          "lambda_bar": 0.5041406237328186,
+          "chi": 0.8823768259400727
+        },
+        "Flecha total L/300": {
+          "Ed": 0.008952590546013904,
+          "Rd": 0.020000000000000004,
+          "u": 0.4476295273006951,
+          "ok": true,
+          "art": "EC0 7.4 / criterio despacho"
+        },
+        "Flecha activa L/500": {
+          "Ed": 0.004069359339097232,
+          "Rd": 0.012000000000000002,
+          "u": 0.3391132782581026,
+          "ok": true,
+          "art": "criterio despacho"
+        }
+      },
+      "aprovechamiento_max": 0.4476295273006951,
+      "veredicto": "CUMPLE"
+    }
+  }
+}

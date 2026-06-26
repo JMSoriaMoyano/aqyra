@@ -1,0 +1,124 @@
+{
+  "sistema": "edificio_multi_elemento",
+  "asociaciones": {
+    "mixta": {
+      "B2": "Mixta_Losa"
+    },
+    "pilar_zapata": {
+      "C3": "Zapata_Aislada"
+    }
+  },
+  "superficies": [
+    {
+      "superficie": "Mixta_Losa",
+      "clase_ifc": "IfcSlab",
+      "orientacion": "horizontal",
+      "material": "C25/30",
+      "espesor_m": 0.12,
+      "lecho": false,
+      "rol": "losa_mixta",
+      "modulo": "mixtas/solver_mixta (EC4)"
+    },
+    {
+      "superficie": "Muro_Carga",
+      "clase_ifc": "IfcWall",
+      "orientacion": "vertical",
+      "material": "C30/37",
+      "espesor_m": 0.2,
+      "lecho": false,
+      "rol": "muro_de_carga",
+      "modulo": "laminas/solver_muro (EC2 5.8.8)"
+    },
+    {
+      "superficie": "Zapata_Aislada",
+      "clase_ifc": "IfcFooting",
+      "orientacion": "horizontal",
+      "material": "C30/37",
+      "espesor_m": 0.6,
+      "lecho": true,
+      "rol": "zapata",
+      "modulo": "cimentaciones/solver_zapata (EC7+EC2)"
+    }
+  ],
+  "barras": [
+    {
+      "barra": "C1",
+      "elemento_fisico": "Portico_Pilar_1",
+      "material": "S275",
+      "seccion": "HEB 240",
+      "orientacion": "vertical",
+      "rol": "pilar/dintel (portico)",
+      "modulo": "barras (EC3)"
+    },
+    {
+      "barra": "C2",
+      "elemento_fisico": "Portico_Pilar_2",
+      "material": "S275",
+      "seccion": "HEB 240",
+      "orientacion": "vertical",
+      "rol": "pilar/dintel (portico)",
+      "modulo": "barras (EC3)"
+    },
+    {
+      "barra": "C3",
+      "elemento_fisico": "Cim_Pilar",
+      "material": "C30/37",
+      "seccion": "Pilar 400x400",
+      "orientacion": "vertical",
+      "rol": "pilar->cimiento",
+      "modulo": "cimentaciones (cadena)",
+      "asociado_a": "Zapata_Aislada"
+    },
+    {
+      "barra": "B1",
+      "elemento_fisico": "Portico_Dintel",
+      "material": "S275",
+      "seccion": "IPE 360",
+      "orientacion": "horizontal",
+      "rol": "pilar/dintel (portico)",
+      "modulo": "barras (EC3)"
+    },
+    {
+      "barra": "B2",
+      "elemento_fisico": "Mixta_Viga",
+      "material": "S275",
+      "seccion": "IPE 400",
+      "orientacion": "horizontal",
+      "rol": "viga_mixta",
+      "modulo": "mixtas (EC4)",
+      "asociado_a": "Mixta_Losa"
+    }
+  ],
+  "subsistemas": [
+    {
+      "id": "portico",
+      "modulo": "barras",
+      "descripcion": "Portico de acero (EC3)",
+      "barras": [
+        "C1",
+        "C2",
+        "B1"
+      ]
+    },
+    {
+      "id": "mixta",
+      "modulo": "mixtas",
+      "descripcion": "Forjado mixto / viga mixta (EC4)",
+      "viga": "B2",
+      "losa": "Mixta_Losa"
+    },
+    {
+      "id": "muro",
+      "modulo": "laminas",
+      "descripcion": "Muro de carga (EC2 esbeltez 5.8.8)",
+      "superficie": "Muro_Carga"
+    },
+    {
+      "id": "cimentacion",
+      "modulo": "cimentaciones",
+      "descripcion": "Cimentacion superficial: pilar->zapata (EC7+EC2)",
+      "zapata": "Zapata_Aislada",
+      "pilar": "C3"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "materiales": {
+    "C25/30": {
+      "E": 31000000000.0,
+      "G": 12900000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 25000000.0,
+      "fctm": 2600000.0
+    },
+    "C30/37": {
+      "E": 33000000000.0,
+      "G": 13750000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "via": "ortodoxo",
+  "muro": {
+    "H": 3.0,
+    "L": 1.0,
+    "espesor": 0.2,
+    "malla": 0.25,
+    "beta": 1.0,
+    "material": "C25/30",
+    "cargas": [
+      {
+        "tipo": "top_vertical",
+        "caso": "G",
+        "valor": -250000.0
+      },
+      {
+        "tipo": "top_vertical",
+        "caso": "Q",
+        "valor": -120000.0
+      }
+    ],
+    "cabeza": [
+      {
+        "caso": "G",
+        "N_N_m": 250000.0,
+        "M_Nm_m": 6250.0
+      },
+      {
+        "caso": "Q",
+        "N_N_m": 120000.0,
+        "M_Nm_m": 3000.0
+      }
+    ],
+    "arriostrado": true,
+    "e_cabeza_m": 0.025
+  }
+}

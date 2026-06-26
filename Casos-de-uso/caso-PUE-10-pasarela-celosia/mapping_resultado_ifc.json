@@ -1,0 +1,23 @@
+{
+  "elementos": {
+    "D_0": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "celosia",
+        "N_Ed_kN": 2486.7,
+        "N_Rd_kN": 4260.0,
+        "Modo": "traccion",
+        "Aprovechamiento": 0.584,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "CELOSIA": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "celosia",
+        "Frecuencia_fundamental_Hz": 3.86,
+        "Fatiga": "EN 1993-1-9: gancho diferido (LM3 + categorias de detalle + Palmgren-Miner).",
+        "Aprovechamiento_max": 0.584,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

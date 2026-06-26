@@ -1,0 +1,207 @@
+{
+  "elementos": {
+    "M-T1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 100.0,
+        "Caudal_l_s": 3.9899,
+        "Velocidad_m_s": 0.508,
+        "Perdida_carga_kPa": 0.2773,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "M-T2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 100.0,
+        "Caudal_l_s": 2.2501,
+        "Velocidad_m_s": 0.2865,
+        "Perdida_carga_kPa": 0.0982,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "M-T3": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 100.0,
+        "Caudal_l_s": 1.0472,
+        "Velocidad_m_s": 0.1333,
+        "Perdida_carga_kPa": 0.0252,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "M-B1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 100.0,
+        "Caudal_l_s": 2.0101,
+        "Velocidad_m_s": 0.2559,
+        "Perdida_carga_kPa": 0.0802,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "M-B2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 100.0,
+        "Caudal_l_s": 1.7499,
+        "Velocidad_m_s": 0.2228,
+        "Perdida_carga_kPa": 0.0626,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "M-B3": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 100.0,
+        "Caudal_l_s": 0.9528,
+        "Velocidad_m_s": 0.1213,
+        "Perdida_carga_kPa": 0.0214,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "R-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 80.0,
+        "Caudal_l_s": 2.0101,
+        "Velocidad_m_s": 0.3999,
+        "Perdida_carga_kPa": 0.2369,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "R-2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 80.0,
+        "Caudal_l_s": 0.7398,
+        "Velocidad_m_s": 0.1472,
+        "Perdida_carga_kPa": 0.0399,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "R-3": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 80.0,
+        "Caudal_l_s": 0.2029,
+        "Velocidad_m_s": 0.0404,
+        "Perdida_carga_kPa": 0.0043,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "R-4": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 80.0,
+        "Caudal_l_s": 0.0472,
+        "Velocidad_m_s": 0.0094,
+        "Perdida_carga_kPa": 0.0005,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "D-ROC-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 32.0,
+        "Caudal_l_s": 1.0,
+        "Velocidad_m_s": 1.2434,
+        "Perdida_carga_kPa": 2.2622,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "D-ROC-2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 32.0,
+        "Caudal_l_s": 1.0,
+        "Velocidad_m_s": 1.2434,
+        "Perdida_carga_kPa": 2.2622,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "D-ROC-3": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 32.0,
+        "Caudal_l_s": 1.0,
+        "Velocidad_m_s": 1.2434,
+        "Perdida_carga_kPa": 2.2622,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "D-ROC-4": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 32.0,
+        "Caudal_l_s": 1.0,
+        "Velocidad_m_s": 1.2434,
+        "Perdida_carga_kPa": 2.2622,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "D-ROC-5": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 32.0,
+        "Caudal_l_s": 1.0,
+        "Velocidad_m_s": 1.2434,
+        "Perdida_carga_kPa": 2.2622,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "D-ROC-6": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 32.0,
+        "Caudal_l_s": 1.0,
+        "Velocidad_m_s": 1.2434,
+        "Perdida_carga_kPa": 2.2622,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "ROC-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 1.0,
+        "Presion_disponible_kPa": 297.46,
+        "Presion_min_kPa": 56.25,
+        "Margen_kPa": 241.21,
+        "Cumple": true
+      }
+    },
+    "ROC-2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 1.0,
+        "Presion_disponible_kPa": 297.362,
+        "Presion_min_kPa": 56.25,
+        "Margen_kPa": 241.112,
+        "Cumple": true
+      }
+    },
+    "ROC-3": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 1.0,
+        "Presion_disponible_kPa": 297.337,
+        "Presion_min_kPa": 56.25,
+        "Margen_kPa": 241.087,
+        "Cumple": true
+      }
+    },
+    "ROC-4": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 1.0,
+        "Presion_disponible_kPa": 297.421,
+        "Presion_min_kPa": 56.25,
+        "Margen_kPa": 241.171,
+        "Cumple": true
+      }
+    },
+    "ROC-5": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 1.0,
+        "Presion_disponible_kPa": 297.358,
+        "Presion_min_kPa": 56.25,
+        "Margen_kPa": 241.108,
+        "Cumple": true
+      }
+    },
+    "ROC-6": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 1.0,
+        "Presion_disponible_kPa": 297.337,
+        "Presion_min_kPa": 56.25,
+        "Margen_kPa": 241.087,
+        "Cumple": true
+      }
+    }
+  },
+  "_meta": {
+    "pset": "Pset_Estructurando_ResultadoRed",
+    "fuente": "instalaciones/red (solver hidraulico de red)",
+    "nota": "Predimensionado; revisar y firmar por tecnico competente."
+  }
+}

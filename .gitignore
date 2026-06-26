@@ -1,0 +1,26 @@
+# Dependencias instaladas (nunca en git) — causa del fallo de git add (.bin/nanoid)
+node_modules/
+**/node_modules/
+.bin/
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*aqyra_venv*/
+.pytest_cache/
+.ipynb_checkpoints/
+# Builds / distribuibles
+dist/
+build/
+*.egg-info/
+# Sistema / editores
+.DS_Store
+Thumbs.db
+*.swp
+*~
+# Temporales
+*.tmp
+*.log

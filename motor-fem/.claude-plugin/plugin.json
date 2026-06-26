@@ -1,0 +1,38 @@
+{
+  "name": "motor-fem",
+  "version": "0.2.1",
+  "description": "Motor de elementos finitos (FEM) transversal del ecosistema Estructurando (numpy/scipy). FEM-1: barra 3D + lamina DKMQ; estatico lineal (FEM-0, sin regresion vs PyNite), MODAL (masa participante) y CARGAS MOVILES/LINEAS DE INFLUENCIA. v0.2.1 (PT 7.2): objetivo esfuerzo_lamina en el barrido movil (IL de momento de placa para losas postesadas), aditivo y sin regresion. C5: resolver(modelo, analisis=estatico_lineal|modal|movil). Lo consumen puentes (Ola 7) y estructuras singulares.",
+  "author": {
+    "name": "Estructurando"
+  },
+  "license": "Proprietary",
+  "keywords": [
+    "FEM",
+    "elementos finitos",
+    "motor de calculo",
+    "barra 3D",
+    "Euler-Bernoulli",
+    "Timoshenko",
+    "lamina",
+    "DKMQ",
+    "placa",
+    "membrana",
+    "ensamblaje disperso",
+    "scipy.sparse",
+    "estatico lineal",
+    "modal",
+    "eigsh",
+    "masa participante",
+    "cargas moviles",
+    "lineas de influencia",
+    "envolventes",
+    "tren de cargas",
+    "resortes",
+    "strangler",
+    "PyNite",
+    "puentes",
+    "estructuras singulares",
+    "tensoestructuras",
+    "nucleo transversal"
+  ]
+}

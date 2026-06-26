@@ -1,0 +1,37 @@
+{
+  "nombre": "ESTRIBO",
+  "estribo": {
+    "geom": {
+      "Hm": 6.0,
+      "t_alz": 1.1,
+      "e_z": 2.2,
+      "puntera": 4.5,
+      "talon": 4.8,
+      "Df": 2.2
+    },
+    "terreno": {
+      "gamma": 19000.0,
+      "phi": 32.0,
+      "c": 0.0,
+      "metodo": "rankine",
+      "metodo_empuje": "activo",
+      "phi_base": 32.0,
+      "adh_base": 0.0,
+      "Rd": 650000.0,
+      "nf": -1.0,
+      "phi_pas": 32.0,
+      "gamma_pas": 19000.0,
+      "f_pas": 0.5
+    },
+    "material": {
+      "fck": 30000000.0
+    },
+    "reacciones": {
+      "N_G_N": 700000.0,
+      "N_LM1_N": 300000.0,
+      "H_frenado_N": 95000.0
+    },
+    "sobrecarga": 12000.0
+  },
+  "_tipologia": "estribo"
+}

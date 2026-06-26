@@ -1,0 +1,7 @@
+{"nombre":"PUE18_MIXTO","mixto":{"L":30.0,"n_vanos":1,"B":10.0,"n_vigas":4,"t_losa":0.25,
+"nx":16,"ny":10,"n_carriles":2,"g2_N_m2":3000.0,
+"perfil":{"h":1.2,"b":0.40,"tw":0.018,"tf":0.030},
+"material_h":{"E":3.3e10,"nu":0.2,"rho":2500.0,"fck":35e6,"fctm":3.2e6},
+"material_s":{"E":2.1e11,"nu":0.3,"rho":7850.0,"fy":355e6,"fu":490e6},
+"conector":{"d":0.022,"hsc":0.150,"fu":450e6,"sep_long":0.20,"n_fila":2},
+"fatiga":{"detalle_MPa":90.0,"lambda":1.0,"phi":1.0}}}

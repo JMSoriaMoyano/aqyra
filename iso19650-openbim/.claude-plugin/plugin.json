@@ -1,0 +1,43 @@
+{
+  "name": "iso19650-openbim",
+  "version": "0.7.0",
+  "description": "Gestion de informacion BIM segun ISO 19650 y OpenBIM/IFC: BEP/EIR, matriz LOIN, creacion y validacion de modelos IFC con IfcOpenShell en los dominios estructural, MEP (redes fisico->modelo neutro incl. saneamiento lamina libre y abastecimiento a presion deposito/bombeo, validacion sistema-aware Pipe/Cable/Duct, write-back de Psets) y obra lineal IFC 4.3 (IfcAlignment + georref -> modelo neutro lineal, validacion, GIS GeoJSON), bsDD (Uniclass+GuBIMClass) y auditoria del CDE.",
+  "author": {
+    "name": "JM Soria"
+  },
+  "keywords": [
+    "BIM",
+    "ISO 19650",
+    "OpenBIM",
+    "IFC",
+    "IFC4X3",
+    "CDE",
+    "AEC",
+    "bsDD",
+    "Uniclass",
+    "GuBIMClass",
+    "MEP",
+    "red",
+    "PCI",
+    "Alignment",
+    "obra lineal",
+    "georreferencia",
+    "GIS",
+    "GeoJSON",
+    "saneamiento",
+    "SEWAGE",
+    "colector",
+    "lamina libre",
+    "cota de solera",
+    "vertido",
+    "EN 752",
+    "abastecimiento",
+    "WATERSUPPLY",
+    "DOMESTICCOLDWATER",
+    "red a presion",
+    "deposito",
+    "IfcTank",
+    "bombeo",
+    "EN 805"
+  ]
+}

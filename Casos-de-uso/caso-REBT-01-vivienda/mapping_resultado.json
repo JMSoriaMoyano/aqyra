@@ -1,0 +1,73 @@
+{
+  "elementos": {
+    "C1-Iluminacion": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 1552.5,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 1.0481,
+        "Cumple": true
+      }
+    },
+    "C2-Tomas-generales": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 368.0,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 0.1491,
+        "Cumple": true
+      }
+    },
+    "C3-Cocina-horno": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 2025.0,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 0.3418,
+        "Cumple": true
+      }
+    },
+    "C4-Lavadora-termo": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 1707.8,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 0.4324,
+        "Cumple": true
+      }
+    },
+    "C5-Tomas-bano-cocina": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 690.0,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 0.3162,
+        "Cumple": true
+      }
+    },
+    "C8-Calefaccion": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 5750.0,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 1.098,
+        "Cumple": true
+      }
+    },
+    "C9-Aire-acondicionado": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 5750.0,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 1.098,
+        "Cumple": true
+      }
+    },
+    "C12-Adicional": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 862.5,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 0.3953,
+        "Cumple": true
+      }
+    }
+  },
+  "_meta": {
+    "pset": "Pset_Estructurando_ResultadoRed",
+    "fuente": "instalaciones/electrico (solver de red electrica REBT)",
+    "nota": "Predimensionado; revisar y firmar por tecnico competente."
+  }
+}
