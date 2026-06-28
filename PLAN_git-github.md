@@ -56,12 +56,14 @@ Para tu caso, **gratis**: GitHub incluye repos **privados** ilimitados y minutos
 
 ## 8. Fases (orden propuesto)
 
-1. **Fase 0 — local — ✅ HECHA (2026-06-28).** Inicializados y con primer commit `main`: **Entorno (193 ficheros)**, **Aqyra-Raiz (32)**, **Estructurando 2.0 (109)**; `.env` y `node_modules` excluidos (verificado); `Estructurando` ya era repo (intacto). Cero nube. Pendiente menor: en `Estructurando` quedan **74 cambios sin commitear** (incluyen la reconciliación CN-3) y **35 `*.plugin` versionados** (archivo de releases que dejaste a propósito) — decidir si se commitean / se sacan a Releases.
-2. **Fase 1 — nube privada (tú creas, yo guío):** creas los 4 repos privados en GitHub y subimos. Respaldo + PR activos.
-3. **Fase 2 — cebo público (más adelante, deliberado):** repo público del visor con Apache-2.0, cuando decidas abrir el cebo.
+1. **Fase 0 — local — ✅ HECHA (2026-06-28).** Inicializados y con primer commit `main`: **Entorno (193 ficheros)**, **Aqyra-Raiz (32)**, **Estructurando 2.0 (109)**; `.env` y `node_modules` excluidos (verificado); `Estructurando` ya era repo (migrado a `main`).
+2. **Fase 1 — nube privada — ✅ HECHA (2026-06-28, verificada en disco).** Los **4 repos privados** subidos a GitHub (rama `main`, `local == origin/main`, en sync): `aqyra-motor` **e3ead40**, `aqyra-entorno` **891ac38**, `aqyra-contratos-golden` **04fdb79**, `aqyra-raiz` **b83bd1c**. Respaldo + PR (2ª llave) activos. Subidas ejecutadas vía `FASE1_git_push*.bat`; operativa en `INICIO-hilo_git-firmas-operaciones.md`. *(El bloque «node_modules / 35 `*.plugin`» quedó resuelto por `.gitignore`/`.gitattributes` antes del push.)*
+3. **Fase 2 — cebo público (más adelante, deliberado):** repo público del visor con Apache-2.0, cuando decidas abrir el cebo. **Pendiente — no arrancada.**
 
 ---
 
-**Decisiones que solo cierras tú:** (a) ¿4 repos o mono-repo?; (b) ¿confirmas que ningún IFC de casos es dato confidencial de cliente?; (c) ¿arrancamos por la Fase 0 (local) ya?
+**Decisiones cerradas por JM:** (a) **4 repos** (no mono-repo) — para poder abrir solo el visor en la Fase 2; (b) IFC de casos = *fixtures* del golden, sin dato confidencial → se versionan; (c) Fases 0 y 1 ejecutadas (28-jun).
+
+**Decisión abierta (Fase 2):** cuándo extraer `Entorno/publico/visor` a un repo PÚBLICO `aqyra-visor` (Apache-2.0) — paso deliberado, ligado al hito «cebo desplegable» del roadmap.
 
 *Procedencia: hilo de coordinación · Aqyra-Raiz · plan git/GitHub para revisión y decisión de JM · 2026-06-28.*
