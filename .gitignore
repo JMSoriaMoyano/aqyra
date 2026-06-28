@@ -24,6 +24,11 @@ venv/
 # ── Artefactos de release (binarios) — el manifiesto y su .asc SÍ se versionan ──
 *.plugin
 
+# ── Helpers operativos de git (no son del proyecto) ──
+/COMMIT_contratos.bat
+/PUSH_contratos_main.bat
+/LIMPIAR_contratos_eol.bat
+
 # ── Salidas / temporales ──
 *_resultado.txt
 _resultados/
