@@ -56,8 +56,8 @@ Para tu caso, **gratis**: GitHub incluye repos **privados** ilimitados y minutos
 
 ## 8. Fases (orden propuesto)
 
-1. **Fase 0 — local (yo, cuando digas):** git + `.gitignore` + primeras commits + limpieza de `Estructurando`. **Cero nube, cero riesgo, reversible.** Ya te da historial y "deshacer".
-2. **Fase 1 — nube privada (tú creas, yo guío):** creas los 4 repos privados y subimos. Respaldo + PR activos.
+1. **Fase 0 — local — ✅ HECHA (2026-06-28).** Inicializados y con primer commit `main`: **Entorno (193 ficheros)**, **Aqyra-Raiz (32)**, **Estructurando 2.0 (109)**; `.env` y `node_modules` excluidos (verificado); `Estructurando` ya era repo (intacto). Cero nube. Pendiente menor: en `Estructurando` quedan **74 cambios sin commitear** (incluyen la reconciliación CN-3) y **35 `*.plugin` versionados** (archivo de releases que dejaste a propósito) — decidir si se commitean / se sacan a Releases.
+2. **Fase 1 — nube privada (tú creas, yo guío):** creas los 4 repos privados en GitHub y subimos. Respaldo + PR activos.
 3. **Fase 2 — cebo público (más adelante, deliberado):** repo público del visor con Apache-2.0, cuando decidas abrir el cebo.
 
 ---

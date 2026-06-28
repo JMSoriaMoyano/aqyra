@@ -24,6 +24,13 @@ venv/
 # ── Artefactos de release (binarios) — el manifiesto y su .asc SÍ se versionan ──
 *.plugin
 
+# ── Sonda de montaje (carpeta conectada) — no es del proyecto ──
+.__write_test
+.__*
+
+# ── Helper operativo de git generado por el asistente (los FASE1_*.bat SI se versionan) ──
+/PUSH_raiz_main.bat
+
 # ── Salidas / temporales ──
 *_resultado.txt
 _resultados/
