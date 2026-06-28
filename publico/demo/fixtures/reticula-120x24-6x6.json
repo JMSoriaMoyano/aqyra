@@ -15,7 +15,7 @@
     "byObjectType": {},
     "zones": [],
     "sampleCodes": [],
-    "totalColumns": 210,
+    "totalColumns": 315,
     "columnsPerStorey": 105,
     "sampleColumnCodes": [
       "AQ-PIL-P00-A1",
@@ -25,6 +25,7 @@
       "AQ-PIL-P00-A5",
       "AQ-PIL-P00-A6"
     ],
-    "totalSlabs": 2
+    "totalSlabs": 3,
+    "totalOpenings": 0
   }
 }

@@ -15,7 +15,7 @@ import { residenceGenerator, GENERATORS } from "./generators";
 import { toAltoSpec } from "./c1-bridge";
 import { makeFixture } from "./fixture";
 import {
-  buildModel, hasModel, spaceCount, columnCount, slabCount, resolveGrid, buildGrid,
+  buildModel, hasModel, spaceCount, columnCount, slabCount, openingCount, resolveGrid, buildGrid,
   type BuildingInput, type BuildingModel, type StoreyInstance, type SpaceInstance,
   type ZoneInstance, type ElementInstance, type GridResolved, type GridNode,
 } from "./model";
@@ -61,6 +61,7 @@ type Selection =
   | { kind: "zone"; zone: string }
   | { kind: "element"; x: number; y: number; storey: number }
   | { kind: "slab"; storey: number }
+  | { kind: "opening"; storey: number; cx: number; cy: number }
   | { kind: "storey"; index: number };
 let selected: Selection = { kind: "none" };
 const HILITE = "#ffe066";
@@ -82,6 +83,18 @@ function currentGrid(): { grid: GridResolved; nodes: GridNode[] } | null {
   if (!bInput.grid) return null;
   const grid = resolveGrid(bInput.grid, { W, D });
   return { grid, nodes: buildGrid(grid) };
+}
+
+type Fp = { x: number; y: number; w: number; d: number };
+/** Footprints de la planta tipo (generador activo): fuente común de planta y 3D. */
+function placedSpaces(): { objectType: string; footprint: Fp; sideTag?: string }[] {
+  return bInput.program
+    ? (GENERATORS[bInput.program.generator]?.generate(bInput.program.params, { W, D }) ?? [])
+    : residenceGenerator.generate(plan, { W, D });
+}
+/** Anillo (4 esquinas) de una huella proyectado a la cota z de la maqueta 3D. */
+function footprintRing(f: Fp, z: number): [number, number][] {
+  return [iso(f.x, f.y, z), iso(f.x + f.w, f.y, z), iso(f.x + f.w, f.y + f.d, z), iso(f.x, f.y + f.d, z)];
 }
 
 // ── planta tipo (esquema 2D acumulado a partir de acciones `space`) ───────────
@@ -110,6 +123,17 @@ function seg(a: [number, number], b: [number, number], stroke: string, sw = 1, d
   stage.appendChild(svg("line", {
     x1: a[0].toFixed(1), y1: a[1].toFixed(1), x2: b[0].toFixed(1), y2: b[1].toFixed(1),
     stroke, "stroke-width": String(sw), "stroke-dasharray": dash,
+  }));
+}
+/** Polígono con agujeros: varios anillos (exterior + huecos), relleno con regla
+ *  evenodd → los anillos interiores quedan vacíos. Cada anillo = puntos de pantalla. */
+function polyPath(rings: [number, number][][], fill: string, stroke: string, sw = 1): void {
+  const d = rings
+    .filter((r) => r.length >= 3)
+    .map((r) => "M" + r.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" L") + " Z")
+    .join(" ");
+  stage.appendChild(svg("path", {
+    d, fill, "fill-rule": "evenodd", stroke, "stroke-width": String(sw), "stroke-linejoin": "round",
   }));
 }
 function axisBubble(x: number, y: number, label: string, color: string): void {
@@ -176,12 +200,23 @@ function drawVolume(): void {
   slab(0, EDGE, 1.2);
   drawAxes();
   drawCardinals();
-  // forjados (IfcSlab): losa rellena por planta 1..NF-1 (la baja apoya en terreno).
-  // Inherentes a tener plantas; el seleccionado se resalta.
-  if (view.levels) for (let i = 1; i < NF; i++) {
-    const hot = selected.kind === "slab" && selected.storey === i;
-    poly([iso(0, 0, i * FF), iso(W, 0, i * FF), iso(W, D, i * FF), iso(0, D, i * FF)],
-      hot ? "rgba(255,224,102,0.28)" : "rgba(120,170,235,0.12)", hot ? HILITE : FAINT, hot ? 2 : 1);
+  // forjados (IfcSlab): SUELO de cada planta 1..NF-1 (con sus huecos de núcleo, path
+  // evenodd) y la CUBIERTA en NF (techo, sin huecos: cierra por arriba). Forjado/hueco
+  // seleccionado, resaltado.
+  const holes = placedSpaces().filter((s) => s.objectType === "Nucleo").map((s) => s.footprint);
+  if (view.levels) for (let i = 1; i <= NF; i++) {
+    const z = i * FF;
+    const isRoof = i === NF;
+    const fHoles = isRoof ? [] : holes;
+    const hotSlab = selected.kind === "slab" && selected.storey === i;
+    const fill = hotSlab ? "rgba(255,224,102,0.28)" : isRoof ? "rgba(150,170,205,0.18)" : "rgba(120,170,235,0.12)";
+    const rings = [footprintRing({ x: 0, y: 0, w: W, d: D }, z), ...fHoles.map((f) => footprintRing(f, z))];
+    polyPath(rings, fill, hotSlab ? HILITE : FAINT, hotSlab ? 2 : 1);
+    for (const f of fHoles) {
+      const hot = selected.kind === "opening" && selected.storey === i
+        && near(selected.cx, f.x + f.w / 2) && near(selected.cy, f.y + f.d / 2);
+      poly(footprintRing(f, z), "none", hot ? HILITE : "#b98a3a", hot ? 2.6 : 1, hot ? "" : "3 2");
+    }
   }
   if (selected.kind === "storey") slab(selected.index * FF, HILITE, 2.4); // planta seleccionada
   const g = currentGrid();
@@ -208,21 +243,19 @@ function drawGridSchematic(): void {
  *  pilar pasa las plantas). Las cabezas de pilar se marcan en la base. */
 function drawGrid3D(grid: GridResolved, nodes: GridNode[]): void {
   const GU = "#e0a23a", GV = "#56b3a0", COL = "#cf7be0", m = 2.8;
-  const [ox, oy] = grid.origin;
-  for (let ix = 0; ix < grid.nx; ix++) {
-    const x = ox + ix * grid.sepX;
-    seg(iso(x, oy - m, 0), iso(x, oy + (grid.ny - 1) * grid.sepY + m, 0), GU, 0.8, "3 3");
-    axisBubble(x, oy - m, String(ix + 1), GU);
-  }
-  for (let iy = 0; iy < grid.ny; iy++) {
-    const y = oy + iy * grid.sepY;
-    seg(iso(ox - m, y, 0), iso(ox + (grid.nx - 1) * grid.sepX + m, y, 0), GV, 0.8, "3 3");
-    axisBubble(ox - m, y, String.fromCharCode(65 + (iy % 26)), GV);
-  }
-  // pilares SEGMENTADOS por planta: un tramo por planta estructural, igual que en el
-  // modelo (un IfcColumn por planta). El resaltado ilumina SOLO el tramo de la planta
-  // seleccionada. Plantas con pilar = todas menos la cubierta (o la baja si NF≤1).
-  const nStruct = NF <= 1 ? 1 : NF - 1;
+  const xs = grid.axesX, ys = grid.axesY;
+  const x0 = xs[0] ?? 0, x1 = xs[xs.length - 1] ?? 0, y0 = ys[0] ?? 0, y1 = ys[ys.length - 1] ?? 0;
+  xs.forEach((x, ix) => {
+    seg(iso(x, y0 - m, 0), iso(x, y1 + m, 0), GU, 0.8, "3 3");
+    axisBubble(x, y0 - m, String(ix + 1), GU);
+  });
+  ys.forEach((y, iy) => {
+    seg(iso(x0 - m, y, 0), iso(x1 + m, y, 0), GV, 0.8, "3 3");
+    axisBubble(x0 - m, y, String.fromCharCode(65 + (iy % 26)), GV);
+  });
+  // pilares SEGMENTADOS por planta: un tramo por planta (TODAS, hasta la cubierta en
+  // NF·FF). El resaltado ilumina SOLO el tramo de la planta del IfcColumn seleccionado.
+  const nStruct = Math.max(1, NF);
   for (const nd of nodes) {
     const sel = selected.kind === "element" && near(nd.x, selected.x) && near(nd.y, selected.y) ? selected : null;
     for (let i = 0; i < nStruct; i++) {
@@ -453,10 +486,12 @@ function renderTree(model: BuildingModel): void {
   const nSpaces = spaceCount(model);
   const nCols = columnCount(model);
   const nSlabs = slabCount(model);
+  const nOpen = openingCount(model);
   const tags = [
     nSpaces > 0 ? `${nSpaces} IfcSpace` : "",
     nCols > 0 ? `${nCols} IfcColumn` : "",
     nSlabs > 0 ? `${nSlabs} IfcSlab` : "",
+    nOpen > 0 ? `${nOpen} IfcOpening` : "",
   ].filter(Boolean);
   const bldLabel = tags.length ? `${model.building.name} · ${tags.join(" · ")}` : model.building.name;
   const bld = groupNode({ t: "building", ifcClass: "IfcBuilding", code: "AQ-EDI", name: model.building.name, longName: model.building.longName }, bldLabel, true);
@@ -495,6 +530,23 @@ function resetTree(): void {
 function drow(k: string, v: string): string {
   return `<div class="drow"><span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(v)}</span></div>`;
 }
+/** Traduce el nodo del árbol a una selección geométrica para resaltar en el dibujo. */
+function selectionFor(ref: NodeRef): Selection {
+  if (ref.t === "space") return { kind: "space", footprint: { ...ref.data.footprint } };
+  if (ref.t === "zone") return { kind: "zone", zone: ref.data.kind };
+  if (ref.t === "storey") return { kind: "storey", index: ref.data.index };
+  if (ref.t === "element") {
+    const pl = ref.data.placement;
+    if (pl.kind === "point") return { kind: "element", x: pl.x, y: pl.y, storey: ref.data.storeyIndex };
+    if (ref.data.ifcClass === "IfcOpeningElement") {
+      const c = pl.contour;
+      return { kind: "opening", storey: ref.data.storeyIndex, cx: (c[0][0] + c[2][0]) / 2, cy: (c[0][1] + c[2][1]) / 2 };
+    }
+    return { kind: "slab", storey: ref.data.storeyIndex };
+  }
+  return { kind: "none" };
+}
+
 function selectNode(ref: NodeRef, el: HTMLElement): void {
   document.querySelectorAll(".leaf.sel, summary.sel").forEach((n) => n.classList.remove("sel"));
   el.classList.add("sel");
@@ -508,7 +560,7 @@ function selectNode(ref: NodeRef, el: HTMLElement): void {
     const s = ref.data;
     rows = drow("Clase", "IfcBuildingStorey") + drow("Name", s.code) + drow("LongName", s.name) +
       drow("Elevation", `${s.elevation.toFixed(2)} m`) + drow("Espacios", String(s.spaces.length)) +
-      (s.elements.length ? drow("Pilares", String(s.elements.length)) : "");
+      (s.elements.length ? drow("Elementos", String(s.elements.length)) : "");
   } else if (ref.t === "space") {
     const s = ref.data;
     rows = drow("Clase", "IfcSpace") + drow("Name", s.code) + drow("LongName", s.longName) +
@@ -526,6 +578,7 @@ function selectNode(ref: NodeRef, el: HTMLElement): void {
       (e.thickness ? drow("Espesor", `${e.thickness.toFixed(2)} m`) : "") +
       (e.material ? drow("Material", e.material) : "") +
       drow("Nivel", e.level) +
+      (e.host ? drow("Anfitrión", e.host) : "") +
       (e.placement.kind === "point"
         ? drow("Posición", `x=${e.placement.x.toFixed(2)} · y=${e.placement.y.toFixed(2)} m`)
         : drow("Área", `${polyArea(e.placement.contour).toFixed(1)} m²`));
@@ -536,16 +589,9 @@ function selectNode(ref: NodeRef, el: HTMLElement): void {
   }
 
   // Resalta la selección en el dibujo y asegura que su vista esté visible.
-  selected = ref.t === "space" ? { kind: "space", footprint: { ...ref.data.footprint } }
-    : ref.t === "element"
-      ? (ref.data.placement.kind === "point"
-          ? { kind: "element", x: ref.data.placement.x, y: ref.data.placement.y, storey: ref.data.storeyIndex }
-          : { kind: "slab", storey: ref.data.storeyIndex })
-    : ref.t === "zone" ? { kind: "zone", zone: ref.data.kind }
-    : ref.t === "storey" ? { kind: "storey", index: ref.data.index }
-    : { kind: "none" };
+  selected = selectionFor(ref);
   if (selected.kind === "space" || selected.kind === "zone") view.plan = true;
-  else if (selected.kind === "storey" || selected.kind === "slab") view.volume = true;
+  else if (selected.kind === "storey" || selected.kind === "slab" || selected.kind === "opening") view.volume = true;
   else if (selected.kind === "element") { view.volume = true; if (bInput.grid) view.plan = true; }
   render();
 
@@ -680,7 +726,8 @@ interface Action {
   zone?: string;
   generator?: string; bays?: number; aisle?: number; ramps?: Orient[]; // type=program
   disposition?: "bateria" | "linea";                                   // type=program (parking)
-  sepX?: number; sepY?: number; secW?: number; secD?: number;          // type=columns
+  sepX?: number; sepY?: number; secW?: number; secD?: number;          // type=columns (atajo)
+  axesX?: number[]; axesY?: number[];                                  // type=columns (ejes explícitos)
 }
 function runAction(a: Action): void {
   if (a.type === "summary" && a.key) {
@@ -701,7 +748,8 @@ function runAction(a: Action): void {
     const count = Math.max(1, Math.round(a.count ?? 1));
     const ff = a.height && a.height > 0 ? a.height : H / count;
     bInput.storeys = { count, height: ff };
-    NF = count; FF = ff;          // la caja dibuja count plantas a ff de separación
+    NF = count; FF = ff;
+    H = NF * FF;                  // altura del edificio = plantas × altura (cubierta arriba)
     view.volume = true; view.levels = true;
     render();
     refreshTree();
@@ -726,9 +774,11 @@ function runAction(a: Action): void {
     refreshTree();
   }
   if (a.type === "columns") {
+    // Ejes explícitos (axesX/axesY) ganan; si no, atajo uniforme (sepX/sepY).
     bInput.grid = {
-      sepX: a.sepX && a.sepX > 0 ? a.sepX : 5,
-      sepY: a.sepY && a.sepY > 0 ? a.sepY : 5,
+      sepX: a.sepX, sepY: a.sepY,
+      axesX: a.axesX && a.axesX.length ? a.axesX : undefined,
+      axesY: a.axesY && a.axesY.length ? a.axesY : undefined,
       section: (a.secW || a.secD) ? { w: a.secW ?? 0.4, d: a.secD ?? 0.4 } : undefined,
     };
     view.volume = view.grid = view.plan = true;

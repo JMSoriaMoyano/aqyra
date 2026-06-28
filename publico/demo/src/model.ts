@@ -89,20 +89,26 @@ export interface BuildingModel {
 // un primitivo IfcGrid; el puente entrega `reticulas_pilares` a C1, que C1 ya
 // consume. La retícula es a nivel de EDIFICIO; el pilar se REPITE por planta.
 
-/** Intención de retícula (lo que pide el usuario/acción). */
+/**
+ * Intención de retícula. Dos formas (ejes explícitos ganan al atajo uniforme):
+ *  - EJES EXPLÍCITOS: `axesX`/`axesY` = posiciones de eje en m (no uniformes; el
+ *    usuario alinea con fachadas, borde de pasillo… p. ej. axesY [0, 6.75, 15]).
+ *  - ATAJO UNIFORME: `sepX`/`sepY` → ejes equiespaciados ANCLADOS a las dos
+ *    fachadas (incluyen 0 y W/D), para que el pilar de fachada siempre caiga.
+ */
 export interface GridInput {
-  sepX: number;                // separación entre ejes en X (m)
-  sepY: number;                // separación entre ejes en Y (m)
+  sepX?: number;               // atajo: separación uniforme en X (m)
+  sepY?: number;               // atajo: separación uniforme en Y (m)
+  axesX?: number[];            // ejes explícitos en X (m)
+  axesY?: number[];            // ejes explícitos en Y (m)
   section?: ColumnSection;     // sección de pilar (def 0,40 × 0,40)
-  origin?: [number, number];   // origen de la malla (def [0,0])
   material?: string;           // def HA-30
 }
 
-/** Retícula resuelta sobre la huella W×D (determinista). */
+/** Retícula resuelta = listas de ejes por dirección (determinista). IfcGrid-like. */
 export interface GridResolved {
-  origin: [number, number];
-  sepX: number; sepY: number;
-  nx: number; ny: number;      // nº de ejes (nudos) en cada dirección
+  axesX: number[];             // posiciones de eje en X (m), ordenadas
+  axesY: number[];             // posiciones de eje en Y (m), ordenadas
   section: ColumnSection;
   material: string;
 }
@@ -116,6 +122,11 @@ export const DEFAULT_SLAB_T = 0.3; // espesor de forjado (m), default C1
 const BSDD = (cls: string): string => `https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/${cls}`;
 const BSDD_COLUMN = BSDD("IfcColumn");
 const BSDD_SLAB = BSDD("IfcSlab");
+const BSDD_OPENING = BSDD("IfcOpeningElement");
+
+/** Contorno rectangular (m) de una huella, en orden CCW. */
+const rectContour = (f: Footprint): [number, number][] =>
+  [[f.x, f.y], [f.x + f.w, f.y], [f.x + f.w, f.y + f.d], [f.x, f.y + f.d]];
 
 /** Datos acumulados desde el diálogo (= parámetros del generador residencia). */
 export interface PlanInput {
@@ -149,7 +160,9 @@ const round2 = (x: number): number => Math.round(x * 100) / 100;
 const abbrev = (objectType: string): string => ABBR[objectType] ?? objectType.slice(0, 3).toUpperCase();
 const zabbr = (z: string): string => ZONE_ABBR[z] ?? z.slice(0, 3).toUpperCase();
 const zlabel = (z: string): string => ZONE_LABEL[z] ?? z;
-function storeyName(i: number): string { return i === 0 ? "Planta baja" : `Planta ${i}`; }
+// Nombres de planta ALINEADOS con C1 (resolver_niveles): "Planta Baja" / "Planta i".
+// Importa para el puente: los pilares/losas referencian el nivel por nombre.
+function storeyName(i: number): string { return i === 0 ? "Planta Baja" : `Planta ${i}`; }
 
 /** Etiqueta de eje en Y (filas): A, B, … Z, AA, AB… (determinista). */
 function axisLetter(iy: number): string {
@@ -158,37 +171,37 @@ function axisLetter(iy: number): string {
   return s;
 }
 
-/**
- * Resuelve una retícula sobre la huella W×D: nudos en origen + ix·sepX / iy·sepY
- * que CABEN dentro de W×D. Determinista (mismo input → misma malla) → golden-able.
- * El nº de ejes lo decide la huella real (el cebo es la autoridad geométrica), no
- * el usuario: éste da la intención (separación), el visor cuenta los nudos.
- */
-export function resolveGrid(g: GridInput, ctx: PlanContext): GridResolved {
-  const sepX = Math.max(0.1, g.sepX), sepY = Math.max(0.1, g.sepY);
-  const [ox, oy] = g.origin ?? [0, 0];
-  const nx = Math.max(1, Math.floor((ctx.W - ox) / sepX + 1e-9) + 1);
-  const ny = Math.max(1, Math.floor((ctx.D - oy) / sepY + 1e-9) + 1);
-  return {
-    origin: [round2(ox), round2(oy)], sepX, sepY, nx, ny,
-    section: g.section ?? DEFAULT_SECTION, material: g.material ?? DEFAULT_MATERIAL,
-  };
+/** Limpia ejes explícitos: acota a [0,L], redondea, deduplica y ordena. */
+function cleanAxes(axes: number[], L: number): number[] {
+  const xs = axes.map((a) => round2(Math.min(Math.max(a, 0), L)));
+  return [...new Set(xs)].sort((a, b) => a - b);
+}
+/** Ejes uniformes ANCLADOS a las dos fachadas: incluyen 0 y L, vanos ~iguales ≈ sep. */
+function uniformAxes(L: number, sep?: number): number[] {
+  const s = sep && sep > 0 ? sep : 5;
+  const nbays = Math.max(1, Math.round(L / s));
+  return Array.from({ length: nbays + 1 }, (_, k) => round2((L * k) / nbays));
 }
 
-/** Nudos de la retícula con su eje lógico (B2 = letra de fila Y + nº de columna X). */
+/**
+ * Resuelve la retícula a LISTAS DE EJES por dirección (IfcGrid-like). Ejes explícitos
+ * si se dan (el usuario alinea con fachadas/pasillo); si no, el atajo uniforme anclado
+ * a las dos fachadas. Determinista (mismo input → mismos ejes) → golden-able.
+ */
+export function resolveGrid(g: GridInput, ctx: PlanContext): GridResolved {
+  const axesX = g.axesX ? cleanAxes(g.axesX, ctx.W) : uniformAxes(ctx.W, g.sepX);
+  const axesY = g.axesY ? cleanAxes(g.axesY, ctx.D) : uniformAxes(ctx.D, g.sepY);
+  return { axesX, axesY, section: g.section ?? DEFAULT_SECTION, material: g.material ?? DEFAULT_MATERIAL };
+}
+
+/** Nudos = producto cartesiano de los ejes; eje lógico B2 = letra(fila Y) + nº(col X). */
 export function buildGrid(grid: GridResolved): GridNode[] {
   const out: GridNode[] = [];
-  const [ox, oy] = grid.origin;
-  for (let iy = 0; iy < grid.ny; iy++) {
-    for (let ix = 0; ix < grid.nx; ix++) {
-      out.push({
-        ix, iy,
-        x: round2(ox + ix * grid.sepX),
-        y: round2(oy + iy * grid.sepY),
-        axis: `${axisLetter(iy)}${ix + 1}`,
-      });
-    }
-  }
+  grid.axesY.forEach((y, iy) => {
+    grid.axesX.forEach((x, ix) => {
+      out.push({ ix, iy, x: round2(x), y: round2(y), axis: `${axisLetter(iy)}${ix + 1}` });
+    });
+  });
   return out;
 }
 
@@ -214,13 +227,11 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
     ? (GENERATORS[inp.program.generator]?.generate(inp.program.params, ctx) ?? [])
     : residenceGenerator.generate(inp.plan, ctx);
 
-  // retícula estructural (sistema transversal → IfcColumn). El pilar se REPITE por
-  // planta. Plantas ESTRUCTURALES = todas menos la superior (el pilar nace de una
-  // planta y sostiene la de arriba); con una sola planta, la baja. Espeja el `estr`
-  // de C1 (expandir_reticula) para que el preview anticipe el Maestro autorado.
+  // retícula estructural (sistema transversal → IfcColumn). El pilar se REPITE en
+  // TODAS las plantas: cada una sostiene la losa de arriba (la última, la CUBIERTA).
   const grid = inp.grid ? resolveGrid(inp.grid, ctx) : undefined;
   const gridNodes = grid ? buildGrid(grid) : [];
-  const isStructural = (i: number): boolean => (n <= 1 ? i === 0 : i < n - 1);
+  const SLAB_CONTOUR: [number, number][] = [[0, 0], [ctx.W, 0], [ctx.W, ctx.D], [0, ctx.D]];
 
   const storeys: StoreyInstance[] = [];
   const zoneMembers = new Map<string, string[]>(); // zona → códigos (orden de aparición)
@@ -248,8 +259,8 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
         footprint: g.footprint, zone: g.zone, sideTag: g.sideTag,
       };
     });
-    // Pilares: en plantas estructurales (todas menos la cubierta).
-    const cols: ElementInstance[] = grid && isStructural(i)
+    // Pilares: en TODAS las plantas (cada una sube y sostiene la losa de arriba).
+    const cols: ElementInstance[] = grid
       ? gridNodes.map((nd) => ({
           code: `AQ-PIL-${p}-${nd.axis}`,
           ifcClass: "IfcColumn", objectType: "Pilar", predefinedType: "COLUMN",
@@ -259,19 +270,36 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
         }))
       : [];
 
-    // Forjado: automático en cada planta menos la baja (i==0 apoya en terreno);
-    // incluye la cubierta. Cubre la huella del edificio. Espeja el `losa` de C1.
-    const slabs: ElementInstance[] = i >= 1
-      ? [{
-          code: `AQ-FOR-${p}`,
-          ifcClass: "IfcSlab", objectType: "Forjado", predefinedType: "FLOOR",
-          placement: { kind: "polygon", contour: [[0, 0], [ctx.W, 0], [ctx.W, ctx.D], [0, ctx.D]] },
-          thickness: DEFAULT_SLAB_T, material: DEFAULT_MATERIAL,
-          level: storeyName(i), storeyIndex: i, uriBsdd: BSDD_SLAB,
-        }]
+    // Forjados: el SUELO de cada planta i≥1 (la baja apoya en terreno) y, encima de
+    // la ÚLTIMA planta, la CUBIERTA (techo, nivel n). Cubren la huella del edificio.
+    const slabCode = `AQ-FOR-${p}`;
+    const slabs: ElementInstance[] = [];
+    if (i >= 1) slabs.push({
+      code: slabCode, ifcClass: "IfcSlab", objectType: "Forjado", predefinedType: "FLOOR",
+      placement: { kind: "polygon", contour: SLAB_CONTOUR },
+      thickness: DEFAULT_SLAB_T, material: DEFAULT_MATERIAL,
+      level: storeyName(i), storeyIndex: i, uriBsdd: BSDD_SLAB,
+    });
+    if (i === n - 1) slabs.push({
+      code: "AQ-FOR-CUB", ifcClass: "IfcSlab", objectType: "Cubierta", predefinedType: "ROOF",
+      placement: { kind: "polygon", contour: SLAB_CONTOUR },
+      thickness: DEFAULT_SLAB_T, material: DEFAULT_MATERIAL,
+      level: "Cubierta", storeyIndex: n, uriBsdd: BSDD_SLAB,
+    });
+
+    // Hueco de forjado: cada Nucleo (circulación vertical) vacía el forjado de PISO que
+    // atraviesa (la CUBIERTA cierra por arriba: no se vacía). `host` = el forjado de piso
+    // → estrena la capa relacional (IfcRelVoidsElement). Geometría = huella del núcleo.
+    const openings: ElementInstance[] = i >= 1
+      ? placed.filter((g) => g.objectType === "Nucleo").map((g, k) => ({
+          code: `AQ-HUE-${p}-${pad2(k + 1)}`,
+          ifcClass: "IfcOpeningElement", objectType: "HuecoForjado", predefinedType: "OPENING",
+          placement: { kind: "polygon", contour: rectContour(g.footprint) },
+          level: storeyName(i), storeyIndex: i, host: slabCode, uriBsdd: BSDD_OPENING,
+        } as ElementInstance))
       : [];
 
-    const elements: ElementInstance[] = [...cols, ...slabs];
+    const elements: ElementInstance[] = [...cols, ...slabs, ...openings];
 
     storeys.push({
       code: `AQ-NIV-${p}`, ifcClass: "IfcBuildingStorey", index: i,
@@ -308,3 +336,5 @@ export function elementCount(m: BuildingModel, ifcClass: string): number {
 export function columnCount(m: BuildingModel): number { return elementCount(m, "IfcColumn"); }
 /** Recuento total de IfcSlab (forjados, todas las plantas menos la baja). */
 export function slabCount(m: BuildingModel): number { return elementCount(m, "IfcSlab"); }
+/** Recuento total de IfcOpeningElement (huecos de forjado). */
+export function openingCount(m: BuildingModel): number { return elementCount(m, "IfcOpeningElement"); }

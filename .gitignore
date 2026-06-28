@@ -24,6 +24,11 @@ venv/
 # ── Artefactos de release (binarios) — el manifiesto y su .asc SÍ se versionan ──
 *.plugin
 
+# ── Helpers operativos de git (no son del proyecto) ──
+/ESTADO_entorno.bat
+/COMMIT_entorno.bat
+/PUSH_entorno_main.bat
+
 # ── Salidas / temporales ──
 *_resultado.txt
 _resultados/

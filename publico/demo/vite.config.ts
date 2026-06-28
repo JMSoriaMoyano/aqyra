@@ -122,11 +122,19 @@ const RESPONDER_TOOL = {
             },
             sepX: {
               type: "number",
-              description: "Separación entre ejes de pilar en X (m), solo type=columns. Es la INTENCIÓN: el visor cuenta los nudos que caben en la huella real.",
+              description: "ATAJO uniforme: separación entre ejes de pilar en X (m), type=columns. El visor reparte ejes ANCLADOS a las dos fachadas (incluye 0 y el ancho). Usa axesX si necesitas ejes en posiciones concretas.",
             },
             sepY: {
               type: "number",
-              description: "Separación entre ejes de pilar en Y (m), solo type=columns.",
+              description: "ATAJO uniforme: separación entre ejes de pilar en Y (m), type=columns. Anclado a las fachadas (incluye 0 y el fondo).",
+            },
+            axesX: {
+              type: "array", items: { type: "number" },
+              description: "EJES EXPLÍCITOS en X (m desde la fachada oeste), type=columns. Úsalo cuando el usuario alinea con líneas concretas (fachadas, borde de pasillo). Gana a sepX. P. ej. [0, 5, 10, 20].",
+            },
+            axesY: {
+              type: "array", items: { type: "number" },
+              description: "EJES EXPLÍCITOS en Y (m desde la fachada sur), type=columns. Para alinear pilares con fachada sur, borde de pasillo y fachada norte: p. ej. [0, 6.75, 15]. Gana a sepY.",
             },
             secW: {
               type: "number",
@@ -154,7 +162,10 @@ Guía al usuario por estos pasos y, a medida que te dé datos, emite acciones co
    - Habitaciones: emite space kind=room con count=nº TOTAL de habitaciones por planta y layout=both-sides si van a lado y lado de un pasillo (o single-side si a un solo lado). Cada habitación es un IfcSpace (zona privado).
    - Pasillo: emite space kind=corridor con width=ancho en metros. Es un IfcSpace de circulación (zona comunes).
    - Núcleos: emite UNA acción space kind=core por cada núcleo, con su orientation y un detail (p. ej. '2 ascensores + escalera'). Son IfcSpace de circulación (zona comunes).
-5. RETÍCULA ESTRUCTURAL (pilares): si el usuario pide pilares, retícula o estructura, emite la acción columns con sepX y sepY = separación entre ejes en metros (la INTENCIÓN). Opcional secW×secD = sección del pilar en m (def. 0,40×0,40, HA-30); OMÍTELA si no la dan. El visor coloca un IfcColumn en cada nudo que CABE en la huella real y lo REPITE por planta (todas menos la cubierta); tú das la separación, NUNCA el número de pilares. Cada pilar es un IfcColumn con su eje lógico (p. ej. B2). Puedes añadir summary key=grid con el texto. (Para solo ver ejes esquemáticos sin pilares: view show=grid.)
+5. RETÍCULA ESTRUCTURAL (pilares): si el usuario pide pilares, retícula o estructura, emite la acción columns. DOS formas:
+   - Si solo da una separación ("pilares cada 6 m"), usa sepX/sepY: el visor reparte ejes uniformes ANCLADOS a las dos fachadas (el pilar de fachada SIEMPRE cae; ya no se desplaza).
+   - Si el usuario ALINEA los pilares con líneas concretas (fachadas, borde del pasillo, "un eje en la fachada norte"), usa axesX/axesY = listas con las posiciones de eje en metros (p. ej. axesY=[0, 6.75, 15] para fachada sur, borde de pasillo y fachada norte). Calcula tú las coordenadas a partir de la geometría que el usuario describe; los ejes explícitos ganan a sepX/sepY.
+   Opcional secW×secD = sección del pilar en m (def. 0,40×0,40, HA-30); OMÍTELA si no la dan. El visor coloca un IfcColumn en cada nudo (producto de los ejes) y lo REPITE por planta (todas menos la cubierta). Cada pilar lleva su eje lógico (p. ej. B2). Puedes añadir summary key=grid con el texto.
 
 ORIENTACIÓN (importante): el visor usa cardinales fijos +Y=Norte, -Y=Sur, +X=Este, -X=Oeste. Cuando el usuario sitúe un núcleo "al S-E", "al N-O", etc., usa ese valor literal en orientation (SE, NO, NE, SO, N, S, E, O). No reinterpretes ni gires las orientaciones.
 

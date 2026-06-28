@@ -1,0 +1,40 @@
+{
+  "name": "residencia-4plantas-2nucleos",
+  "input": {
+    "project": "Residencia",
+    "building": "Bloque",
+    "storeys": { "count": 4, "height": 3 },
+    "plan": {
+      "rooms": { "count": 20, "layout": "both-sides" },
+      "corridor": { "width": 1.5 },
+      "cores": [
+        { "orientation": "SE", "detail": "2 asc + esc" },
+        { "orientation": "NO", "detail": "esc" }
+      ]
+    }
+  },
+  "ctx": { "W": 31, "D": 15.6 },
+  "snapshot": {
+    "storeys": 4,
+    "spacesPerStorey": 23,
+    "totalSpaces": 92,
+    "byObjectType": { "Habitacion": 20, "Pasillo": 1, "Nucleo": 2 },
+    "zones": [
+      { "code": "AQ-ZON-PRI", "kind": "privado", "members": 80 },
+      { "code": "AQ-ZON-COM", "kind": "comunes", "members": 12 }
+    ],
+    "sampleCodes": [
+      "AQ-ESP-HAB-P00-IZQ-01",
+      "AQ-ESP-HAB-P00-IZQ-02",
+      "AQ-ESP-HAB-P00-IZQ-03",
+      "AQ-ESP-HAB-P00-IZQ-04",
+      "AQ-ESP-HAB-P00-IZQ-05",
+      "AQ-ESP-HAB-P00-IZQ-06"
+    ],
+    "totalColumns": 0,
+    "columnsPerStorey": 0,
+    "sampleColumnCodes": [],
+    "totalSlabs": 4,
+    "totalOpenings": 6
+  }
+}
