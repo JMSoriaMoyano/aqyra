@@ -1,7 +1,7 @@
 {
   "name": "iso19650-openbim",
-  "version": "0.7.0",
-  "description": "Gestion de informacion BIM segun ISO 19650 y OpenBIM/IFC: BEP/EIR, matriz LOIN, creacion y validacion de modelos IFC con IfcOpenShell en los dominios estructural, MEP (redes fisico->modelo neutro incl. saneamiento lamina libre y abastecimiento a presion deposito/bombeo, validacion sistema-aware Pipe/Cable/Duct, write-back de Psets) y obra lineal IFC 4.3 (IfcAlignment + georref -> modelo neutro lineal, validacion, GIS GeoJSON), bsDD (Uniclass+GuBIMClass) y auditoria del CDE.",
+  "version": "0.10.0",
+  "description": "Gestion de informacion BIM segun ISO 19650 y OpenBIM/IFC: BEP/EIR, matriz LOIN, creacion y validacion de modelos IFC con IfcOpenShell en los dominios estructural, MEP (redes fisico->modelo neutro incl. saneamiento lamina libre y abastecimiento a presion deposito/bombeo, validacion sistema-aware Pipe/Cable/Duct, write-back de Psets) y obra lineal IFC 4.3 (IfcAlignment + georref -> modelo neutro lineal, validacion, GIS GeoJSON), bsDD (Uniclass+GuBIMClass) y auditoria del CDE. | C1 'apertura de familias P1' (2026-06-28): el compilador narracion->IFC autora HUECOS GENERALIZADOS (IfcOpeningElement+IfcRelVoidsElement en cualquier anfitrion: muros/losas/cubiertas), CATALOGO DE CLASES ABIERTO (elementos[].ifcClass de cualquier IfcClass concreta del catalogo bsDD, incl. IfcTransportElement), DOBLE CLASIFICACION determinista bsDD(URI)+Uniclass 2015(EF) por ifcClass, y ALINEACIONES completas (alineaciones[] -> IfcAlignment planta/alzado/seccion/peralte reutilizando scripts/lineal de la Ola 5). Esquema alto.json FORWARD-OPEN.",
   "author": {
     "name": "JM Soria"
   },
@@ -38,6 +38,13 @@
     "deposito",
     "IfcTank",
     "bombeo",
-    "EN 805"
+    "EN 805",
+    "IfcAlignment",
+    "clotoide",
+    "hueco",
+    "IfcTransportElement",
+    "ascensor",
+    "doble clasificacion",
+    "forward-open"
   ]
 }

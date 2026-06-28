@@ -1,18 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "estructurando/spec-parametrico/v0.1",
-  "title": "Spec paramétrico canónico (entrada de spec_to_ifc.py)",
+  "$id": "estructurando/spec-parametrico/v0.2",
+  "title": "Spec parametrico canonico (entrada de spec_to_ifc.py) — FORWARD-OPEN",
+  "$comment": "Contrato C1 'apertura de familias P1' (2026-06-28). FORWARD-OPEN: additionalProperties=true en TODOS los niveles. El cebo (c1-bridge) puede EMITIR POR DELANTE de lo que el compilador autora; lo que C1 aun no entiende se IGNORA, nunca rompe. Esta es la garantia formal de 'sin mas parches': las claves nuevas (huecos en cualquier anfitrion, elementos[].ifcClass de cualquier clase del catalogo bsDD, alineaciones[]) son ADITIVAS y no alteran la semantica de las existentes; los consumidores actuales (estructuras/MEP/lineal/puentes) no regresan.",
   "type": "object",
   "required": ["niveles"],
   "additionalProperties": true,
   "properties": {
     "proyecto": { "type": "string" },
-    "esquema": { "type": "string", "enum": ["IFC4", "IFC4X3"], "default": "IFC4" },
+    "esquema": { "type": "string", "enum": ["IFC4", "IFC4X3"], "default": "IFC4",
+      "$comment": "IFC4X3 obligatorio si hay alineaciones[] (IfcAlignment no existe en IFC4)." },
     "unidades": { "type": "string", "enum": ["m"], "default": "m" },
     "niveles": {
       "type": "array", "minItems": 1,
       "items": {
-        "type": "object", "required": ["nombre", "cota"],
+        "type": "object", "required": ["nombre", "cota"], "additionalProperties": true,
         "properties": {
           "nombre": { "type": "string" },
           "cota": { "type": "number" }
@@ -23,6 +25,7 @@
       "type": "array",
       "items": {
         "type": "object", "required": ["nombre", "nivel", "pos", "seccion", "altura"],
+        "additionalProperties": true,
         "properties": {
           "nombre": { "type": "string" },
           "nivel": { "type": "string" },
@@ -37,6 +40,7 @@
       "type": "array",
       "items": {
         "type": "object", "required": ["nombre", "nivel", "inicio", "fin", "espesor", "altura"],
+        "additionalProperties": true,
         "properties": {
           "nombre": { "type": "string" },
           "nivel": { "type": "string" },
@@ -45,7 +49,21 @@
           "espesor": { "type": "number", "exclusiveMinimum": 0 },
           "altura": { "type": "number", "exclusiveMinimum": 0 },
           "exterior": { "type": "boolean" },
-          "material": { "type": "string" }
+          "material": { "type": "string" },
+          "huecos": {
+            "type": "array",
+            "$comment": "HUECOS GENERALIZADOS (via unica). En muro: ancho x alto situados por 'pos' a lo largo del muro + 'alfeizar'. Opcional 'tipo':'puerta'|'ventana' rellena el hueco (IfcDoor/IfcWindow).",
+            "items": {
+              "type": "object", "required": ["ancho", "alto", "pos"], "additionalProperties": true,
+              "properties": {
+                "ancho": { "type": "number", "exclusiveMinimum": 0 },
+                "alto": { "type": "number", "exclusiveMinimum": 0 },
+                "pos": { "type": "number" },
+                "alfeizar": { "type": "number" },
+                "tipo": { "type": "string", "enum": ["puerta", "ventana"] }
+              }
+            }
+          }
         }
       }
     },
@@ -53,6 +71,7 @@
       "type": "array",
       "items": {
         "type": "object", "required": ["nombre", "nivel", "contorno", "espesor"],
+        "additionalProperties": true,
         "properties": {
           "nombre": { "type": "string" },
           "nivel": { "type": "string" },
@@ -61,7 +80,94 @@
             "items": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
           },
           "espesor": { "type": "number", "exclusiveMinimum": 0 },
-          "material": { "type": "string" }
+          "material": { "type": "string" },
+          "tipo": { "type": "string", "enum": ["macizo", "nervado", "reticular", "unidireccional"] },
+          "huecos": {
+            "type": "array",
+            "$comment": "HUECOS GENERALIZADOS en anfitrion HORIZONTAL (losa/cubierta): prisma vertical que atraviesa el canto. Rectangular por 'pos':[x,y]+ancho+largo, o poligonal por 'contorno':[[x,y],...].",
+            "items": {
+              "type": "object", "additionalProperties": true,
+              "properties": {
+                "pos": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+                "ancho": { "type": "number", "exclusiveMinimum": 0 },
+                "largo": { "type": "number", "exclusiveMinimum": 0 },
+                "contorno": {
+                  "type": "array", "minItems": 3,
+                  "items": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "elementos": {
+      "type": "array",
+      "$comment": "CATALOGO DE CLASES ABIERTO: 'ifcClass' (alias historico 'clase') autora CUALQUIER IfcClass concreta del catalogo bsDD del esquema (p.ej. IfcTransportElement=ascensor) SIN lista cerrada — las clases futuras entran sin re-bump del contrato.",
+      "items": {
+        "type": "object", "additionalProperties": true,
+        "properties": {
+          "ifcClass": { "type": "string" },
+          "clase": { "type": "string" },
+          "nombre": { "type": "string" },
+          "nivel": { "type": "string" },
+          "pos": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+          "cota": { "type": "number" },
+          "predefined": { "type": "string" },
+          "material": { "type": "string" },
+          "huecos": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        }
+      }
+    },
+    "alineaciones": {
+      "type": "array",
+      "$comment": "ALINEACIONES COMPLETAS -> IfcAlignment (reutiliza la maquinaria de la Ola 5; legible por ifc_to_model_lineal.py). planta: recta/clotoide/curva; alzado: rasantes/acuerdos; peralte; georref. Requiere esquema IFC4X3.",
+      "items": {
+        "type": "object", "required": ["planta"], "additionalProperties": true,
+        "properties": {
+          "nombre": { "type": "string" },
+          "infraestructura": { "type": "object", "additionalProperties": true,
+            "properties": { "clase": { "type": "string" }, "nombre": { "type": "string" } } },
+          "ancho_ref": { "type": "number", "exclusiveMinimum": 0 },
+          "inicio": { "type": "object", "additionalProperties": true,
+            "properties": { "x": {"type":"number"}, "y": {"type":"number"},
+              "acimut_deg": {"type":"number"}, "acimut_rad": {"type":"number"}, "cota": {"type":"number"} } },
+          "planta": {
+            "type": "array", "minItems": 1,
+            "items": { "type": "object", "required": ["tipo", "longitud"], "additionalProperties": true,
+              "properties": {
+                "tipo": { "type": "string", "$comment": "recta|clotoide|curva (o LINE/CLOTHOID/CIRCULARARC)" },
+                "longitud": { "type": "number", "exclusiveMinimum": 0 },
+                "radio": { "type": "number" }, "radio_ini": { "type": "number" }, "radio_fin": { "type": "number" }
+              } }
+          },
+          "alzado": {
+            "type": "array",
+            "items": { "type": "object", "required": ["tipo", "longitud"], "additionalProperties": true,
+              "properties": {
+                "tipo": { "type": "string", "$comment": "rampa|acuerdo (o CONSTANTGRADIENT/PARABOLICARC)" },
+                "longitud": { "type": "number", "exclusiveMinimum": 0 },
+                "pendiente_ini": { "type": "number" }, "pendiente_fin": { "type": "number" },
+                "kv": { "type": "number" }
+              } }
+          },
+          "peralte": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": true,
+              "properties": {
+                "tipo": { "type": "string", "$comment": "constante|transicion (o CONSTANTCANT/LINEARTRANSITION)" },
+                "longitud": { "type": "number" },
+                "peralte_ini_pct": { "type": "number" }, "peralte_fin_pct": { "type": "number" }
+              } }
+          },
+          "georref": { "type": "object", "additionalProperties": true,
+            "properties": {
+              "epsg": { "type": "string" }, "descripcion": { "type": "string" },
+              "datum_geodesico": { "type": "string" }, "datum_vertical": { "type": "string" },
+              "map_projection": { "type": "string" }, "map_zone": { "type": "string" },
+              "origen_e": { "type": "number" }, "origen_n": { "type": "number" }, "altura": { "type": "number" },
+              "rotacion_deg": { "type": "number" }, "rotacion_rad": { "type": "number" }, "escala": { "type": "number" }
+            } }
         }
       }
     }

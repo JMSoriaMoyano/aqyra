@@ -417,3 +417,72 @@ de sección se derivan de la forma, no de una entidad de perfil estructural). La
 
 > Todo resultado es de predimensionado/asistencia y debe ser **revisado y firmado por técnico
 > competente (ICCP)**.
+
+---
+
+## §7. Evolución de C1 — apertura de familias P1 (autoría narración→IFC, 2026-06-28)
+
+`iso19650-openbim` **v0.10.0** evoluciona C1 por el **lado de autoría** (el compilador
+narración→IFC del cebo: `narracion-ifc/spec_to_ifc.py` + `compilar_spec.py` +
+`scripts/lineal`). Es **UNA** evolución completa y diseñada (no parches) que desbloquea las
+tres familias de P1 (A edificación, B trazado, C normativa) **sin volver a tocar el contrato
+por cada variante**. Es **aditiva y retrocompatible**: añade claves/capacidades nuevas y **no
+cambia la semántica** de las existentes; los consumidores actuales (estructuras, MEP, lineal,
+puentes) **no regresan**. Principio rector (dos patas): (1) `alto.json` **forward-open**
+(`additionalProperties` permitido en todos los niveles → el cebo emite por delante; lo no
+soportado se ignora, nunca rompe); (2) **capacidad-completa, no rebanada** (cada capacidad
+entra entera y genérica).
+
+**Capacidades (las cuatro, enteras):**
+
+1. **Huecos generalizados** — `IfcOpeningElement` + `IfcRelVoidsElement` por una **vía única
+   reutilizable** (`spec_to_ifc._practicar_hueco` / `_hueco_horizontal`) aplicable a
+   **cualquier anfitrión** que los admita: **muros** (refactorizados a esta vía), **losas** y
+   **cubiertas/elementos horizontales** (prisma vertical que atraviesa el canto;
+   rectangular por `pos`+`ancho`+`largo` o poligonal por `contorno`). No es un caso suelto.
+2. **Catálogo de clases ABIERTO** — el handler genérico `elementos[].ifcClass` (alias
+   histórico `.clase`) autora **cualquier `IfcClass` concreta** del catálogo bsDD del esquema
+   (`catalogo_ifc`), incluido `IfcTransportElement` (ascensor, PredefinedType ELEVATOR). **Sin
+   lista cerrada**: las clases futuras entran **sin re-bump** del contrato.
+3. **Doble clasificación completa** — nuevo módulo `narracion-ifc/clasificacion.py`: cada
+   elemento autorado lleva **bsDD** (referencia de entidad IFC por **URI**) **+ Uniclass 2015**
+   (`IfcClassificationReference`, tabla **EF** Elements/functions) por **mapeo determinista por
+   `ifcClass`** (+ refinamiento por `PredefinedType`; p. ej. `IfcTransportElement.ELEVATOR` →
+   `EF_80_50` Lifts, `IfcSlab` → `EF_30_20` Floors, `IfcWall` → `EF_25_10` Walls), tan
+   determinista como la URI bsDD; **fallback por grupo IFC** para clases no tabuladas (nunca
+   queda sin Uniclass). Se aplica a pilares/muros/losas/rampas/escaleras y a `elementos[]`.
+4. **Alineaciones completas** — `alineaciones[]` → **`IfcAlignment`** con **planta**
+   (recta + arco + **clotoide**), **alzado** (rasantes + acuerdos) y **sección barrida +
+   peralte**, **reutilizando la maquinaria de la Ola 5** (§4bis): se extrae el constructor
+   `construir_alineacion(model, ctx, …)` de `scripts/lineal/generate_test_ifc_lineal.py`
+   (que el banco de pruebas `main` ahora reusa, **sin regresión** en `test_lineal.py`), y el
+   puente `narracion-ifc/alineaciones_ifc.py` traduce el `alto.json` y **delega** — **no se
+   reimplementa** la geometría de alineación. El IFC resultante es **legible por el parser
+   lineal** `scripts/lineal/ifc_to_model_lineal.py`. Requiere esquema **IFC4X3**.
+
+**Esquema forward-open** — `narracion-ifc/spec.schema.json` **v0.2**: `additionalProperties`
+permitido y **documentado** en todos los niveles; declara `muros[]/losas[]/elementos[].huecos`,
+`elementos[].ifcClass` y `alineaciones[]`. Es la **garantía formal** de «sin más parches»: el
+coste de cada familia o variante nueva deja de ser un cambio de contrato y pasa a ser trabajo
+de cebo contra una superficie estable.
+
+**Golden única de C1 (Llave 1) — `C1-APERTURA-01`:** un `alto.json` patrón con (a) **huecos
+en losa y muro**, (b) un **`IfcTransportElement`** (ELEVATOR), (c) una **alineación con
+clotoide + acuerdo vertical**, (d) **doble clasificación** bsDD+Uniclass → **compila un IFC
+IFC4X3 válido** en el que la losa queda **vaciada**, el ascensor está **presente**, el
+`IfcAlignment` es **legible por `ifc_to_model_lineal.py`** (planta LINE·CLOTHOID·CIRCULARARC·
+CLOTHOID·LINE, L=400 m, validación CUMPLE) y cada elemento lleva su clasificación bsDD+Uniclass.
+**Verde = Llave 1.** (Regla de oro: un fallo se arregla en el código, no aflojando la golden.)
+Se entrega como artefacto a Aqyra-Raiz; el **registro en `Estructurando 2.0` + la firma (Llave
+2) + el anclado en `versions.lock`** son de **JM** (regla de dos llaves).
+
+> **Frontera de este hilo:** el **lado cebo** (que `c1-bridge.ts` emita `huecos`/`ifcClass`/
+> `alineaciones[]`/Uniclass en el `alto.json`) es de los hilos **P1·A/B/C** (proyecto `Entorno`),
+> contra este contrato ya completo. Todo resultado es de predimensionado/asistencia y debe ser
+> **revisado y firmado por técnico competente**.
+
+> **Nota de versionado (para JM):** skew observado al cerrar el hilo — `versions.lock` ancla
+> `iso19650-openbim` en **0.8.2**, el paquete publicado es **v0.9.2** (track puentes) y el
+> `plugin.json` de dev iba a 0.7.0. Se propone **0.10.0** (siguiente MINOR sobre el head
+> publicado 0.9.2; cambio **aditivo**, el contrato C1 permanece **v0** retrocompatible). El
+> número definitivo se reconcilia al anclar (Llave 2).

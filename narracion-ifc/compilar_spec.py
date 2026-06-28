@@ -104,6 +104,8 @@ def compilar(alto):
     if escaleras: canon["escaleras"] = escaleras
     if elementos: canon["elementos"] = elementos
     if "georef" in alto: canon["georef"] = alto["georef"]
+    if alto.get("alineaciones"): canon["alineaciones"] = alto["alineaciones"]
+    if alto.get("cubiertas"): canon["cubiertas"] = alto["cubiertas"]
     return canon
 
 

@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-spec_to_ifc.py  --  Generador parametrico Estructurando (Ruta 1, v0.6)
+spec_to_ifc.py  --  Generador parametrico Estructurando (Ruta 1, v0.7)
 
-Primitivas (metros). Novedades v0.6:
-  losas[].tipo:"unidireccional"  -> capa compresion + viguetas + BOVEDILLAS (IfcBuildingElementPart)
-  escaleras[] con meseta + giro(0/180 en U) + zanca (zancas inclinadas laterales)
-  rampas[].peldaneada:true       -> resaltos transversales sobre la superficie inclinada
-Mantiene: pilares, muros(+huecos reales), losas(macizo/nervado/reticular), rampas, elementos(catalogo bsDD).
+Primitivas (metros). Novedades v0.7 (contrato C1 - apertura de familias P1):
+  HUECOS GENERALIZADOS: IfcOpeningElement + IfcRelVoidsElement via UNICA reutilizable
+    aplicable a CUALQUIER anfitrion (muros -ya-, losas, cubiertas/elementos horizontales).
+  CATALOGO DE CLASES ABIERTO: elementos[].ifcClass (alias de .clase) autora CUALQUIER
+    IfcClass del catalogo bsDD (incl. IfcTransportElement = ascensor) sin lista cerrada.
+  DOBLE CLASIFICACION: cada elemento autorado lleva bsDD (URI) + Uniclass 2015 (EF) por
+    mapeo determinista por ifcClass (modulo clasificacion.py).
+  ALINEACIONES: alineaciones[] -> IfcAlignment (planta recta+arco+clotoide, alzado
+    rasantes+acuerdos, seccion+peralte) reutilizando la maquinaria de Ola 5
+    (iso19650-openbim/scripts/lineal), no se reimplementa la geometria de alineacion.
+Hereda v0.6: losas(macizo/nervado/reticular/unidireccional+bovedillas), escaleras (meseta/
+  giro/zanca), rampas (peldaneada), muros, pilares, elementos (catalogo).
 """
-import sys, json, math
+import sys, os, json, math
 import ifcopenshell, ifcopenshell.guid
 from ifcopenshell.api import run
+import clasificacion
 
 
 def _pt(m, c): return m.create_entity("IfcCartesianPoint", Coordinates=[float(x) for x in c])
@@ -43,6 +51,36 @@ def _voids(m,w,o): return m.create_entity("IfcRelVoidsElement", GlobalId=ifcopen
 def _fills(m,o,f): return m.create_entity("IfcRelFillsElement", GlobalId=ifcopenshell.guid.new(),
         RelatingOpeningElement=o, RelatedBuildingElement=f)
 
+# ---- HUECOS GENERALIZADOS (via UNICA reutilizable, contrato C1) --------------
+def _practicar_hueco(m, bctx, host, opening_solid, *, rel_placement=None,
+                     origin=(0.,0.,0.), nombre="Hueco"):
+    """Crea un IfcOpeningElement con `opening_solid` y lo asocia al anfitrion
+    `host` mediante IfcRelVoidsElement. Vale para CUALQUIER anfitrion que admita
+    huecos (muros, losas, cubiertas...). `rel_placement` = placement del anfitrion
+    para situar el hueco en su sistema local (None = coordenadas globales)."""
+    op = run("root.create_entity", m, ifc_class="IfcOpeningElement", name=nombre)
+    try: op.PredefinedType = "OPENING"
+    except Exception: pass
+    op.ObjectPlacement = _lp(m, rel_placement, origin)
+    op.Representation = _shape(m, bctx, opening_solid)
+    _voids(m, host, op)
+    return op
+
+def _hueco_horizontal(m, bctx, host, *, x, y, ancho, largo, espesor,
+                      contorno=None, nombre="Hueco"):
+    """Hueco vertical (prismatico) que atraviesa un anfitrion HORIZONTAL (losa,
+    cubierta) de espesor `espesor` cuya cara superior esta en la cota del host.
+    Posicion en planta (x,y) en coordenadas del modelo; corta todo el canto."""
+    dz = float(espesor) + 0.20
+    if contorno:
+        prof = _poly(m, nombre, contorno)
+        solid = _ext(m, prof, dz, o=(0., 0., -(float(espesor) + 0.10)))
+    else:
+        solid = _box(m, nombre, float(ancho), float(largo), dz,
+                     c=(float(x), float(y), -(float(espesor) + 0.10)))
+    return _practicar_hueco(m, bctx, host, solid, rel_placement=host.ObjectPlacement,
+                            origin=(0., 0., 0.), nombre=nombre)
+
 def _beam_between(m, name, p0, p1, w, h):
     """Prisma rect (w x h) que corre del punto p0 a p1 (eje del prisma = recta p0p1)."""
     d=(p1[0]-p0[0],p1[1]-p0[1],p1[2]-p0[2]); L=math.sqrt(sum(v*v for v in d)) or 1.0
@@ -72,8 +110,13 @@ def generar(spec, out):
     def mat(p,material):
         if material:
             ps=run("pset.add_pset",m,product=p,name="Pset_Estructurando_Spec"); run("pset.edit_pset",m,pset=ps,properties={"Material":material})
-    c={"pilares":0,"muros":0,"losas":0,"rampas":0,"escaleras":0,"huecos":0,"bovedillas":0,"elementos":0}
+    c={"pilares":0,"muros":0,"losas":0,"rampas":0,"escaleras":0,"huecos":0,"bovedillas":0,"elementos":0,"alineaciones":0}
     import catalogo_ifc as C; ecache={}
+    def clasif(el, clase):
+        # via UNICA de doble clasificacion (bsDD URI + Uniclass 2015 determinista)
+        clasificacion.clasificar_doble(m, el, clase, ecache,
+                                       predefined=getattr(el,"PredefinedType",None),
+                                       grupo=C.grupo_de(clase))
 
     for p in spec.get("pilares",[]):
         bx,by=p["seccion"]; x,y=p["pos"]; z=cota(p["nivel"])
@@ -81,7 +124,7 @@ def generar(spec, out):
         col.ObjectPlacement=_lp(m,None,(x,y,z)); col.Representation=_shape(m,bctx,_ext(m,_rect(m,p["nombre"],bx,by),p["altura"]))
         run("spatial.assign_container",m,relating_structure=storeys[p["nivel"]],products=[col])
         _pc=run("pset.add_pset",m,product=col,name="Pset_ColumnCommon"); run("pset.edit_pset",m,pset=_pc,properties={"LoadBearing":True,"IsExternal":bool(p.get("exterior",False))})
-        mat(col,p.get("material")); c["pilares"]+=1
+        mat(col,p.get("material")); clasif(col,"IfcColumn"); c["pilares"]+=1
 
     for w in spec.get("muros",[]):
         (x0,y0),(x1,y1)=w["inicio"],w["fin"]; e=w["espesor"]; H=w["altura"]
@@ -92,14 +135,13 @@ def generar(spec, out):
         run("spatial.assign_container",m,relating_structure=storeys[w["nivel"]],products=[wall])
         ps=run("pset.add_pset",m,product=wall,name="Pset_WallCommon")
         run("pset.edit_pset",m,pset=ps,properties={"IsExternal":bool(w.get("exterior",False)),"LoadBearing":True})
-        mat(wall,w.get("material")); c["muros"]+=1
+        mat(wall,w.get("material")); clasif(wall,"IfcWall"); c["muros"]+=1
         for h in w.get("huecos",[]):
             ancho=float(h["ancho"]); alto=float(h["alto"]); alf=float(h.get("alfeizar",0.0)); xc=float(h["pos"])-L/2.0
-            op=run("root.create_entity",m,ifc_class="IfcOpeningElement",name=f"{w['nombre']}_Hueco")
-            try: op.PredefinedType="OPENING"
-            except Exception: pass
-            op.ObjectPlacement=_lp(m,wall.ObjectPlacement,(xc,0.,alf)); op.Representation=_shape(m,bctx,_box(m,"hueco",ancho,e+0.10,alto))
-            _voids(m,wall,op); c["huecos"]+=1
+            op=_practicar_hueco(m,bctx,wall,_box(m,"hueco",ancho,e+0.10,alto),
+                                rel_placement=wall.ObjectPlacement,origin=(xc,0.,alf),
+                                nombre=f"{w['nombre']}_Hueco")
+            c["huecos"]+=1
             tipo=h.get("tipo")
             if tipo in ("puerta","ventana"):
                 clase="IfcDoor" if tipo=="puerta" else "IfcWindow"
@@ -148,7 +190,13 @@ def generar(spec, out):
         slab.ObjectPlacement=_lp(m,None,(0.,0.,z)); slab.Representation=sh
         run("spatial.assign_container",m,relating_structure=storeys[s["nivel"]],products=[slab])
         _ps=run("pset.add_pset",m,product=slab,name="Pset_SlabCommon"); run("pset.edit_pset",m,pset=_ps,properties={"LoadBearing":True,"IsExternal":bool(s.get("exterior",False))})
-        mat(slab,s.get("material")); c["losas"]+=1
+        mat(slab,s.get("material")); clasif(slab,"IfcSlab"); c["losas"]+=1
+        esp_h=float(s.get("espesor", s.get("canto",0.30)))
+        for h in s.get("huecos",[]):
+            px,py=h.get("pos",[0.,0.])
+            _hueco_horizontal(m,bctx,slab,x=px,y=py,ancho=h.get("ancho",0.0),largo=h.get("largo",h.get("ancho",0.0)),
+                              espesor=esp_h,contorno=h.get("contorno"),nombre=f"{s['nombre']}_Hueco")
+            c["huecos"]+=1
         for i,(sx,sy,dp,cx,cy) in enumerate(locals().get("bov",[]) or [],1):
             if sx<=0 or sy<=0 or dp<=0: continue
             part=run("root.create_entity",m,ifc_class="IfcBuildingElementPart",name=f"{s['nombre']}_Bovedilla_{i}")
@@ -171,7 +219,7 @@ def generar(spec, out):
         fl=run("root.create_entity",m,ifc_class="IfcRampFlight",name=r["nombre"])
         fl.ObjectPlacement=_lp(m,None,origin,z=Z,x=X); fl.Representation=sh
         st=storeys[r["nivel"]] if r.get("nivel") in storeys else nivel_cota(min(p0[2],p1[2]))
-        run("spatial.assign_container",m,relating_structure=st,products=[fl]); mat(fl,r.get("material")); c["rampas"]+=1
+        run("spatial.assign_container",m,relating_structure=st,products=[fl]); mat(fl,r.get("material")); clasif(fl,"IfcRampFlight"); c["rampas"]+=1
 
     for e_ in spec.get("escaleras",[]):
         x,y=e_.get("pos",[0.,0.]); z=cota(e_["nivel"]); a=float(e_.get("ancho",1.20))
@@ -191,13 +239,13 @@ def generar(spec, out):
             if zanca:
                 items.append(_beam_between(m,"zanca",(0.,a/2.,0.),(x1,a/2.,z1),0.08,0.30))
                 items.append(_beam_between(m,"zanca",(0.,-a/2.,0.),(x1,-a/2.,z1),0.08,0.30))
-            if abs(giro-180.0)<1.0:   # U: meseta cubre dos bandas, 2º tramo paralelo en -X, banda Y=+a
+            if abs(giro-180.0)<1.0:   # U: meseta cubre dos bandas, 2do tramo paralelo en -X, banda Y=+a
                 items.append(_box(m,"meseta",a,2*a,0.20,c=(x1+a/2.,a/2.,z1-0.20)))
                 for j in range(n2): items.append(_box(m,"peldano",hue,a,(j+1)*ch,c=(x1+a-(j+0.5)*hue,a,z1)))
                 if zanca:
                     items.append(_beam_between(m,"zanca",(x1+a,a/2.,z1),(x1+a-n2*hue,a/2.,z1+n2*ch),0.08,0.30))
                     items.append(_beam_between(m,"zanca",(x1+a,3*a/2.,z1),(x1+a-n2*hue,3*a/2.,z1+n2*ch),0.08,0.30))
-            else:                      # recta: meseta + 2º tramo continua en +X
+            else:                      # recta: meseta + 2do tramo continua en +X
                 items.append(_box(m,"meseta",ml,a,0.20,c=(x1+ml/2.,0.,z1-0.20)))
                 for j in range(n2): items.append(_box(m,"peldano",hue,a,(j+1)*ch,c=(x1+ml+(j+0.5)*hue,0.,z1)))
                 if zanca:
@@ -211,12 +259,26 @@ def generar(spec, out):
         except Exception: pass
         flight.ObjectPlacement=_lp(m,stair.ObjectPlacement,(0.,0.,0.)); flight.Representation=_shape(m,bctx,items)
         m.create_entity("IfcRelAggregates",GlobalId=ifcopenshell.guid.new(),RelatingObject=stair,RelatedObjects=[flight])
-        mat(stair,e_.get("material")); c["escaleras"]+=1
+        mat(stair,e_.get("material")); clasif(stair,"IfcStair"); c["escaleras"]+=1
 
     for el in spec.get("elementos",[]):
-        clase=el["clase"]; name=el.get("nombre",clase); x,y=el.get("pos",[0.,0.]); st=storeys.get(el.get("nivel"))
+        # CATALOGO ABIERTO: clase = ifcClass del cebo (o alias 'clase'); CUALQUIER IfcClass
+        clase=el.get("ifcClass") or el.get("clase"); name=el.get("nombre",clase); x,y=el.get("pos",[0.,0.]); st=storeys.get(el.get("nivel"))
         z=cota(el["nivel"]) if el.get("nivel") in storeys else float(el.get("cota",0.0))
-        C.crear_elemento(m,bctx,st,clase,name,origin=(x,y,z),predefined=el.get("predefined"),material=el.get("material"),classif_cache=ecache,params=el); c["elementos"]+=1
+        ej,_=C.crear_elemento(m,bctx,st,clase,name,origin=(x,y,z),predefined=el.get("predefined"),material=el.get("material"),classif_cache=ecache,params=el); c["elementos"]+=1
+        # huecos generalizados en anfitriones horizontales autorados por catalogo (cubiertas, etc.)
+        for h in el.get("huecos",[]):
+            px,py=h.get("pos",[x,y])
+            _hueco_horizontal(m,bctx,ej,x=px,y=py,ancho=h.get("ancho",0.0),largo=h.get("largo",h.get("ancho",0.0)),
+                              espesor=h.get("espesor",el.get("espesor",0.30)),contorno=h.get("contorno"),nombre=f"{name}_Hueco")
+            c["huecos"]+=1
+
+    # ALINEACIONES (IFC4X3): reutiliza la maquinaria de Ola 5 (no se reimplementa)
+    if spec.get("alineaciones"):
+        import alineaciones_ifc as AL
+        for a in spec.get("alineaciones",[]):
+            AL.autorar_alineacion(m, mctx, a, prj=project)
+            c["alineaciones"]+=1
 
     m.write(out); return m,c
 
@@ -228,7 +290,7 @@ def main():
         print("Uso: python3 spec_to_ifc.py entrada.spec.json salida.ifc [--estricto] [--no-validar]"); sys.exit(1)
     spec=json.load(open(args[0],encoding="utf-8")); m,c=generar(spec,args[1])
     print(f"OK  esquema={m.schema}  ->  {args[1]}")
-    print(f"    pilares={c['pilares']} muros={c['muros']}(huecos={c['huecos']}) losas={c['losas']}(bovedillas={c['bovedillas']}) rampas={c['rampas']} escaleras={c['escaleras']} elementos={c['elementos']}")
+    print(f"    pilares={c['pilares']} muros={c['muros']}(huecos={c['huecos']}) losas={c['losas']}(bovedillas={c['bovedillas']}) rampas={c['rampas']} escaleras={c['escaleras']} elementos={c['elementos']} alineaciones={c['alineaciones']}")
     print(f"    productos con geometria={len([p for p in m.by_type('IfcProduct') if p.Representation])}")
     if "--no-validar" not in flags:
         try:

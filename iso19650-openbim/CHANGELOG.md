@@ -3,6 +3,43 @@
 Registro de versiones del plugin. Formato SemVer. Cada hilo que toque el plugin añade
 una entrada y reempaqueta el `.plugin` (puerta `Nucleo-transversal/verificar_empaquetado.py`).
 
+## [0.10.0] — 2026-06-28
+- **Evolucion de C1 "apertura de familias P1" (RFC Aqyra-Raiz, 2026-06-28).** UNA sola
+  evolucion completa del contrato (no parches) que desbloquea las tres familias del
+  Visor/Editor (P1·A edificacion, P1·B trazado, P1·C normativa) sin volver a tocar C1.
+  Toda la capacidad entra ENTERA y GENERICA; el cebo construye por slices contra una
+  superficie ya estable. **Retrocompatible/aditiva** (estructuras/MEP/lineal/puentes sin
+  regresion). Lado compilador (narracion-ifc + scripts/lineal):
+  1. **Huecos generalizados** — `spec_to_ifc._practicar_hueco` / `_hueco_horizontal`: via
+     UNICA `IfcOpeningElement`+`IfcRelVoidsElement` aplicable a CUALQUIER anfitrion (muro
+     -ya-, losa, cubierta/elemento horizontal). El muro se refactoriza a la misma via.
+  2. **Catalogo de clases ABIERTO** — `elementos[].ifcClass` (alias historico `.clase`)
+     autora CUALQUIER IfcClass concreta del catalogo bsDD del esquema, incl.
+     `IfcTransportElement` (ascensor); clases futuras entran sin re-bump.
+  3. **Doble clasificacion** — nuevo `narracion-ifc/clasificacion.py`: cada elemento
+     autorado lleva `bSDD` (URI) + `Uniclass 2015` (tabla EF) por mapeo DETERMINISTA por
+     ifcClass (+PredefinedType), tan determinista como la URI bsDD; fallback por grupo IFC.
+     Se aplica a pilares/muros/losas/rampas/escaleras y a `elementos[]` (catalogo).
+  4. **Alineaciones completas** — `alineaciones[]` -> `IfcAlignment`. La maquinaria de la
+     Ola 5 `scripts/lineal/generate_test_ifc_lineal.py` se REFACTORIZA extrayendo
+     `construir_alineacion(model, ctx, ...)` (planta recta/clotoide/curva + alzado
+     rasantes/acuerdos + seccion/peralte + georref); el banco de pruebas `main` la reusa
+     (test_lineal.py SIN regresion). El puente `narracion-ifc/alineaciones_ifc.py` traduce
+     el `alto.json` y delega — NO se reimplementa geometria de alineacion. El IFC resultante
+     es legible por `scripts/lineal/ifc_to_model_lineal.py`.
+  5. **Esquema `alto.json` FORWARD-OPEN** — `narracion-ifc/spec.schema.json` v0.2:
+     `additionalProperties=true` en todos los niveles y documentado (garantia formal de
+     "sin mas parches"); documenta `huecos`, `ifcClass`, `alineaciones[]`.
+- **Golden unica C1 (Llave 1)** `C1-APERTURA-01` en VERDE: un `alto.json` con huecos en
+  losa+muro, un `IfcTransportElement` (ELEVATOR), una alineacion con clotoide+acuerdo
+  vertical y doble clasificacion -> compila IFC IFC4X3 valido (losa vaciada, ascensor
+  presente, IfcAlignment legible por el parser lineal, bsDD+Uniclass en cada elemento).
+  Entregada como artefacto a Aqyra-Raiz para que JM la registre y firme en `Estructurando 2.0`.
+- **Nota de versionado (para JM):** skew observado — `versions.lock` ancla 0.8.2, el paquete
+  publicado es v0.9.2 (track puentes) y este `plugin.json` de dev iba a 0.7.0. Se propone
+  **0.10.0** (siguiente MINOR sobre el head publicado 0.9.2; cambio ADITIVO, C1 sigue v0).
+  Reconciliar el numero definitivo al anclar (Llave 2).
+
 ## [0.7.0] — 2026-06-22
 - **Extension del dominio IFC MEP a ABASTECIMIENTO a presion (PT 6.3, Ola 6 · CIERRE).**
   El parser de red `scripts/mep/ifc_to_model_mep.py` reconoce los sistemas de
@@ -139,4 +176,4 @@ una entrada y reempaqueta el `.plugin` (puerta `Nucleo-transversal/verificar_emp
 
 ## [0.3.0] — (baseline previo)
 - Gestión de información BIM (ISO 19650 / OpenBIM): `bep-eir`, `loin-matrix`, `cde-audit`,
-  `bsdd-clasificacion`, y E/S IFC del **dominio estructural** (`ifc-create`, `ifc-validate`).
+  `bsdd-clasificacion`, y E/S IFC del **dominio estructural** (`ifc-create`, `ifc-validate`)

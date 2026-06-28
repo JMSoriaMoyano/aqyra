@@ -256,13 +256,9 @@ def crear_elemento(m, body_ctx, storey, clase, name, origin=(0.,0.,0.),
         ps = run("pset.add_pset", m, product=el, name="Pset_Estructurando_Spec")
         run("pset.edit_pset", m, pset=ps, properties={"Material": material})
     if classif_cache is not None:
-        c = classif_cache.get("__classif__")
-        if c is None:
-            c = run("classification.add_classification", m, classification="bSDD - IFC 4.3")
-            classif_cache["__classif__"] = c
-        try:
-            ref = run("classification.add_reference", m, products=[el],
-                      identification=clase, name=clase, classification=c, is_lightweight=False)
-            if ref is not None: ref.Location = bsdd_uri(clase)
-        except Exception: pass
+        # Doble clasificacion determinista (bsDD URI + Uniclass 2015), via unica.
+        import clasificacion
+        clasificacion.clasificar_doble(m, el, clase, classif_cache,
+                                       predefined=getattr(el, "PredefinedType", None),
+                                       grupo=grupo_de(clase))
     return el, n_props
