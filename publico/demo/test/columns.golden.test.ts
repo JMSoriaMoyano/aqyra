@@ -1,5 +1,5 @@
 /**
- * Arnés golden — capa de ELEMENTOS (Inc núcleo: IfcColumn + IfcSlab + IfcOpeningElement).
+ * Arnés golden — capa de ELEMENTOS (IfcColumn + IfcSlab + IfcOpeningElement + IfcWall).
  *
  * Llave 1 (golden verde): este arnés prueba que `buildGrid`/`buildModel` son
  * DETERMINISTAS y que los fixtures congelados no regresionan. La IA lo prepara;
@@ -10,7 +10,7 @@
  */
 import { describe, it, expect } from "vitest";
 import {
-  resolveGrid, buildGrid, buildModel, columnCount, slabCount, openingCount,
+  resolveGrid, buildGrid, buildModel, columnCount, slabCount, openingCount, wallCount,
   type BuildingInput,
 } from "../src/model";
 import { checkFixture, type CaseFixture } from "../src/fixture";
@@ -212,5 +212,36 @@ describe("resolveGrid — ejes explícitos (alineación no uniforme)", () => {
     );
     const cols = m.storeys[0].elements.filter((e) => e.ifcClass === "IfcColumn");
     expect(cols.some((c) => c.placement.kind === "point" && c.placement.y === 15)).toBe(true);
+  });
+});
+
+describe("buildModel — muros de fachada (IfcWall, línea, por planta)", () => {
+  const base: BuildingInput = {
+    project: "R", building: "B",
+    storeys: { count: 4, height: 3 },
+    plan: { rooms: null, corridor: null, cores: [] },
+  };
+
+  it("4 muros de fachada por planta (lados de la huella)", () => {
+    const m = buildModel(base, CTX);
+    expect(wallCount(m)).toBe(16);
+    expect(m.storeys.map((s) => s.elements.filter((e) => e.ifcClass === "IfcWall").length)).toEqual([4, 4, 4, 4]);
+  });
+
+  it("el muro es LÍNEA, exterior, con su extensión [i,i+1]", () => {
+    const m = buildModel(base, CTX);
+    const w = m.storeys[0].elements.find((e) => e.ifcClass === "IfcWall")!;
+    expect(w.placement.kind).toBe("line");
+    expect(w.exterior).toBe(true);
+    expect(w.spans).toEqual([0, 1]);
+    expect(w.code).toBe("AQ-MUR-P00-FAC-S");
+    expect(w.uriBsdd).toContain("/class/IfcWall");
+  });
+
+  it("el puente emite muros[] y muros_perimetrales:false", () => {
+    const spec = toAltoSpec(buildModel(base, CTX), { ancho: 31, largo: 15.6, altura: 3 });
+    expect(spec.muros?.length).toBe(16);
+    expect(spec.edificios[0].muros_perimetrales).toBe(false);
+    expect(spec.muros?.[0]).toMatchObject({ nivel: "Planta Baja", exterior: true, espesor: 0.25, altura: 3 });
   });
 });

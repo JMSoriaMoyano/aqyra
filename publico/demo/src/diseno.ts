@@ -15,7 +15,7 @@ import { residenceGenerator, GENERATORS } from "./generators";
 import { toAltoSpec } from "./c1-bridge";
 import { makeFixture } from "./fixture";
 import {
-  buildModel, hasModel, spaceCount, columnCount, slabCount, openingCount, resolveGrid, buildGrid,
+  buildModel, hasModel, spaceCount, columnCount, slabCount, openingCount, wallCount, resolveGrid, buildGrid,
   type BuildingInput, type BuildingModel, type StoreyInstance, type SpaceInstance,
   type ZoneInstance, type ElementInstance, type GridResolved, type GridNode,
 } from "./model";
@@ -62,6 +62,7 @@ type Selection =
   | { kind: "element"; x: number; y: number; storey: number }
   | { kind: "slab"; storey: number }
   | { kind: "opening"; storey: number; cx: number; cy: number }
+  | { kind: "wall"; storey: number; cx: number; cy: number }
   | { kind: "storey"; index: number };
 let selected: Selection = { kind: "none" };
 const HILITE = "#ffe066";
@@ -200,6 +201,7 @@ function drawVolume(): void {
   slab(0, EDGE, 1.2);
   drawAxes();
   drawCardinals();
+  if (view.levels) drawFacade(); // muros de fachada (paño por planta)
   // forjados (IfcSlab): SUELO de cada planta 1..NF-1 (con sus huecos de núcleo, path
   // evenodd) y la CUBIERTA en NF (techo, sin huecos: cierra por arriba). Forjado/hueco
   // seleccionado, resaltado.
@@ -222,6 +224,25 @@ function drawVolume(): void {
   const g = currentGrid();
   if (g) drawGrid3D(g.grid, g.nodes);
   else if (view.grid) drawGridSchematic();
+}
+
+/** Muros de fachada: un paño vertical por planta y lado de la huella; el seleccionado, resaltado. */
+function drawFacade(): void {
+  const edges: [[number, number], [number, number]][] = [
+    [[0, 0], [W, 0]], [[W, 0], [W, D]], [[W, D], [0, D]], [[0, D], [0, 0]],
+  ];
+  for (let i = 0; i < NF; i++) {
+    const z0 = i * FF, z1 = (i + 1) * FF;
+    for (const [a, b] of edges) {
+      const hot = selected.kind === "wall" && selected.storey === i
+        && near(selected.cx, (a[0] + b[0]) / 2) && near(selected.cy, (a[1] + b[1]) / 2);
+      poly(
+        [iso(a[0], a[1], z0), iso(b[0], b[1], z0), iso(b[0], b[1], z1), iso(a[0], a[1], z1)],
+        hot ? "rgba(255,224,102,0.32)" : "rgba(154,141,122,0.10)",
+        hot ? HILITE : "#6b6354", hot ? 2 : 0.8,
+      );
+    }
+  }
 }
 
 /** Retícula esquemática (sin parámetros): ayuda visual de ejes 6×A/B/C. */
@@ -487,10 +508,12 @@ function renderTree(model: BuildingModel): void {
   const nCols = columnCount(model);
   const nSlabs = slabCount(model);
   const nOpen = openingCount(model);
+  const nWalls = wallCount(model);
   const tags = [
     nSpaces > 0 ? `${nSpaces} IfcSpace` : "",
     nCols > 0 ? `${nCols} IfcColumn` : "",
     nSlabs > 0 ? `${nSlabs} IfcSlab` : "",
+    nWalls > 0 ? `${nWalls} IfcWall` : "",
     nOpen > 0 ? `${nOpen} IfcOpening` : "",
   ].filter(Boolean);
   const bldLabel = tags.length ? `${model.building.name} · ${tags.join(" · ")}` : model.building.name;
@@ -538,6 +561,7 @@ function selectionFor(ref: NodeRef): Selection {
   if (ref.t === "element") {
     const pl = ref.data.placement;
     if (pl.kind === "point") return { kind: "element", x: pl.x, y: pl.y, storey: ref.data.storeyIndex };
+    if (pl.kind === "line") return { kind: "wall", storey: ref.data.storeyIndex, cx: (pl.start[0] + pl.end[0]) / 2, cy: (pl.start[1] + pl.end[1]) / 2 };
     if (ref.data.ifcClass === "IfcOpeningElement") {
       const c = pl.contour;
       return { kind: "opening", storey: ref.data.storeyIndex, cx: (c[0][0] + c[2][0]) / 2, cy: (c[0][1] + c[2][1]) / 2 };
@@ -576,11 +600,15 @@ function selectNode(ref: NodeRef, el: HTMLElement): void {
       (e.axis ? drow("Eje", e.axis) : "") +
       (e.section ? drow("Sección", `${e.section.w.toFixed(2)}×${e.section.d.toFixed(2)} m`) : "") +
       (e.thickness ? drow("Espesor", `${e.thickness.toFixed(2)} m`) : "") +
+      (e.height ? drow("Altura", `${e.height.toFixed(2)} m`) : "") +
+      (e.exterior !== undefined ? drow("IsExternal", e.exterior ? "sí (fachada)" : "no (interior)") : "") +
       (e.material ? drow("Material", e.material) : "") +
       drow("Nivel", e.level) +
       (e.host ? drow("Anfitrión", e.host) : "") +
       (e.placement.kind === "point"
         ? drow("Posición", `x=${e.placement.x.toFixed(2)} · y=${e.placement.y.toFixed(2)} m`)
+        : e.placement.kind === "line"
+        ? drow("Longitud", `${Math.hypot(e.placement.end[0] - e.placement.start[0], e.placement.end[1] - e.placement.start[1]).toFixed(2)} m`)
         : drow("Área", `${polyArea(e.placement.contour).toFixed(1)} m²`));
   } else {
     const z = ref.data;
@@ -591,7 +619,7 @@ function selectNode(ref: NodeRef, el: HTMLElement): void {
   // Resalta la selección en el dibujo y asegura que su vista esté visible.
   selected = selectionFor(ref);
   if (selected.kind === "space" || selected.kind === "zone") view.plan = true;
-  else if (selected.kind === "storey" || selected.kind === "slab" || selected.kind === "opening") view.volume = true;
+  else if (selected.kind === "storey" || selected.kind === "slab" || selected.kind === "opening" || selected.kind === "wall") view.volume = true;
   else if (selected.kind === "element") { view.volume = true; if (bInput.grid) view.plan = true; }
   render();
 

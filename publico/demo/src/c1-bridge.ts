@@ -54,6 +54,19 @@ export interface AltoPilar {
  * esquema no cambia (losas admite campos extra). El cebo toma autoridad del forjado
  * (emite la losa) y pone `forjados:false`, igual que `pilares:false` con la retícula.
  */
+/** Muro explícito en el spec de C1. `muros` YA es primitivo de C1 → frontera-cero.
+ *  El cebo toma autoridad de la fachada (emite los muros) y pone `muros_perimetrales:false`. */
+export interface AltoMuro {
+  nombre: string;
+  nivel: string;
+  inicio: [number, number];
+  fin: [number, number];
+  espesor: number;
+  altura: number;
+  exterior: boolean;
+  material: string;
+}
+
 export interface AltoHueco { contorno: [number, number][]; }
 export interface AltoLosa {
   nombre: string;
@@ -79,6 +92,7 @@ export interface AltoSpec {
   espacios: AltoEspacio[];     // extensión de frontera (ver cabecera)
   pilares?: AltoPilar[];       // pilares explícitos (ejes no uniformes); C1 YA los tiene
   losas?: AltoLosa[];          // el cebo autora los forjados (con huecos) → forjados:false
+  muros?: AltoMuro[];          // el cebo autora la fachada → muros_perimetrales:false
 }
 
 export interface BridgeDims { ancho: number; largo: number; altura: number; }
@@ -145,6 +159,22 @@ export function toAltoSpec(model: BuildingModel, dims: BridgeDims): AltoSpec {
     }
   }
 
+  // Muros: el cebo AUTORA la fachada (línea por planta) desde los IfcWall del modelo →
+  // el edificio no la autogenera (muros_perimetrales:false). Primitivo `muros` de C1.
+  const muros: AltoMuro[] = [];
+  for (const st of model.storeys) {
+    for (const e of st.elements) {
+      if (e.ifcClass !== "IfcWall" || e.placement.kind !== "line") continue;
+      muros.push({
+        nombre: e.code, nivel: e.level,
+        inicio: [round3(e.placement.start[0]), round3(e.placement.start[1])],
+        fin: [round3(e.placement.end[0]), round3(e.placement.end[1])],
+        espesor: round3(e.thickness ?? 0.25), altura: round3(e.height ?? dims.altura),
+        exterior: e.exterior ?? false, material: e.material ?? "HA-30",
+      });
+    }
+  }
+
   // Niveles: una cota por planta habitable + la CUBIERTA encima de la última.
   const niveles = model.storeys.map((st) => ({ nombre: st.name, cota: round3(st.elevation) }));
   niveles.push({ nombre: "Cubierta", cota: round3(model.storeys.length * dims.altura) });
@@ -158,13 +188,14 @@ export function toAltoSpec(model: BuildingModel, dims: BridgeDims): AltoSpec {
       origen: [0, 0],
       ancho: round3(dims.ancho),
       largo: round3(dims.largo),
-      muros_perimetrales: true,
+      muros_perimetrales: muros.length === 0, // si el cebo da muros, el edificio no añade los suyos
       forjados: false,           // el cebo autora las losas (abajo); C1 no las duplica
       pilares: pilares.length === 0, // si el cebo da pilares, el edificio no añade los suyos
     }],
     espacios,
     ...(pilares.length ? { pilares } : {}),
     ...(losas.length ? { losas } : {}),
+    ...(muros.length ? { muros } : {}),
   };
 }
 

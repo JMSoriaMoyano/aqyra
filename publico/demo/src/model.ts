@@ -33,10 +33,11 @@ export interface SpaceInstance {
 // catálogo de C1 (no una batería de generadores). El cebo aporta identidad ligera
 // (clase + colocación + sección + clasificación); C1 autora la geometría real.
 
-/** Colocación de un elemento (m). Punto (pilar) o polígono (forjado); línea con muros. */
+/** Colocación de un elemento (m): punto (pilar), polígono (forjado) o línea (muro). */
 export type Placement =
   | { kind: "point"; x: number; y: number }
-  | { kind: "polygon"; contour: [number, number][] };
+  | { kind: "polygon"; contour: [number, number][] }
+  | { kind: "line"; start: [number, number]; end: [number, number] };
 
 /** Sección rectangular de pilar (m). Default C1: 0,40 × 0,40. */
 export interface ColumnSection { w: number; d: number; }
@@ -49,6 +50,9 @@ export interface ElementInstance {
   placement: Placement;
   section?: ColumnSection;     // sección de barra (pilar/viga)
   thickness?: number;          // espesor (forjado/muro), m
+  height?: number;             // altura del muro, m
+  exterior?: boolean;          // IsExternal: fachada (true) | divisoria (false)
+  spans?: [number, number];    // EXTENSIÓN vertical: rango de niveles [desde, hasta]
   material?: string;           // HA-30 (def. C1)
   level: string;               // nombre de la planta que lo contiene
   storeyIndex: number;         // índice de esa planta (para render por tramos)
@@ -119,10 +123,12 @@ export interface GridNode { x: number; y: number; axis: string; ix: number; iy: 
 export const DEFAULT_SECTION: ColumnSection = { w: 0.4, d: 0.4 };
 export const DEFAULT_MATERIAL = "HA-30";
 export const DEFAULT_SLAB_T = 0.3; // espesor de forjado (m), default C1
+export const DEFAULT_WALL_T = 0.25; // espesor de muro (m), default C1
 const BSDD = (cls: string): string => `https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/${cls}`;
 const BSDD_COLUMN = BSDD("IfcColumn");
 const BSDD_SLAB = BSDD("IfcSlab");
 const BSDD_OPENING = BSDD("IfcOpeningElement");
+const BSDD_WALL = BSDD("IfcWall");
 
 /** Contorno rectangular (m) de una huella, en orden CCW. */
 const rectContour = (f: Footprint): [number, number][] =>
@@ -299,7 +305,26 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
         } as ElementInstance))
       : [];
 
-    const elements: ElementInstance[] = [...cols, ...slabs, ...openings];
+    // Muros de FACHADA (driver = envolvente): 4 por planta, los lados de la huella.
+    // POR PLANTA (de suelo a techo, altura h), geometría de LÍNEA, exterior=true.
+    // `spans=[i,i+1]` deja la EXTENSIÓN como propiedad: el muro pasante (núcleo) será
+    // el mismo elemento con otro rango. Driver de divisoria/núcleo = clon, después.
+    const fachada: Array<{ tag: string; a: [number, number]; b: [number, number] }> = [
+      { tag: "S", a: [0, 0], b: [ctx.W, 0] },
+      { tag: "E", a: [ctx.W, 0], b: [ctx.W, ctx.D] },
+      { tag: "N", a: [ctx.W, ctx.D], b: [0, ctx.D] },
+      { tag: "O", a: [0, ctx.D], b: [0, 0] },
+    ];
+    const walls: ElementInstance[] = fachada.map((e) => ({
+      code: `AQ-MUR-${p}-FAC-${e.tag}`,
+      ifcClass: "IfcWall", objectType: "Fachada", predefinedType: "SOLIDWALL",
+      placement: { kind: "line", start: e.a, end: e.b },
+      thickness: DEFAULT_WALL_T, material: DEFAULT_MATERIAL, exterior: true,
+      height: round2(h), spans: [i, i + 1],
+      level: storeyName(i), storeyIndex: i, uriBsdd: BSDD_WALL,
+    } as ElementInstance));
+
+    const elements: ElementInstance[] = [...cols, ...slabs, ...openings, ...walls];
 
     storeys.push({
       code: `AQ-NIV-${p}`, ifcClass: "IfcBuildingStorey", index: i,
@@ -338,3 +363,5 @@ export function columnCount(m: BuildingModel): number { return elementCount(m, "
 export function slabCount(m: BuildingModel): number { return elementCount(m, "IfcSlab"); }
 /** Recuento total de IfcOpeningElement (huecos de forjado). */
 export function openingCount(m: BuildingModel): number { return elementCount(m, "IfcOpeningElement"); }
+/** Recuento total de IfcWall (muros). */
+export function wallCount(m: BuildingModel): number { return elementCount(m, "IfcWall"); }

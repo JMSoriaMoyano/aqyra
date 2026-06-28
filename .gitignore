@@ -28,6 +28,7 @@ venv/
 /ESTADO_entorno.bat
 /COMMIT_entorno.bat
 /PUSH_entorno_main.bat
+/LIMPIAR_entorno_eol.bat
 
 # ── Salidas / temporales ──
 *_resultado.txt
