@@ -30,5 +30,7 @@ Thumbs.db
 # Helpers operativos de git (no son del proyecto; se ejecutan y se borran)
 /COMMIT_motor_CN-convenciones.bat
 /LIMPIAR_log_amend.bat
+/PUSH_motor_main.bat
+/LIMPIAR_motor_eol.bat
 # Logs de resultado de los .bat de git (traza operativa, no del proyecto)
 git_resultado_*.txt
