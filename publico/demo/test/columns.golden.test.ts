@@ -1,5 +1,5 @@
 /**
- * Arnés golden — capa de ELEMENTOS (IfcColumn + IfcSlab + IfcOpeningElement + IfcWall).
+ * Arnés golden — capa de ELEMENTOS (IfcColumn · IfcSlab · IfcOpeningElement · IfcWall · IfcDoor/Window).
  *
  * Llave 1 (golden verde): este arnés prueba que `buildGrid`/`buildModel` son
  * DETERMINISTAS y que los fixtures congelados no regresionan. La IA lo prepara;
@@ -10,7 +10,7 @@
  */
 import { describe, it, expect } from "vitest";
 import {
-  resolveGrid, buildGrid, buildModel, columnCount, slabCount, openingCount, wallCount,
+  resolveGrid, buildGrid, buildModel, columnCount, slabCount, openingCount, wallCount, carpentryCount, stairCount,
   type BuildingInput,
 } from "../src/model";
 import { checkFixture, type CaseFixture } from "../src/fixture";
@@ -243,5 +243,132 @@ describe("buildModel — muros de fachada (IfcWall, línea, por planta)", () => 
     expect(spec.muros?.length).toBe(16);
     expect(spec.edificios[0].muros_perimetrales).toBe(false);
     expect(spec.muros?.[0]).toMatchObject({ nivel: "Planta Baja", exterior: true, espesor: 0.25, altura: 3 });
+  });
+});
+
+describe("buildModel — tabiques interiores (divisoria por línea)", () => {
+  const base: BuildingInput = {
+    project: "R", building: "B",
+    storeys: { count: 4, height: 3 },
+    plan: { rooms: null, corridor: null, cores: [] },
+    partitions: [{ start: [7, 0], end: [7, 10] }], // tabique alineado al eje X=7, de fachada a fachada
+  };
+
+  it("un tabique por planta, ADEMÁS de la fachada (interior, PARTITIONING)", () => {
+    const m = buildModel(base, CTX);
+    expect(wallCount(m)).toBe(20); // (4 fachada + 1 divisoria) × 4 plantas
+    const div = m.storeys[0].elements.find((e) => e.objectType === "Divisoria")!;
+    expect(div.exterior).toBe(false);
+    expect(div.predefinedType).toBe("PARTITIONING");
+    expect(div.placement.kind).toBe("line");
+    expect(div.code).toBe("AQ-MUR-P00-DIV-01");
+  });
+
+  it("el puente lo emite como muro interior (exterior:false)", () => {
+    const spec = toAltoSpec(buildModel(base, CTX), { ancho: 14, largo: 10, altura: 3 });
+    expect(spec.muros?.length).toBe(20);
+    expect(spec.muros?.some((w) => w.exterior === false)).toBe(true);
+  });
+});
+
+describe("buildModel — muros de núcleo PASANTES (continuos, spans multi-planta)", () => {
+  const base: BuildingInput = {
+    project: "R", building: "B",
+    storeys: { count: 4, height: 3 },
+    plan: { rooms: { count: 8, layout: "both-sides" }, corridor: { width: 1.4 }, cores: [{ orientation: "NO", detail: "esc" }] },
+  };
+
+  it("4 muros por núcleo, UN elemento cada uno (no por planta), spans [0,n]", () => {
+    const m = buildModel(base, CTX);
+    const core = m.storeys.flatMap((s) => s.elements).filter((e) => e.objectType === "MuroNucleo");
+    expect(core.length).toBe(4); // 1 núcleo × 4 lados, continuos (no × plantas)
+    expect(core[0].spans).toEqual([0, 4]);
+    expect(core[0].height).toBe(12); // n·h = 4·3
+    expect(core[0].predefinedType).toBe("SHEAR");
+    expect(core[0].exterior).toBe(false);
+  });
+
+  it("el puente emite el muro de núcleo alto (altura total) en Planta Baja", () => {
+    const spec = toAltoSpec(buildModel(base, CTX), { ancho: 31, largo: 15.6, altura: 3 });
+    const nuc = spec.muros?.find((w) => w.altura === 12);
+    expect(nuc).toBeDefined();
+    expect(nuc?.nivel).toBe("Planta Baja");
+  });
+});
+
+describe("buildModel — divisorias por LINDES (aristas de espacio)", () => {
+  const base: BuildingInput = {
+    project: "R", building: "B",
+    storeys: { count: 1, height: 3 },
+    plan: { rooms: { count: 4, layout: "both-sides" }, corridor: { width: 1 }, cores: [] },
+  };
+
+  it("muros divisoria en las aristas compartidas (fundidas en líneas), interior", () => {
+    const m = buildModel(base, { W: 10, D: 8 });
+    const lin = m.storeys[0].elements.filter((e) => e.objectType === "Divisoria" && e.code.includes("LIN"));
+    expect(lin.length).toBe(4); // 2 entre habitaciones (cortadas por el pasillo) + 2 con el pasillo (fundidas)
+    expect(lin[0].exterior).toBe(false);
+    expect(lin[0].placement.kind).toBe("line");
+  });
+
+  it("el parking NO lleva divisorias por lindes (no separa plazas con muros)", () => {
+    const m = buildModel(
+      { project: "P", building: "B", storeys: { count: 1, height: 3 }, plan: { rooms: null, corridor: null, cores: [] }, program: { generator: "parking-comb", params: { bays: 50, aisle: 6 } } },
+      { W: 30, D: 15 },
+    );
+    expect(m.storeys[0].elements.filter((e) => e.code.includes("LIN")).length).toBe(0);
+  });
+});
+
+describe("buildModel — carpintería (IfcDoor/IfcWindow con host = muro)", () => {
+  const base: BuildingInput = {
+    project: "R", building: "B",
+    storeys: { count: 2, height: 3 },
+    plan: { rooms: null, corridor: null, cores: [] },
+    openings: [{ kind: "door", x: 5, y: 0 }], // puerta en la fachada sur (y=0) en x=5
+  };
+
+  it("la puerta se aloja en el muro que pasa por su punto (host), por planta", () => {
+    const m = buildModel(base, { W: 14, D: 10 });
+    expect(carpentryCount(m)).toBe(2); // 1 puerta × 2 plantas
+    const d = m.storeys[0].elements.find((e) => e.ifcClass === "IfcDoor")!;
+    expect(d.host).toBe("AQ-MUR-P00-FAC-S");
+    expect(d.placement.kind).toBe("line");
+    expect(d.width).toBe(0.9);
+  });
+
+  it("el puente emite el vano como muro.huecos (frontera-cero)", () => {
+    const spec = toAltoSpec(buildModel(base, { W: 14, D: 10 }), { ancho: 14, largo: 10, altura: 3 });
+    const muroS = spec.muros?.find((w) => w.nombre === "AQ-MUR-P00-FAC-S");
+    expect(muroS?.huecos?.length).toBe(1);
+    expect(muroS?.huecos?.[0]).toMatchObject({ tipo: "puerta", ancho: 0.9, alto: 2.1, pos: 5 });
+  });
+
+  it("si el punto no cae en ningún muro, no coloca carpintería", () => {
+    const m = buildModel({ ...base, openings: [{ kind: "window", x: 5, y: 5 }] }, { W: 14, D: 10 });
+    expect(carpentryCount(m)).toBe(0);
+  });
+});
+
+describe("buildModel — escalera de núcleo (IfcStair)", () => {
+  const base: BuildingInput = {
+    project: "R", building: "B",
+    storeys: { count: 4, height: 3 },
+    plan: { rooms: { count: 8, layout: "both-sides" }, corridor: { width: 1.4 }, cores: [{ orientation: "NO", detail: "esc" }] },
+  };
+
+  it("una escalera por núcleo y planta, contenida en el espacio del núcleo", () => {
+    const m = buildModel(base, CTX);
+    expect(stairCount(m)).toBe(4); // 1 núcleo × 4 plantas
+    const e = m.storeys[0].elements.find((x) => x.ifcClass === "IfcStair")!;
+    expect(e.objectType).toBe("Escalera");
+    expect(e.container).toBe("AQ-ESP-NUC-P00-NO");
+    expect(e.uriBsdd).toContain("/class/IfcStair");
+  });
+
+  it("el puente emite escaleras[] con nº de escalones por la altura (≈ DB-SUA)", () => {
+    const spec = toAltoSpec(buildModel(base, CTX), { ancho: 31, largo: 15.6, altura: 3 });
+    expect(spec.escaleras?.length).toBe(4);
+    expect(spec.escaleras?.[0]).toMatchObject({ ancho: 1.2, contrahuella: 0.18, n_escalones: 17, meseta: true, giro: 180 });
   });
 });

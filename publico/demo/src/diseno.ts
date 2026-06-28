@@ -15,7 +15,7 @@ import { residenceGenerator, GENERATORS } from "./generators";
 import { toAltoSpec } from "./c1-bridge";
 import { makeFixture } from "./fixture";
 import {
-  buildModel, hasModel, spaceCount, columnCount, slabCount, openingCount, wallCount, resolveGrid, buildGrid,
+  buildModel, hasModel, spaceCount, columnCount, slabCount, openingCount, wallCount, stairCount, resolveGrid, buildGrid, spaceBoundaryWalls,
   type BuildingInput, type BuildingModel, type StoreyInstance, type SpaceInstance,
   type ZoneInstance, type ElementInstance, type GridResolved, type GridNode,
 } from "./model";
@@ -201,7 +201,7 @@ function drawVolume(): void {
   slab(0, EDGE, 1.2);
   drawAxes();
   drawCardinals();
-  if (view.levels) drawFacade(); // muros de fachada (paño por planta)
+  if (view.levels) { drawFacade(); drawPartitions(); drawDivisions(); drawCores(); drawCarpentry(); drawStairs(); } // muros + carpintería + escaleras
   // forjados (IfcSlab): SUELO de cada planta 1..NF-1 (con sus huecos de núcleo, path
   // evenodd) y la CUBIERTA en NF (techo, sin huecos: cierra por arriba). Forjado/hueco
   // seleccionado, resaltado.
@@ -240,6 +240,91 @@ function drawFacade(): void {
         [iso(a[0], a[1], z0), iso(b[0], b[1], z0), iso(b[0], b[1], z1), iso(a[0], a[1], z1)],
         hot ? "rgba(255,224,102,0.32)" : "rgba(154,141,122,0.10)",
         hot ? HILITE : "#6b6354", hot ? 2 : 0.8,
+      );
+    }
+  }
+}
+
+/** Tabiques interiores (divisorias): un paño vertical por planta a lo largo de la línea dada. */
+function drawPartitions(): void {
+  for (let i = 0; i < NF; i++) {
+    const z0 = i * FF, z1 = (i + 1) * FF;
+    for (const d of bInput.partitions ?? []) {
+      const hot = selected.kind === "wall" && selected.storey === i
+        && near(selected.cx, (d.start[0] + d.end[0]) / 2) && near(selected.cy, (d.start[1] + d.end[1]) / 2);
+      poly(
+        [iso(d.start[0], d.start[1], z0), iso(d.end[0], d.end[1], z0), iso(d.end[0], d.end[1], z1), iso(d.start[0], d.start[1], z1)],
+        hot ? "rgba(255,224,102,0.32)" : "rgba(120,150,180,0.14)", hot ? HILITE : "#5a7088", hot ? 2 : 1,
+      );
+    }
+  }
+}
+
+/** Divisorias por LINDES: paño por planta en cada arista compartida entre espacios. */
+function drawDivisions(): void {
+  if (bInput.program) return; // no en parking
+  const lines = spaceBoundaryWalls(placedSpaces().filter((s) => s.objectType !== "Nucleo").map((s) => s.footprint));
+  for (let i = 0; i < NF; i++) {
+    const z0 = i * FF, z1 = (i + 1) * FF;
+    for (const d of lines) {
+      const hot = selected.kind === "wall" && selected.storey === i
+        && near(selected.cx, (d.start[0] + d.end[0]) / 2) && near(selected.cy, (d.start[1] + d.end[1]) / 2);
+      poly(
+        [iso(d.start[0], d.start[1], z0), iso(d.end[0], d.end[1], z0), iso(d.end[0], d.end[1], z1), iso(d.start[0], d.start[1], z1)],
+        hot ? "rgba(255,224,102,0.32)" : "rgba(120,150,180,0.12)", hot ? HILITE : "#5a7088", hot ? 2 : 0.9,
+      );
+    }
+  }
+}
+
+/** Escaleras: un tramo por planta en cada núcleo (marca de huella + diagonal del tramo). */
+function drawStairs(): void {
+  for (const f of placedSpaces().filter((s) => s.objectType === "Nucleo").map((s) => s.footprint)) {
+    for (let i = 0; i < NF; i++) {
+      const z0 = i * FF, z1 = (i + 1) * FF;
+      const hot = selected.kind === "element" && selected.storey === i && near(selected.x, f.x) && near(selected.y, f.y);
+      const col = hot ? HILITE : "#8fb98f";
+      poly([iso(f.x, f.y, z0), iso(f.x + f.w, f.y, z0), iso(f.x + f.w, f.y + f.d, z0), iso(f.x, f.y + f.d, z0)],
+        hot ? "rgba(255,224,102,0.30)" : "rgba(143,185,143,0.12)", col, hot ? 2 : 0.8);
+      seg(iso(f.x, f.y, z0), iso(f.x + f.w, f.y + f.d, z1), col, hot ? 2.4 : 1.4); // diagonal del tramo
+    }
+  }
+}
+
+/** Carpintería (puertas/ventanas): paño del vano (alféizar..alféizar+alto) sobre su muro. */
+function drawCarpentry(): void {
+  if (!(bInput.openings?.length)) return;
+  const m = buildModel(bInput, { W, D });
+  for (const st of m.storeys) {
+    for (const e of st.elements) {
+      if ((e.ifcClass !== "IfcDoor" && e.ifcClass !== "IfcWindow") || e.placement.kind !== "line") continue;
+      const z0 = e.storeyIndex * FF + (e.sill ?? 0), z1 = z0 + (e.height ?? 2);
+      const a = e.placement.start, b = e.placement.end;
+      const hot = selected.kind === "wall" && selected.storey === e.storeyIndex
+        && near(selected.cx, (a[0] + b[0]) / 2) && near(selected.cy, (a[1] + b[1]) / 2);
+      const col = e.ifcClass === "IfcDoor" ? "rgba(200,150,90,0.45)" : "rgba(150,200,235,0.40)";
+      poly(
+        [iso(a[0], a[1], z0), iso(b[0], b[1], z0), iso(b[0], b[1], z1), iso(a[0], a[1], z1)],
+        hot ? "rgba(255,224,102,0.50)" : col, hot ? HILITE : "#caa46a", hot ? 2 : 1,
+      );
+    }
+  }
+}
+
+/** Muros de núcleo PASANTES: paño continuo de suelo a cubierta por cada lado del núcleo. */
+function drawCores(): void {
+  const top = NF * FF;
+  for (const f of placedSpaces().filter((s) => s.objectType === "Nucleo").map((s) => s.footprint)) {
+    const sides: [[number, number], [number, number]][] = [
+      [[f.x, f.y], [f.x + f.w, f.y]], [[f.x + f.w, f.y], [f.x + f.w, f.y + f.d]],
+      [[f.x + f.w, f.y + f.d], [f.x, f.y + f.d]], [[f.x, f.y + f.d], [f.x, f.y]],
+    ];
+    for (const [a, b] of sides) {
+      const hot = selected.kind === "wall"
+        && near(selected.cx, (a[0] + b[0]) / 2) && near(selected.cy, (a[1] + b[1]) / 2);
+      poly(
+        [iso(a[0], a[1], 0), iso(b[0], b[1], 0), iso(b[0], b[1], top), iso(a[0], a[1], top)],
+        hot ? "rgba(255,224,102,0.34)" : "rgba(110,140,170,0.20)", hot ? HILITE : "#5a7a98", hot ? 2.2 : 1.2,
       );
     }
   }
@@ -368,6 +453,17 @@ function renderPlan(): void {
         rectS(px - half * 1.9, py - half * 1.9, half * 3.8, half * 3.8, "none", HILITE, 2);
       }
     }
+  }
+
+  // tabiques interiores (divisorias): línea a escala en la huella
+  for (const d of bInput.partitions ?? []) {
+    const mid = near(selected.kind === "wall" ? selected.cx : NaN, (d.start[0] + d.end[0]) / 2)
+      && near(selected.kind === "wall" ? selected.cy : NaN, (d.start[1] + d.end[1]) / 2);
+    seg(
+      [fx + (d.start[0] / W2) * fw, fy + (1 - d.start[1] / D2) * fh],
+      [fx + (d.end[0] / W2) * fw, fy + (1 - d.end[1] / D2) * fh],
+      mid ? HILITE : "#7e96b0", mid ? 3 : 2,
+    );
   }
 
   // leyenda por objectType presente
@@ -514,6 +610,7 @@ function renderTree(model: BuildingModel): void {
     nCols > 0 ? `${nCols} IfcColumn` : "",
     nSlabs > 0 ? `${nSlabs} IfcSlab` : "",
     nWalls > 0 ? `${nWalls} IfcWall` : "",
+    stairCount(model) > 0 ? `${stairCount(model)} IfcStair` : "",
     nOpen > 0 ? `${nOpen} IfcOpening` : "",
   ].filter(Boolean);
   const bldLabel = tags.length ? `${model.building.name} · ${tags.join(" · ")}` : model.building.name;
@@ -544,6 +641,8 @@ function resetTree(): void {
   bInput.storeys = undefined;
   bInput.program = undefined;
   bInput.grid = undefined;
+  bInput.partitions = undefined;
+  bInput.openings = undefined;
   selected = { kind: "none" };
   treebody.innerHTML = EMPTY_TREE;
   detail.innerHTML = `<div id="detailEmpty">Selecciona un nodo del árbol para ver sus atributos, Psets y clasificación bsDD (en vivo).</div>`;
@@ -600,7 +699,10 @@ function selectNode(ref: NodeRef, el: HTMLElement): void {
       (e.axis ? drow("Eje", e.axis) : "") +
       (e.section ? drow("Sección", `${e.section.w.toFixed(2)}×${e.section.d.toFixed(2)} m`) : "") +
       (e.thickness ? drow("Espesor", `${e.thickness.toFixed(2)} m`) : "") +
+      (e.width ? drow("Ancho", `${e.width.toFixed(2)} m`) : "") +
       (e.height ? drow("Altura", `${e.height.toFixed(2)} m`) : "") +
+      (e.sill ? drow("Alféizar", `${e.sill.toFixed(2)} m`) : "") +
+      (e.spans && e.spans[1] - e.spans[0] > 1 ? drow("Extensión", `pasante · ${e.spans[1] - e.spans[0]} plantas`) : "") +
       (e.exterior !== undefined ? drow("IsExternal", e.exterior ? "sí (fachada)" : "no (interior)") : "") +
       (e.material ? drow("Material", e.material) : "") +
       drow("Nivel", e.level) +
@@ -688,16 +790,6 @@ function waiting(on: boolean): void {
     log.scrollTop = log.scrollHeight;
   } else if (!on && t) { t.remove(); }
 }
-function starterChips(items: string[]): void {
-  chipsBox.innerHTML = "";
-  for (const it of items) {
-    const c = document.createElement("div");
-    c.className = "chip";
-    c.textContent = it;
-    c.addEventListener("click", () => void send(it));
-    chipsBox.appendChild(c);
-  }
-}
 
 // ── bucle de auto-revisión: lo SOLICITADO vs lo realmente COLOCADO ───────────
 // El visor es la autoridad geométrica: tras dibujar, compara lo que el LLM pidió
@@ -744,7 +836,9 @@ function selfCheck(): void {
 
 // ── acciones que devuelve Claude (outbox.actions) ────────────────────────────
 interface Action {
-  type: "summary" | "view" | "space" | "storeys" | "program" | "volume" | "columns";
+  type: "summary" | "view" | "space" | "storeys" | "program" | "volume" | "columns" | "partition" | "clear" | "carpentry";
+  target?: "cores" | "corridor" | "rooms" | "grid" | "partitions" | "openings" | "program"; // type=clear
+  carp?: "door" | "window"; cw?: number; ch?: number;                         // type=carpentry
   key?: string; value?: string;
   show?: "volume" | "levels" | "grid" | "plan" | "reset";
   kind?: "room" | "corridor" | "core";
@@ -756,6 +850,7 @@ interface Action {
   disposition?: "bateria" | "linea";                                   // type=program (parking)
   sepX?: number; sepY?: number; secW?: number; secD?: number;          // type=columns (atajo)
   axesX?: number[]; axesY?: number[];                                  // type=columns (ejes explícitos)
+  x1?: number; y1?: number; x2?: number; y2?: number;                  // type=partition (línea del tabique)
 }
 function runAction(a: Action): void {
   if (a.type === "summary" && a.key) {
@@ -813,12 +908,37 @@ function runAction(a: Action): void {
     render();
     refreshTree();
   }
+  if (a.type === "partition" && a.x1 !== undefined && a.y1 !== undefined && a.x2 !== undefined && a.y2 !== undefined) {
+    (bInput.partitions ??= []).push({ start: [a.x1, a.y1], end: [a.x2, a.y2] });
+    view.volume = view.plan = true;
+    render();
+    refreshTree();
+  }
+  if (a.type === "carpentry" && a.carp && a.x1 !== undefined && a.y1 !== undefined) {
+    (bInput.openings ??= []).push({ kind: a.carp, x: a.x1, y: a.y1, width: a.cw, height: a.ch });
+    view.volume = view.plan = true;
+    render();
+    refreshTree();
+  }
+  if (a.type === "clear") {
+    // QUITAR (edición no solo aditiva): borra una categoría de lo ya colocado.
+    if (a.target === "cores") plan.cores = [];
+    else if (a.target === "corridor") plan.corridor = null;
+    else if (a.target === "rooms") plan.rooms = null;
+    else if (a.target === "grid") bInput.grid = undefined;
+    else if (a.target === "partitions") bInput.partitions = undefined;
+    else if (a.target === "openings") bInput.openings = undefined;
+    else if (a.target === "program") bInput.program = undefined;
+    render();
+    refreshTree();
+  }
   if (a.type === "view") {
     if (a.show === "reset") {
       view.volume = view.levels = view.grid = view.plan = false;
       W = 31; D = 15.6; H = 16.5; NF = 5; FF = 3.2; // dimensiones por defecto
       zoom = 1; panX = panY = 0;
       bInput.grid = undefined;
+      bInput.partitions = undefined;
       selected = { kind: "none" };
       resetPlan(); resetTree();
     }
@@ -866,7 +986,6 @@ function boot(): void {
     "Cuéntame qué edificio quieres diseñar y dónde está, y empezamos a crearlo.",
     "ai",
   );
-  starterChips(["Edificio 2 de Can Cabassa, en Sant Cugat del Vallès (cat. 0419901DF2901H0001WW)"]);
 }
 
 // ── cámara: GIRAR (botón izq.), TRASLADAR (botón der.), zoom (rueda) ──────────

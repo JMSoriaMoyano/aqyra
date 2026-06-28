@@ -50,7 +50,9 @@ export interface ElementInstance {
   placement: Placement;
   section?: ColumnSection;     // sección de barra (pilar/viga)
   thickness?: number;          // espesor (forjado/muro), m
-  height?: number;             // altura del muro, m
+  height?: number;             // altura del muro / del vano, m
+  width?: number;              // ancho del vano (carpintería), m
+  sill?: number;               // alféizar/antepecho del vano, m
   exterior?: boolean;          // IsExternal: fachada (true) | divisoria (false)
   spans?: [number, number];    // EXTENSIÓN vertical: rango de niveles [desde, hasta]
   material?: string;           // HA-30 (def. C1)
@@ -123,12 +125,18 @@ export interface GridNode { x: number; y: number; axis: string; ix: number; iy: 
 export const DEFAULT_SECTION: ColumnSection = { w: 0.4, d: 0.4 };
 export const DEFAULT_MATERIAL = "HA-30";
 export const DEFAULT_SLAB_T = 0.3; // espesor de forjado (m), default C1
-export const DEFAULT_WALL_T = 0.25; // espesor de muro (m), default C1
+export const DEFAULT_WALL_T = 0.25; // espesor de muro de fachada (m), default C1
+export const DEFAULT_PARTITION_T = 0.1; // espesor de tabique interior (m)
 const BSDD = (cls: string): string => `https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/${cls}`;
 const BSDD_COLUMN = BSDD("IfcColumn");
 const BSDD_SLAB = BSDD("IfcSlab");
 const BSDD_OPENING = BSDD("IfcOpeningElement");
 const BSDD_WALL = BSDD("IfcWall");
+const BSDD_DOOR = BSDD("IfcDoor");
+const BSDD_WINDOW = BSDD("IfcWindow");
+const BSDD_STAIR = BSDD("IfcStair");
+/** Defaults de carpintería (m): ancho × alto × alféizar. */
+const CARP_DEF = { door: { w: 0.9, h: 2.1, sill: 0 }, window: { w: 1.2, h: 1.2, sill: 0.9 } };
 
 /** Contorno rectangular (m) de una huella, en orden CCW. */
 const rectContour = (f: Footprint): [number, number][] =>
@@ -150,6 +158,10 @@ export interface BuildingInput {
   program?: { generator: string; params: unknown };
   /** Retícula estructural del edificio (sistema transversal → IfcColumn). */
   grid?: GridInput;
+  /** Tabiques interiores (divisorias) como líneas: el usuario los coloca a propósito. */
+  partitions?: Array<{ start: [number, number]; end: [number, number] }>;
+  /** Carpintería: puertas/ventanas en un punto sobre un muro (el modelo busca el anfitrión). */
+  openings?: Array<{ kind: "door" | "window"; x: number; y: number; width?: number; height?: number }>;
 }
 
 /** Rectángulo de planta por defecto (m): X=ancho, Y=fondo. */
@@ -215,6 +227,60 @@ export function buildGrid(grid: GridResolved): GridNode[] {
  * ¿Hay algo que mostrar? Crece con el diálogo: en cuanto se nombra proyecto/sitio/
  * edificio ya se pinta la cabecera; plantas y espacios se añaden después.
  */
+/**
+ * Muros entre espacios adyacentes (LINDES): aristas compartidas de footprints
+ * rectangulares, fundidas en líneas continuas. Driver de la divisoria arquitectónica
+ * (el tabique entre dos habitaciones = su arista común). Determinista.
+ */
+export function spaceBoundaryWalls(foots: Footprint[]): Array<{ start: [number, number]; end: [number, number] }> {
+  const eps = 1e-6;
+  const vert = new Map<string, [number, number][]>(); // x → intervalos [y0,y1]
+  const horz = new Map<string, [number, number][]>(); // y → intervalos [x0,x1]
+  const key = (n: number): string => (Math.round(n * 1000) / 1000).toFixed(3);
+  const push = (m: Map<string, [number, number][]>, k: string, seg: [number, number]): void => {
+    const a = m.get(k); if (a) a.push(seg); else m.set(k, [seg]);
+  };
+  for (let i = 0; i < foots.length; i++) for (let j = 0; j < foots.length; j++) {
+    if (i === j) continue;
+    const A = foots[i], B = foots[j];
+    if (Math.abs(A.x + A.w - B.x) < eps) { // arista vertical: A a la izq. de B
+      const y0 = Math.max(A.y, B.y), y1 = Math.min(A.y + A.d, B.y + B.d);
+      if (y1 - y0 > eps) push(vert, key(A.x + A.w), [y0, y1]);
+    }
+    if (Math.abs(A.y + A.d - B.y) < eps) { // arista horizontal: A debajo de B
+      const x0 = Math.max(A.x, B.x), x1 = Math.min(A.x + A.w, B.x + B.w);
+      if (x1 - x0 > eps) push(horz, key(A.y + A.d), [x0, x1]);
+    }
+  }
+  const merge = (segs: [number, number][]): [number, number][] => {
+    const s = segs.slice().sort((a, b) => a[0] - b[0]); const out: [number, number][] = [];
+    for (const [lo, hi] of s) {
+      const last = out[out.length - 1];
+      if (last && lo <= last[1] + eps) last[1] = Math.max(last[1], hi); else out.push([lo, hi]);
+    }
+    return out;
+  };
+  const out: Array<{ start: [number, number]; end: [number, number] }> = [];
+  for (const [k, segs] of vert) { const x = round2(parseFloat(k)); for (const [y0, y1] of merge(segs)) out.push({ start: [x, round2(y0)], end: [x, round2(y1)] }); }
+  for (const [k, segs] of horz) { const y = round2(parseFloat(k)); for (const [x0, x1] of merge(segs)) out.push({ start: [round2(x0), y], end: [round2(x1), y] }); }
+  return out;
+}
+
+/** Localiza el muro (línea) que pasa por un punto; devuelve el muro y su dirección unitaria. */
+function findHostWall(walls: ElementInstance[], x: number, y: number): { wall: ElementInstance; dir: [number, number] } | null {
+  const tol = 0.06;
+  for (const w of walls) {
+    if (w.placement.kind !== "line") continue;
+    const [ax, ay] = w.placement.start, [bx, by] = w.placement.end;
+    const dx = bx - ax, dy = by - ay; const len = Math.hypot(dx, dy) || 1;
+    const t = ((x - ax) * dx + (y - ay) * dy) / (len * len);
+    if (t < -tol / len || t > 1 + tol / len) continue;
+    const cx = ax + t * dx, cy = ay + t * dy;
+    if (Math.hypot(x - cx, y - cy) <= tol) return { wall: w, dir: [dx / len, dy / len] };
+  }
+  return null;
+}
+
 export function hasModel(inp: BuildingInput): boolean {
   return Boolean(inp.project || inp.site || inp.building) || (inp.storeys?.count ?? 0) > 0;
 }
@@ -324,7 +390,92 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
       level: storeyName(i), storeyIndex: i, uriBsdd: BSDD_WALL,
     } as ElementInstance));
 
-    const elements: ElementInstance[] = [...cols, ...slabs, ...openings, ...walls];
+    // Tabiques interiores (DIVISORIAS): líneas que el usuario coloca a propósito
+    // (alineadas a un eje o libres). Mismo molde que la fachada: línea, por planta,
+    // pero INTERIOR (exterior:false, PARTITIONING). Driver = la línea dada, no la envolvente.
+    const partitions: ElementInstance[] = (inp.partitions ?? []).map((d, k) => ({
+      code: `AQ-MUR-${p}-DIV-${pad2(k + 1)}`,
+      ifcClass: "IfcWall", objectType: "Divisoria", predefinedType: "PARTITIONING",
+      placement: { kind: "line", start: d.start, end: d.end },
+      thickness: DEFAULT_PARTITION_T, material: DEFAULT_MATERIAL, exterior: false,
+      height: round2(h), spans: [i, i + 1],
+      level: storeyName(i), storeyIndex: i, uriBsdd: BSDD_WALL,
+    } as ElementInstance));
+
+    // Muros de NÚCLEO (driver = huella del Nucleo): la caja de escalera/ascensor.
+    // PASANTES: un solo elemento por lado, CONTINUO de suelo a cubierta (spans=[0,n],
+    // altura=n·h), no por planta. Estructurales (SHEAR). Mismo driver que los huecos
+    // (el Nucleo): los muros encierran el hueco que vacía los forjados. Solo i===0.
+    const coreWalls: ElementInstance[] = i === 0
+      ? placed.filter((g) => g.objectType === "Nucleo").flatMap((g, k) => {
+          const f = g.footprint;
+          const sides: Array<{ tag: string; a: [number, number]; b: [number, number] }> = [
+            { tag: "S", a: [f.x, f.y], b: [f.x + f.w, f.y] },
+            { tag: "E", a: [f.x + f.w, f.y], b: [f.x + f.w, f.y + f.d] },
+            { tag: "N", a: [f.x + f.w, f.y + f.d], b: [f.x, f.y + f.d] },
+            { tag: "O", a: [f.x, f.y + f.d], b: [f.x, f.y] },
+          ];
+          return sides.map((s) => ({
+            code: `AQ-MUR-NUC-${pad2(k + 1)}-${s.tag}`,
+            ifcClass: "IfcWall", objectType: "MuroNucleo", predefinedType: "SHEAR",
+            placement: { kind: "line", start: s.a, end: s.b },
+            thickness: DEFAULT_WALL_T, material: DEFAULT_MATERIAL, exterior: false,
+            height: round2(n * h), spans: [0, n],
+            level: storeyName(0), storeyIndex: 0, uriBsdd: BSDD_WALL,
+          } as ElementInstance));
+        })
+      : [];
+
+    // Divisorias por LINDES (driver = aristas compartidas de los espacios). Automáticas
+    // en distribución residencial/oficina (no en parking → no separa plazas con muros).
+    // Excluye el Nucleo (ya tiene sus muros pasantes). Mismo molde: interior, por planta.
+    const lindes: ElementInstance[] = !inp.program
+      ? spaceBoundaryWalls(placed.filter((g) => g.objectType !== "Nucleo").map((g) => g.footprint)).map((d, k) => ({
+          code: `AQ-MUR-${p}-LIN-${pad2(k + 1)}`,
+          ifcClass: "IfcWall", objectType: "Divisoria", predefinedType: "PARTITIONING",
+          placement: { kind: "line", start: d.start, end: d.end },
+          thickness: DEFAULT_PARTITION_T, material: DEFAULT_MATERIAL, exterior: false,
+          height: round2(h), spans: [i, i + 1],
+          level: storeyName(i), storeyIndex: i, uriBsdd: BSDD_WALL,
+        } as ElementInstance))
+      : [];
+
+    // CARPINTERÍA (puertas/ventanas): hosteada por el muro que pasa por su punto.
+    // Estrena el host/void en VERTICAL (el vano vacía el muro; C1 lo rellena con la
+    // puerta/ventana). El vano = línea de su ancho sobre el muro. Por planta.
+    const storeyWalls = [...walls, ...partitions, ...lindes, ...coreWalls];
+    const carpentry: ElementInstance[] = (inp.openings ?? []).flatMap((o, k) => {
+      const host = findHostWall(storeyWalls, o.x, o.y);
+      if (!host) return [];
+      const def = CARP_DEF[o.kind];
+      const wdt = o.width ?? def.w, hgt = o.height ?? def.h;
+      const [dx, dy] = host.dir;
+      const isDoor = o.kind === "door";
+      return [{
+        code: `AQ-${isDoor ? "PUE" : "VEN"}-${p}-${pad2(k + 1)}`,
+        ifcClass: isDoor ? "IfcDoor" : "IfcWindow", objectType: isDoor ? "Puerta" : "Ventana",
+        placement: { kind: "line", start: [round2(o.x - dx * wdt / 2), round2(o.y - dy * wdt / 2)], end: [round2(o.x + dx * wdt / 2), round2(o.y + dy * wdt / 2)] },
+        width: round2(wdt), height: round2(hgt), sill: def.sill,
+        level: storeyName(i), storeyIndex: i, host: host.wall.code, uriBsdd: isDoor ? BSDD_DOOR : BSDD_WINDOW,
+      } as ElementInstance];
+    });
+
+    // ESCALERA (IfcStair): cada Nucleo lleva una escalera, un TRAMO por planta (de i a
+    // i+1). Contenida en el espacio del núcleo (container). El cebo da identidad +
+    // colocación; C1 autora la geometría real (peldaños/meseta) desde `escaleras`.
+    const stairs: ElementInstance[] = placed.filter((g) => g.objectType === "Nucleo").map((g, k) => {
+      const f = g.footprint;
+      const nucCode = `AQ-ESP-NUC-${p}${g.sideTag ? `-${g.sideTag}` : ""}`;
+      return {
+        code: `AQ-ESC-${p}-${pad2(k + 1)}`,
+        ifcClass: "IfcStair", objectType: "Escalera", predefinedType: "HALF_TURN_STAIR",
+        placement: { kind: "point", x: round2(f.x), y: round2(f.y) },
+        width: round2(Math.min(1.2, f.w)), height: round2(h),
+        container: nucCode, level: storeyName(i), storeyIndex: i, uriBsdd: BSDD_STAIR,
+      } as ElementInstance;
+    });
+
+    const elements: ElementInstance[] = [...cols, ...slabs, ...openings, ...walls, ...partitions, ...lindes, ...coreWalls, ...carpentry, ...stairs];
 
     storeys.push({
       code: `AQ-NIV-${p}`, ifcClass: "IfcBuildingStorey", index: i,
@@ -365,3 +516,7 @@ export function slabCount(m: BuildingModel): number { return elementCount(m, "If
 export function openingCount(m: BuildingModel): number { return elementCount(m, "IfcOpeningElement"); }
 /** Recuento total de IfcWall (muros). */
 export function wallCount(m: BuildingModel): number { return elementCount(m, "IfcWall"); }
+/** Recuento de carpintería (IfcDoor + IfcWindow). */
+export function carpentryCount(m: BuildingModel): number { return elementCount(m, "IfcDoor") + elementCount(m, "IfcWindow"); }
+/** Recuento de escaleras (IfcStair). */
+export function stairCount(m: BuildingModel): number { return elementCount(m, "IfcStair"); }

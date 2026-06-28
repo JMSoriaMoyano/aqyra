@@ -27,6 +27,10 @@
     ],
     "totalColumns": 0,
     "columnsPerStorey": 0,
-    "sampleColumnCodes": []
+    "sampleColumnCodes": [],
+    "totalSlabs": 1,
+    "totalOpenings": 0,
+    "totalWalls": 4,
+    "totalStairs": 0
   }
 }
