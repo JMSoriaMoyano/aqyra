@@ -1,0 +1,58 @@
+[
+  {
+    "elem": "Cubierta · vano (inferior) — dir corta",
+    "M_Ed": 308,
+    "armado": "phi20/175 (18.0 cm2/m)",
+    "MRd": 452.0,
+    "util": 0.68,
+    "wk": 0.245
+  },
+  {
+    "elem": "Cubierta · vano (inferior) — dir larga",
+    "M_Ed": 182,
+    "armado": "phi16/200 (10.1 cm2/m)",
+    "MRd": 245.0,
+    "util": 0.74,
+    "wk": "-"
+  },
+  {
+    "elem": "Cubierta · apoyo sobre muros (superior)",
+    "M_Ed": 352,
+    "armado": "phi25/200 (24.5 cm2/m)",
+    "MRd": 618.0,
+    "util": 0.57,
+    "wk": "-"
+  },
+  {
+    "elem": "Muro · cabeza/esquina (cara exterior)",
+    "M_Ed": 352,
+    "armado": "phi25/200 (24.5 cm2/m)",
+    "MRd": 427.0,
+    "util": 0.82,
+    "wk": 0.128
+  },
+  {
+    "elem": "Muro · base (empotramiento en solera)",
+    "M_Ed": 92,
+    "armado": "phi20/200 (15.7 cm2/m)",
+    "MRd": 274.0,
+    "util": 0.34,
+    "wk": "-"
+  },
+  {
+    "elem": "Muro · paramento (agua/tierras, vano)",
+    "M_Ed": 95,
+    "armado": "phi20/200 (15.7 cm2/m)",
+    "MRd": 274.0,
+    "util": 0.35,
+    "wk": 0.144
+  },
+  {
+    "elem": "Solera (raft) · vano y esquina",
+    "M_Ed": 133,
+    "armado": "phi20/175 (18.0 cm2/m)",
+    "MRd": 383.0,
+    "util": 0.35,
+    "wk": 0.179
+  }
+]

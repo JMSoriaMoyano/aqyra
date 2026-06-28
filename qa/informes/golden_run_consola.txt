@@ -1,0 +1,48 @@
+========================================================================
+SUITE GOLDEN N1.1 — C5 v0 — oraculo PyNite + analitico (DA-2 / lamina)
+========================================================================
+
+[DEC-A1] Costilla mixta acero-CLT (Opcion A) — flecha (PyNite) + vibracion + flexion
+   EI_eff=4.527 MN·m2 (2.48x acero; min 1,42x) | gamma1=0.037
+   delta(PyNite)=3.98 mm | f1=10.57 Hz | u_M=0.39
+   GATE EC5 §7.3: f1>=8 Hz -> CUMPLE
+
+[celosia 2D Cajon O · PyNite] nudos=64 barras=153 apoyos=5
+   N cordon=+330 kN | N diagonal=+348 kN | N montante=+392 kN | L_montante=3.08 m
+
+[DEC-B1] Diagonal SHS 200x10 — N_b,Rd (EC3) + N_Ed (PyNite 2D)
+   N_b,Rd=1978 kN (lam=0.725 chi=0.770) | N_Ed=348 kN | u=0.18
+[DEC-B2] Cordon SHS 180x8 — N_b,Rd (EC3) + N_Ed (PyNite 2D)
+   N_b,Rd=1595 kN (lam=0.559 chi=0.857) | N_Ed=330 kN | u=0.21
+[DEC-B4] Montante SHS 120x6 — L_cr (conectividad) + N_b,Rd (EC3) + N_Ed (PyNite 2D)
+   L_cr=3.08 m | N_b,Rd=632 kN (chi=0.683) | N_Ed=392 kN | u=0.62
+
+[DEC-E1] Encepados bielas-tirantes EC2 §6.5 — tirante T
+   NC-Lab: theta=53.6° T=811 kN (esp 811)
+   NC-Vest: theta=58.1° T=860 kN (esp 860)
+
+[DEC-E2] Pilotes D650 y D450 — EC7 parcial DA-2 (admisible SOCOTEC con FS embebido)
+   [D650] R_adm=2397 u_serv=0.41 | FS=3: R_b,k=3870 R_s,k=3320 R_d=4204 E_d=1383 u=0.33 -> CUMPLE
+   [D450] R_adm=1381 u_serv=0.57 | FS=3: R_b,k=1845 R_s,k=2299 R_d=2469 E_d=1100 u=0.45 -> CUMPLE
+
+[DEC-S1] Cubierta cajon (lamina) — validacion elemento (Navier) + bandas oraculo
+   Navier M_x=11.97 vs Timoshenko 11.97 kN·m/m (err -0.03%, |.|<=2% valida)
+   M_vano m_x [kN·m/m]: build=440 en banda [410,461] -> OK
+   M_vano m_y [kN·m/m]: build=261 en banda [231,285] -> OK
+   M_esquina [kN·m/m]: build=249 en banda [218,250] -> OK
+   w_k=0.169 mm <= 0,20 (EN 1992-3 clase 1) -> OK
+
+========================================================================
+INFORME GOLDEN (verde/rojo)
+========================================================================
+   DEC-A1   : VERDE [OK]
+   DEC-B1   : VERDE [OK]
+   DEC-B2   : VERDE [OK]
+   DEC-B4   : VERDE [OK]
+   DEC-E1   : VERDE [OK]
+   DEC-E2   : VERDE [OK]
+   DEC-S1   : VERDE [OK]
+------------------------------------------------------------------------
+   SUITE: VERDE — 7/7 fichas
+========================================================================
+Informe escrito: /sessions/determined-brave-edison/mnt/Projects/Estructurando 2.0/qa/informes/golden_run_report.json

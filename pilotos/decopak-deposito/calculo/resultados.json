@@ -1,0 +1,107 @@
+{
+  "materiales": {
+    "fck": 30.0,
+    "fcd": 20.0,
+    "fctm": 2.896,
+    "fctk05": 2.028,
+    "Ecm": 32837.0,
+    "fyd": 434.8,
+    "alphae": 6.09
+  },
+  "acciones": {
+    "K0": 0.5,
+    "Ka": 0.333,
+    "phi": 30.0,
+    "q_sobrecarga": 20.0,
+    "gamma_agua": 10.0,
+    "gamma_terreno": 20.0
+  },
+  "muro_perimetral_50": {
+    "EI": 342048.0,
+    "d": 0.445,
+    "M_base_tierras": 92.6,
+    "M_vano_tierras": 76.0,
+    "M_base_agua": 54.8,
+    "M_vano_agua": 44.3,
+    "M_diseno_ULS": 125.0,
+    "As_req": 6.8,
+    "Asmin": 4.71,
+    "armado": "phi20/200",
+    "As_prov": 15.71,
+    "V_ULS": 178.8,
+    "VRdc": 195.9,
+    "util_cortante": 0.91,
+    "wk_cara_agua": 0.113,
+    "sigma_s": 83.6,
+    "lim_wk": 0.2,
+    "util_flexion": 0.46
+  },
+  "muro_interior_50": {
+    "M_base": 54.8,
+    "M_ULS": 82.2,
+    "As_req": 4.71,
+    "armado": "phi20/200",
+    "As_prov": 15.71,
+    "wk": 0.113,
+    "util_flexion": 0.3
+  },
+  "losa_cubierta_70": {
+    "L": 11.37,
+    "g_perm": 19.0,
+    "beff_tandem": 8.79,
+    "q_tandem_line": 68.3,
+    "M_perm": 307.0,
+    "M_udl": 145.4,
+    "M_tandem": 194.1,
+    "M_ULS": 923.9,
+    "M_SLS": 646.6,
+    "d": 0.643,
+    "armado_tentativo": "phi25/100 (2 capas posible)",
+    "As_prov": 49.09,
+    "MRd": 1235.1,
+    "util_flexion": 0.75,
+    "punz_vEd": 0.036,
+    "punz_vRdc": 0.581,
+    "util_punz": 0.06,
+    "M_solo_permanente_ULS": 414.5,
+    "util_solo_permanente": 0.34
+  },
+  "losa_fondo": {
+    "modelo": "viga sobre lecho elástico (Winkler), ks=80000 kN/m3 (UG3 arenisca)",
+    "W_total": 19963.0,
+    "q_terreno_medio": 65.9,
+    "q_adm_UG3": 800.0,
+    "util_portante": 0.08,
+    "P_muro_linea": 382.1,
+    "M_raft": 132.8,
+    "M_ULS": 179.2,
+    "d": 0.545,
+    "As_req": 7.96,
+    "Asmin": 5.65,
+    "armado": "phi20/200",
+    "As_prov": 15.71,
+    "wk": 0.222,
+    "util_flexion": 0.54
+  },
+  "flotacion": {
+    "freatico_documentado": 144.6,
+    "base": 146.4,
+    "h_sumergida": 0.0,
+    "U_documentado": 0.0,
+    "W_estab_09G": 10920.0,
+    "FS_documentado": "inf (sin subpresion)",
+    "caso_conservador_rasante": {
+      "h_sub": 5.55,
+      "U": 16804.0,
+      "FS": 0.65
+    },
+    "nota": "Con freatico documentado la base queda sobre el agua -> flotacion NO critica."
+  },
+  "verificacion": {
+    "caso": "muro agua triangular, mensula apuntalada (fixed-pinned)",
+    "M_base_FE": 54.8,
+    "M_base_analitico": 54.88,
+    "error_pct": 0.137,
+    "R_top_analitico": 18.92
+  }
+}

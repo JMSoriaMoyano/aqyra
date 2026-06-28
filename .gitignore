@@ -1,0 +1,39 @@
+# ── Dependencias (se regeneran; nunca en git) ──
+node_modules/
+**/node_modules/
+.bin/
+.npmcache/
+
+# ── Secretos / credenciales (NUNCA subir) ──
+.env
+.env.*
+**/.env
+*.key
+*.pem
+secrets.*
+
+# ── Python temporales ──
+__pycache__/
+**/__pycache__/
+*.pyc
+.venv/
+venv/
+*aqyra_venv*/
+.pytest_cache/
+
+# ── Artefactos de release (binarios) — el manifiesto y su .asc SÍ se versionan ──
+*.plugin
+
+# ── Salidas / temporales ──
+*_resultado.txt
+_resultados/
+dist/
+build/
+*.log
+*.tmp
+
+# ── Sistema / editores ──
+.DS_Store
+Thumbs.db
+*.swp
+*~
