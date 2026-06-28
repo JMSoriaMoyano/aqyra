@@ -8,12 +8,12 @@ escala a **trazado de carretera y urbanización**.
 
 ## ✅ ALCANCE CERRADO (JM · 2026-06-28) — no reabrir; sin parches, construir el primer slice
 Decisiones de §5 ratificadas. **No re-preguntar el alcance.**
-- **Primer slice (preview) = directriz horizontal recta+arco.** Clotoide y alzado → slices siguientes (el **contrato** ya los contempla enteros, no se re-toca).
+- **Primer slice (preview) = directriz horizontal recta+arco.** Clotoide y alzado → slices siguientes (el **contrato ya los contempla enteros**, no se re-toca).
 - Alineación = **objeto propio** (`IfcAlignment`), no una 4.ª variante de `Placement`.
 - Definición **opt-in**; derivación desde el parking → 2.º slice.
 - **Asistencia de radios en este slice**: mínimo parametrizable + self-check; consulta real a `obras-lineales` → después.
-- **Emitir ya** `alineaciones[]` en el `alto.json` (handoff).
-- Contrato: C1 **ya parsea y genera `IfcAlignment`** (Ola 5); la evolución completa (planta+alzado+sección+peralte, **sin parches**) está en `RFC_C1-apertura_familias-P1.md` / `CIERRE-ALCANCE_P1-A-B-C.md`. El cebo arranca ya sin esperar a C1.
+- **Emitir ya** `alineaciones[]` en el `alto.json` — y **YA compila**: C1 está firmado y completo (ver abajo).
+- **Contrato LISTO:** C1 «apertura familias P1» **FIRMADA** (`iso19650-openbim 0.10.0`, 28-jun) autora `alineaciones[]` → `IfcAlignment` (planta recta+arco+clotoide, alzado, sección+peralte). El cebo trabaja **contra el contrato completo**, no contra una RFC pendiente.
 
 ---
 
@@ -33,16 +33,16 @@ Decisiones de §5 ratificadas. **No re-preguntar el alcance.**
   trazado (3.1-IC: radios mínimos, clotoides, acuerdos, visibilidad), drenaje, firmes. **El visor
   dibuja la alineación; el plugin la asiste/audita** — mismo patrón que el CTE en edificación.
 
-## 1. CEBO y frontera — la familia ARRANCA sin esperar a C1
+## 1. CEBO y frontera — el contrato YA está completo
 - Regla CEBO: preview vivo, **sin export firmable, sin medidor visible**; el IFC autoritativo lo
   compila C1 desde `alto.json`.
-- PERO C1 **aún no autora `IfcAlignment`** (sus primitivas son de edificación: pilares/muros/losas/
-  escaleras/rampas-de-edificio). Hay una **RFC abierta en el PANEL** (`Aqyra-Raiz/PANEL_Ahora-cebo.md`)
-  para extender C1 → autoría de `IfcAlignment`.
-- **Consecuencia clave:** este hilo **arranca en el cebo** (modela + previsualiza la alineación y
-  **asiste los radios vía `obras-lineales`**) **sin esperar a C1**. La RFC gatea solo la **salida
-  autoritativa** (que C1 compile el alignment). El puente prepara el handoff (`alineaciones[]`); la
-  adopción es de JM. Igual que con `losa.huecos`, pero a mayor escala.
+- **C1 YA autora `IfcAlignment`.** La evolución «apertura familias P1» (`iso19650-openbim 0.10.0`,
+  FIRMADA 28-jun, golden `C1-APERTURA-01` verde) añadió el handler `alineaciones[]` → `IfcAlignment`
+  (planta recta+arco+clotoide, alzado rasantes+acuerdos, sección+peralte), reutilizando la maquinaria
+  de la Ola 5 (`scripts/lineal/`). **Ya no hay RFC pendiente ni frontera abierta para alineaciones.**
+- **Consecuencia:** el cebo modela y previsualiza la alineación, **asiste los radios vía
+  `obras-lineales`**, y **emite `alineaciones[]` que C1 compila de verdad** (salida autoritativa
+  disponible). El sellado de cada slice sigue la regla de dos llaves (golden + firma JM).
 
 ## 2. Lo que YA existe (no se reescribe)
 `Entorno/publico/demo/src`: `model.ts` (`Placement` point/polygon/line; `ElementInstance`; spaces;
@@ -51,18 +51,17 @@ generadores `residence-corridor`/`parking-comb`; retícula con **ejes explícito
 operador IA, selección→resaltado), `c1-bridge.ts` (`toAltoSpec` → `alto.json`), `fixture.ts` (golden
 determinista), `vite.config.ts` (operador IA `/__aqyra/llm` + vocabulario de acciones + prompt).
 Golden `columns.golden` **35/35** + `parking.golden` 7/7 verde. Plugin **`obras-lineales`** (IFC 4.3,
-3.1-IC, drenaje, firmes). **RFC C1→`IfcAlignment`** planteada en el PANEL. (Historia detallada de la
-capa de elementos: en la memoria del proyecto.)
+3.1-IC, drenaje, firmes). **C1 0.10.0** autora `alineaciones[]` → `IfcAlignment` (golden
+`C1-APERTURA-01`). (Historia detallada de la capa de elementos: en la memoria del proyecto.)
 
 ## 3. Reglas (no romper)
 - **Determinismo verificable:** mismo input → misma salida; arnés + fixture golden por caso.
 - **Dos llaves:** golden verde (Llave 1) + firma de JM (Llave 2). La IA prepara y propone; NO certifica.
 - **CEBO:** sin export firmable, sin medidor. El cebo previsualiza; el IFC lo compila C1.
-- **Frontera C1** = bump → golden → adoptar si verde → anclar en `versions.lock` (reservado a JM). La
-  salida autoritativa de alineaciones **espera la RFC**; mientras, el cebo previsualiza y
-  `obras-lineales` asiste.
-- **Reservado a JM:** alcance de cada slice, qué entra en C1 (la RFC), y qué reglas de trazado entran
-  en la asistencia/auditoría.
+- **Contrato C1 = COMPLETO** para alineaciones (`iso19650-openbim 0.10.0` anclado en `versions.lock`).
+  El cebo consume esa versión; cualquier capacidad nueva fuera de lo previsto sí sería evolución de C1
+  (bump → golden → firma, reservado a JM), pero el trazado **no** la necesita.
+- **Reservado a JM:** alcance de cada slice y qué reglas de trazado entran en la asistencia/auditoría.
 
 ## 4. Alcance del primer slice (recomendado)
 La **directriz horizontal** como primitivo nuevo del cebo: una **alineación = secuencia de segmentos
@@ -73,25 +72,24 @@ aplicarla a nada. Concretamente:
 - **Render:** el arco **real** (no una recta) en la planta 2D y en la caja 3D.
 - **Asistencia:** el **radio de giro** de cada arco frente a un mínimo (parametrizable en este slice;
   consulta real a `obras-lineales` después). Avisa si no cumple (como el self-check del parking).
-- **Puente:** preparar `alineaciones[]` en el `alto.json` (handoff), marcado **pendiente de la RFC de
-  C1** (no compila aún).
-- **SIN** clotoide todavía (recta+arco primero; la clotoide es el clon siguiente), **sin** alzado/rampa
-  (pendiente), **sin** sección barrida (después), y **sin** reorganizar aún la circulación del parking
-  (ese es el 2.º slice, una vez la alineación existe como pieza).
+- **Puente:** `c1-bridge.ts` emite `alineaciones[]` en el `alto.json` → **C1 0.10.0 lo compila**
+  (handoff real, ya no «pendiente»).
+- **SIN** clotoide todavía en el cebo (recta+arco primero; la clotoide es el clon siguiente — el
+  contrato ya la soporta), **sin** alzado/rampa (pendiente), **sin** sección barrida (después), y
+  **sin** reorganizar aún la circulación del parking (ese es el 2.º slice, una vez la alineación
+  existe como pieza).
 
-## 5. Primer paso — cierra el alcance
-Antes de tocar código, dime tus decisiones (reservadas a JM):
-1. ¿Solo la **directriz horizontal recta+arco** primero (recomendado), o ya la clotoide / el alzado?
-2. ¿La alineación como **4.ª variante de `Placement`** (`kind:"alignment"`, segmentos) o como
-   **objeto/elemento propio** (`IfcAlignment` con su lista de segmentos)? (rec.: objeto propio.)
-3. ¿Cómo se define en este slice: **acción opt-in** (el copiloto da puntos/segmentos) o **derivada del
-   parking** ya aquí? (rec.: opt-in primero; derivación del parking en el siguiente.)
-4. **Asistencia de radios** (`obras-lineales`): ¿en este slice o después? ¿mínimo parametrizable o
-   consulta real al plugin? (rec.: mínimo parametrizable + self-check ahora; consulta real después.)
-5. ¿Emitimos ya el handoff `alineaciones[]` al puente (preparado para la RFC), o esperamos a que la RFC
-   de C1 esté firmada? (rec.: prepararlo ya, marcado como pendiente de RFC.)
+## 5. Primer paso — el alcance YA ESTÁ CERRADO (ver bloque ✅ arriba)
+**No re-preguntes el alcance**; construye directamente el primer slice según el bloque «ALCANCE
+CERRADO» y el contrato ya firmado (C1 0.10.0). Las decisiones de abajo quedan **solo como registro**
+de por qué se decidió así (ya resueltas con la recomendación):
+1. Directriz horizontal **recta+arco** primero (clotoide/alzado después; el contrato ya los soporta).
+2. Alineación como **objeto propio** (`IfcAlignment`), no 4.ª variante de `Placement`.
+3. Definición **opt-in** (el copiloto da puntos/segmentos); derivación del parking en el 2.º slice.
+4. **Asistencia de radios**: mínimo parametrizable + self-check ahora; consulta real a `obras-lineales` después.
+5. **Emitir ya** `alineaciones[]` → C1 0.10.0 lo compila (handoff real).
 
-Con eso cerrado, construyo el slice, lo pruebo en tu pantalla y lo dejo con su arnés + fixture golden
-para tu firma. La IA prepara; JM firma.
+Construye el slice, pruébalo en pantalla y déjalo con su arnés + fixture golden para la firma de JM.
+La IA prepara; JM firma.
 
-*Procedencia: P1 Visor/Editor · Aqyra · inicio de hilo de la familia de TRAZADO (geometría por alineaciones) · para JM.*
+*Procedencia: P1 Visor/Editor · Aqyra · inicio de hilo de la familia de TRAZADO (geometría por alineaciones) · act. 2026-06-28 (C1 0.10.0 firmada).*

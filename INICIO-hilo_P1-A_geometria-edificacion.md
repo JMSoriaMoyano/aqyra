@@ -14,7 +14,7 @@ Decisiones de §5 ratificadas. **No re-preguntar el alcance.**
 - **W×D se mantiene como bbox/marco.**
 - Emitir **todo explícito**; el macro `edificio` ancho×largo queda solo informativo.
 - **Ascensor:** `ifcClass:"IfcTransportElement"` por el handler genérico `elementos[]` (catálogo abierto, sin tocar el contrato).
-- Contrato: la evolución de C1 (huecos generalizados + clases abiertas + alineaciones, **completa, no parches**) está en `RFC_C1-apertura_familias-P1.md` / `CIERRE-ALCANCE_P1-A-B-C.md`. Dos llaves: golden + firma JM.
+- **Contrato LISTO:** C1 «apertura familias P1» **FIRMADA** (`iso19650-openbim 0.10.0`, 28-jun) — huecos generalizados, **catálogo de clases abierto**, doble clasificación bsDD+Uniclass, alineaciones. El cebo emite **contra el contrato completo**; A es **frontera-cero**. Dos llaves siguen para sellar cada slice.
 
 ---
 
@@ -41,8 +41,8 @@ con `host`), escalera. Quedan:
   en la frontera es el macro `edificio` (ancho×largo), que el cebo **casi no usa** (ya pone
   `pilares/forjados/muros_perimetrales:false`). Por eso la **envolvente poligonal es mayormente
   frontera-cero**.
-- Excepción del **ascensor**: verificar si C1 lleva `IfcTransportElement`; si no, modelarlo como
-  ensamblaje/hueco → posible cruce de frontera **menor** (bump → golden → firma, reservado a JM).
+- **Ascensor: ya cubierto.** C1 0.10.0 autora **cualquier `ifcClass`** (catálogo abierto;
+  `IfcTransportElement`/ELEVATOR verificado en la golden `C1-APERTURA-01`) → **frontera-cero, sin bump**.
 
 ## 2. Lo que YA existe (no se reescribe)
 `Entorno/publico/demo/src`: `model.ts` (`Placement` point/polygon/line; `ElementInstance`; spaces;
@@ -74,16 +74,16 @@ Dos candidatos. Recomiendo abrir por **el salto (A.2)** porque es lo que **defin
 - **Sin** subdivisión poligonal de espacios (el caso difícil; después), **sin** Catastro como fuente
   todavía (opt-in: el copiloto da los vértices; Catastro después), **sin** alzado/voladizos.
 
-**Opción CALENTAMIENTO — ascensor:** clon de la escalera, contenido en el núcleo (`IfcTransportElement`
-o ensamblaje), por planta/hueco. Verificar frontera C1 antes.
+**Opción CALENTAMIENTO — ascensor:** clon de la escalera, contenido en el núcleo
+(`ifcClass:"IfcTransportElement"` por el handler genérico), por planta/hueco. **C1 0.10.0 ya lo
+soporta (frontera-cero).**
 
-## 5. Primer paso — cierra el alcance
-Antes de tocar código, dime tus decisiones (reservadas a JM):
+## 5. Primer paso — el alcance YA ESTÁ CERRADO (ver bloque ✅ arriba)
+**No re-preguntes el alcance**; construye directamente el primer slice (envolvente poligonal) según el
+bloque «ALCANCE CERRADO», contra C1 0.10.0 ya firmado. Las decisiones de abajo quedan **solo como
+registro** de por qué se decidió así (ya resueltas con la recomendación):
 
-0. ¿Arrancamos por la **envolvente poligonal** (el salto, recomendado) o por el **ascensor**
-   (calentamiento que cierra el núcleo)?
-
-Si **envolvente poligonal**:
+Envolvente poligonal:
 1. ¿Solo la **envolvente** (fachada/forjado/retícula recortada) primero, o ya la **subdivisión
    poligonal de espacios**? (rec.: solo envolvente; subdivisión después.)
 2. ¿El polígono por **acción opt-in** (vértices del copiloto) o del **contorno de Catastro** (P1·A)?
@@ -93,8 +93,9 @@ Si **envolvente poligonal**:
 5. Frontera: ¿dejamos de usar el macro `edificio` ancho×largo (emitir **todo explícito**) o lo
    mantenemos como bbox informativo? (rec.: explícito; bbox solo informativo.)
 
-Si **ascensor**: confirmar el driver (cada `Nucleo` con detalle «ascensor» → N ascensores, contenidos
-en el espacio del núcleo) y **verifico `IfcTransportElement` en C1** antes de cerrar la frontera.
+Ascensor (calentamiento opcional): driver = cada `Nucleo` con detalle «ascensor» → N ascensores,
+contenidos en el espacio del núcleo, con `ifcClass:"IfcTransportElement"` (ya soportado por C1 0.10.0;
+frontera-cero).
 
 Con eso cerrado, construyo el slice, lo pruebo en tu pantalla y lo dejo con su arnés + fixture golden
 para tu firma. La IA prepara; JM firma.

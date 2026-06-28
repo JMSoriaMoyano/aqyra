@@ -64,23 +64,21 @@ sin round-trip a C1): recorre el `BuildingModel`, comprueba un set inicial y **r
 no-conformidades en un **panel de auditoría** del visor (no certifica). Set inicial propuesto (lo que ya
 vive en el modelo):
 - **Nomenclatura:** todo elemento con código `AQ-*` válido y único.
-- **Clasificación:** todo elemento con **URI bsDD** (IFC 4.3) coherente con su `ifcClass`.
+- **Clasificación (doble):** todo elemento con **URI bsDD** + **código Uniclass 2015** coherentes con su `ifcClass` (C1 0.10.0 ya autora la doble clasificación determinista; el modelo del cebo debe emitir el código Uniclass).
 - **Coherencia estructural:** cada hueco con su `host`/`container`, cada forjado con su nivel, etc.
 - **SIN** conexión al plugin real todavía (las reglas básicas se codifican en el cebo como preview),
   **sin** reglas CTE aún (una de muestra — p. ej. DB-SUA: relación huella/contrahuella + ancho mínimo de
   la escalera — como **segundo** slice, para enseñar la conexión), **sin** la asistencia de generación.
 
-## 5. Primer paso — cierra el alcance
-Antes de tocar código, dime tus decisiones (reservadas a JM):
+## 5. Primer paso — el alcance YA ESTÁ CERRADO (ver bloque ✅ arriba)
+**No re-preguntes el alcance**; construye directamente el primer slice (auditoría básica sobre el
+modelo del cebo) según el bloque «ALCANCE CERRADO». Las decisiones de abajo quedan **solo como
+registro** de por qué se decidió así (ya resueltas con la recomendación):
 
-0. ¿Arrancamos por la **AUDITORÍA** (verificar/reportar, recomendado) o por la **ASISTENCIA** (las
-   reglas que gobiernan la generación)?
-
-Si **auditoría**:
+Auditoría:
 1. ¿La auditoría corre sobre el **MODELO del cebo** (inmediata, teaser) o sobre el **IFC autorado por
    C1** (`iso19650-openbim`, completa)? (rec.: sobre el modelo en el cebo = básica; la del IFC = anzuelo.)
-2. **¿Qué reglas entran en la «básica»** (RESERVADO a ti): nomenclatura `AQ-*`, clasificación bsDD,
-   Psets por defecto, coherencia estructural? (rec.: nomenclatura + clasificación bsDD, que ya están.)
+2. **Reglas de la «básica»** (decidido JM 28-jun): **nomenclatura `AQ-*` + doble clasificación bsDD + Uniclass**. (Psets por defecto y coherencia estructural → más adelante.)
 3. ¿Reporte en un **panel de auditoría** del visor (no-conformidades), **sin certificar**? (rec.: sí —
    reporta, no certifica.)
 4. ¿Una **regla CTE de muestra** (DB-SUA escalera) ya en este slice, o solo OpenBIM? (rec.: solo
