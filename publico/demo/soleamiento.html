@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aqyra — soleamiento y Norte real (P1·A)</title>
+    <style>
+      :root { color-scheme: dark; }
+      html, body { margin: 0; min-height: 100%; background: #0e1116; color: #e6e6e6; font-family: system-ui, sans-serif; }
+      .wrap { max-width: 720px; margin: 0 auto; padding: 24px 18px 48px; }
+      h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+      .sub { opacity: .6; font-size: 13px; margin-bottom: 20px; }
+      .ctrl { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 12px 18px; margin-bottom: 14px; }
+      .ctrl .row { display: flex; align-items: center; gap: 10px; }
+      .ctrl label { font-size: 13px; opacity: .7; min-width: 48px; }
+      .ctrl input[type=range] { flex: 1; accent-color: #2b6cb0; }
+      .ctrl .out { font-size: 13px; font-weight: 600; min-width: 56px; }
+      .quick { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+      .quick button { border: 1px solid #2a313c; background: rgba(20,24,31,.6); color: #e6e6e6; border-radius: 8px; padding: 7px 12px; font-size: 12px; cursor: pointer; }
+      .quick button:hover { background: #1b2230; }
+      .stage { background: rgba(20,24,31,.6); border: 1px solid #2a313c; border-radius: 12px; padding: 8px; display: flex; justify-content: center; }
+      svg { width: 100%; max-width: 540px; height: auto; }
+      .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 12px; margin-top: 16px; }
+      .card { background: rgba(20,24,31,.6); border: 1px solid #2a313c; border-radius: 10px; padding: 12px 14px; }
+      .card .k { font-size: 12px; opacity: .6; }
+      .card .v { font-size: 22px; font-weight: 600; margin-top: 2px; }
+      .foot { opacity: .5; font-size: 12px; margin-top: 20px; line-height: 1.6; }
+      a { color: #7fb2e6; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Soleamiento y Norte real — Can Cabassa</h1>
+      <div class="sub">Prototipo P1·A · lat 41.4730°N, lon 2.0453°E (Catastro) · giro = rotación de IfcMapConversion. La IA prepara; JM firma.</div>
+
+      <div class="ctrl">
+        <div class="row"><label>Fecha</label><input type="range" min="1" max="365" value="172" step="1" id="doy"><span class="out" id="doyOut">21 jun</span></div>
+        <div class="row"><label>Hora</label><input type="range" min="0" max="24" value="13" step="0.25" id="hour"><span class="out" id="hourOut">13:00</span></div>
+        <div class="row"><label>Giro</label><input type="range" min="-90" max="90" value="0" step="1" id="giro"><span class="out" id="giroOut">0°</span></div>
+      </div>
+      <div class="quick">
+        <button id="bSummer">Solsticio verano</button>
+        <button id="bEquinox">Equinoccio</button>
+        <button id="bWinter">Solsticio invierno</button>
+      </div>
+
+      <div class="stage">
+        <svg id="plan" viewBox="0 0 420 360" role="img" aria-label="Planta con Norte real, edificio, dirección del Sol y sombra proyectada"></svg>
+      </div>
+
+      <div class="cards">
+        <div class="card"><div class="k">Altitud solar</div><div class="v" id="mAlt">—</div></div>
+        <div class="card"><div class="k">Azimut</div><div class="v" id="mAz">—</div></div>
+        <div class="card"><div class="k">Sombra (× altura)</div><div class="v" id="mSh">—</div></div>
+        <div class="card"><div class="k">Fachadas al sol</div><div class="v" id="mFac">—</div></div>
+      </div>
+
+      <div class="foot">
+        Cálculo solar NOAA/Meeus (error &lt; ~0,2°, sin refracción). Hora = oficial peninsular (DST aprox.: abr–oct UTC+2, resto UTC+1).
+        El motor de cálculo es <code>visor/src/solar.ts</code> (con golden <code>test/solar.test.ts</code>); esta página replica su algoritmo.
+        Pendiente de firma de JM y de cablear a la maqueta del skin Diseño.
+      </div>
+    </div>
+
+    <script>
+    (function(){
+      const RAD=Math.PI/180, DEG=180/Math.PI;
+      const LAT=41.4730, LON=2.0453, W=31, D=15.6, Hh=16.5;
+      function jd(d){return d.getTime()/86400000+2440587.5;}
+      function sun(lat,lon,d){
+        const n=jd(d)-2451545.0;
+        const L=((280.46+0.9856474*n)%360+360)%360;
+        const g=(((357.528+0.9856003*n)%360+360)%360)*RAD;
+        const lam=(L+1.915*Math.sin(g)+0.02*Math.sin(2*g))*RAD;
+        const eps=(23.439-0.0000004*n)*RAD;
+        const dec=Math.asin(Math.sin(eps)*Math.sin(lam));
+        const ra=Math.atan2(Math.cos(eps)*Math.sin(lam),Math.cos(lam))*DEG;
+        const gmst=((18.697374558+24.06570982441908*n)%24+24)%24;
+        const lst=(gmst*15+lon)%360;
+        let H=(lst-ra)%360; if(H<-180)H+=360; if(H>180)H-=360; H*=RAD;
+        const la=lat*RAD;
+        const sa=Math.sin(la)*Math.sin(dec)+Math.cos(la)*Math.cos(dec)*Math.cos(H);
+        const alt=Math.asin(sa)*DEG;
+        const aS=Math.atan2(Math.sin(H),Math.cos(H)*Math.sin(la)-Math.tan(dec)*Math.cos(la))*DEG;
+        return {alt, az:(aS+180+360)%360};
+      }
+      const $=id=>document.getElementById(id);
+      const doy=$('doy'),hour=$('hour'),giro=$('giro'),svg=$('plan');
+      const NS="http://www.w3.org/2000/svg", MONTHS=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+      const dateOf=d=>{const b=new Date(2026,0,1); b.setDate(d); return b;};
+      const el=(n,a)=>{const e=document.createElementNS(NS,n); for(const k in a)e.setAttribute(k,a[k]); return e;};
+      const cardinal=az=>["N","NE","E","SE","S","SO","O","NO"][Math.round(az/45)%8];
+      function hull(pts){
+        pts=pts.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+        const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);
+        const lo=[]; for(const p of pts){while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop(); lo.push(p);}
+        const up=[]; for(let i=pts.length-1;i>=0;i--){const p=pts[i]; while(up.length>=2&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop(); up.push(p);}
+        lo.pop(); up.pop(); return lo.concat(up);
+      }
+      function draw(){
+        while(svg.firstChild)svg.removeChild(svg.firstChild);
+        const d=+doy.value, h=+hour.value, r=(+giro.value)*RAD;
+        const bd=dateOf(d); $('doyOut').textContent=bd.getDate()+" "+MONTHS[bd.getMonth()];
+        const hh=Math.floor(h), mm=Math.round((h-hh)*60); $('hourOut').textContent=String(hh).padStart(2,'0')+":"+String(mm).padStart(2,'0');
+        $('giroOut').textContent=(+giro.value)+"°";
+        const off=(bd.getMonth()>=3&&bd.getMonth()<=9)?2:1;
+        const utc=new Date(Date.UTC(2026,bd.getMonth(),bd.getDate(),hh-off,mm));
+        const s=sun(LAT,LON,utc), day=s.alt>0;
+        const cx=210, cy=180, sc=2.3, ring=120;
+        const toS=(E,N)=>[cx+E*sc, cy-N*sc];
+        svg.appendChild(el("circle",{cx,cy,r:ring,fill:"none",stroke:"#2a313c","stroke-width":1}));
+        for(const [lab,az] of [["N",0],["E",90],["S",180],["O",270]]){
+          const a=az*RAD, x=cx+Math.sin(a)*(ring+14), y=cy-Math.cos(a)*(ring+14);
+          const t=el("text",{x,y,"text-anchor":"middle","dominant-baseline":"central","font-size":13,"font-weight":600,fill:"#9fb0c4"}); t.textContent=lab; svg.appendChild(t);
+        }
+        const half=[[W/2,D/2],[-W/2,D/2],[-W/2,-D/2],[W/2,-D/2]];
+        const cor=half.map(([lx,ly])=>[lx*Math.cos(r)-ly*Math.sin(r), lx*Math.sin(r)+ly*Math.cos(r)]);
+        const sunDir=[Math.sin(s.az*RAD), Math.cos(s.az*RAD)];
+        let nfac=0;
+        if(day){
+          const len=Math.min(Hh/Math.tan(s.alt*RAD), 60);
+          const o2=[-sunDir[0]*len,-sunDir[1]*len];
+          const hl=hull(cor.concat(cor.map(c=>[c[0]+o2[0],c[1]+o2[1]]))).map(p=>toS(p[0],p[1]));
+          svg.appendChild(el("polygon",{points:hl.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" "),fill:"#ef9f27","fill-opacity":0.14,stroke:"none"}));
+        }
+        for(let i=0;i<4;i++){
+          const p=cor[i], q=cor[(i+1)%4], mid=[(p[0]+q[0])/2,(p[1]+q[1])/2];
+          const nl=Math.hypot(mid[0],mid[1])||1, nrm=[mid[0]/nl,mid[1]/nl];
+          const lit=day&&(nrm[0]*sunDir[0]+nrm[1]*sunDir[1])>0.02; if(lit)nfac++;
+          const a=toS(p[0],p[1]), b=toS(q[0],q[1]);
+          svg.appendChild(el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:lit?"#ef9f27":"#566276","stroke-width":lit?4:2.5,"stroke-linecap":"round"}));
+        }
+        const fp=cor.map(c=>toS(c[0],c[1]));
+        svg.appendChild(el("polygon",{points:fp.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" "),fill:"#161b22","fill-opacity":0.92,stroke:"#3a4150","stroke-width":1}));
+        const sx=cx+sunDir[0]*ring, sy=cy-sunDir[1]*ring;
+        svg.appendChild(el("line",{x1:cx,y1:cy,x2:sx,y2:sy,stroke:day?"#ef9f27":"#3a4150","stroke-width":2,"stroke-dasharray":day?"":"4 4"}));
+        svg.appendChild(el("circle",{cx:sx,cy:sy,r:day?9:6,fill:day?"#ef9f27":"none",stroke:day?"#f5c475":"#3a4150","stroke-width":1.5}));
+        if(!day){const t=el("text",{x:cx,y:cy-ring-30,"text-anchor":"middle","font-size":12,fill:"#7a8597"}); t.textContent="Sol bajo el horizonte"; svg.appendChild(t);}
+        $('mAlt').textContent=s.alt.toFixed(1)+"°";
+        $('mAz').textContent=Math.round(s.az)+"° "+cardinal(s.az);
+        $('mSh').textContent=day?(1/Math.tan(s.alt*RAD)).toFixed(2):"—";
+        $('mFac').textContent=(day?nfac:0)+" / 4";
+      }
+      [doy,hour,giro].forEach(e=>e.addEventListener('input',draw));
+      $('bSummer').onclick=()=>{doy.value=172;hour.value=14;draw();};
+      $('bEquinox').onclick=()=>{doy.value=79;hour.value=14;draw();};
+      $('bWinter').onclick=()=>{doy.value=355;hour.value=13;draw();};
+      draw();
+    })();
+    </script>
+  </body>
+</html>

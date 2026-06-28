@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: aqyra-firma
+Version: 0.1.0
+Summary: Firma de JM (2.a llave): unica fuente de verified-signed (D-021/D-023). Anzuelo (privado).
+Requires-Python: >=3.10

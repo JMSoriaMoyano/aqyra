@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    // El src del cebo es código de NAVEGADOR (DOM lib): no usa APIs de Node, por
+    // lo que NO se incluye @types/node (no es dependencia del proyecto). Si algún
+    // src usa node:* en el futuro, declarar @types/node como devDependency y
+    // reañadir "node" a "types".
+    "types": [],
+    "paths": {
+      "@aqyra/visor": ["./visor/src/index.ts"],
+      "@aqyra/openbim": ["./openbim/src/index.ts"],
+      "@aqyra/embed": ["./embed/src/index.ts"]
+    }
+  },
+  "include": ["visor/src", "openbim/src", "embed/src", "demo/src"]
+}

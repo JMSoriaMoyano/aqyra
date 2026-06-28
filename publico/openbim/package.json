@@ -1,0 +1,19 @@
+{
+  "name": "@aqyra/openbim",
+  "version": "0.2.0",
+  "description": "Adaptadores OpenBIM de Aqyra: BCF (ver/crear), IDS (validar), bsDD (lectura). F0: superficie; BCF en F3, IDS/bsDD en F4.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  }
+}

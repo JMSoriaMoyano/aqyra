@@ -1,0 +1,32 @@
+{
+  "name": "parking-linea-60x12",
+  "input": {
+    "project": "Parking en línea 60x12",
+    "building": "Aparcamiento en cordón",
+    "storeys": { "count": 1, "height": 3 },
+    "plan": { "rooms": null, "corridor": null, "cores": [] },
+    "program": { "generator": "parking-comb", "params": { "bays": 60, "aisle": 5.5, "disposition": "linea" } }
+  },
+  "ctx": { "W": 60, "D": 12 },
+  "snapshot": {
+    "storeys": 1,
+    "spacesPerStorey": 25,
+    "totalSpaces": 25,
+    "byObjectType": { "PlazaAparcamiento": 24, "Vial": 1 },
+    "zones": [
+      { "code": "AQ-ZON-APA", "kind": "aparcamiento", "members": 24 },
+      { "code": "AQ-ZON-CIR", "kind": "circulacion", "members": 1 }
+    ],
+    "sampleCodes": [
+      "AQ-ESP-PLA-P00-F1-01",
+      "AQ-ESP-PLA-P00-F1-02",
+      "AQ-ESP-PLA-P00-F1-03",
+      "AQ-ESP-PLA-P00-F1-04",
+      "AQ-ESP-PLA-P00-F1-05",
+      "AQ-ESP-PLA-P00-F1-06"
+    ],
+    "totalColumns": 0,
+    "columnsPerStorey": 0,
+    "sampleColumnCodes": []
+  }
+}

@@ -1,0 +1,15 @@
+[project]
+name = "aqyra-puente-calculo"
+version = "0.1.0"
+description = "Adaptador del contrato C5: modelo analitico (publico) -> motor-fem anclado -> resultados con estado de dato (privado, anzuelo)."
+requires-python = ">=3.10"
+# motor-fem se consume ANCLADO desde el ecosistema (../../integracion/versions.lock),
+# no como dependencia de PyPI. PyNite (QA, D-023) vive en el carril de QA, no aqui.
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

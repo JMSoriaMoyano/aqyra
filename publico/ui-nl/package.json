@@ -1,0 +1,9 @@
+{
+  "name": "@aqyra/ui-nl",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Superficie del copiloto en lenguaje natural (placeholder). Se ENCIENDE en V4. En V1 solo andamiaje. El criterio que recupera del corpus es privado/.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./src/index.ts"
+}

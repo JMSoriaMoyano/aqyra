@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Fixture REAL (recortado) de Catastro WFS BU (GetAllConstructionByParcel, 0419901DF2901H), 2026-06-27.
+     Building con varias PolygonPatch (una con hueco interior) + OtherConstruction (piscina). -->
+<gml:FeatureCollection gml:id="ES.SDGC.BU" xmlns:bu-base="http://inspire.jrc.ec.europa.eu/schemas/bu-base/3.0" xmlns:bu-core2d="http://inspire.jrc.ec.europa.eu/schemas/bu-core2d/2.0" xmlns:bu-ext2d="http://inspire.jrc.ec.europa.eu/schemas/bu-ext2d/2.0" xmlns:base="urn:x-inspire:specification:gmlas:BaseTypes:3.2" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <gml:featureMember>
+    <bu-ext2d:Building gml:id="ES.SDGC.BU.0419901DF2901H">
+      <bu-core2d:inspireId>
+        <base:Identifier>
+          <base:localId>0419901DF2901H</base:localId>
+          <base:namespace>ES.SDGC.BU</base:namespace>
+        </base:Identifier>
+      </bu-core2d:inspireId>
+      <bu-ext2d:geometry>
+       <bu-core2d:BuildingGeometry>
+        <bu-core2d:geometry>
+         <gml:Surface gml:id="Surface_ES.SDGC.BU.0419901DF2901H" srsName="urn:ogc:def:crs:EPSG::25831">
+           <gml:patches>
+                <gml:PolygonPatch>
+                <gml:exterior>
+                    <gml:LinearRing>
+                      <gml:posList srsDimension="2" count="18">420259.15 4591713.39 420265.01 4591712.76 420265.03 4591712.32 420264.5 4591701.83 420264.44 4591700.56 420264.34 4591698.73 420264.21 4591696.01 420263.59 4591693.01 420259.79 4591663.16 420238.74 4591662.06 420238.78 4591665.26 420239 4591675.2 420239.11 4591679.54 420239.22 4591686.29 420239.47 4591690.35 420239.53 4591693.99 420239.92 4591715.9 420259.15 4591713.39</gml:posList>
+                    </gml:LinearRing>
+                </gml:exterior>
+                <gml:interior>
+                    <gml:LinearRing>
+                      <gml:posList srsDimension="2" count="4">420259.15 4591713.39 420258.02 4591701.15 420258.38 4591701.24 420259.15 4591713.39</gml:posList>
+                    </gml:LinearRing>
+                </gml:interior>
+                </gml:PolygonPatch>
+                <gml:PolygonPatch>
+                <gml:exterior>
+                    <gml:LinearRing>
+                      <gml:posList srsDimension="2" count="6">420312.76 4591685.56 420311.05 4591685.64 420311.37 4591692.13 420321.5 4591691.63 420321.18 4591685.15 420312.76 4591685.56</gml:posList>
+                    </gml:LinearRing>
+                </gml:exterior>
+                </gml:PolygonPatch>
+              </gml:patches>
+            </gml:Surface>
+        </bu-core2d:geometry>
+       </bu-core2d:BuildingGeometry>
+      </bu-ext2d:geometry>
+      <bu-ext2d:currentUse>1_residential</bu-ext2d:currentUse>
+      <bu-ext2d:numberOfFloorsAboveGround xsi:nil="true" nilReason="other:unpopulated"></bu-ext2d:numberOfFloorsAboveGround>
+    </bu-ext2d:Building>
+  </gml:featureMember>
+  <gml:featureMember>
+    <bu-ext2d:OtherConstruction gml:id="ES.SDGC.BU.0419901DF2901H_PI.1">
+      <bu-ext2d:constructionNature>openAirPool</bu-ext2d:constructionNature>
+      <bu-ext2d:geometry>
+            <gml:Polygon gml:id="Polygon_PI.1" srsName="urn:ogc:def:crs:EPSG::25831">
+                <gml:exterior>
+                    <gml:LinearRing>
+                      <gml:posList srsDimension="2" count="5">420271.53 4591680.05 420273.02 4591692.4 420297.71 4591689.42 420296.22 4591677.07 420271.53 4591680.05</gml:posList>
+                    </gml:LinearRing>
+                </gml:exterior>
+              </gml:Polygon>
+      </bu-ext2d:geometry>
+    </bu-ext2d:OtherConstruction>
+  </gml:featureMember>
+</gml:FeatureCollection>

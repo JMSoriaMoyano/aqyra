@@ -1,0 +1,33 @@
+{
+  "name": "parking-120x24-2filas",
+  "input": {
+    "project": "Parking 120x24",
+    "building": "Aparcamiento en peine",
+    "storeys": { "count": 3, "height": 3 },
+    "plan": { "rooms": null, "corridor": null, "cores": [] },
+    "program": { "generator": "parking-comb", "params": { "bays": 200, "aisle": 6, "ramps": ["O", "E"] } }
+  },
+  "ctx": { "W": 120, "D": 24 },
+  "snapshot": {
+    "storeys": 3,
+    "spacesPerStorey": 91,
+    "totalSpaces": 273,
+    "byObjectType": { "PlazaAparcamiento": 88, "Vial": 1, "Rampa": 2 },
+    "zones": [
+      { "code": "AQ-ZON-APA", "kind": "aparcamiento", "members": 264 },
+      { "code": "AQ-ZON-CIR", "kind": "circulacion", "members": 9 }
+    ],
+    "sampleCodes": [
+      "AQ-ESP-PLA-P00-F1-01",
+      "AQ-ESP-PLA-P00-F1-02",
+      "AQ-ESP-PLA-P00-F1-03",
+      "AQ-ESP-PLA-P00-F1-04",
+      "AQ-ESP-PLA-P00-F1-05",
+      "AQ-ESP-PLA-P00-F1-06"
+    ],
+    "totalColumns": 0,
+    "columnsPerStorey": 0,
+    "sampleColumnCodes": [],
+    "totalSlabs": 2
+  }
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fixture REAL capturado de Catastro WFS CP (GetNeighbourParcel, refcat 0419901DF2901H, EPSG:25831), 2026-06-27. -->
+<FeatureCollection xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:cp="http://inspire.ec.europa.eu/schemas/cp/4.0" xmlns="http://www.opengis.net/wfs/2.0" numberMatched="3" numberReturned="3">
+<member>
+<cp:CadastralParcel gml:id="ES.SDGC.CP.0419912DF2901H">
+<cp:areaValue uom="m2">770</cp:areaValue>
+<cp:geometry>
+<gml:MultiSurface gml:id="MultiSurface_ES.SDGC.CP.0419912DF2901H" srsName="http://www.opengis.net/def/crs/EPSG/0/25831">
+<gml:surfaceMember>
+<gml:Surface gml:id="Surface_ES.SDGC.CP.0419912DF2901H.1" srsName="http://www.opengis.net/def/crs/EPSG/0/25831">
+<gml:patches>
+<gml:PolygonPatch>
+<gml:exterior>
+<gml:LinearRing>
+<gml:posList srsDimension="2" count="9">420337.09 4591735.07 420342.58 4591737.46 420349.72 4591740.56 420354.27 4591718.63 420359.38 4591689.21 420349.59 4591684.98 420344.67 4591682.86 420343.36 4591691.86 420337.09 4591735.07</gml:posList>
+</gml:LinearRing>
+</gml:exterior>
+</gml:PolygonPatch>
+</gml:patches>
+</gml:Surface>
+</gml:surfaceMember>
+</gml:MultiSurface>
+</cp:geometry>
+<cp:nationalCadastralReference>0419912DF2901H</cp:nationalCadastralReference>
+</cp:CadastralParcel>
+</member>
+<member>
+<cp:CadastralParcel gml:id="ES.SDGC.CP.0419901DF2901H">
+<cp:areaValue uom="m2">11884</cp:areaValue>
+<cp:geometry>
+<gml:MultiSurface gml:id="MultiSurface_ES.SDGC.CP.0419901DF2901H" srsName="http://www.opengis.net/def/crs/EPSG/0/25831">
+<gml:surfaceMember>
+<gml:Surface gml:id="Surface_ES.SDGC.CP.0419901DF2901H.1" srsName="http://www.opengis.net/def/crs/EPSG/0/25831">
+<gml:patches>
+<gml:PolygonPatch>
+<gml:exterior>
+<gml:LinearRing>
+<gml:posList srsDimension="2" count="58">420320.37 4591669.09 420316.92 4591666.84 420314.83 4591665.45 420309.87 4591662.11 420307.06 4591660.13 420306.71 4591659.89 420302.93 4591657.3 420294.17 4591651.08 420286.32 4591645.18 420285.45 4591644.59 420278.61 4591639.32 420276.47 4591637.58 420269.38 4591631.86 420268.67 4591631.29 420267.74 4591630.65 420266.35 4591629.7 420262.76 4591628.12 420259.16 4591627.56 420258.82 4591627.5 420254.91 4591627.51 420251.31 4591628.16 420246.65 4591629.6 420243.48 4591630.54 420238.35 4591636.28 420238.64 4591655.2 420238.7 4591659.52 420238.78 4591665.26 420239 4591675.2 420239.11 4591679.54 420239.22 4591686.29 420239.47 4591690.35 420240.38 4591742.48 420240.89 4591751.14 420240.9 4591760.9 420241.98 4591762.5 420249.35 4591764.74 420251.15 4591765.52 420254.13 4591765.94 420255.33 4591765.82 420257.69 4591765.6 420264.82 4591764.72 420274.16 4591764.55 420284.99 4591764.65 420291.12 4591766.24 420296.86 4591768.21 420300.68 4591769.85 420315.89 4591776.85 420321.84 4591779.62 420329.49 4591783.18 420329.56 4591782.84 420330.2 4591779.84 420336.26 4591740.46 420337.09 4591735.07 420343.36 4591691.86 420344.67 4591682.86 420332.3 4591676.45 420330.42 4591675.24 420320.37 4591669.09</gml:posList>
+</gml:LinearRing>
+</gml:exterior>
+</gml:PolygonPatch>
+</gml:patches>
+</gml:Surface>
+</gml:surfaceMember>
+</gml:MultiSurface>
+</cp:geometry>
+<cp:nationalCadastralReference>0419901DF2901H</cp:nationalCadastralReference>
+</cp:CadastralParcel>
+</member>
+<member>
+<cp:CadastralParcel gml:id="ES.SDGC.CP.0419902DF2901H">
+<cp:areaValue uom="m2">759</cp:areaValue>
+<cp:geometry>
+<gml:MultiSurface gml:id="MultiSurface_ES.SDGC.CP.0419902DF2901H" srsName="http://www.opengis.net/def/crs/EPSG/0/25831">
+<gml:surfaceMember>
+<gml:Surface gml:id="Surface_ES.SDGC.CP.0419902DF2901H.1" srsName="http://www.opengis.net/def/crs/EPSG/0/25831">
+<gml:patches>
+<gml:PolygonPatch>
+<gml:exterior>
+<gml:LinearRing>
+<gml:posList srsDimension="2" count="12">420330.2 4591779.84 420332.51 4591780.92 420333.7 4591781.48 420338.83 4591783.88 420345 4591786.77 420350.99 4591756.55 420353.81 4591742.34 420349.72 4591740.56 420342.58 4591737.46 420337.09 4591735.07 420336.26 4591740.46 420330.2 4591779.84</gml:posList>
+</gml:LinearRing>
+</gml:exterior>
+</gml:PolygonPatch>
+</gml:patches>
+</gml:Surface>
+</gml:surfaceMember>
+</gml:MultiSurface>
+</cp:geometry>
+<cp:nationalCadastralReference>0419902DF2901H</cp:nationalCadastralReference>
+</cp:CadastralParcel>
+</member>
+</FeatureCollection>
