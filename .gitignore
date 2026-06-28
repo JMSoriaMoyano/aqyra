@@ -25,6 +25,7 @@ venv/
 *.plugin
 
 # ── Helpers operativos de git (no son del proyecto) ──
+/ESTADO_contratos.bat
 /COMMIT_contratos.bat
 /PUSH_contratos_main.bat
 /LIMPIAR_contratos_eol.bat
