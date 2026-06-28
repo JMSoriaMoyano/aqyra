@@ -15,7 +15,7 @@ nucleo:
   motor-calculo:        "0.1.0"   # built_from 0.23.0 (DEC-A1 Opción A + P3) · GOLDEN VERDE · tag cortado en P4 · paridad 2.0
 
 plugins:
-  iso19650-openbim:     "0.8.2"   # C1 · built_from 0.8.2 · GOLDEN VERDE · paridad 2.0
+  iso19650-openbim:     "0.10.0"   # C1 v0 apertura familias P1 (huecos/clases/alineaciones/doble clasif/forward-open) - golden C1-APERTURA-01 verde + firma JM 2026-06-28
   visor-ifc:            "0.4.0"   # = paquete @aqyra/visor · 0.3.0 georref+Norte/soleamiento · 0.4.0 entorno (planta Catastro/CartoCiudad→GeoJSON) + terreno/topografía · golden VERDE (17 files/119 tests) + firma JM 2026-06-28 · C1 sin cambios · abierto no-bloqueante: confirmar BU/viales en vivo
   estructuras-eurocodigos: "0.1.0"   # skills EC en uso (N1.1)
 
