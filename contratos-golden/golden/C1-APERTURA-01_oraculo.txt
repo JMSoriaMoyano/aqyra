@@ -1,0 +1,8 @@
+=== oracle (mount files) ===
+esquema: IFC4X3
+Eje 'Eje C-001' | esquema IFC4X3 | L=400.000 m (PK 0.000 -> 400.000) | planta 5 / alzado 3 / peralte 5 | georref EPSG:25830
+alineacion planta: ['LINE', 'CLOTHOID', 'CIRCULARARC', 'CLOTHOID', 'LINE'] | L=400.0 | validacion: CUMPLE
+huecos losa=1 muro=1 | IfcTransportElement=1 (['ELEVATOR'])
+doble clasificacion: 7 elementos, sin clasif=0
+
+VEREDICTO GOLDEN (Llave 1): VERDE

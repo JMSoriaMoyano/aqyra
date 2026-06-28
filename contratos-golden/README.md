@@ -46,3 +46,5 @@ oraculo:      analitico | pynite | mms | mano-JM   (+ fuente)
 tolerancia:   <por magnitud>
 responsable:  JM
 ```
+
+- 2026-06-28 - Golden **C1-APERTURA-01** registrada (C1 apertura familias P1, iso19650-openbim 0.10.0): Llave 1 VERDE + firma JM.
