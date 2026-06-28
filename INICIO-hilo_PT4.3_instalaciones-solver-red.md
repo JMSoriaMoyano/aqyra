@@ -13,17 +13,17 @@ transversal** (`ifc_utils` + `grafo_red`, PT 4.1) y el **dominio IFC MEP** (PT 4
 v0.4.0) **sin romperlos**. Es el cierre de los huecos **H3** (bases de demanda) y del **motor
 hidráulico de red** (decisión abierta nº4, parte de cálculo). Trabaja con el patrón de agente de
 disciplina (el mismo de `ingeniero-estructurista`). El parser MEP (lectura IFC→neutro) **se queda en
-`iso19650-openbim`**; el **solver y la demanda son de `instalaciones`** (frontera C1 lectura ↔ C4
+`iso19650-openbim`**; el **solver y la demanda son de `instalaciones`** (frontera C1 lectura ↔ CN-3
 demanda ↔ disciplina cálculo).
 
 **Lee primero, en este orden:**
 1. `Hoja-de-ruta_Ecosistema-ingenieria.md` — §3 (mapa de plugins; `instalaciones` "a crear", 1 plugin
    con subagentes PCI/eléctricas/clima; `description` ≤ 500), §4 ("**capacidad transversal emergente:
-   motor hidráulico de red**" y los contratos C1–C4), §5 (disciplina **Instalaciones**: PCI/REBT/RITE),
+   motor hidráulico de red**" y los contratos C1 + CN-1/CN-2/CN-3), §5 (disciplina **Instalaciones**: PCI/REBT/RITE),
    §6 (olas; este hilo es Ola 4) y §8 (decisiones: nº1 instalaciones = **un plugin con subagentes**, ya
    resuelta; nº4 núcleo compartido, **parcialmente abierta** — unificar los espejos, ver INC-10).
-2. `Nucleo-transversal/Verificacion-Ola1.md` — hueco **H3** (bases de demanda = el "slot" C4 para
-   disciplinas no estructurales) y el **dry-run §5** (cómo enchufa `instalaciones` por C1/C2/C3/C4).
+2. `Nucleo-transversal/Verificacion-Ola1.md` — hueco **H3** (bases de demanda = el "slot" CN-3 para
+   disciplinas no estructurales) y el **dry-run §5** (cómo enchufa `instalaciones` por C1/CN-1/CN-2/CN-3).
 3. `Nucleo-transversal/C1_Contrato-IFC-modelo-neutro.md` — §4 (dominio MEP: el **modelo neutro de red**
    `unidades`/`sistema`/`nodos`/`tramos`/`terminales`/`fuentes`, ya **implementado** en PT 4.2, con la
    clave `demanda` prevista por terminal/sistema = el gancho H3; y la nota "**cálculo MEP ≠ FEM**:
@@ -57,8 +57,8 @@ demanda ↔ disciplina cálculo).
    presiones admisibles), análogo al de equilibrio estructural.
 3. **Bases de demanda (hueco H3).** Skill/módulo de **bases de demanda** que rellena la clave `demanda`
    del modelo neutro (caudales/ocupación/simultaneidad). Para PCI: nº de BIE/rociadores simultáneos y
-   caudal de cálculo según RIPCI/UNE `[confirmar AN]`. Es el "slot" **C4** para disciplinas no
-   estructurales (aclarar C4 en consecuencia).
+   caudal de cálculo según RIPCI/UNE `[confirmar AN]`. Es el "slot" **CN-3** para disciplinas no
+   estructurales (aclarar CN-3 en consecuencia).
 4. **Memoria y criterios (C2/C3).** `criterios-instalaciones.md` (raíz, desde
    `Nucleo-transversal/plantilla-criterios-disciplina.md`), `memoria-instalaciones.md` por obra (desde
    `plantilla-memoria.md`, 7 apartados), skill `criterios-memoria` del plugin, y `Casos-de-uso/` propio
@@ -80,7 +80,7 @@ demanda ↔ disciplina cálculo).
 - Plugin `instalaciones` (agente + subagente PCI + solver de red + bases de demanda + skills de memoria),
   con **micro-test** del solver (balance de caudales/presiones) y un **caso PCI de extremo a extremo** que
   pase (red leída por el parser MEP del PT 4.2 → demanda → solver → verificación CUMPLE → memoria).
-- Actualizar contratos: **C4** (aclarar bases de demanda para disciplinas no estructurales),
+- Actualizar contratos: **CN-3** (aclarar bases de demanda para disciplinas no estructurales),
   `Verificacion-Ola1.md` (**H3 → ✅**), la hoja de ruta (Ola 4: H1/H2/H3 ✅; motor hidráulico nacido) y,
   si se unifica el núcleo, C1 §3bis / decisión nº4 / INC-10.
 - Registrar: lección en `REPOSITORIO-aprendizaje.md` (+ fila/INC si aplica), entrada SemVer en el

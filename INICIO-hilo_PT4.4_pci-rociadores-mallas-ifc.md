@@ -5,7 +5,7 @@
 >
 > *(Ruta recomendada: profundizar el vertical PCI y endurecer el motor de red. Si prefieres
 > abrir antes otro vertical —eléctricas REBT o clima RITE—, la estructura del PT y de la
-> frontera C1/C4 es la misma; cambia solo el solver y las bases de demanda.)*
+> frontera C1/CN-3 es la misma; cambia solo el solver y las bases de demanda.)*
 
 ---
 
@@ -16,17 +16,17 @@ automáticos** según **UNE-EN 12845** (segundo vertical PCI, con redes típicam
 el solver anterior), y (3) **write-back de los Psets de resultado al IFC** (cierra el ciclo
 IFC→cálculo→IFC, **diferido** en el PT 4.3). Reutiliza el **núcleo transversal** (`ifc_utils` + `grafo_red`,
 espejado), el **dominio IFC MEP** (`iso19650-openbim` v0.4.0) y el **motor hidráulico** del PT 4.3 **sin
-romperlos**. Mantén la frontera **C1 lectura (iso19650) ↔ C4 demanda ↔ cálculo (instalaciones)**.
+romperlos**. Mantén la frontera **C1 lectura (iso19650) ↔ CN-3 demanda ↔ cálculo (instalaciones)**.
 
 **Lee primero, en este orden:**
 1. `Hoja-de-ruta_Ecosistema-ingenieria.md` — §3 (mapa de plugins; `instalaciones` ✅ v0.1.0, subagente
    PCI ✅, rociadores pendiente; `description` ≤ 500), §4 ("**motor hidráulico de red**" y los contratos
-   C1–C4), §5 (disciplina **Instalaciones**: PCI/REBT/RITE), §6 (Ola 4; H1/H2/H3 ✅) y §8 (decisiones:
+   C1, CN-1, CN-2 y CN-3), §5 (disciplina **Instalaciones**: PCI/REBT/RITE), §6 (Ola 4; H1/H2/H3 ✅) y §8 (decisiones:
    nº1 ✅ un plugin con subagentes, nº4 ✅ patrón de espejo + puerta de integridad).
 2. `instalaciones/` (el plugin a ampliar): `scripts/red/solver_red.py` (solver **a presión Darcy-Weisbach**,
    reparto por **árbol** BFS — **avisa pero no resuelve mallas**: ese es el frente 1),
    `scripts/red/verificacion_red.py` (arnés balance de caudales ≈0 % + presiones), `scripts/red/
-   test_solver_red.py`, `scripts/pci/bases_demanda.py` (H3, slot C4: BIE; **rociadores no implementado**),
+   test_solver_red.py`, `scripts/pci/bases_demanda.py` (H3, slot CN-3: BIE; **rociadores no implementado**),
    `scripts/pci/run_all_pci.py`, `scripts/nucleo/` (espejo del núcleo), `agents/` y `CHANGELOG.md`.
 3. `Nucleo-transversal/C1_Contrato-IFC-modelo-neutro.md` — §4 (modelo neutro de red MEP; el solver lo
    consume) y **§5 Salida IFC (escritura)**: enriquecer el IFC con **Psets de resultado** (DN dimensionado,
@@ -35,7 +35,7 @@ romperlos**. Mantén la frontera **C1 lectura (iso19650) ↔ C4 demanda ↔ cál
    neutro → demanda → solver → verificación **CUMPLE**, balance 0,0 %; memoria md+docx); plugin
    `instalaciones-v0.1.0.plugin`; la puerta de espejo `Nucleo-transversal/verificar_espejo_nucleo.py`.
 5. `criterios-instalaciones.md` (raíz), `Casos-de-uso/REPOSITORIO-aprendizaje.md` (lección **PT 4.3** —
-   patrón de agente de disciplina, frontera C1/C4, motor hidráulico, decisión nº4 cerrada como espejo;
+   patrón de agente de disciplina, frontera C1/CN-3, motor hidráulico, decisión nº4 cerrada como espejo;
    trampas de mount y `entity.id()`), `instalaciones/CHANGELOG.md` y `Casos-de-uso/CHANGELOG-plugin.md`.
 6. **Normativa PCI** (ya en el ecosistema): `cte-documentos-basicos:normativa-concurrente` (RIPCI —
    RD 513/2017; rociadores **UNE-EN 12845**; abastecimiento UNE 23500) y `cte-documentos-basicos:db-si-sua`

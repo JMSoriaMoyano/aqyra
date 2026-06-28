@@ -90,7 +90,7 @@ saneamiento de la Ola 6;** el **abastecimiento a presión** (reúso del solver D
    (`Q=(1/n)·A·R^(2/3)·J^(1/2)`, J de las cotas de solera) **reutilizando `odt.geom_circular`**.
    Comprueba por tramo: **velocidad** (autolimpieza ↔ no erosión), **grado de llenado** (≤0,75 NDP),
    **pendiente** y **diámetro mínimos**. NDP `[confirmar AN]`.
-3. **Demanda de saneamiento (C4, EN 752).** `scripts/red/bases_saneamiento.py`: caudales de **aguas
+3. **Demanda de saneamiento (CN-3, EN 752).** `scripts/red/bases_saneamiento.py`: caudales de **aguas
    residuales** (dotación · hab-eq · coef. de punta) y/o **pluviales** (reúso de la hidrología
    racional 5.2-IC del PT 6.1 → escorrentía a la red). Define el régimen (separativo/unitario). NDP.
 4. **Verificación + run_all + micro-test.** `verificacion_red_lineal.py` (balance nodal con signo +

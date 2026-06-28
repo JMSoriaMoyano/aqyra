@@ -1,15 +1,15 @@
 """
-BASES DE DEMANDA -- PCI (hueco H3, contrato C4 para disciplinas NO estructurales).
+BASES DE DEMANDA -- PCI (hueco H3, contrato CN-3 para disciplinas NO estructurales).
 Disciplina `instalaciones`, PT 4.3 (Ola 4).
 
 Rellena la clave `demanda` del MODELO NEUTRO DE RED (prevista por el parser MEP de
 iso19650-openbim, PT 4.2, dejada en None) con las bases de demanda de PROTECCION
 CONTRA INCENDIOS por BIE: caudal de calculo y presion dinamica minima por terminal
-y la simultaneidad del sistema. Es el "slot" C4 de la disciplina (analogo a las
+y la simultaneidad del sistema. Es el "slot" CN-3 de la disciplina (analogo a las
 acciones EC0/EC1 de estructuras, aqui DEMANDAS en vez de cargas).
 
 El NUCLEO da la topologia; este modulo aporta la DEMANDA; el solver (red/solver_red)
-CALCULA. Frontera C1 (lectura, iso19650) <-> C4 (demanda) <-> calculo (instalaciones).
+CALCULA. Frontera C1 (lectura, iso19650) <-> CN-3 (demanda) <-> calculo (instalaciones).
 
 Bases por defecto (NDP, todos [confirmar AN] -- criterio del despacho):
   RIPCI (RD 513/2017, Anexo I) | UNE-EN 671-1/-2 (BIE) | UNE 23500 (abastecimiento)

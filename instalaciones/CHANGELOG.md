@@ -8,8 +8,8 @@ revisado y firmado por tecnico competente.
 - **Segundo vertical de la disciplina: instalaciones ELECTRICAS de baja tension (REBT).**
   Otro solver **sobre el mismo grafo de red** (el primero es el hidraulico); BT radial → se
   reutiliza la **propagacion por arbol** del solver hidraulico (`red/solver_red._arbol_desde_fuente`),
-  sin Hardy-Cross y sin duplicar el grafo. Frontera C1/C4 intacta.
-- **Bases de demanda electrica (C4).** `scripts/electrico/bases_demanda_electrica.py` (NUEVO):
+  sin Hardy-Cross y sin duplicar el grafo. Frontera C1/CN-3 intacta.
+- **Bases de demanda electrica (CN-3).** `scripts/electrico/bases_demanda_electrica.py` (NUEVO):
   modo **vivienda** (ITC-BT-25: circuitos C1–C12, Fu/Fs, grado de electrificacion basica/elevada,
   ITC-BT-10) y modo **receptores** (terciario/industrial: catalogo luminaria/toma/motor/clima,
   ITC-BT-44/-47). Dispatcher `aplicar_demanda_electrica`. El dato del IFC prevalece. `[confirmar AN]`.
@@ -67,7 +67,7 @@ revisado y firmado por tecnico competente.
   **Darcy-Weisbach** (Swamee-Jain), propagacion de presiones con cota, comprobacion
   de terminales; `scripts/red/verificacion_red.py` — balance de caudales (~0 %) y
   presiones; micro-test `scripts/red/test_solver_red.py`.
-- **Bases de demanda (hueco H3, contrato C4):** `scripts/pci/bases_demanda.py` —
+- **Bases de demanda (hueco H3, contrato CN-3):** `scripts/pci/bases_demanda.py` —
   rellena `demanda` para PCI (BIE) segun RIPCI/UNE-EN 671/UNE 23500/DB-SI [confirmar AN].
 - **Orquestador** `scripts/pci/run_all_pci.py` (modelo neutro -> demanda -> solver ->
   verificacion).

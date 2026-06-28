@@ -138,9 +138,9 @@ Cada peldaño es **entregable y validado** por sí mismo, y desbloquea tipologí
 
 ## 5. Capacidades transversales de puente (más allá del FEM)
 
-Son el "C4 de puentes" y la fontanería que comparten todas las tipologías:
+Son el "CN-3 de puentes" y la fontanería que comparten todas las tipologías:
 
-- **Acciones IAP-11** (módulo nuevo, *slot* C4): permanentes y reológicas; **tráfico** (LM1: tándem +
+- **Acciones IAP-11** (módulo nuevo, *slot* CN-3): permanentes y reológicas; **tráfico** (LM1: tándem +
   carga uniforme; LM2; sobrecarga de uso en aceras); **viento**; **térmica** (componente uniforme +
   **gradiente vertical**); **nieve**; **asientos** de apoyo; **fatiga** (LM3); **sísmica** (EC8-2);
   **combinaciones** específicas de puente (ELU/ELS, frecuente/cuasipermanente).
@@ -195,7 +195,7 @@ acciones → comprobación EC → memoria + write-back), y (c) las **puertas** e
 
 ## 8. Contrato C5 — Motor FEM (modelo de análisis + API del solver)
 
-Nuevo contrato del núcleo (junto a C1–C4), que estabiliza cómo cualquier disciplina pide cálculo:
+Nuevo contrato del núcleo (junto a C1, CN-1, CN-2 y CN-3), que estabiliza cómo cualquier disciplina pide cálculo:
 
 - **Modelo de análisis (malla FEM)** — extiende el modelo neutro estructural (C1 §2) con:
   `mallas`/`elementos` (tipo: `barra|lamina|lamina_curva|rigidizador|cable|membrana`), `laminados`

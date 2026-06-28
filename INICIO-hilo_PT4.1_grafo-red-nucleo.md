@@ -13,7 +13,7 @@ la hoja de ruta ("¿dónde vive el motor hidráulico de red?"). Trabaja con el a
 `ingeniero-estructurista` (es quien conoce el código a refactorizar) y **no rompas estructuras**.
 
 **Lee primero, en este orden:**
-1. `Hoja-de-ruta_Ecosistema-ingenieria.md` (v2.3) — §4 (núcleo y contratos C1–C4; "capacidad
+1. `Hoja-de-ruta_Ecosistema-ingenieria.md` (v2.3) — §4 (núcleo y contratos C1, CN-1, CN-2 y CN-3; "capacidad
    transversal emergente: motor hidráulico de red"), §6 (olas; este hilo es Ola 4) y la decisión
    abierta nº4.
 2. `Nucleo-transversal/Verificacion-Ola1.md` — huecos **H1** (este PT), H2 (IFC MEP) y H3 (bases de

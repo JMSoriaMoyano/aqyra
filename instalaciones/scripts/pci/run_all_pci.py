@@ -3,7 +3,7 @@ ORQUESTADOR PCI (extremo a extremo). Disciplina `instalaciones`, PT 4.3 (Ola 4).
 
 Encadena la receta de la disciplina sobre el MODELO NEUTRO DE RED (emitido por el
 parser MEP de iso19650-openbim, PT 4.2):
-  modelo neutro  ->  bases_demanda.aplicar (H3, C4)  ->  solver_red.resolver
+  modelo neutro  ->  bases_demanda.aplicar (H3, CN-3)  ->  solver_red.resolver
                  ->  verificacion_red.verificar  ->  artefactos JSON.
 
 NO lee IFC (eso es C1, en iso19650-openbim). Entrada: modelo_neutro_mep.json.

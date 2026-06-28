@@ -14,7 +14,7 @@
   explanada y catálogo de secciones. [confirmar AN] edición vigente.
 - Write-back/validación IFC: `iso19650-openbim` v0.5.0.
 
-## 3. Datos de proyecto / acciones (C4 — acción del tráfico)
+## 3. Datos de proyecto / acciones (CN-3 — acción del tráfico)
 
 - IMD total **8000 veh/día**; pesados **12 %**; calzada única (reparto 50 % por
   sentido) → **IMDp ≈ 480** vehículos pesados/día en el carril de proyecto. [confirmar AN].

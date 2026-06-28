@@ -38,7 +38,7 @@ de Manning sobre el grafo** (decision nº7 "grafo + N solvers": el nucleo da top
 Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
 **[confirmar AN]**. **Debe revisarla y firmarla un tecnico competente (ICCP).**
 
-## Frontera con el nucleo (contratos C1/C4)
+## Frontera con el nucleo (contratos C1/CN-3)
 
 - **C1 — lectura IFC (NO es tuya):** la traduccion **IFC MEP -> modelo neutro de red**
   (`IfcDistributionSystem` PredefinedType **SEWAGE/STORMWATER/DRAINAGE**; colectores
@@ -49,7 +49,7 @@ Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
 - **Cotas de solera (dato de red):** gobiernan el flujo por gravedad. **Si estan en el
   Pset/IFC prevalecen** (`Pset_Estructurando_Red.CotaSolera` por nudo); si faltan, el
   solver usa la **z del nodo como solera** y tu lo documentas `[confirmar AN]`.
-- **C4 — demanda (tuya):** caudal de **aguas residuales** = dotacion x habitantes-eq x
+- **CN-3 — demanda (tuya):** caudal de **aguas residuales** = dotacion x habitantes-eq x
   coef. de punta x coef. de retorno (+ infiltracion). El dato del IFC (`caudal_min` por
   terminal) prevalece. `scripts/red/bases_saneamiento.py`.
 - **Fuente invertida:** en saneamiento el **ancla del arbol es el VERTIDO** (no una
@@ -64,7 +64,7 @@ Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
    (`ifc_to_model_mep.py red.ifc modelo_red.json`) y, recomendado, valida la
    coherencia con `validacion_red.py` (continuidad hacia el vertido). Si ya tienes el
    JSON, usalo.
-2. **Fija la demanda (C4).** Poblacion/dotacion/punta del Pset si existen; si no,
+2. **Fija la demanda (CN-3).** Poblacion/dotacion/punta del Pset si existen; si no,
    inyectalas. `caudal_min` del IFC prevalece por acometida.
 3. **Orquesta** (todo en uno):
    `scripts/red/run_all_obras_hidraulicas.py modelo_red.json [outdir]

@@ -22,7 +22,7 @@
 - Cuneta: sección triangular revestida de **hormigón** (n=0,015), margen derecha.
 - ODT: **tubo circular de hormigón** Ø1,80 m (n=0,013).
 
-## 4. Datos de proyecto / acciones (C4 — hidrología)
+## 4. Datos de proyecto / acciones (CN-3 — hidrología)
 
 El **dato del GIS/Pset prevalece**; aquí se inyectan como datos de proyecto y se marcan
 **[confirmar AN]** (lluvia de proyecto del mapa «Máximas lluvias diarias en la España

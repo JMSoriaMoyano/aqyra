@@ -1,7 +1,7 @@
 # Verificación de cierre de la Ola 1 (PT 1.6)
 
 **Auditoría del núcleo transversal y de la edificación cerrada · 22/06/2026.** Comprueba que el
-núcleo (contratos C1–C4) está listo para que **enchufe una disciplina nueva sin tocarlo** y que la
+núcleo (contratos C1 + CN-1/CN-2/CN-3) está listo para que **enchufe una disciplina nueva sin tocarlo** y que la
 edificación queda cubierta de extremo a extremo. No es desarrollo nuevo. Realizada con el agente
 `ingeniero-estructurista` y contrastada con una **verificación independiente** (subagente). Todo
 resultado es de **predimensionado/asistencia y debe ser revisado y firmado por técnico competente**;
@@ -23,7 +23,7 @@ NDP marcados `[confirmar AN]`.
 | **C1 — IFC / modelo neutro** | ⚠️ Coherente con matices | El esquema documentado coincide con los parsers intactos: `barras/ifc_to_model.py` emite `unidades, materiales, secciones, nodos, barras, cargas` (caso 1 lo confirma, con `cargas` a nivel raíz `{caso,barra,direccion,qz}`); `laminas/ifc_to_model_3d.py` emite `unidades, materiales, secciones, nodos, barras, superficies` (caso 10 lo confirma). El caso 15 **añade claves nuevas** (`pantallas[]`, `diafragma`, `dinteles`, `ec8`, `nucleo`, `masas`) sin alterar la semántica de las existentes. **Matices** (ver §6): (a) la colocación de cargas difiere entre 1D (raíz) y 2D (`superficies[].cargas`) y el contrato no lo explicita; (b) el modelo sísmico es un **modelo hermano** que usa `material` (singular) en vez de `materiales` (dict) y omite la topología gravitatoria; (c) referencias de ola **desfasadas** en §4 ("habilita la Ola 3 (PCI)"); (d) el parser `puente.py` y `barras/ifc_to_model.py`, citados por el contrato, estaban **truncados en el paquete v0.22.0** (corregido en v0.22.1). |
 | **C2 — Memoria del despacho** | ✅ Coherente | `criterios-despacho.md` tiene las **5 secciones** fijas (Normativa, Materiales, Coeficientes y criterios, Lecciones aprendidas, **Formato de memoria**), idénticas a `plantilla-criterios-disciplina.md`. La skill `estructuras-eurocodigos:criterios-memoria` lee/mantiene `criterios-despacho.md` (raíz) + `memoria-estructural.md` (subcarpeta) al iniciar, con entradas fechadas y promoción de criterios. El patrón "una skill `criterios-memoria` por plugin" ya existe **duplicado** (estructuras + `cte-documentos-basicos:criterios-memoria-cte`). Matiz cosmético: el título "Materiales habituales" vs "Materiales / componentes habituales" de la plantilla. |
 | **C3 — Entregables / memoria** | ✅ Coherente (con 1 alineación menor) | `plantilla-memoria.md` reproduce **exactamente** los 7 apartados de C3 §1 (Datos del proyecto · Normativa · Materiales · Acciones/bases · Comprobaciones por elemento · **Registro fechado** · Conclusiones). El generador del motor `sismico/generate_memoria_nucleo.py` ya emite memoria Word con esa estructura (caso 15). **Alineación pendiente:** la skill `estructuras-eurocodigos:memoria-calculo` documenta una estructura de 7 secciones **distinta** (sin apartado "Registro de comprobaciones fechado", "Objeto y alcance" en vez de "Datos del proyecto", "Modelo estructural" separado). Conviene alinearla con el esqueleto C3 y que toda disciplina parta de `plantilla-memoria.md`. |
-| **C4 — Acciones / bases de cálculo** | ✅ Coherente (en su alcance actual) | Existe la skill `estructuras-eurocodigos:bases-acciones`; su `SKILL.md` cubre **EN 1990 (EC0) + EN 1991 (EC1)** con Anejo Nacional español: coeficientes parciales y de simultaneidad, ELU/ELS, permanentes/variables, viento, nieve, sobrecargas de uso, térmicas, combinaciones §6.4/§6.5; marca `[NDP - confirmar en AN]`. Alimenta al resto de skills y sigue el protocolo de memoria (lee `criterios-despacho.md`). Las acciones de tráfico (IAP) e hidrología son extensión **futura** (olas 5–6), correctamente fuera del alcance de la Ola 1. Para disciplinas no estructurales el "slot" C4 son las **bases de demanda** (caudales/potencias/ocupación), **ya creadas para PCI** en `instalaciones` v0.1.0 (`bases_demanda.py`, hueco H3 ✅). |
+| **CN-3 — Acciones / bases de cálculo** | ✅ Coherente (en su alcance actual) | Existe la skill `estructuras-eurocodigos:bases-acciones`; su `SKILL.md` cubre **EN 1990 (EC0) + EN 1991 (EC1)** con Anejo Nacional español: coeficientes parciales y de simultaneidad, ELU/ELS, permanentes/variables, viento, nieve, sobrecargas de uso, térmicas, combinaciones §6.4/§6.5; marca `[NDP - confirmar en AN]`. Alimenta al resto de skills y sigue el protocolo de memoria (lee `criterios-despacho.md`). Las acciones de tráfico (IAP) e hidrología son extensión **futura** (olas 5–6), correctamente fuera del alcance de la Ola 1. Para disciplinas no estructurales el "slot" CN-3 son las **bases de demanda** (caudales/potencias/ocupación), **ya creadas para PCI** en `instalaciones` v0.1.0 (`bases_demanda.py`, hueco H3 ✅). |
 
 Leyenda: ✅ coherente · ⚠️ desajuste menor / a precisar · ❌ falta.
 
@@ -123,7 +123,7 @@ disciplina nueva (no si una disciplina concreta lo ha rellenado).
 - [x] Motor de documentos común reutilizable (`docx`/`pdf`/`pptx`/`xlsx`).
 - [~] **Alinear** `memoria-calculo` al esqueleto C3 y partir siempre de `plantilla-memoria.md` (hueco H4).
 
-**C4 — Acciones / bases de cálculo**
+**CN-3 — Acciones / bases de cálculo**
 
 - [x] `bases-acciones` cubre EC0/EC1 + AN para disciplinas estructurales.
 - [x] Para disciplinas **no estructurales** el "slot" de **bases de demanda** existe (hueco H3 ✅; `instalaciones:bases_demanda.py`, PCI).
@@ -131,9 +131,9 @@ disciplina nueva (no si una disciplina concreta lo ha rellenado).
 **Definición de "hecho" de la Ola 1 (roadmap §7)**
 
 - [x] (a) Leer/escribir IFC (C1) — ✅ estructural; ⚠️ MEP/Alignment planificados.
-- [x] (b) Aprender entre hilos (C2) — ✅.
-- [x] (c) Emitir memoria homogénea (C3) — ✅ (alineación menor de `memoria-calculo`).
-- [x] (d) Tomar acciones (C4) — ✅ estructural; ✅ bases de demanda para no estructurales (PCI, H3, `instalaciones` v0.1.0).
+- [x] (b) Aprender entre hilos (CN-1) — ✅.
+- [x] (c) Emitir memoria homogénea (CN-2) — ✅ (alineación menor de `memoria-calculo`).
+- [x] (d) Tomar acciones (CN-3) — ✅ estructural; ✅ bases de demanda para no estructurales (PCI, H3, `instalaciones` v0.1.0).
 - [x] Edificación cubierta de extremo a extremo — ✅ (casos 1–10, 11, 15).
 - [x] El `.plugin` abre y los módulos están — ✅ **en v0.22.1** (❌ en v0.22.0).
 
@@ -170,14 +170,14 @@ construir nada, para localizar dónde **tocaría el núcleo** (lo que no deberí
    ya están previstas en C3 §2) y reutiliza `docx`/`pdf`. **Enchufa. ✅** Debe partir de
    `plantilla-memoria.md` (canónica), no de la estructura de `memoria-calculo` (hueco H4).
 
-4. **C4 (acciones / bases).** `instalaciones` es dimensionado de redes + cumplimiento, **menos FEM**.
+4. **CN-3 (acciones / bases).** `instalaciones` es dimensionado de redes + cumplimiento, **menos FEM**.
    Sus "acciones" no son cargas EC0/EC1 sino **demandas** (ocupación→caudal, factores de
    simultaneidad, potencias, intensidades) según RITE/REBT/CTE-HS. `bases-acciones` **no cubre**
-   esto. → El "slot" C4 lo rellenaría una **base de demanda propia** de la disciplina (hueco **H3**);
-   el contrato C4 debería aclarar que para disciplinas no estructurales este contrato se cumple con
+   esto. → El "slot" CN-3 lo rellenaría una **base de demanda propia** de la disciplina (hueco **H3**);
+   el contrato CN-3 debería aclarar que para disciplinas no estructurales este contrato se cumple con
    módulos de demanda específicos. No se toca el núcleo, pero el contrato debe explicitarlo.
 
-**Conclusión del dry-run:** C2 y C3 enchufan limpiamente hoy. C1 y C4 enchufan **a nivel de patrón**,
+**Conclusión del dry-run:** CN-1 y CN-2 enchufan limpiamente hoy. C1 y CN-3 enchufan **a nivel de patrón**,
 pero exigen **trabajo de núcleo previo** (extraer grafo+utilidades IFC; ampliar IFC a MEP; definir
 bases de demanda). Eso es precisamente el contenido planificado de la **Ola 4** — no son defectos de
 la Ola 1, sino sus puntos de extensión, ahora explicitados.
@@ -190,13 +190,13 @@ la Ola 1, sino sus puntos de extensión, ahora explicitados.
 |---|---|---|---|---|
 | **H1** | P1 (Ola 4) | C1 | El **grafo de red** y las utilidades IFC compartidas (`_psets`, factor de unidades, construcción de grafo por puertos/intersección) están **embebidas en `puente.py`/parsers de estructuras**, no expuestas como capacidad transversal. | ✅ **Aplicado (PT 4.1, v0.23.0).** Extraído a `scripts/nucleo/` (`ifc_utils` + `grafo_red`), agnóstico al solver, con API estable y micro-test; `puente.py` lo consume como adaptador fino (R1–R5 byte a byte, casos 1/5/7/10 cumplen). Resuelve la decisión abierta nº4. H2 (IFC MEP) queda pendiente. |
 | **H2** | P1 (Ola 4) | C1 | `iso19650-openbim` (ifc-create/ifc-validate) **no soportaba MEP** (IfcDistributionElement/FlowSegment/Port, Pset_*). | ✅ **Aplicado (PT 4.2, `iso19650-openbim` v0.4.0).** Abierto el dominio IFC MEP: `scripts/mep/ifc_to_model_mep.py` (físico→modelo neutro de red, reutiliza el núcleo **sin tocarlo**), `generate_test_ifc_mep.py` (red PCI de prueba) y `validacion_red.py` (continuidad/terminales/huérfanas/SI), con micro-test `test_red_mep.py` y caso e2e `caso-MEP-01-red-pci` (CUMPLE, cobertura 100 %). `ifc-create`/`ifc-validate` ampliadas a MEP (`checks-mep.py`). Núcleo **espejado** al plugin (avance de la decisión nº4). Sin solver hidráulico (nace con `instalaciones`). Gancho **H3** (clave `demanda`) dejado listo, no implementado. |
-| **H3** | P2 (Ola 4) | C4 | C4 = `bases-acciones` solo cubre acciones estructurales EC0/EC1; no hay **bases de demanda** (caudales/potencias/ocupación, simultaneidad). | ✅ **Aplicado (PT 4.3, plugin `instalaciones` v0.1.0).** Creada la base de demanda no estructural `scripts/pci/bases_demanda.py` (PCI: simultaneidad, caudal y presión dinámica de cálculo de BIE según RIPCI/UNE-EN 671/UNE 23500/DB-SI, `[confirmar AN]`), que rellena la clave `demanda` del modelo neutro de red. Aclarado que para disciplinas no estructurales el "slot" C4 son las **bases de demanda** (análogo a las acciones EC0/EC1). Nace además el **solver hidráulico de red** (Darcy-Weisbach) y el caso e2e `caso-PCI-01-bie-presion` (CUMPLE, balance 0,0 %). |
+| **H3** | P2 (Ola 4) | CN-3 | CN-3 = `bases-acciones` solo cubre acciones estructurales EC0/EC1; no hay **bases de demanda** (caudales/potencias/ocupación, simultaneidad). | ✅ **Aplicado (PT 4.3, plugin `instalaciones` v0.1.0).** Creada la base de demanda no estructural `scripts/pci/bases_demanda.py` (PCI: simultaneidad, caudal y presión dinámica de cálculo de BIE según RIPCI/UNE-EN 671/UNE 23500/DB-SI, `[confirmar AN]`), que rellena la clave `demanda` del modelo neutro de red. Aclarado que para disciplinas no estructurales el "slot" CN-3 son las **bases de demanda** (análogo a las acciones EC0/EC1). Nace además el **solver hidráulico de red** (Darcy-Weisbach) y el caso e2e `caso-PCI-01-bie-presion` (CUMPLE, balance 0,0 %). |
 | **H4** | P3 | C3 | La skill `estructuras-eurocodigos:memoria-calculo` **no sigue exactamente** el esqueleto de 7 apartados de C3 (sin "Registro fechado", "Objeto y alcance" vs "Datos del proyecto"). | 🟡 **Parcial:** fijada en C3 §3 la fuente canónica (`plantilla-memoria.md`) y registrada la alineación pendiente. El cambio en la skill se hace en el plugin `estructuras-eurocodigos` (Settings > Capabilities), no editable desde este hilo. |
 | **H5** | P3 | C1, C2 | **Referencias de ola desfasadas** tras la re-secuenciación v2.1: C1 §4 decía MEP "habilita la Ola 3 (PCI) y la Ola 4"; C2 §1 decía "criterios-instalaciones.md (a crear en Ola 3)". Con v2.1, **instalaciones es Ola 4** (Ola 3 = edificación singular). | ✅ **Aplicado:** corregido en C1 §4 (texto y "Tareas… para la Ola 4") y C2 §1 ("a crear en Ola 4"). |
 | **H6** | P1 (proceso) | — | El **empaquetado** truncó 8 módulos en v0.22.0 sin que ningún control lo detectara antes de publicar. | ✅ **Aplicado:** automatizado en `Nucleo-transversal/verificar_empaquetado.py` (exit≠0 si falla; `ast.parse` + salto de línea final + sin artefactos + plugin.json válido + contraste de tamaños vs `--ref`). Probado APTO en v0.22.1 y NO APTO en copia truncada. Pendiente menor: integrarlo como paso fijo del flujo de empaquetado (INC-09). |
 | **H7** | P3 | C1 | **Precisiones del esquema neutro:** colocación de `cargas` distinta en 1D (raíz) y 2D (`superficies[].cargas`) no explicitada; el modelo sísmico usa `material` (singular) vs `materiales` (dict). | ✅ **Aplicado:** C1 §2 documenta las dos colocaciones de carga; C1 §3 declara los "modelos hermanos por tipo de análisis" y deja anotada la reconciliación `material`/`materiales`. |
 
-> Nota: el soporte **GIS** (decisión abierta nº3) y la acción de **tráfico/hidrología** (C4) son de
+> Nota: el soporte **GIS** (decisión abierta nº3) y la acción de **tráfico/hidrología** (CN-3) son de
 > las olas 5–6, no de la Ola 4; no bloquean el enchufe de `instalaciones`.
 
 ---
@@ -207,7 +207,7 @@ Se lanzó una auditoría **ciega** en paralelo (sin las conclusiones previas) so
 y los contratos. **Confirmó** de forma independiente: los **8 módulos truncados** en v0.22.0
 (coincidencia exacta de lista y tamaños), su ausencia en v0.21.0 y su corrección en v0.22.1
 (0 errores); la advertencia de que **`ast.parse` infravalora** el truncado; la coherencia de **C3**
-(7 apartados) y **C4** (EC0/EC1); y los números de **caso 10** (CUMPLE 4/4, máx 94,4 %) y **caso 15**
+(7 apartados) y **CN-3** (EC0/EC1); y los números de **caso 10** (CUMPLE 4/4, máx 94,4 %) y **caso 15**
 (CUMPLE, equilibrio 0,0 % X/Y, máx 0,72).
 
 Aportó además dos precisiones de C1 (colocación de `cargas` y el modelo hermano del caso 15),
@@ -221,15 +221,15 @@ de este proyecto: para markdown, mandan las herramientas de fichero (Read/Write/
 
 ## 8. Conclusión
 
-La **Ola 1 puede cerrarse (✅)**: el núcleo es coherente con su implementación (C1–C4), la edificación
+La **Ola 1 puede cerrarse (✅)**: el núcleo es coherente con su implementación (C1 + CN-1/CN-2/CN-3), la edificación
 cumple de extremo a extremo (casos 1–10, 11, 15, equilibrios ≈0 %, aprovechamientos ≤1) y una
-disciplina nueva puede aprender entre hilos (C2) y emitir memoria homogénea (C3) sin tocar el núcleo;
-las acciones estructurales (C4) están cubiertas. La condición material para el cierre era reparar el
+disciplina nueva puede aprender entre hilos (CN-1) y emitir memoria homogénea (CN-2) sin tocar el núcleo;
+las acciones estructurales (CN-3) están cubiertas. La condición material para el cierre era reparar el
 **empaquetado v0.22.0 → v0.22.1**, ya hecho: el plugin instala limpio y todos los módulos están.
 
 Los huecos H1–H3 (extraer grafo+utilidades, IFC MEP, bases de demanda) **no son deudas de la Ola 1**
-sino el **arranque natural de la Ola 4**: el dry-run confirma que `instalaciones` enchufa por C2/C3 y
-necesita ese trabajo de núcleo en C1/C4 —exactamente lo previsto—. H4–H7 son correcciones acotadas de
+sino el **arranque natural de la Ola 4**: el dry-run confirma que `instalaciones` enchufa por CN-1/CN-2 y
+necesita ese trabajo de núcleo en C1/CN-3 —exactamente lo previsto—. H4–H7 son correcciones acotadas de
 documentación y de proceso. **Recomendación:** marcar PT 1.6 ✅, distribuir **v0.22.1**, e iniciar la
 Ola 4 abordando H1/H2/H3 antes de redactar el agente `ingeniero-de-instalaciones`.
 

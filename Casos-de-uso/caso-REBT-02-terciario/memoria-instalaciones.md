@@ -35,7 +35,7 @@ de alumbrado y toma, **monofásicas (230 V)**. La línea general, al alimentar c
 trifásicas y monofásicas, se resuelve como **trifásica equilibrada** (aproximación de
 predimensionado `[confirmar AN]`).
 
-## 4. Bases de demanda (slot C4)
+## 4. Bases de demanda (slot CN-3)
 
 Modo **receptores** (catálogo por tipo). **Potencia prevista total: 11 296 W.**
 

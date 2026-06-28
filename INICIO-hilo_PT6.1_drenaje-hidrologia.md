@@ -6,7 +6,7 @@ añadiendo a la disciplina `obras-lineales` (creada en el PT 5.2) su **tercer su
 superficial y transversal** de la carretera según la **Norma 5.2-IC** (Drenaje superficial). Es el
 **análogo, para el agua de lluvia, de lo que trazado/firmes hicieron con la geometría y el firme**:
 geometría + normativa + hidrología, **sobre la cuenca georreferenciada** que el PT 5.1 dejó lista
-(puente GIS→cuencas, `export_gis.py` → GeoJSON). **Estrena la capacidad transversal C4 de
+(puente GIS→cuencas, `export_gis.py` → GeoJSON). **Estrena la capacidad transversal CN-3 de
 hidrología** (caudales de cálculo) que la hoja de ruta reservó para la Ola 6.
 
 **Dónde encaja en la Ola 6 (mapa de la ola, para situar este hilo):**
@@ -30,7 +30,7 @@ hidrología** (caudales de cálculo) que la hoja de ruta reservó para la Ola 6.
 
 **Lee primero, en este orden:**
 1. `Hoja-de-ruta_Ecosistema-ingenieria.md` — §4 (**capacidad transversal: motor hidráulico de red**
-   y **C4 — hidrología/caudales de cálculo en obras lineales**), §5 (disciplina **Obras lineales**:
+   y **CN-3 — hidrología/caudales de cálculo en obras lineales**), §5 (disciplina **Obras lineales**:
    tipologías **drenaje** —hidrología, drenaje superficial, ODT, 5.2-IC— y **obras hidráulicas**),
    §6 (olas; este hilo es **Ola 6, PT 6.1**; la Ola 6 reutiliza el motor hidráulico de la Ola 4) y
    §8 (**decisión nº4** núcleo de red espejado y **nº7** "grafo + N solvers": el solver Manning de
@@ -69,7 +69,7 @@ hidrología** (caudales de cálculo) que la hoja de ruta reservó para la Ola 6.
    reconocer el encargo de **drenaje** (además de trazado/firmes) y orquestar el flujo
    (modelo neutro lineal + cuenca [GeoJSON/datos] → hidrología → capacidad de cuneta/ODT →
    verificación → memoria).
-2. **Hidrología (C4 — caudales de cálculo).** `scripts/drenaje/hidrologia.py`: **método racional**
+2. **Hidrología (CN-3 — caudales de cálculo).** `scripts/drenaje/hidrologia.py`: **método racional**
    de la 5.2-IC (`Q = C · I(T,tc) · A / 3.6`, con coeficiente de escorrentía C, intensidad de la
    **curva IDF** para el periodo de retorno T y el tiempo de concentración tc, área de cuenca A),
    tiempo de concentración (p. ej. Témez `tc = 0.3·(L/J^0.25)^0.76`), y **periodos de retorno por

@@ -22,7 +22,7 @@ Esta es la única decisión arquitectónica grande del plan; el resto son increm
 ## 1. Principios de diseño (no negociables)
 
 1. **Herramienta transversal**, plugin propio, nunca acoplada al plugin de Estructuras. Sirve a estructuras, instalaciones MEP y obras lineales.
-2. **Consume los contratos del núcleo** (C1 modelo neutro/IFC, C3 entregables, C4 acciones/resultados); no duplica cálculo ni validación.
+2. **Consume los contratos del núcleo** (C1 modelo neutro/IFC, CN-2 entregables, CN-3 acciones/resultados); no duplica cálculo ni validación.
 3. **El visor lee, anota y, desde v1.0, edita datos; nunca modela geometría.** Frontera firme con la autoría (Blender/Bonsai, Revit).
 4. **Local y sin nube:** todo el procesamiento ocurre en el equipo / sandbox. Privacidad de los proyectos.
 5. **Una mejora por versión, validada y anotada con fecha.** Versiones de dependencias fijadas y compatibles.
@@ -132,12 +132,12 @@ Esta es la única decisión arquitectónica grande del plan; el resto son increm
 ### v1.2 — Coloreado por resultados de cálculo
 **Objetivo:** unir el visor con los motores de cálculo del ecosistema.
 
-- Lectura de resultados vía contrato del núcleo (C4): esfuerzos/armado/ratios de Estructuras; presiones/caudales/DN de Instalaciones.
+- Lectura de resultados vía contrato del núcleo (CN-3): esfuerzos/armado/ratios de Estructuras; presiones/caudales/DN de Instalaciones.
 - Mapa de color por resultado sobre el modelo (degradado y leyenda), por elemento.
 - Filtro por umbral (p. ej. resaltar elementos con ratio > 1,0 o presión < requerida).
 - **Aceptación:** colorear un modelo estructural por ratio de aprovechamiento y un modelo MEP por presión disponible.
 
-> **ENTREGADA — 23/06/2026 (build b8). Validación lógica determinista APTA; pendiente validación en vivo del usuario.** Entregada en `Estructurando/visor/visor-ifc-v1.2.html` (la app de escritorio ya apunta a v1.2; `package.json` 1.2.0). Decisiones del usuario: leer resultados **del IFC y además importar JSON** (contrato C4 externo), escala **gradiente continuo + umbral**, demos **estructural y MEP**. Nueva pestaña **Resultados**: selector de **magnitud** (cualquier propiedad numérica de Psets/cantidades de la federación; las `*Resultado*` se ordenan primero), **gradiente** verde→amarillo→rojo con **leyenda** (barra + min/max + marca de umbral + nº de críticos), **umbral** configurable con **invertir escala** (bajo = crítico, p.ej. presión) y **aislar críticos**, e **importar JSON** de resultados (`{results:{GlobalId:{magnitud:valor}}}`) que casa por GlobalId y añade magnitudes `… (JSON)`. Lee directamente el índice `props.json` (sin tocar el pipeline); colorea por `setColor` agrupando en 21 buckets por modelo.
+> **ENTREGADA — 23/06/2026 (build b8). Validación lógica determinista APTA; pendiente validación en vivo del usuario.** Entregada en `Estructurando/visor/visor-ifc-v1.2.html` (la app de escritorio ya apunta a v1.2; `package.json` 1.2.0). Decisiones del usuario: leer resultados **del IFC y además importar JSON** (contrato CN-3 externo), escala **gradiente continuo + umbral**, demos **estructural y MEP**. Nueva pestaña **Resultados**: selector de **magnitud** (cualquier propiedad numérica de Psets/cantidades de la federación; las `*Resultado*` se ordenan primero), **gradiente** verde→amarillo→rojo con **leyenda** (barra + min/max + marca de umbral + nº de críticos), **umbral** configurable con **invertir escala** (bajo = crítico, p.ej. presión) y **aislar críticos**, e **importar JSON** de resultados (`{results:{GlobalId:{magnitud:valor}}}`) que casa por GlobalId y añade magnitudes `… (JSON)`. Lee directamente el índice `props.json` (sin tocar el pipeline); colorea por `setColor` agrupando en 21 buckets por modelo.
 > **Datos demo (no requieren motor de cálculo):** `models/res-estr` (estructura: `Pset_Estructurando_Resultado.Aprovechamiento`, 13 elem, min 0,33 / max 1,12 → **2 críticos ≥1,0**: Pilar_3 1,12 y Viga_4 1,05) y `models/res-mep` (MEP: `Pset_Estructurando_ResultadoRed.Presion_bar/Velocidad_m_s/DN_mm`, 5 elem; presión invertida umbral 2,0 → **2 críticos**), más `models/res-estr-resultados-sismo.json` para probar la importación JSON (Aprov_sismo). Ambos en el manifest con `load:false`; geometría reutilizada de clasif-demo/mep (no cargar la pareja origen simultáneamente).
 > **Validación determinista (Node):** el `resScan` ya integrado (extraído del HTML, ejecutado en vm con un LOADED simulado) detecta las 6 magnitudes con las `*Resultado*` primero y los 2 críticos ≥1,0; módulo pasa `node --check`; copia al mount verificada por `md5sum`.
 > **VALIDADA EN VIVO 23/06/2026 (build b8→b9):** demo en la app de escritorio — coloreo de `res-estr` por Aprovechamiento (gradiente verde→rojo, leyenda 0,33→1,12), umbral 1,0 → 2 sobre umbral, «aislar críticos» dejó solo Pilar_3 y Viga_4; selector con las 6 magnitudes. **Pulido v1.2.1 (build b9):** (1) pestañas en dos filas (`flex-wrap`) — con 9 pestañas «Resultados» quedaba recortada/tapada por la tarjeta de Sección; (2) **cargador de modelos del manifest** en el panel Modelos (los `load:false` ya no dependen de Comparar). Validado en vivo. **Pendiente:** reconstruir el instalador para llevar la v1.2 a la app instalada.
@@ -163,7 +163,7 @@ Esta es la única decisión arquitectónica grande del plan; el resto son increm
 | v0.9 | Clasificación + BCF | Anotación e incidencias |
 | v1.0 | Edición de datos + ingesta por arrastre | Exportar IFC editado (de despacho) — **ENTREGADA 22/06/2026 (build b3)** |
 | v1.1 | Comparación de versiones | Diff datos + geometría |
-| v1.2 | Coloreado por resultados | Unión con motores de cálculo (C4) |
+| v1.2 | Coloreado por resultados | Unión con motores de cálculo (CN-3) |
 | v1.3 | Colaboración / CDE | Flujo ISO 19650 |
 
 ---
@@ -181,10 +181,10 @@ Esta es la única decisión arquitectónica grande del plan; el resto son increm
 
 - **Migración a ThatOpen (v0.5)** es el mayor esfuerzo y bloquea al resto; conviene una prueba de concepto temprana con un modelo real antes de comprometer la reescritura completa.
 - **Bundle vs. único HTML:** se pierde la portabilidad de "un archivo", a cambio de rendimiento de producción. El lanzador Python mantiene el doble clic sobre `.ifc`.
-- **Contrato C4 (resultados):** v1.2 depende de que los motores de cálculo expongan resultados por `GlobalId` de forma estable; coordinar con la evolución del núcleo.
+- **Contrato CN-3 (resultados):** v1.2 depende de que los motores de cálculo expongan resultados por `GlobalId` de forma estable; coordinar con la evolución del núcleo.
 
 ---
 
 ## 9. Dónde se desarrolla
 
-Dentro del **ecosistema Estructurando** (misma memoria, mismo núcleo, mismo marketplace) como **plugin independiente `visor-ifc`**. Consume C1, C3 y C4; se enlaza con `bsdd-clasificacion`, `ifc-validate` y `cde-audit` del plugin `iso19650-openbim`.
+Dentro del **ecosistema Estructurando** (misma memoria, mismo núcleo, mismo marketplace) como **plugin independiente `visor-ifc`**. Consume C1, CN-2 y CN-3; se enlaza con `bsdd-clasificacion`, `ifc-validate` y `cde-audit` del plugin `iso19650-openbim`.

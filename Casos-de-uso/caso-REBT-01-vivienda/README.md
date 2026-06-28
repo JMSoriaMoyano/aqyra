@@ -15,7 +15,7 @@ Validación de red **APTO** (continuidad 100 %, 8 elementos enriquecidos).
 - `generate_test_ifc_vivienda.py` — generador del IFC de prueba (fixture; usa ifcopenshell).
 - `vivienda_rebt.ifc` — IFC de entrada (sistema ELECTRICAL, 17 elementos).
 - `modelo_neutro_mep.json` — modelo neutro de red (salida del parser).
-- `demanda.json` — modelo con la demanda eléctrica (slot C4).
+- `demanda.json` — modelo con la demanda eléctrica (slot CN-3).
 - `resultado.json` — salida del solver (I, sección, caída de tensión por tramo).
 - `verificacion.json` — arnés (balance / caída de tensión / I admisible).
 - `mapping_resultado.json` — mapping de Psets de resultado (write-back).

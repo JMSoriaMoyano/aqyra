@@ -29,13 +29,13 @@ independiente (subagente) que contraste tus conclusiones.
      formato y secciones; que el árbol de carpetas descrito es el real.
    - **C3:** que la estructura de memoria de la plantilla coincide con lo que generan las skills
      de memoria del motor / `estructuras-eurocodigos` / `cte-documentos-basicos`.
-   - **C4:** que `bases-acciones` cubre lo que el contrato dice (acciones/combinaciones EC0/EC1).
+   - **CN-3:** que `bases-acciones` cubre lo que el contrato dice (acciones/combinaciones EC0/EC1).
 2. **Edificación cerrada de extremo a extremo:** re-ejecutar (o revisar el último run de) un caso
    integrado (p. ej. caso 10 + caso 15) y confirmar **equilibrio ~0 %**, validación cruzada y
    rangos físicos; que el `.plugin` v0.22.0 abre y los módulos están presentes.
 3. **Prueba de "enchufe" (dry-run, sin construir nada):** describir, paso a paso, cómo el futuro
-   plugin `instalaciones` consumiría cada contrato (C1 MEP, C2 `criterios-instalaciones.md`, C3
-   memoria, C4 acciones) y **detectar huecos** del núcleo que haya que cerrar antes de la Ola 4.
+   plugin `instalaciones` consumiría cada contrato (C1 MEP, CN-1 `criterios-instalaciones.md`, CN-2
+   memoria, CN-3 acciones) y **detectar huecos** del núcleo que haya que cerrar antes de la Ola 4.
 
 **Entregable:** `Nucleo-transversal/Verificacion-Ola1.md` con:
 - tabla contrato-por-contrato (✅ coherente / ⚠️ desajuste / ❌ falta) con la evidencia,

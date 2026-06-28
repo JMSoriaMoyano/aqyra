@@ -28,7 +28,7 @@ Mantiene dos archivos, con formato y ubicacion **estables** (otras skills los le
   *Lecciones aprendidas* lo que generalice.
 - **Citas**: reglamento y articulo (RIPCI RD 513/2017, UNE-EN 671, UNE 23500, DB-SI).
   Marca **[confirmar AN]** los NDP. Unidades SI (l/s, kPa, mm).
-- **Bases de demanda** = el "slot" **C4** de la disciplina (analogo a las acciones
+- **Bases de demanda** = el "slot" **CN-3** de la disciplina (analogo a las acciones
   EC0/EC1 de estructuras): simultaneidad, caudales y presiones de calculo.
 
 Todo resultado es de predimensionado/asistencia y **debe ser revisado y firmado por

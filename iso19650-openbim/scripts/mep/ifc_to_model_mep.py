@@ -383,7 +383,7 @@ def parse(ifc_path, out_path=None, tol=None):
         f = {
             "id": getattr(el, "Name", None) or el.is_a(),
             "nodo": nm,
-            "presion": presion,             # kPa; si None, la inyecta la demanda (C4)
+            "presion": presion,             # kPa; si None, la inyecta la demanda (CN-3)
             "caudal": _num(_prop_terminal(el, "FlowRate")),
             "tipo": kind,                   # "deposito" | "equipo" | "controlador"
         }

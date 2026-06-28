@@ -34,7 +34,7 @@ terminal representa un **circuito** (C1, C2, C3, C4, C5, C8, C9, C12).
 Conductores de **cobre**, aislamiento **PVC** `[confirmar AN]`. Conductividad
 γ = 56 m/Ω·mm² (Cu, 20 °C) `[confirmar AN]`. Tensión monofásica **230 V**.
 
-## 4. Bases de demanda (slot C4)
+## 4. Bases de demanda (slot CN-3)
 
 Modo **vivienda** (ITC-BT-25). Potencia de cálculo por circuito = P_prevista · Fu · Fs
 (factores de utilización y simultaneidad de la tabla de la ITC-BT-25 `[confirmar AN]`).

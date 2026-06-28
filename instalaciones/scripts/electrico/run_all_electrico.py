@@ -4,7 +4,7 @@ ORQUESTADOR ELECTRICO (extremo a extremo). Disciplina `instalaciones`, PT 4.5
 
 Encadena la receta de la disciplina sobre el MODELO NEUTRO DE RED (emitido por el
 parser MEP de iso19650-openbim, PT 4.2, sistema ELECTRICAL):
-  modelo neutro  ->  bases_demanda_electrica.aplicar_demanda_electrica (C4)
+  modelo neutro  ->  bases_demanda_electrica.aplicar_demanda_electrica (CN-3)
                  ->  solver_electrico.resolver  ->  verificacion_electrico.verificar
                  ->  resultado_ifc_electrico.construir_mapping (write-back)
                  ->  artefactos JSON.
@@ -34,7 +34,7 @@ def run(modelo_path, outdir=None, modo=None, grado=None,
     outdir = outdir or os.path.dirname(os.path.abspath(modelo_path))
     base = os.path.splitext(os.path.basename(modelo_path))[0]
 
-    # 1) bases de demanda electrica (C4): dispatcher vivienda / receptores
+    # 1) bases de demanda electrica (CN-3): dispatcher vivienda / receptores
     m_dem = bases_demanda_electrica.aplicar_demanda_electrica(modelo, modo, grado)
     p_dem = os.path.join(outdir, base + "_demanda.json")
     with open(p_dem, "w", encoding="utf-8") as fh:

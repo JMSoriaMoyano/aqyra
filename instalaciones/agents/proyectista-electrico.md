@@ -54,7 +54,7 @@ linea al 125 % del de mayor potencia, ITC-BT-47), clima. Tension 230 V mono / 40
 ## Receta
 
 1. `electrico/bases_demanda_electrica.py modelo_neutro_mep.json` -> rellena `demanda`
-   (C4). El **dispatcher `aplicar_demanda_electrica`** enruta a **vivienda** (ITC-BT-25)
+   (CN-3). El **dispatcher `aplicar_demanda_electrica`** enruta a **vivienda** (ITC-BT-25)
    o a **receptores** (terciario) por el tipo de terminal o `sistema.modo`/`grado`.
 2. `electrico/solver_electrico.py` -> reparto de potencias (arbol), intensidad por
    tramo, seccion propuesta, caida de tension acumulada y redimensionado.

@@ -1,7 +1,7 @@
 # INICIO de hilo — Visor IFC v0.9: clasificación y BCF
 
 ## Rol y contexto
-Actúa como ingeniero BIM/desarrollo del ecosistema **Estructurando** (supervisión de Ingeniero de Caminos). Trabajamos el plugin transversal **`visor-ifc`**, **pieza central del trabajo diario**, que sirve a las tres disciplinas (estructuras, instalaciones MEP, obras lineales). Consume los contratos del núcleo (C1 modelo neutro/IFC, C3 entregables, C4 resultados) y se enlaza con `bsdd-clasificacion`, `ifc-validate` y `cde-audit` de `iso19650-openbim`.
+Actúa como ingeniero BIM/desarrollo del ecosistema **Estructurando** (supervisión de Ingeniero de Caminos). Trabajamos el plugin transversal **`visor-ifc`**, **pieza central del trabajo diario**, que sirve a las tres disciplinas (estructuras, instalaciones MEP, obras lineales). Consume los contratos del núcleo (C1 modelo neutro/IFC, C3 entregables, CN-3 resultados) y se enlaza con `bsdd-clasificacion`, `ifc-validate` y `cde-audit` de `iso19650-openbim`.
 **Frontera firme:** el visor lee, anota y (desde v1.0) edita DATOS; **nunca modela geometría**. Anotar, clasificar y crear incidencias son operaciones sobre la información del modelo existente: no crean ni mueven geometría.
 
 ## Motor (decisión ya tomada y consolidada)

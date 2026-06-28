@@ -75,7 +75,7 @@ frontera de versionado e instalación, y esas fronteras NO coinciden con “todo
 - **Contexto del agente:** un agente por disciplina enruta mejor que uno omnisciente saturado.
 - **Aislamiento de fallos:** un error empaquetando una disciplina no rompe las demás.
 
-El **pegamento NO es un plugin común, son los contratos** del núcleo (C1–C4, §4) + el patrón de
+El **pegamento NO es un plugin común, son los contratos** del núcleo (C1 + CN-1/CN-2/CN-3, §4) + el patrón de
 agente. Así, plugins independientes interoperan sin fusionarse.
 
 ### Mapa de plugins (dos niveles)
@@ -115,7 +115,7 @@ lo limita a **500 caracteres**. Reglas para que toda disciplina nueva nazca sane
   *"Disciplina X: entrada IFC (dominio Y), normativa Z; qué dimensiona/comprueba; salida (memoria/IFC)."*
   Tocarla **solo cuando cambie el alcance**, nunca en cada caso/versión.
 - **No usarla como changelog.** El historial por versión va en `Casos-de-uso/CHANGELOG-plugin.md`;
-  el "qué hace y cómo" en `README.md` y en los contratos C1–C4; las capacidades que **disparan** cada
+  el "qué hace y cómo" en `README.md` y en los contratos C1 + CN-1/CN-2/CN-3; las capacidades que **disparan** cada
   pieza, en el `description` de cada **skill/agente** (esos sí guían el enrutado).
 - **Descubrimiento por término** → el array **`keywords`** del `plugin.json` (sin ese límite tan
   estricto), no la `description`.
@@ -141,7 +141,7 @@ Para que una disciplina nueva “enchufe” sin fricción, el núcleo expone **c
   programa de aprendizaje (PROGRAMA/REPOSITORIO/CHANGELOG). Una skill `criterios-memoria` por plugin.
 - **C3 — Entregables.** Motor de documentos común + **estructura de memoria homogénea** (citas,
   `[confirmar AN]`).
-- **C4 — Acciones / bases de cálculo.** EC0/EC1 + DB-SE-AE; en obras lineales se suma la
+- **CN-3 — Acciones / bases de cálculo.** EC0/EC1 + DB-SE-AE; en obras lineales se suma la
   **acción del tráfico** (IAP) y, en drenaje, la **hidrología** (caudales de cálculo).
 
 ### Capacidad transversal emergente: motor hidráulico de red
@@ -220,12 +220,12 @@ proyecto completo con memoria + IFC**.
 
 | Ola | Foco | Disciplina | Por qué aquí | Estado |
 |---|---|---|---|---|
-| **1** | Consolidar núcleo (contratos C1–C4) + cerrar **edificación** (incl. sísmico EC8 + núcleo) | Núcleo + Estructuras | Máxima reutilización, mínimo riesgo | ✅ Cerrada (PT 1.6 verificado; plugin **v0.22.1**) |
+| **1** | Consolidar núcleo (contratos C1 + CN-1/CN-2/CN-3) + cerrar **edificación** (incl. sísmico EC8 + núcleo) | Núcleo + Estructuras | Máxima reutilización, mínimo riesgo | ✅ Cerrada (PT 1.6 verificado; plugin **v0.22.1**) |
 | **2** | **Cimentaciones y contención** como módulo transversal limpio | Estructuras | Lo comparten edificación, puentes y obra civil | 🔜 |
 | **3** | **Edificación singular** (grandes cubiertas, voladizos, altura): FEM con **láminas / láminas curvas / rigidizadores**, **2.º orden (P-Δ)** y **dinámico** | Estructuras | Continúa la disciplina madura; **pasa a CONSUMIR `motor-fem`** (no construye motor propio): cubiertas laminares = vertical directo sobre **FEM-2/FEM-3**. Reactivable como spin-off en paralelo a PT 7.4/7.6 | ⬜ (replanteada como consumidora del motor FEM) |
-| **4** | **Instalaciones** completas: **PCI + eléctricas (REBT) + climáticas (RITE/HE)** — nace el **motor hidráulico de red** + dominio **IFC MEP** | Instalaciones | Lanza la disciplina entera de una vez; la normativa de PCI ya existe | 🔄 En curso: **PT 4.1 (H1) ✅** núcleo de red; **PT 4.2 (H2) ✅** dominio IFC MEP (`iso19650-openbim` v0.4.0); **PT 4.3 (H3) ✅** nace `instalaciones` v0.1.0 (agente `ingeniero-de-instalaciones` + subagente PCI + **solver hidráulico de red Darcy-Weisbach** + bases de demanda). **PT 4.4 ✅** `instalaciones` v0.2.0: **rociadores UNE-EN 12845** (densidad×área, OH1 e2e), **motor de red con MALLAS (Hardy-Cross)** y **write-back de Psets de resultado al IFC** (`iso19650-openbim` v0.4.1). **PT 4.5 ✅** segundo vertical **eléctricas (REBT)**: `instalaciones` v0.3.0 (subagente `proyectista-electrico` + **solver eléctrico** sobre el mismo grafo —intensidad, sección, caída de tensión— + bases de demanda ITC-BT-10/25/44/47 + write-back) e `iso19650-openbim` v0.4.2 (**validador sistema-aware** Pipe/Cable/Duct; parser intacto). Casos `caso-REBT-01-vivienda` y `caso-REBT-02-terciario` CUMPLE/APTO. **PT 4.6 ✅** verificación/consolidación de la Ola 4 (`Verificacion-Ola4.md`): contratos C1–C4 coherentes, modelo neutro agnóstico al sistema, regresión micro-test 3/3 + 5 casos e2e (**PCI sin regresión tras REBT**), puertas **APTO** + **ESPEJOS IDÉNTICOS**, sin defecto de empaquetado; INC-12 (reproducibilidad rociadores) e INC-13 (feeder mono+tri) menores. **H1/H2/H3 ✅; PCI completo (BIE+rociadores) + REBT ✅ — Ola 4 CERRADA en lo verificado.** **Clima (RITE) → sub-ola 4.x (PT 4.7)**, hueco pre-aprovisionado (parser agnóstico + validador `AIRCONDITIONING→Duct` + patrón demanda/subagente). |
+| **4** | **Instalaciones** completas: **PCI + eléctricas (REBT) + climáticas (RITE/HE)** — nace el **motor hidráulico de red** + dominio **IFC MEP** | Instalaciones | Lanza la disciplina entera de una vez; la normativa de PCI ya existe | 🔄 En curso: **PT 4.1 (H1) ✅** núcleo de red; **PT 4.2 (H2) ✅** dominio IFC MEP (`iso19650-openbim` v0.4.0); **PT 4.3 (H3) ✅** nace `instalaciones` v0.1.0 (agente `ingeniero-de-instalaciones` + subagente PCI + **solver hidráulico de red Darcy-Weisbach** + bases de demanda). **PT 4.4 ✅** `instalaciones` v0.2.0: **rociadores UNE-EN 12845** (densidad×área, OH1 e2e), **motor de red con MALLAS (Hardy-Cross)** y **write-back de Psets de resultado al IFC** (`iso19650-openbim` v0.4.1). **PT 4.5 ✅** segundo vertical **eléctricas (REBT)**: `instalaciones` v0.3.0 (subagente `proyectista-electrico` + **solver eléctrico** sobre el mismo grafo —intensidad, sección, caída de tensión— + bases de demanda ITC-BT-10/25/44/47 + write-back) e `iso19650-openbim` v0.4.2 (**validador sistema-aware** Pipe/Cable/Duct; parser intacto). Casos `caso-REBT-01-vivienda` y `caso-REBT-02-terciario` CUMPLE/APTO. **PT 4.6 ✅** verificación/consolidación de la Ola 4 (`Verificacion-Ola4.md`): contratos C1 + CN-1/CN-2/CN-3 coherentes, modelo neutro agnóstico al sistema, regresión micro-test 3/3 + 5 casos e2e (**PCI sin regresión tras REBT**), puertas **APTO** + **ESPEJOS IDÉNTICOS**, sin defecto de empaquetado; INC-12 (reproducibilidad rociadores) e INC-13 (feeder mono+tri) menores. **H1/H2/H3 ✅; PCI completo (BIE+rociadores) + REBT ✅ — Ola 4 CERRADA en lo verificado.** **Clima (RITE) → sub-ola 4.x (PT 4.7)**, hueco pre-aprovisionado (parser agnóstico + validador `AIRCONDITIONING→Duct` + patrón demanda/subagente). |
 | **5** | **Obras lineales I:** núcleo **IFC 4.3 Alignment + GIS** y arranque por **trazado** y **firmes** | Obras lineales | Estrena el soporte georreferenciado; trazado/firmes son geometría+normativa (sin FEM) | 🔄 En curso: **PT 5.1 ✅** soporte georreferenciado (extensión C1 §4bis en `iso19650-openbim` v0.5.0: parser de alineación físico→modelo neutro lineal por PK, generador IFC4X3, validación continuidad/tangencia/georref, export GIS GeoJSON; caso `caso-LIN-01-eje-carretera` CUMPLE; decisiones nº2/nº3 resueltas). **PT 5.2 ✅** nace la disciplina `obras-lineales` v0.1.0 (agente `ingeniero-de-obra-lineal` + subagentes **trazado 3.1-IC** y **firmes 6.1-IC**; `scripts/trazado`+`scripts/firmes`, stdlib pura; rellena los ganchos `firme`/`secciones_tipo`; write-back `Pset_Estructurando_ResultadoLineal` + GIS; casos `caso-LIN-02-trazado` CUMPLE y `caso-LIN-03-firmes` sección 221; puerta **APTO**, sin espejo de núcleo). **Olas 5 (trazado+firmes) ✅; pendiente Ola 6 (drenaje/hidráulica).** |
-| **6** | **Obras lineales II:** **drenaje** (hidrología + 5.2-IC) y **obras hidráulicas** (colectores/tuberías) | Obras lineales | Reutiliza el **motor hidráulico de red** de la Ola 4 | ✅ **CERRADA** (PT 6.3): **PT 6.1 ✅** nace el subagente **`proyectista-de-drenaje`** (`obras-lineales` v0.2.0): hidrología por método racional modificado 5.2-IC (tc Témez, IDF, coef. escorrentía), capacidad de **cunetas** (Manning de sección simple) y **ODT** (control de entrada/salida); rellena el gancho **`drenaje`** del modelo neutro; caso `caso-LIN-04-drenaje` CUMPLE; **sin espejo de núcleo** (cálculo local, sin grafo de red); puerta **APTO**. Estrena la **capacidad transversal C4 de hidrología**. **PT 6.2 ✅** nace el subagente **`proyectista-de-saneamiento`** (`obras-lineales` v0.3.0) y el **solver de Manning sobre el grafo**: colectores en lámina libre en árbol que convergen al **vertido** (outfall = ancla; mallas cableadas por Hardy-Cross de lámina libre), comprobando calado/velocidad/grado de llenado/pendiente/DN; **espeja el núcleo** (`verificar_espejo_nucleo.py` ESPEJOS IDÉNTICOS) y extiende el dominio **IFC MEP a saneamiento** (`iso19650-openbim` v0.6.0: SEWAGE/STORMWATER/DRAINAGE, cotas de solera, vertido). Reutiliza el **motor de red de la Ola 4** (árbol + continuidad + Hardy-Cross) con física de lámina libre. Caso `caso-LIN-05-saneamiento` CUMPLE; puertas **APTO** + **ESPEJOS IDÉNTICOS**. **PT 6.3 ✅** nace `proyectista-de-abastecimiento` (EN 805, red a presión): **copia byte a byte del solver Darcy** de `instalaciones` a `obras-lineales/scripts/red/solver_presion.py` (decisión nº7), árbol desde la **fuente** (depósito por cota/bombeo) + Hardy-Cross en mallas, demanda EN 805 + **hidrante concurrente**, comprobación velocidad 0,5–2,0 m/s / presión ≥250 kPa / DN_min; `iso19650-openbim` v0.7.0 extiende el IFC MEP a abastecimiento (WATERSUPPLY/DOMESTICCOLDWATER; **fuente = depósito `IfcTank`** por jerarquía `is_a`). Caso `caso-LIN-06-abastecimiento` CUMPLE (depósito por cota + anillo Hardy-Cross). **Ola 6 CERRADA; siguiente foco Ola 7 (puentes).** |
+| **6** | **Obras lineales II:** **drenaje** (hidrología + 5.2-IC) y **obras hidráulicas** (colectores/tuberías) | Obras lineales | Reutiliza el **motor hidráulico de red** de la Ola 4 | ✅ **CERRADA** (PT 6.3): **PT 6.1 ✅** nace el subagente **`proyectista-de-drenaje`** (`obras-lineales` v0.2.0): hidrología por método racional modificado 5.2-IC (tc Témez, IDF, coef. escorrentía), capacidad de **cunetas** (Manning de sección simple) y **ODT** (control de entrada/salida); rellena el gancho **`drenaje`** del modelo neutro; caso `caso-LIN-04-drenaje` CUMPLE; **sin espejo de núcleo** (cálculo local, sin grafo de red); puerta **APTO**. Estrena la **capacidad transversal CN-3 de hidrología**. **PT 6.2 ✅** nace el subagente **`proyectista-de-saneamiento`** (`obras-lineales` v0.3.0) y el **solver de Manning sobre el grafo**: colectores en lámina libre en árbol que convergen al **vertido** (outfall = ancla; mallas cableadas por Hardy-Cross de lámina libre), comprobando calado/velocidad/grado de llenado/pendiente/DN; **espeja el núcleo** (`verificar_espejo_nucleo.py` ESPEJOS IDÉNTICOS) y extiende el dominio **IFC MEP a saneamiento** (`iso19650-openbim` v0.6.0: SEWAGE/STORMWATER/DRAINAGE, cotas de solera, vertido). Reutiliza el **motor de red de la Ola 4** (árbol + continuidad + Hardy-Cross) con física de lámina libre. Caso `caso-LIN-05-saneamiento` CUMPLE; puertas **APTO** + **ESPEJOS IDÉNTICOS**. **PT 6.3 ✅** nace `proyectista-de-abastecimiento` (EN 805, red a presión): **copia byte a byte del solver Darcy** de `instalaciones` a `obras-lineales/scripts/red/solver_presion.py` (decisión nº7), árbol desde la **fuente** (depósito por cota/bombeo) + Hardy-Cross en mallas, demanda EN 805 + **hidrante concurrente**, comprobación velocidad 0,5–2,0 m/s / presión ≥250 kPa / DN_min; `iso19650-openbim` v0.7.0 extiende el IFC MEP a abastecimiento (WATERSUPPLY/DOMESTICCOLDWATER; **fuente = depósito `IfcTank`** por jerarquía `is_a`). Caso `caso-LIN-06-abastecimiento` CUMPLE (depósito por cota + anillo Hardy-Cross). **Ola 6 CERRADA; siguiente foco Ola 7 (puentes).** |
 | **7** | **Puentes** (remate integrador) + **nuevo motor FEM transversal** | Estructuras | El núcleo maduro + el Alignment/infra de obras lineales convergen; **nace `motor-fem`** (capacidad transversal: lámina curva, rigidizadores, no-lineal) | 🔄 **Arranca (planificada)**: hoja de ruta dedicada `Hoja-de-ruta_Ola7-puentes-y-motor-FEM.md` (decisión nº8). Motor FEM transversal (`motor-fem`, núcleo numpy/scipy) con **estrategia *strangler* sobre PyNite**, escalera FEM-0…FEM-5; tipologías por madurez (vigas pretensadas → losa → pórtico → celosía → pilas/estribos → cajón → metálico/mixto → oblicuo → curvo → arco → atirantado); acciones **IAP-11** + cargas móviles + fases constructivas/diferidos; consume **Alignment** (Ola 5) y el **pretensado** ✅. **PT 7.0 (FEM-0) ✅ `motor-fem` v0.1.0**; **PT 7.1 (FEM-1) ✅**: `motor-fem` v0.2.0 (modal + cargas móviles/líneas de influencia) + nace la disciplina **`puentes` v0.1.0** (vigas pretensadas e2e `caso-PUE-01` CUMPLE). **PT 7.2 🔜** (losa postesada, pórtico, celosía). |
 
 > Lógica de dependencias: la Ola 4 crea el **motor hidráulico** que la Ola 6 reutiliza; la Ola 5
@@ -233,7 +233,7 @@ proyecto completo con memoria + IFC**.
 > (olas 1–3), luego instalaciones (4) y obras lineales (5–6); puentes cierra como integrador.
 
 > **Ola 4 cerrada en lo verificado (PT 4.6 ✅, `Nucleo-transversal/Verificacion-Ola4.md`):** núcleo de red
-> + PCI (BIE + rociadores) + REBT, con contratos C1–C4 coherentes, regresión limpia y puertas en verde.
+> + PCI (BIE + rociadores) + REBT, con contratos C1 + CN-1/CN-2/CN-3 coherentes, regresión limpia y puertas en verde.
 > **Próximos pasos (🔜):** (a) **PT 4.7 — clima/RITE** (sub-ola 4.x): solver de conductos de aire + cargas
 > térmicas + demanda RITE/DB-HE, sobre el hueco ya pre-aprovisionado (parser MEP agnóstico, validador
 > `AIRCONDITIONING→Duct`, patrón demanda/subagente); ejecutable sin bloquear la Ola 5. (b) **Ola 5 — obras
@@ -246,7 +246,7 @@ proyecto completo con memoria + IFC**.
 
 ## 7. Ola 1 en detalle — paquetes de trabajo
 
-> Objetivo: dejar el **núcleo reutilizable y documentado** (C1–C4) y **cerrar la edificación**.
+> Objetivo: dejar el **núcleo reutilizable y documentado** (C1 + CN-1/CN-2/CN-3) y **cerrar la edificación**.
 
 | PT | Paquete | Resultado |
 |---|---|---|
@@ -258,7 +258,7 @@ proyecto completo con memoria + IFC**.
 | 1.6 | Verificación de Ola 1: coherencia contratos/plugins + checklist “listo para nueva disciplina” | ✅ `Nucleo-transversal/Verificacion-Ola1.md` (contratos coherentes; empaquetado corregido **v0.22.1**; backlog Ola 4 H1–H7) |
 
 **Definición de “hecho” de la Ola 1:** un plugin de disciplina nuevo puede (a) leer/escribir IFC
-(C1), (b) aprender entre hilos (C2), (c) emitir memoria homogénea (C3), (d) tomar acciones (C4)
+(C1), (b) aprender entre hilos (CN-1), (c) emitir memoria homogénea (CN-2), (d) tomar acciones (CN-3)
 — sin tocar el núcleo. Y la edificación queda cubierta de extremo a extremo.
 
 ---
@@ -417,7 +417,7 @@ aire) como solver pendiente sobre el mismo grafo (sub-ola 4.x).
 - **v3.2 (22/06/2026):** **arranca la Ola 6 (obras lineales II) con el PT 6.1 — drenaje (5.2-IC)**.
   Nace el **tercer subagente** de `obras-lineales`, **`proyectista-de-drenaje`** (plugin → **v0.2.0**),
   el análogo —para el agua de lluvia— de lo que trazado/firmes hicieron con la geometría y el firme.
-  **Estrena la capacidad transversal C4 de hidrología** (caudales de cálculo). El agente
+  **Estrena la capacidad transversal CN-3 de hidrología** (caudales de cálculo). El agente
   `ingeniero-de-obra-lineal` amplía su clasificación/enrutado a **drenaje** (además de trazado/firmes).
   `scripts/drenaje/` (**stdlib pura**): `hidrologia.py` (**método racional modificado 5.2-IC**: tc de
   Témez, intensidad de la **curva IDF**, coef. de **escorrentía** por umbral Po, coef. de uniformidad
@@ -491,7 +491,7 @@ aire) como solver pendiente sobre el mismo grafo (sub-ola 4.x).
 - **v2.8 (22/06/2026):** cerrado el **PT 4.6** (verificación y consolidación de la **Ola 4**, análogo al
   PT 1.6 sobre la Ola 1). Entregable `Nucleo-transversal/Verificacion-Ola4.md`. **Veredicto: Ola 4
   CERRABLE ✅ en lo verificado (núcleo de red + PCI + REBT), sin reempaquetar.** Comprobado: (1) **contratos
-  C1–C4 coherentes** — el **modelo neutro de red es agnóstico al sistema** (mismo esquema y `unidades` para
+  C1 + CN-1/CN-2/CN-3 coherentes** — el **modelo neutro de red es agnóstico al sistema** (mismo esquema y `unidades` para
   `FIREPROTECTION` y `ELECTRICAL`, solo cambia `sistema.tipo`; la sección del conductor nace en demanda, no
   en el parser, que quedó intacto), write-back con el mismo `Pset_Estructurando_ResultadoRed` y validación
   **sistema-aware** (Pipe/Cable/Duct, con `AIRCONDITIONING→Duct` ya cableado); (2) **regresión** micro-test
@@ -513,7 +513,7 @@ aire) como solver pendiente sobre el mismo grafo (sub-ola 4.x).
 - **v2.7 (22/06/2026):** cerrado el **PT 4.5** (segundo vertical de instalaciones: **eléctricas, REBT**).
   Nace el **solver de red eléctrica** sobre el **mismo grafo de red** (otro solver sobre la misma
   topología; BT radial → reutiliza la propagación por árbol del solver hidráulico, sin Hardy-Cross):
-  `instalaciones/scripts/electrico/` — `bases_demanda_electrica.py` (C4: ITC-BT-10 previsión, ITC-BT-25
+  `instalaciones/scripts/electrico/` — `bases_demanda_electrica.py` (CN-3: ITC-BT-10 previsión, ITC-BT-25
   circuitos vivienda C1–C12, ITC-BT-44/-47 receptores; dispatcher vivienda/receptores),
   `solver_electrico.py` (intensidad I=P/(U·cosφ) mono / P/(√3·U·cosφ) tri; **sección propuesta por
   momentos + intensidad admisible** ITC-BT-19; **caída de tensión por intensidades** ΔU=2·L·I·cosφ/(γ·S)
@@ -551,7 +551,7 @@ aire) como solver pendiente sobre el mismo grafo (sub-ola 4.x).
   solver_red.py` (**Darcy-Weisbach**, fricción Swamee-Jain; reparto de caudales en árbol; propagación de
   presiones desde la fuente con cota; comprobación de BIE) + `scripts/red/verificacion_red.py` (balance de
   caudales ≈0 % y presiones) + micro-test. **Bases de demanda** `scripts/pci/bases_demanda.py` (H3, slot
-  C4 no estructural: simultaneidad/caudal/presión de BIE según RIPCI/UNE/DB-SI, `[confirmar AN]`). Caso
+  CN-3 no estructural: simultaneidad/caudal/presión de BIE según RIPCI/UNE/DB-SI, `[confirmar AN]`). Caso
   e2e `caso-PCI-01-bie-presion` (IFC→parser MEP PT 4.2→demanda→solver→verificación **CUMPLE**, balance
   0,0 %, fuente 600 vs 352,9 kPa req) + memoria (md+docx). **Frontera confirmada:** lectura IFC MEP en
   `iso19650-openbim`; demanda+cálculo en `instalaciones`. **Decisión nº4 cerrada (INC-10):** núcleo
@@ -569,7 +569,7 @@ aire) como solver pendiente sobre el mismo grafo (sub-ola 4.x).
 - **v2.3 (22/06/2026):** marcada la **Ola 4 como siguiente**, arrancando por **PT 4.1** (hueco H1:
   extraer al núcleo el grafo de red + utilidades IFC; resuelve la decisión abierta nº4). Texto de
   inicio en `INICIO-hilo_PT4.1_grafo-red-nucleo.md`.
-- **v2.2 (22/06/2026):** cerrado el **PT 1.6** (verificación de la Ola 1). Contratos C1–C4 coherentes
+- **v2.2 (22/06/2026):** cerrado el **PT 1.6** (verificación de la Ola 1). Contratos C1 + CN-1/CN-2/CN-3 coherentes
   con la implementación y edificación cumplida de extremo a extremo (casos 10 y 15). Detectado y
   **corregido** un defecto de empaquetado (8 módulos truncados en el `.plugin` **v0.22.0** →
   reempaquetado **v0.22.1** íntegro). Backlog de la Ola 4 registrado (H1 extraer grafo+utilidades de
@@ -585,4 +585,4 @@ aire) como solver pendiente sobre el mismo grafo (sub-ola 4.x).
   motor hidráulico de red**. Olas re-secuenciadas a **1–7** (obras lineales en 5–6, puentes como
   remate en 7). Reflejado el cierre de la Ola 1 / PT 1.5 (plugin v0.22.0).
 - **v1.0 (22/06/2026):** primera versión. Arquitectura en planos, heurística
-  plugin/skill/agente/subagente, contratos C1–C4 del núcleo y olas 1–5 (+ horizonte de obra lineal).
+  plugin/skill/agente/subagente, contratos C1 + CN-1/CN-2/CN-3 del núcleo y olas 1–5 (+ horizonte de obra lineal).

@@ -1,12 +1,12 @@
 """
 BASES DE DEMANDA -- SANEAMIENTO (aguas residuales). Disciplina `obras-lineales`,
-PT 6.2 (Ola 6). Es el "slot" C4 de la red de saneamiento (analogo a las acciones
+PT 6.2 (Ola 6). Es el "slot" CN-3 de la red de saneamiento (analogo a las acciones
 EC0/EC1 de estructuras o a las bases de demanda PCI de instalaciones): rellena la
 clave `demanda` del MODELO NEUTRO DE RED (prevista por el parser MEP de
 iso19650-openbim, dejada en None) con los CAUDALES DE AGUAS RESIDUALES.
 
 El NUCLEO da la topologia; este modulo aporta la DEMANDA; el solver
-(red/solver_lamina_libre) CALCULA. Frontera C1 (lectura, iso19650) <-> C4 (demanda)
+(red/solver_lamina_libre) CALCULA. Frontera C1 (lectura, iso19650) <-> CN-3 (demanda)
 <-> calculo (obras-lineales).
 
 CAUDAL DE AGUAS RESIDUALES (separativo) por ACOMETIDA/nudo de aporte:

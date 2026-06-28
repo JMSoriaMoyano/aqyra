@@ -51,7 +51,7 @@ de `sistema.clase_riesgo` (o argumento); por defecto **OH1**.
 
 ## Receta
 
-1. `pci/bases_demanda.py modelo_neutro_mep.json` -> rellena `demanda` (H3, C4).
+1. `pci/bases_demanda.py modelo_neutro_mep.json` -> rellena `demanda` (H3, CN-3).
    El **dispatcher `aplicar_demanda`** enruta a **BIE** o a **rociadores** (UNE-EN
    12845) por el tipo de terminal o `sistema.clase_riesgo`.
 2. `red/solver_red.py` -> reparto de caudales (**arbol** por continuidad; **malla** por

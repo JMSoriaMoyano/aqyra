@@ -34,7 +34,7 @@ capacidades "a mano".
   (GeoJSON de `iso19650-openbim:scripts/lineal/export_gis.py`) y el modelo neutro
   lineal los produce `iso19650-openbim`. Tu **consumes** la cuenca; no reimplementas
   la lectura IFC/GIS.
-- **C4 — datos hidrologicos (tuyos):** **cuenca** (area A, longitud L, pendiente J),
+- **CN-3 — datos hidrologicos (tuyos):** **cuenca** (area A, longitud L, pendiente J),
   **lluvia de proyecto** (Pd, indice de torrencialidad I1/Id, umbral de escorrentia Po)
   y **periodo de retorno T**. El **dato del GIS/Pset prevalece**; si falta, lo
   **inyectas tu** y lo documentas `[confirmar AN]`.

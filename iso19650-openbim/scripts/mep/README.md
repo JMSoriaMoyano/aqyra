@@ -65,7 +65,7 @@ El parser reconoce los sistemas de **abastecimiento a presion** (`PredefinedType
 WATERSUPPLY/DOMESTICCOLDWATER/POTABLEWATER) y la **FUENTE = DEPOSITO**
 (`IfcTank`/`IfcFlowStorageDevice`, por **jerarquia `is_a()`**) ademas del grupo de bombeo
 (`IfcFlowMovingDevice`). La fuente lleva `tipo:"deposito"|"equipo"|"controlador"` y, en el
-deposito, `cota_lamina`/`presion` si el Pset las trae (si no, las inyecta la demanda C4 de
+deposito, `cota_lamina`/`presion` si el Pset las trae (si no, las inyecta la demanda CN-3 de
 `obras-lineales`). Lee `habitantes_eq` tambien aqui (consumo EN 805). El **ancla de la red
 es la FUENTE** (al reves que el vertido del saneamiento). El calculo (solver **Darcy-Weisbach
 de red**, copia del de `instalaciones`) vive en `obras-lineales`. Generador:

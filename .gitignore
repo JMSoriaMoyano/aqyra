@@ -24,3 +24,11 @@ Thumbs.db
 # Temporales
 *.tmp
 *.log
+# Sonda de montaje (carpeta conectada) — no es del proyecto
+.__write_test
+.__*
+# Helpers operativos de git (no son del proyecto; se ejecutan y se borran)
+/COMMIT_motor_CN-convenciones.bat
+/LIMPIAR_log_amend.bat
+# Logs de resultado de los .bat de git (traza operativa, no del proyecto)
+git_resultado_*.txt

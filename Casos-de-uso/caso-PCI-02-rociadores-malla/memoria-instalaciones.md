@@ -19,7 +19,7 @@ más desfavorable y en el grupo de presión.
 - **DB-SI** del CTE (SI4) — Dotación de instalaciones de protección contra incendios.
 
 Frontera del ecosistema (contratos del núcleo): la **lectura/escritura IFC** es de
-`iso19650-openbim` (dominio MEP, C1); la **demanda** (C4) y el **cálculo hidráulico** son de
+`iso19650-openbim` (dominio MEP, C1); la **demanda** (CN-3) y el **cálculo hidráulico** son de
 `instalaciones`, sobre el **modelo neutro de red**. El núcleo aporta la **topología**
 (nodos+tramos); el solver **calcula**.
 

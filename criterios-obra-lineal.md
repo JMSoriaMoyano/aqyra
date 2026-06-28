@@ -106,7 +106,7 @@
   CUMPLE (no rompe el modelo). [caso LIN-03]
 - [2026-06-22] **Nace el drenaje (PT 6.1, 5.2-IC) como tercer subagente** — el análogo, para el agua,
   de trazado/firmes: hidrología (caudal de cálculo) + capacidad de cunetas (Manning) y ODT (control
-  entrada/salida). **Estrena la capacidad transversal C4 de hidrología.** [caso LIN-04]
+  entrada/salida). **Estrena la capacidad transversal CN-3 de hidrología.** [caso LIN-04]
 - [2026-06-22] **El drenaje local NO espeja el núcleo** (igual que trazado/firmes): cuneta/ODT son
   Manning de **sección simple**, cálculo local por elemento sobre el JSON neutro; no hay topología de
   red. El **grafo_red + espejo + IFC MEP de saneamiento** son del **PT 6.2** (colectores). [caso LIN-04]

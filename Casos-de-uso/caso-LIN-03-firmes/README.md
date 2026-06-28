@@ -41,7 +41,7 @@ python3 obras-lineales/scripts/firmes/run_all_firme.py \
 
 ## Notas
 
-- La **lectura del IFC** es de `iso19650-openbim`; aquí vive la **acción del tráfico (C4)**
+- La **lectura del IFC** es de `iso19650-openbim`; aquí vive la **acción del tráfico (CN-3)**
   y la **selección de catálogo (6.1-IC)**. El **dato del IFC prevalece** sobre los valores
   por defecto. Catálogo, no dimensionado por fatiga.
 - Predimensionado/asistencia; NDP **[confirmar AN]** (umbrales de categoría, espesores del

@@ -105,7 +105,7 @@ lineales II); a partir de aquí el ecosistema apunta a la **Ola 7 (puentes)**.
    desde la fuente con cota**; **Hardy-Cross** para mallas. Comprueba por tramo: **velocidad**
    (mín. anti-estancamiento ↔ máx. anti-golpe de ariete/erosión, p. ej. 0,5–2,0 m/s NDP), **presión
    mínima** en acometidas/hidrantes (p. ej. ≥ 250 kPa NDP) y **DN mínimo**. NDP `[confirmar AN]`.
-3. **Demanda de abastecimiento (C4, EN 805).** `scripts/red/bases_abastecimiento.py`: caudal punta
+3. **Demanda de abastecimiento (CN-3, EN 805).** `scripts/red/bases_abastecimiento.py`: caudal punta
    por **dotación · habitantes-eq · coef. de punta/simultaneidad** (y, si procede, caudal de
    incendio/hidrante como hipótesis concurrente). Define el tipo de fuente (depósito por cota /
    bombeo). NDP `[confirmar AN]`.

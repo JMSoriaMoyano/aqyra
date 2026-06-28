@@ -19,7 +19,7 @@
   carretera.
 - Lectura/coherencia geométrica del IFC: `iso19650-openbim` v0.5.0 (PT 5.1).
 
-## 3. Datos de proyecto / acciones (C4)
+## 3. Datos de proyecto / acciones (CN-3)
 
 - **Velocidad de proyecto Vp = 60 km/h** (dato de proyecto; el del IFC prevalece, si no
   se inyecta). [confirmar AN].

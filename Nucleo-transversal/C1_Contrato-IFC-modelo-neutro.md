@@ -151,7 +151,7 @@ climáticas), según la re-secuenciación v2.1 de la hoja de ruta (la Ola 3 es e
   aire). Cada disciplina aporta su solver de red; el núcleo aporta el grafo, las unidades y la
   E/S IFC. **Implementado (PT 4.3):** el **solver hidráulico a presión** (Darcy-Weisbach) vive en
   el plugin `instalaciones` (`scripts/red/solver_red.py`), consumiendo este modelo neutro; la clave
-  `demanda` (H3) la rellena `instalaciones/scripts/pci/bases_demanda.py` (frontera C1 lectura ↔ C4
+  `demanda` (H3) la rellena `instalaciones/scripts/pci/bases_demanda.py` (frontera C1 lectura ↔ CN-3
   demanda ↔ cálculo de la disciplina).
 
 **Tareas de la extensión MEP (Ola 4) — ✅ IMPLEMENTADO (PT 4.2, hueco H2; plugin
@@ -225,8 +225,8 @@ la Ola 4; decisión nº7 "grafo + N solvers").
     de la propagación por cota del solver (`ρ·g·Δz`). El parser lee `cota_lamina` del Pset si está.
   - **Grupo de bombeo** (`IfcFlowMovingDevice`, ya soportado) → presión declarada.
   - La **presión de la fuente** (`fuentes[*].presion`) del Pset **prevalece**; si no, la inyecta la
-    demanda (C4) según el tipo de fuente. El validador ya ancla en `fuentes` (sin cambios).
-- **Demanda (C4, EN 805):** caudal punta = dotación·hab-eq·coef. de punta (el parser lee
+    demanda (CN-3) según el tipo de fuente. El validador ya ancla en `fuentes` (sin cambios).
+- **Demanda (CN-3, EN 805):** caudal punta = dotación·hab-eq·coef. de punta (el parser lee
   `habitantes_eq` también para abastecimiento) + **hipótesis de incendio** (caudal de hidrante
   concurrente). Vive en `obras-lineales/scripts/red/bases_abastecimiento.py`.
 - **Retrocompatibilidad:** son **claves ya existentes** (`fuentes`, `red`); el resto del esquema no

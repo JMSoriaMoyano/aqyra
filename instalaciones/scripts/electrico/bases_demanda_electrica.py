@@ -6,11 +6,11 @@ Rellena la clave `demanda` del MODELO NEUTRO DE RED (emitido por el parser MEP d
 iso19650-openbim, PT 4.2, sistema ELECTRICAL) con las bases de demanda ELECTRICA:
 potencia, factor de potencia (cosphi) y nº de fases (mono/tri) por terminal, y la
 tension nominal + simultaneidad + grado de electrificacion por sistema. Es el "slot"
-C4 de la disciplina (analogo a las acciones EC0/EC1 en estructuras; aqui POTENCIAS).
+CN-3 de la disciplina (analogo a las acciones EC0/EC1 en estructuras; aqui POTENCIAS).
 
 El NUCLEO da la topologia (iso19650); este modulo aporta la DEMANDA; el solver
 (electrico/solver_electrico) CALCULA intensidades, caidas de tension y secciones.
-Frontera C1 (lectura, iso19650) <-> C4 (demanda) <-> calculo (instalaciones).
+Frontera C1 (lectura, iso19650) <-> CN-3 (demanda) <-> calculo (instalaciones).
 
 Dos modos (dispatcher `aplicar_demanda_electrica`):
   - VIVIENDA (ITC-BT-25): circuitos C1..C12, electrificacion basica/elevada. Cada

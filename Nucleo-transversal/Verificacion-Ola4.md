@@ -3,14 +3,14 @@
 **Auditoría del motor de red del ecosistema y de sus dos verticales —PCI (BIE + rociadores) y
 eléctricas (REBT)— · 22/06/2026.** Análogo al PT 1.6 sobre la Ola 1: comprueba que la cadena
 **IFC → modelo neutro → demanda → solver → verificación → write-back → validación** es coherente,
-**sin regresiones**, con los contratos **C1–C4** respetados, las **puertas de calidad en verde** y
+**sin regresiones**, con los contratos **C1 + CN-1/CN-2/CN-3** respetados, las **puertas de calidad en verde** y
 el **núcleo espejado idéntico**, y deja preparado el hueco del **tercer vertical (clima/RITE)** y de
 la **Ola 5**. No es desarrollo nuevo: no se construye ningún vertical. Todo resultado es de
 **predimensionado/asistencia y debe ser revisado y firmado por técnico competente** (Ingeniero de
 Caminos); NDP marcados `[confirmar AN]`.
 
 > **Veredicto global: Ola 4 CERRABLE ✅ en lo verificado (núcleo de red + PCI + REBT), sin
-> reempaquetar.** Los contratos C1–C4 son coherentes con la implementación multi-vertical; el modelo
+> reempaquetar.** Los contratos C1 + CN-1/CN-2/CN-3 son coherentes con la implementación multi-vertical; el modelo
 > neutro de red es **realmente agnóstico al sistema** (PCI hidráulico y REBT eléctrico lo consumen
 > igual); la regresión de **micro-tests (3/3) y de los 5 casos e2e** confirma **PCI sin regresión tras
 > las adiciones de REBT** y **REBT CUMPLE/APTO**; las **puertas** dan **APTO** y **ESPEJOS IDÉNTICOS**
@@ -26,20 +26,20 @@ Caminos); NDP marcados `[confirmar AN]`.
 
 ---
 
-## 1. Tabla contrato por contrato (coherencia C1–C4 multi-vertical)
+## 1. Tabla contrato por contrato (coherencia C1 + CN-1/CN-2/CN-3 multi-vertical)
 
 | Contrato | Veredicto | Evidencia |
 |---|---|---|
-| **C1 — IFC / modelo neutro de red (agnóstico al sistema)** | ✅ Coherente | El parser `iso19650-openbim:scripts/mep/ifc_to_model_mep.py` emite el **mismo esquema de modelo neutro** para los dos verticales: top-keys `{unidades, sistema, nodos, tramos, terminales, fuentes, metricas}` **idénticas** en PCI-01 (`sistema.tipo=FIREPROTECTION`) y en REBT-01/02 (`sistema.tipo=ELECTRICAL`); mismo bloque `unidades` SI (`longitud m, caudal l/s, presion kPa, potencia W`); mismas claves de tramo `{ni,nj,dn,material,rugosidad,longitud,clase,elemento}`. **Lo único que cambia es `sistema.tipo`.** La **sección del conductor** (REBT) **no nace en el parser** sino en la capa de demanda de `instalaciones` (decisión PT 4.5) → el parser quedó **intacto** entre v0.4.0 y v0.4.2 (la puerta confirma 0 encogidos / 0 nuevos en el contraste v0.4.2↔v0.4.1). **Frontera C1↔C4↔cálculo respetada.** |
+| **C1 — IFC / modelo neutro de red (agnóstico al sistema)** | ✅ Coherente | El parser `iso19650-openbim:scripts/mep/ifc_to_model_mep.py` emite el **mismo esquema de modelo neutro** para los dos verticales: top-keys `{unidades, sistema, nodos, tramos, terminales, fuentes, metricas}` **idénticas** en PCI-01 (`sistema.tipo=FIREPROTECTION`) y en REBT-01/02 (`sistema.tipo=ELECTRICAL`); mismo bloque `unidades` SI (`longitud m, caudal l/s, presion kPa, potencia W`); mismas claves de tramo `{ni,nj,dn,material,rugosidad,longitud,clase,elemento}`. **Lo único que cambia es `sistema.tipo`.** La **sección del conductor** (REBT) **no nace en el parser** sino en la capa de demanda de `instalaciones` (decisión PT 4.5) → el parser quedó **intacto** entre v0.4.0 y v0.4.2 (la puerta confirma 0 encogidos / 0 nuevos en el contraste v0.4.2↔v0.4.1). **Frontera C1↔CN-3↔cálculo respetada.** |
 | **C1 §5bis — Write-back de Psets de resultado** | ✅ Coherente | La **mecánica** vive en `iso19650-openbim` (`ifc-create:escribir_psets_resultado.py`, escritor genérico por mapping `Name/GlobalId`); la **semántica** en `instalaciones`, con el **mismo `Pset_Estructurando_ResultadoRed`** en los dos verticales: `red/resultado_ifc.py` (hidráulico: `DN_dimensionado_mm`, `Caudal_l_s`, `Velocidad_m_s`, `Perdida_carga_kPa`, `Margen_kPa`, `Cumple`) y `electrico/resultado_ifc_electrico.py` (eléctrico: `Seccion_mm2`, `Intensidad_A`, `I_admisible_A`, `Caida_tension_pct`, `Potencia_W`, `Fases`, `Material_conductor`). Mismo Pset, propiedades por disciplina. |
 | **C1 §5/§5bis — Validación sistema-aware (Pipe/Cable/Duct)** | ✅ Coherente | `ifc-validate:checks-mep.py` (v0.4.2) exige el Pset de segmento **según `sistema.tipo`**: `ELECTRICAL/POWER/LIGHTING → Pset_CableSegmentTypeCommon`, `AIRCONDITIONING/VENTILATION/AIRHANDLING/EXHAUST → Pset_DuctSegmentTypeCommon`, resto (PCI/fontanería) → `Pset_PipeSegmentTypeCommon` (def.). Verificado en PCI (exige Pipe, sin regresión) y REBT (exige Cable). **`AIRCONDITIONING→Duct` ya está cableado** (hueco RITE pre-aprovisionado). |
 | **C2 — Memoria del despacho** | ✅ Coherente | `criterios-instalaciones.md` (raíz) tiene las 5 secciones (Normativa, Materiales/componentes, Coeficientes y criterios, Lecciones aprendidas, Formato de memoria), con normativa **PCI** (RIPCI/UNE-EN 671/UNE 23500/DB-SI; rociadores UNE-EN 12845) y **REBT** (ITC-BT-10/19/25/44/47) y 10 lecciones fechadas (PCI-01…REBT-02). La skill `instalaciones:criterios-memoria` lee/mantiene este archivo + la memoria por obra. Enchufa sin tocar el núcleo. |
 | **C3 — Entregables / memoria** | ✅ Coherente | Cada caso e2e entrega `memoria-instalaciones.md` (+ `.docx`) con el esqueleto homogéneo (datos, normativa citada, demanda/bases, comprobaciones por elemento, registro fechado, conclusiones), unidades SI (l/s, kPa, mm, A, %) y NDP `[confirmar AN]`. Reutiliza el motor de documentos común. |
-| **C4 — Bases de demanda (slot no estructural)** | ✅ Coherente | El "slot C4" se cubre con **bases de demanda propias** por vertical: PCI `pci/bases_demanda.py` (BIE por simultaneidad RIPCI/UNE; rociadores por densidad×área UNE-EN 12845, dispatcher `aplicar_demanda`) y REBT `electrico/bases_demanda_electrica.py` (vivienda ITC-BT-25 C1–C12; receptores ITC-BT-44/47; previsión ITC-BT-10). El **dato del IFC prevalece** sobre el valor por defecto. Frontera C1(lectura iso19650) ↔ C4(demanda) ↔ cálculo(instalaciones) mantenida en ambos verticales. |
+| **CN-3 — Bases de demanda (slot no estructural)** | ✅ Coherente | El "slot CN-3" se cubre con **bases de demanda propias** por vertical: PCI `pci/bases_demanda.py` (BIE por simultaneidad RIPCI/UNE; rociadores por densidad×área UNE-EN 12845, dispatcher `aplicar_demanda`) y REBT `electrico/bases_demanda_electrica.py` (vivienda ITC-BT-25 C1–C12; receptores ITC-BT-44/47; previsión ITC-BT-10). El **dato del IFC prevalece** sobre el valor por defecto. Frontera C1(lectura iso19650) ↔ CN-3(demanda) ↔ cálculo(instalaciones) mantenida en ambos verticales. |
 
 Leyenda: ✅ coherente · ⚠️ desajuste menor / a precisar · ❌ falta.
 
-**Conclusión C1–C4.** El núcleo de red es agnóstico al sistema demostrablemente (el mismo parser y el
+**Conclusión C1 + CN-1/CN-2/CN-3.** El núcleo de red es agnóstico al sistema demostrablemente (el mismo parser y el
 mismo grafo alimentan un solver hidráulico y uno eléctrico), y la frontera transversal↔disciplina se
 respeta en los dos verticales. No se detecta ninguna divergencia de contrato.
 
@@ -244,7 +244,7 @@ núcleo ya verificado y qué es **realmente nuevo**.
   propiedades de aire (caudal m³/h, pérdida Pa, sección/diámetro de conducto).
 - [x] **Validación sistema-aware**: `AIRCONDITIONING/VENTILATION/AIRHANDLING/EXHAUST → Pset_DuctSegmentTypeCommon`
   **ya está cableado** en `checks-mep.py` (no hay que tocar el validador para el caso base de clima).
-- [x] **Patrón demanda = slot C4** (dispatcher tipo `aplicar_demanda`), **memoria/criterios** (C2/C3) y
+- [x] **Patrón demanda = slot CN-3** (dispatcher tipo `aplicar_demanda`), **memoria/criterios** (CN-1/CN-2) y
   **patrón de subagente** (`proyectista-*`) replicables.
 - [x] **Propagación por árbol** del solver (`red/solver_red._arbol_desde_fuente`) reutilizable para
   conductos en árbol; **Hardy-Cross** disponible si la red de retorno/anillo es mallada.
@@ -255,7 +255,7 @@ núcleo ya verificado y qué es **realmente nuevo**.
   de caudales de impulsión/retorno, posible cálculo por el método de **pérdida de carga constante** o
   **recuperación estática**; unidades de aire (m³/h, Pa).
 - [ ] **Cargas térmicas / demanda RITE**: cargas de calefacción/refrigeración, caudales de ventilación
-  por ocupación (RITE IT 1.1.4.2, IDA/ODA), renovaciones — el "slot C4" del clima (DB-HE / RITE).
+  por ocupación (RITE IT 1.1.4.2, IDA/ODA), renovaciones — el "slot CN-3" del clima (DB-HE / RITE).
 - [ ] **Tipos de terminal de aire** (difusor, rejilla, UTA) y la extensión de `unidades` (caudal de aire,
   presión Pa, potencia térmica kW) en el modelo neutro.
 - [ ] **Subagente `proyectista-climatizacion`** + enrutado `AIRCONDITIONING → RITE` en el agente
@@ -323,7 +323,7 @@ Pset + neutro + demanda + resultado + verif + mapping + write-back IFC). Queda *
 La **Ola 4 puede cerrarse en lo verificado (✅): núcleo de red + PCI (BIE + rociadores) + REBT.** El modelo
 neutro de red es **agnóstico al sistema** (mismo esquema y unidades para PCI hidráulico y REBT eléctrico,
 solo cambia `sistema.tipo`); la cadena **IFC→neutro→demanda→solver→verificación→write-back→validación** es
-coherente con los contratos C1–C4 en los dos verticales; la **regresión** (micro-tests 3/3 y 5 casos e2e)
+coherente con los contratos C1 + CN-1/CN-2/CN-3 en los dos verticales; la **regresión** (micro-tests 3/3 y 5 casos e2e)
 confirma **PCI sin regresión tras REBT** y **REBT CUMPLE/APTO**; las **puertas** dan **APTO** (iso19650
 v0.4.2 vs v0.4.1; instalaciones v0.3.0 vs v0.2.0) y **ESPEJOS IDÉNTICOS** (núcleo md5-idéntico en los tres
 plugins); y **no hay defecto de empaquetado** (0 truncados, 0 artefactos, sin divergencia real

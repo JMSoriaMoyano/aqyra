@@ -995,10 +995,10 @@ incidencias** (lo pendiente de corregir, priorizado) y **decisiones de criterio*
 - **Coherencia contrato↔implementación (resultado).** C1 ⚠️ (esquema coincide con los parsers
   intactos y el caso 15 añade claves nuevas; matices: colocación de `cargas` 1D-raíz vs
   2D-`superficies[]`, `material` singular del modelo sísmico, refs de ola desfasadas, parsers
-  truncados en el paquete), C2 ✅, C3 ✅ (alinear `memoria-calculo` al esqueleto de 7 apartados), C4 ✅
+  truncados en el paquete), C2 ✅, C3 ✅ (alinear `memoria-calculo` al esqueleto de 7 apartados), CN-3 ✅
   (EC0/EC1). Edificación E2E: caso 10 CUMPLE 4/4 (máx 94,4 %), caso 15 CUMPLE (equilibrio 0,0 % X/Y,
   máx 0,72).
-- **Dry-run de "enchufe" (instalaciones).** C2 y C3 enchufan ya sin tocar el núcleo; C1 y C4 exigen
+- **Dry-run de "enchufe" (instalaciones).** C2 y C3 enchufan ya sin tocar el núcleo; C1 y CN-3 exigen
   trabajo de núcleo previo = **arranque de la Ola 4**: extraer **grafo de red + utilidades IFC**
   (`_psets`, factor de unidades, construcción de grafo) hoy embebidas en `puente.py`/estructuras
   (H1); ampliar `iso19650-openbim` a **MEP** (H2); definir **bases de demanda** para disciplinas no
@@ -1106,8 +1106,8 @@ incidencias** (lo pendiente de corregir, priorizado) y **decisiones de criterio*
   al subagente/solver → orquestar IFC→neutro[PT 4.2]→demanda→solver→verificación→memoria → registrar) y
   subagente `proyectista-pci`, igual que `ingeniero-estructurista`. La disciplina aporta SOLO lo suyo
   (normativa PCI + solver hidráulico + demanda); el núcleo y la lectura IFC MEP se reutilizan sin tocar.
-- **Frontera C1↔C4↔cálculo confirmada y operativa.** La lectura IFC MEP (parser/validación) se queda en
-  `iso19650-openbim` (capa transversal); la **demanda** (`pci/bases_demanda.py`, slot C4) y el **cálculo**
+- **Frontera C1↔CN-3↔cálculo confirmada y operativa.** La lectura IFC MEP (parser/validación) se queda en
+  `iso19650-openbim` (capa transversal); la **demanda** (`pci/bases_demanda.py`, slot CN-3) y el **cálculo**
   (`red/solver_red.py` + `red/verificacion_red.py`) viven en `instalaciones`, consumiendo el **modelo
   neutro de red** (JSON). El solver NO lee IFC. El núcleo da topología, el solver calcula.
 - **Nace el motor hidráulico de red (capacidad transversal).** `solver_red.py`: reparto de caudales por
@@ -1116,7 +1116,7 @@ incidencias** (lo pendiente de corregir, priorizado) y **decisiones de criterio*
   propagación de presiones desde la fuente **con cota**, presión requerida vs disponible y comprobación
   de caudal/presión en terminales. Reutiliza `grafo_red` (núcleo) para orientar el árbol. Mismo grafo
   conceptual que el estructural, distinto solver (lo previsto en la hoja de ruta §4).
-- **Bases de demanda = el slot C4 no estructural (H3 cerrado).** `bases_demanda.py` rellena la clave
+- **Bases de demanda = el slot CN-3 no estructural (H3 cerrado).** `bases_demanda.py` rellena la clave
   `demanda` (terminal+sistema) con simultaneidad (2 BIE más desfavorables), caudal y presión dinámica de
   BIE según **RIPCI/UNE-EN 671/UNE 23500/DB-SI** `[confirmar AN]`. **El dato del proyecto (IFC) prevalece**
   sobre el valor por defecto (`fuente_dato`). Es a instalaciones lo que EC0/EC1 a estructuras.

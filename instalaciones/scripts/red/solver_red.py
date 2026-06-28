@@ -3,7 +3,7 @@ SOLVER HIDRAULICO DE RED A PRESION (Darcy-Weisbach). Disciplina `instalaciones`,
 PT 4.3/4.4 (Ola 4). NACE el motor hidraulico de red (capacidad transversal del
 ecosistema, reutilizable luego en obras hidraulicas a presion, Ola 6).
 
-FRONTERA (contratos C1/C4 del nucleo): el NUCLEO da la TOPOLOGIA (nodos+tramos del
+FRONTERA (contratos C1/CN-3 del nucleo): el NUCLEO da la TOPOLOGIA (nodos+tramos del
 modelo neutro de red emitido por el parser MEP de iso19650-openbim, PT 4.2) y la
 demanda la rellena `pci/bases_demanda.py` (hueco H3). Este modulo SOLO CALCULA:
   - reparto de caudales por continuidad en una red en ARBOL (raiz = fuente),

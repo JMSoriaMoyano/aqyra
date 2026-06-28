@@ -20,7 +20,7 @@ drenaje/obras hidráulicas de la Ola 6). Tampoco hay FEM: trazado y firmes son *
 
 **Lee primero, en este orden:**
 1. `Hoja-de-ruta_Ecosistema-ingenieria.md` — §3 (mapa de plugins: `iso19650-openbim` v0.4.3, "ampliar
-   **Alignment/GIS** en Ola 5"; convención de `description` ≤ 500), §4 (núcleo y contratos C1–C4), §4bis
+   **Alignment/GIS** en Ola 5"; convención de `description` ≤ 500), §4 (núcleo y contratos C1, CN-1, CN-2 y CN-3), §4bis
    vía C1 (referencia), §5 (disciplina **Obras lineales** — agente `ingeniero-de-obra-lineal` a crear;
    tipologías trazado/firmes/drenaje/obras hidráulicas; soporte IFC 4.3 Alignment + GIS), §6 (olas; este
    hilo es **Ola 5**; la Ola 6 reutiliza el motor hidráulico de red) y §8 (**decisiones abiertas nº2

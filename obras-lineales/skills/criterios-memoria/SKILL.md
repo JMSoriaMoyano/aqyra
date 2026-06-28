@@ -32,7 +32,7 @@ Mantiene dos archivos, con formato y ubicacion **estables** (otras skills los le
   **5.2-IC** Drenaje superficial —hidrologia, cunetas, ODT—; **EN 752** Saneamiento (colectores en lamina libre, Manning de red); **EN 805**
   Abastecimiento (red a presion, Darcy-Weisbach de red, PT 6.3)). Marca **[confirmar AN]** los NDP.
   Unidades SI (m, km/h, %; PK en m).
-- **Datos de proyecto** = el "slot" **C4** de la disciplina (analogo a las acciones
+- **Datos de proyecto** = el "slot" **CN-3** de la disciplina (analogo a las acciones
   EC0/EC1 de estructuras): velocidad de proyecto (trazado), accion del trafico
   —IMDp, categoria de trafico pesado, categoria de explanada— (firmes) y la
   **hidrologia** —cuenca (A/L/J), lluvia de proyecto (Pd, I1/Id, Po), periodo de

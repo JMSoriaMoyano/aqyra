@@ -42,7 +42,7 @@ obras-lineales/
 └── skills/criterios-memoria/SKILL.md  # C2/C3
 ```
 
-## Frontera (contratos C1/C4)
+## Frontera (contratos C1/CN-3)
 
 - **C1 — lectura/coherencia IFC: de `iso19650-openbim`** (`scripts/lineal/`,
   PT 5.1): parser `ifc_to_model_lineal.py` (IFC 4.3 -> modelo neutro lineal),
@@ -51,7 +51,7 @@ obras-lineales/
   `secciones_tipo`/`firme`/`terreno` = `None`; este plugin **rellena** `firme` (firmes),
   una `secciones_tipo` basica y la clave **nueva** `drenaje` (caudales + cunetas + ODT).
   `terreno` queda para geotecnia/movimiento de tierras (no es de este PT).
-- **C4 — datos de proyecto: aqui.** Vp (trazado), IMDp/explanada (firmes) y la
+- **CN-3 — datos de proyecto: aqui.** Vp (trazado), IMDp/explanada (firmes) y la
   **hidrologia** (cuenca A/L/J, lluvia Pd/I1Id/Po, periodo de retorno T) en drenaje. El
   **dato del IFC/GIS prevalece**; si falta, lo inyecta el agente (`[confirmar AN]`).
 - **Sin espejo de nucleo:** no se lee IFC ni se usa `grafo_red`; se trabaja sobre el JSON

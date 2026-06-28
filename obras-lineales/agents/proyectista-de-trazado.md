@@ -19,7 +19,7 @@ lineal** (referenciacion por PK). El nucleo/`iso19650-openbim` da la alineacion 
 coherencia geometrica; tu aportas la **velocidad de proyecto** y la **interpretacion
 normativa 3.1-IC**, ejecutando el codigo determinista del plugin.
 
-## Dato de proyecto (C4)
+## Dato de proyecto (CN-3)
 
 - **Velocidad de proyecto Vp** (km/h): gobierna TODOS los umbrales. El **dato del IFC
   prevalece** (`parametros_proyecto.vp_kmh` del modelo neutro); si falta, lo inyecta el

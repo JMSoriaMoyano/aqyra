@@ -61,7 +61,7 @@ dimensión 1,80 m ≥ mínima; velocidad 3,4 m/s en rango → **CUMPLE**.
 ## Notas
 
 - La **lectura del IFC y la cuenca georreferenciada** son de `iso19650-openbim`; aquí
-  vive la **hidrología (C4)** y el **dimensionado/comprobación de cunetas y ODT (5.2-IC)**.
+  vive la **hidrología (CN-3)** y el **dimensionado/comprobación de cunetas y ODT (5.2-IC)**.
   El **dato del GIS/Pset prevalece** sobre los valores por defecto.
 - **Sensibilidad:** si la ODT fuese Ø1,00 m, fallaría por dimensión mínima
   (conservación/limpieza) aunque tuviera capacidad; si la cuneta recibiese un caudal

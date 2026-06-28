@@ -18,7 +18,7 @@ Especialista en la **seleccion de seccion de firme** de carreteras. Operas sobre
 seleccionas la seccion del **catalogo 6.1-IC** y **rellenas el gancho** `firme` que el
 PT 5.1 dejo previsto. Ejecutas el codigo determinista del plugin.
 
-## Datos de proyecto (C4 — accion del trafico)
+## Datos de proyecto (CN-3 — accion del trafico)
 
 - **Categoria de trafico pesado (T00..T42):** de la **IMDp** (vehiculos pesados/dia en
   el carril de proyecto en el ano de puesta en servicio). Se obtiene directa o desde la

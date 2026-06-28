@@ -1,7 +1,7 @@
 """
 HIDROLOGIA -- Norma 5.2-IC (Drenaje superficial). Plugin obras-lineales. PT 6.1 (Ola 6).
 
-Es el "slot" C4 de la disciplina aplicado al DRENAJE: la hidrologia (CAUDALES DE
+Es el "slot" CN-3 de la disciplina aplicado al DRENAJE: la hidrologia (CAUDALES DE
 CALCULO) que gobierna el dimensionado de cunetas (drenaje superficial) y obras de
 drenaje transversal (ODT). Analogo a bases_firme (firmes) y bases_demanda
 (instalaciones): NO dimensiona el elemento; provee el CAUDAL que cuneta.py / odt.py
@@ -23,7 +23,7 @@ METODO RACIONAL MODIFICADO (5.2-IC, apdo. 2.2), valido para cuencas pequenas
   - Kt  : coeficiente de uniformidad temporal   Kt = 1 + tc^1.25 / (tc^1.25 + 14)
   - KA  : factor reductor por area de la cuenca  KA = 1 - log10(A_km2)/15   (A>1 km2)
 
-FRONTERA (C1/C4): la CUENCA (area A, longitud L, pendiente J) es un DATO hidrologico:
+FRONTERA (C1/CN-3): la CUENCA (area A, longitud L, pendiente J) es un DATO hidrologico:
 si esta en el GIS/Pset PREVALECE; si falta, lo inyecta el agente y se documenta
 [confirmar AN]. La lluvia de proyecto (Pd, I1/Id, Po) son datos REGIONALES del
 proyecto (mapa/estudio pluviometrico), NDP [confirmar AN]. La 5.2-IC y los valores

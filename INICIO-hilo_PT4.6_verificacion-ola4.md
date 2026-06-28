@@ -14,13 +14,13 @@ Proyecto Estructurando. Ejecuta el **PT 4.6 de la Ola 4**: **verificación y con
 (el **motor de red** del ecosistema y sus dos verticales ya construidos: **PCI** —BIE + rociadores— y
 **eléctricas REBT**), análogo a lo que el **PT 1.6** hizo con la Ola 1. **No** construyas un vertical
 nuevo: el objetivo es **certificar** que la cadena IFC→neutro→demanda→solver→verificación→write-back→
-validación es coherente, **sin regresiones**, con los contratos C1–C4 respetados, las puertas de calidad
+validación es coherente, **sin regresiones**, con los contratos C1, CN-1, CN-2 y CN-3 respetados, las puertas de calidad
 en verde y el núcleo espejado idéntico; y dejar un **checklist "listo para el tercer vertical (clima/RITE)"**
-y para la Ola 5. Respeta la frontera **C1 lectura/escritura (iso19650) ↔ C4 demanda ↔ cálculo (instalaciones)**.
+y para la Ola 5. Respeta la frontera **C1 lectura/escritura (iso19650) ↔ CN-3 demanda ↔ cálculo (instalaciones)**.
 
 **Lee primero, en este orden:**
 1. `Hoja-de-ruta_Ecosistema-ingenieria.md` — §3 (mapa de plugins: `motor-calculo-estructural` v0.23.0,
-   `iso19650-openbim` v0.4.2, `instalaciones` v0.3.0; `description` ≤ 500), §4 (núcleo y contratos C1–C4;
+   `iso19650-openbim` v0.4.2, `instalaciones` v0.3.0; `description` ≤ 500), §4 (núcleo y contratos C1, CN-1, CN-2 y CN-3;
    "motor hidráulico de red" y el **solver eléctrico** como **dos solvers sobre el mismo grafo**), §5
    (Instalaciones: PCI ✅ / REBT ✅ / RITE esbozado), §6 (Ola 4; PT 4.1–4.5 ✅) y §8 (decisiones nº1, nº4).
 2. `Nucleo-transversal/Verificacion-Ola1.md` — **es la plantilla de este PT**: estructura del informe de
@@ -28,7 +28,7 @@ y para la Ola 5. Respeta la frontera **C1 lectura/escritura (iso19650) ↔ C4 de
    Replica ese formato para la Ola 4.
 3. `Nucleo-transversal/C1_Contrato-IFC-modelo-neutro.md` (§4 modelo neutro de red MEP **agnóstico al
    sistema**; §5/§5bis write-back de Psets de resultado y **validación sistema-aware** Pipe/Cable/Duct) y
-   `Nucleo-transversal/C2_…`/`C3_…` (memoria/entregables) + el "slot **C4**" de demanda (no estructural).
+   `Nucleo-transversal/C2_…`/`C3_…` (memoria/entregables) + el "slot **CN-3**" de demanda (no estructural).
 4. **Plugins empaquetados a auditar:** `motor-calculo-estructural-v0.23.0.plugin` (canónico del núcleo),
    `iso19650-openbim-v0.4.2.plugin` (parser MEP + write-back + validador sistema-aware),
    `instalaciones-v0.3.0.plugin` (verticales PCI y REBT; `scripts/red`+`scripts/pci`+`scripts/electrico`+
@@ -44,9 +44,9 @@ y para la Ola 5. Respeta la frontera **C1 lectura/escritura (iso19650) ↔ C4 de
 
 **Objetivo y alcance (qué hay que hacer — verificar, no construir):**
 
-1. **Coherencia de contratos C1–C4 con la implementación multi-vertical.** Comprueba que el **modelo
+1. **Coherencia de contratos C1, CN-1, CN-2 y CN-3 con la implementación multi-vertical.** Comprueba que el **modelo
    neutro de red** es realmente agnóstico al sistema (PCI hidráulico y REBT eléctrico lo consumen igual);
-   que la frontera **C1 (lectura/escritura iso19650) ↔ C4 (demanda) ↔ cálculo (instalaciones)** se
+   que la frontera **C1 (lectura/escritura iso19650) ↔ CN-3 (demanda) ↔ cálculo (instalaciones)** se
    mantiene en los dos verticales; y que el **write-back** (mecánica en iso19650, semántica en
    instalaciones, mismo `Pset_Estructurando_ResultadoRed`) y la **validación sistema-aware**
    (Pipe/Cable/Duct) son consistentes. Documenta cualquier divergencia.

@@ -1,7 +1,7 @@
 """
 BASES DE FIRME -- Norma 6.1-IC (Secciones de firme). Plugin obras-lineales. PT 5.2.
 
-Es el "slot" C4 de la disciplina aplicado a firmes (analogo a las bases de demanda
+Es el "slot" CN-3 de la disciplina aplicado a firmes (analogo a las bases de demanda
 de instalaciones): fija las dos ENTRADAS que gobiernan la seleccion de seccion del
 catalogo 6.1-IC a partir de datos de proyecto:
 

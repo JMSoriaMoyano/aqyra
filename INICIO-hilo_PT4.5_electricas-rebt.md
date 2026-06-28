@@ -5,7 +5,7 @@
 >
 > *(Ruta recomendada: abrir el vertical eléctrico, que reutiliza el patrón de disciplina y el grafo
 > de red ya maduros. Si prefieres abrir antes **clima/RITE**, la estructura del PT y de la frontera
-> C1/C4 es idéntica: cambian solo el solver —conductos de aire / cargas térmicas— y las bases de
+> C1/CN-3 es idéntica: cambian solo el solver —conductos de aire / cargas térmicas— y las bases de
 > demanda. Tras eléctricas + clima, la Ola 4 se cierra con un PT de verificación, como hizo el PT 1.6
 > con la Ola 1.)*
 
@@ -14,22 +14,22 @@
 Proyecto Estructurando. Ejecuta el **PT 4.5 de la Ola 4**: abre el **segundo vertical de la disciplina
 `instalaciones`** — **instalaciones eléctricas de baja tensión (REBT)**. Replica el **patrón de agente de
 disciplina** ya probado en PCI: nuevo subagente `proyectista-electrico`, **bases de demanda eléctrica**
-(slot C4) y un **solver de red eléctrica** (caída de tensión / intensidades / sección de conductor) sobre
+(slot CN-3) y un **solver de red eléctrica** (caída de tensión / intensidades / sección de conductor) sobre
 el **mismo modelo neutro de red**. Reutiliza el **núcleo transversal** (`ifc_utils` + `grafo_red`,
 espejado), el **dominio IFC MEP** (`iso19650-openbim` v0.4.1, sistema `ELECTRICAL`) y, donde aplique, el
 **write-back de Psets de resultado** del PT 4.4, **sin romperlos**. Mantén la frontera **C1 lectura/escritura
-(iso19650) ↔ C4 demanda ↔ cálculo (instalaciones)**.
+(iso19650) ↔ CN-3 demanda ↔ cálculo (instalaciones)**.
 
 **Lee primero, en este orden:**
 1. `Hoja-de-ruta_Ecosistema-ingenieria.md` — §3 (mapa de plugins; `instalaciones` ✅ v0.2.0 con PCI
-   completo, eléctricas/clima esbozadas; `description` ≤ 500), §4 (núcleo y contratos C1–C4; "motor
+   completo, eléctricas/clima esbozadas; `description` ≤ 500), §4 (núcleo y contratos C1, CN-1, CN-2 y CN-3; "motor
    hidráulico de red" como capacidad transversal — el solver eléctrico es **otro solver sobre el mismo
    grafo**), §5 (disciplina Instalaciones: PCI ✅ / **REBT** / RITE), §6 (Ola 4; PT 4.1–4.4 ✅) y §8
    (decisiones: nº1 ✅ un plugin con subagentes, nº4 ✅ espejo + puerta de integridad).
 2. `instalaciones/` (el plugin a ampliar, **v0.2.0**): `scripts/red/solver_red.py` (solver hidráulico
    Darcy-Weisbach, árbol y **malla por Hardy-Cross** — el patrón de propagación por árbol y el grafo te
    sirven de plantilla para la **propagación de tensiones**), `scripts/red/verificacion_red.py` (arnés:
-   balance de caudales con signo + cierre por lazo), `scripts/pci/bases_demanda.py` (slot C4: BIE +
+   balance de caudales con signo + cierre por lazo), `scripts/pci/bases_demanda.py` (slot CN-3: BIE +
    rociadores; **plantilla** para la demanda eléctrica), `scripts/red/resultado_ifc.py` (semántica del
    write-back), `scripts/pci/run_all_pci.py` (orquestador), `scripts/nucleo/` (espejo del núcleo),
    `agents/ingeniero-de-instalaciones.md` (clasifica `sistema.tipo`: ELECTRICAL → REBT) y
@@ -44,7 +44,7 @@ espejado), el **dominio IFC MEP** (`iso19650-openbim` v0.4.1, sistema `ELECTRICA
    `Nucleo-transversal/verificar_espejo_nucleo.py`.
 5. `criterios-instalaciones.md` (raíz; ya cita REBT/RITE como esbozados), `Casos-de-uso/
    REPOSITORIO-aprendizaje.md` (lección **PT 4.4** — Hardy-Cross, rociadores, write-back, hazard de mount
-   en ficheros pre-existentes editados vs nuevos íntegros; frontera C1/C4), `instalaciones/CHANGELOG.md`
+   en ficheros pre-existentes editados vs nuevos íntegros; frontera C1/CN-3), `instalaciones/CHANGELOG.md`
    e `iso19650-openbim/CHANGELOG.md`.
 6. **Normativa eléctrica** (en el ecosistema): `cte-documentos-basicos:normativa-concurrente` (**REBT**,
    RD 842/2002) y `cte-documentos-basicos:db-he` (HE3 iluminación, HE5 autoconsumo) si procede. Marca los
@@ -52,7 +52,7 @@ espejado), el **dominio IFC MEP** (`iso19650-openbim` v0.4.1, sistema `ELECTRICA
 
 **Objetivo y alcance (qué hay que hacer):**
 
-1. **Bases de demanda eléctrica (slot C4).** Nuevo `scripts/electrico/bases_demanda_electrica.py` (o
+1. **Bases de demanda eléctrica (slot CN-3).** Nuevo `scripts/electrico/bases_demanda_electrica.py` (o
    amplía `bases_demanda.py` con dispatcher por `sistema.tipo`): **previsión de potencias** por circuito,
    **coeficientes de simultaneidad y utilización** y grado de electrificación según **REBT ITC-BT-10**
    (previsión de cargas), **ITC-BT-25** (viviendas: circuitos C1–C12, electrificación básica/elevada),

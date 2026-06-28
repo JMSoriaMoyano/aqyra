@@ -20,7 +20,7 @@ Sistema `IfcDistributionSystem` PredefinedType **FIREPROTECTION**.
 1. `ifc_to_model_mep.py red-pci.ifc modelo_neutro_mep.json` (plugin `iso19650-openbim`,
    **C1 lectura**) → modelo neutro de red (5 nodos, 4 tramos, 3 terminales, 1 fuente).
 2. `run_all_pci.py modelo_neutro_mep.json` (plugin `instalaciones`):
-   - **bases_demanda** (H3, **C4**): rellena `demanda` por BIE y sistema (RIPCI/UNE/DB-SI).
+   - **bases_demanda** (H3, **CN-3**): rellena `demanda` por BIE y sistema (RIPCI/UNE/DB-SI).
    - **solver_red** (Darcy-Weisbach): reparto de caudales, pérdida de carga, presiones.
    - **verificacion_red**: balance de caudales y presiones.
 

@@ -1,3 +1,5 @@
+> **Reconciliación de numeración (2026-06-27, firmada por JM).** El contrato de interfaz **C5 canónico** (el que valida la golden firmada) vive en la zona protegida: `Estructurando 2.0/contratos-golden/contratos/C5_motor-fem.md`. **Este fichero NO es un duplicado a archivar:** es la **especificación de ingeniería detallada** del motor (FEM-2, §1–§8) que consumen los hilos de desarrollo del motor (PT7.*); se conserva íntegro y activo. Pendiente (tarea del hilo motor-fem, no de esta reconciliación): verificar que la interfaz aquí descrita y la del contrato canónico no han divergido y, si procede, dejar una sola como fuente de la interfaz.
+
 # C5 — Contrato del Motor FEM (modelo de análisis + API del solver)
 
 **Núcleo transversal del ecosistema · PT 7.0–7.1 (Ola 7).** Define cómo cualquier disciplina

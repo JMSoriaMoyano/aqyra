@@ -5,7 +5,7 @@ hidraulico Darcy-Weisbach). Las redes BT de interior son RADIALES (arbol): se
 reutiliza la PROPAGACION POR ARBOL del solver hidraulico (`red/solver_red.py`,
 `_arbol_desde_fuente`), no se duplica el grafo ni hace falta Hardy-Cross.
 
-FRONTERA (contratos C1/C4): el NUCLEO da la TOPOLOGIA (nodos+tramos del modelo
+FRONTERA (contratos C1/CN-3): el NUCLEO da la TOPOLOGIA (nodos+tramos del modelo
 neutro de red, parser MEP de iso19650-openbim, sistema ELECTRICAL) y la DEMANDA la
 rellena `electrico/bases_demanda_electrica.py` (potencia/cosphi/fases por terminal,
 tension por sistema). Este modulo SOLO CALCULA:

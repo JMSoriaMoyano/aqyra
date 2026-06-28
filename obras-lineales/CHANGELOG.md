@@ -109,7 +109,7 @@ Ola 6**; el abastecimiento a presion (EN 805, Darcy) queda para el **PT 6.3**.
 
 **Nace el subagente `proyectista-de-drenaje` (Norma 5.2-IC, Drenaje superficial)** — el
 analogo, para el agua de lluvia, de lo que trazado/firmes hicieron con la geometria y el
-firme. Estrena la capacidad transversal **C4 de hidrologia** (caudales de calculo).
+firme. Estrena la capacidad transversal **CN-3 de hidrologia** (caudales de calculo).
 
 ### Agente
 - `agents/ingeniero-de-obra-lineal.md` — clasificacion/enrutado ampliados a **drenaje**

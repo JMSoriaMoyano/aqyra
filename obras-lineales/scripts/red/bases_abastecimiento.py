@@ -1,6 +1,6 @@
 """
 BASES DE DEMANDA -- ABASTECIMIENTO de agua (red a PRESION). Disciplina
-`obras-lineales`, PT 6.3 (Ola 6). Es el "slot" C4 de la red de abastecimiento
+`obras-lineales`, PT 6.3 (Ola 6). Es el "slot" CN-3 de la red de abastecimiento
 (gemelo a presion de `bases_saneamiento.py`, que es lamina libre): rellena la clave
 `demanda` del MODELO NEUTRO DE RED (prevista por el parser MEP de iso19650-openbim,
 dejada en None) con los CAUDALES DE ABASTECIMIENTO y la PRESION DINAMICA MINIMA, y
@@ -8,7 +8,7 @@ fija la PRESION DE LA FUENTE (deposito por cota o grupo de bombeo).
 
 El NUCLEO da la topologia; este modulo aporta la DEMANDA; el solver
 (red/solver_presion, copia del Darcy de instalaciones) CALCULA. Frontera C1 (lectura,
-iso19650) <-> C4 (demanda) <-> calculo (obras-lineales).
+iso19650) <-> CN-3 (demanda) <-> calculo (obras-lineales).
 
 CAUDAL DE ABASTECIMIENTO (EN 805) por ACOMETIDA/nudo de consumo:
   - Caudal medio:  Q_medio = dotacion * habitantes_eq / 86400          (l/s)

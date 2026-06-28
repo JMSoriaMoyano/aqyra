@@ -46,15 +46,15 @@ carga "a mano".
 Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
 **[confirmar AN]**. **Debe revisarla y firmarla un tecnico competente.**
 
-## Frontera con el nucleo (contratos C1/C4)
+## Frontera con el nucleo (contratos C1/CN-3)
 
 - **C1 — lectura IFC (NO es tuya):** la traduccion IFC MEP -> modelo neutro de red
   (`unidades`/`sistema`/`nodos`/`tramos`/`terminales`/`fuentes`) la hace el parser
   del plugin **`iso19650-openbim`** (`scripts/mep/ifc_to_model_mep.py`, PT 4.2). Tu
   la **consumes**; no reimplementas la lectura IFC. La **escritura** de Psets de
   resultado tambien es de iso19650 (`ifc-create:escribir_psets_resultado.py`).
-- **C4 — demanda (tuya):** rellenas la clave `demanda` con `scripts/pci/
-  bases_demanda.py` (el "slot" C4 de las disciplinas no estructurales).
+- **CN-3 — demanda (tuya):** rellenas la clave `demanda` con `scripts/pci/
+  bases_demanda.py` (el "slot" CN-3 de las disciplinas no estructurales).
 - **Calculo (tuyo):** `scripts/red/solver_red.py` + `scripts/red/verificacion_red.py`.
 - **Nucleo transversal espejado** en `scripts/nucleo/` (`ifc_utils` + `grafo_red`,
   PT 4.1): da la topologia y las unidades; **no se toca**.
@@ -75,7 +75,7 @@ Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
    - **PCI**: `scripts/pci/run_all_pci.py modelo_neutro_mep.json [outdir]` — bases de
      demanda (H3) -> solver hidraulico -> verificacion (balance/presiones).
    - **REBT**: `scripts/electrico/run_all_electrico.py modelo_neutro_mep.json [outdir]`
-     — bases de demanda electrica (C4) -> solver electrico (I, seccion, caida de
+     — bases de demanda electrica (CN-3) -> solver electrico (I, seccion, caida de
      tension) -> verificacion (balance de potencias / caida de tension / I admisible).
 5. **Valida**: el arnes reporta el **balance de caudales (~0 %)**, el **cierre por
    lazo** (en malla) y las presiones admisibles, como el cierre de equilibrio

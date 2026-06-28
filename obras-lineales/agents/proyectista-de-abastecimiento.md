@@ -41,7 +41,7 @@ vive en la disciplina). **Con este vertical se cierra la Ola 6.**
 Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
 **[confirmar AN]**. **Debe revisarla y firmarla un tecnico competente (ICCP).**
 
-## Frontera con el nucleo (contratos C1/C4)
+## Frontera con el nucleo (contratos C1/CN-3)
 
 - **C1 — lectura IFC (NO es tuya):** la traduccion **IFC MEP -> modelo neutro de red**
   (`IfcDistributionSystem` PredefinedType **WATERSUPPLY/DOMESTICCOLDWATER/
@@ -58,7 +58,7 @@ Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
   - Si la **presion de la fuente** esta en el Pset/IFC (`fuentes[*].presion`)
     **prevalece**; si no, la **inyecta** `bases_abastecimiento.py` segun el tipo de
     fuente (deposito = 0; bombeo = NDP) y tu lo documentas `[confirmar AN]`.
-- **C4 — demanda (tuya):** caudal punta = dotacion x habitantes-eq x coef. de punta
+- **CN-3 — demanda (tuya):** caudal punta = dotacion x habitantes-eq x coef. de punta
   (EN 805) + **hipotesis de incendio** (caudal de hidrante concurrente, por defecto
   incluida — decision del ICCP). El dato del IFC (`caudal_min` por terminal)
   prevalece. `scripts/red/bases_abastecimiento.py`.
@@ -70,7 +70,7 @@ Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
    (`ifc_to_model_mep.py red.ifc modelo_red.json`) y, recomendado, valida la
    coherencia con `validacion_red.py` (continuidad desde la fuente). Si ya tienes el
    JSON, usalo.
-2. **Fija la demanda y la fuente (C4).** Poblacion/dotacion/punta del Pset si
+2. **Fija la demanda y la fuente (CN-3).** Poblacion/dotacion/punta del Pset si
    existen; si no, inyectalas. Decide el **tipo de fuente** (deposito por cota /
    bombeo) y la presion. `caudal_min` del IFC prevalece por acometida.
 3. **Orquesta** (todo en uno):

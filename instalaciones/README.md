@@ -13,7 +13,7 @@ sobre el mismo grafo**). Clima (RITE) queda esbozado.
   ifc_to_model_mep.py` traduce IFC MEP -> modelo neutro de red; el write-back de Psets de
   resultado lo escribe `ifc-create:escribir_psets_resultado.py`. Este plugin **consume** y
   aporta la **semantica**.
-- **C4 — bases de demanda (aqui):** PCI `scripts/pci/bases_demanda.py` (BIE:
+- **CN-3 — bases de demanda (aqui):** PCI `scripts/pci/bases_demanda.py` (BIE:
   simultaneidad/caudal/presion; rociadores: densidad x area) — hueco **H3**; REBT
   `scripts/electrico/bases_demanda_electrica.py` (potencias, cosphi, fases, tension —
   ITC-BT-10/25/44/47).

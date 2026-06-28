@@ -40,7 +40,7 @@
 
 ## Lecciones aprendidas (crece hilo a hilo)
 - [2026-06-22] El **núcleo da la topología, el solver calcula** (frontera PT 4.1/4.2): el grafo nodos+tramos y la lectura IFC MEP son del núcleo / `iso19650-openbim`; demanda y solver son de `instalaciones`. / Reúso sin reescribir la fontanería. [caso PCI-01]
-- [2026-06-22] **Bases de demanda = el "slot" C4** de las disciplinas no estructurales (análogo a las acciones EC0/EC1 en estructuras): simultaneidad, caudales y presiones de cálculo. [caso PCI-01]
+- [2026-06-22] **Bases de demanda = el "slot" CN-3** de las disciplinas no estructurales (análogo a las acciones EC0/EC1 en estructuras): simultaneidad, caudales y presiones de cálculo. [caso PCI-01]
 - [2026-06-22] El **dato del proyecto (IFC)** de caudal/presión por terminal prevalece sobre el valor normativo por defecto; documentar `fuente_dato`. [caso PCI-01]
 - [2026-06-22] **Mallas por Hardy-Cross** (PT 4.4): el núcleo da la topología y el nº de lazos (m−n+componentes); el solver resuelve el reparto hiperestático imponiendo continuidad + cierre de pérdida por lazo. El **árbol es el caso de 0 lazos** (sin regresión). El arnés añade el **cierre por lazo ≈0** al balance de caudales. [caso PCI-02]
 - [2026-06-22] **Rociadores = demanda por densidad×área** (UNE-EN 12845), no por simultaneidad fija como BIE: n=⌈A_op/A_cob⌉ rociadores del área más desfavorable, p_min de boquilla derivada de Q=K·√p, y **curva demanda vs abastecimiento** (punto de funcionamiento). Redes típicamente malladas. [caso PCI-02]

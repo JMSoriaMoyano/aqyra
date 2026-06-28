@@ -82,7 +82,7 @@ Toda salida es de **predimensionado**; deja trazables las hipotesis y los NDP
 **[confirmar AN]**. **Debe revisarla y firmarla un tecnico competente (Ingeniero de
 Caminos).**
 
-## Frontera con el nucleo (contratos C1/C4)
+## Frontera con el nucleo (contratos C1/CN-3)
 
 - **C1 — lectura IFC (NO es tuya):** la traduccion **IFC 4.3 -> modelo neutro lineal**
   (`alineacion{planta[]/alzado[]/peralte[]}`, `georref`, ganchos `secciones_tipo`/
@@ -91,7 +91,7 @@ Caminos).**
   `validacion_alineacion.py`, PT 5.1). Tu las **consumes**; no reimplementas la lectura
   IFC. **La alineacion es referenciacion lineal por PK (curva 1D), NO un grafo de red**
   (no se usa `grafo_red`; el grafo de red es del motor de red, PT 6.2).
-- **C4 — datos de proyecto (tuyos):** **Vp** (trazado), **IMDp/explanada** (firmes) y,
+- **CN-3 — datos de proyecto (tuyos):** **Vp** (trazado), **IMDp/explanada** (firmes) y,
   en drenaje, la **cuenca** (A, L, J), la **lluvia de proyecto** (Pd, I1/Id, Po) y el
   **periodo de retorno T**. El **dato del IFC/GIS prevalece** (Pset/GeoJSON volcado al
   modelo neutro: `parametros_proyecto.vp_kmh`, `datos_firme`, `datos_drenaje`); si falta,
@@ -133,7 +133,7 @@ Caminos).**
    WATERSUPPLY/DOMESTICCOLDWATER/POTABLEWATER + fuente deposito/bombeo en
    abastecimiento) y valida con `scripts/mep/validacion_red.py` (continuidad hacia el
    vertido en saneamiento, o desde la fuente en abastecimiento).
-3. **Fija los datos de proyecto (C4).** Vp del Pset del IFC si existe; si no, inyectala.
+3. **Fija los datos de proyecto (CN-3).** Vp del Pset del IFC si existe; si no, inyectala.
    Igual con IMDp (o IMD + %pesados) y explanada (Ev2 o CBR). En drenaje: la **cuenca**
    (A, L, J del GIS/Pset si existen) y la **lluvia de proyecto** (Pd, I1/Id, Po) + **T**;
    prepara `datos_drenaje.json` (`cuencas[]`, `cunetas[]`, `odt[]`).
@@ -184,11 +184,11 @@ Carpeta base: `${CLAUDE_PLUGIN_ROOT}/scripts/`.
 
 | Encargo | Estado | Bases/datos | Calculo | Verificacion |
 |---|---|---|---|---|
-| Trazado (3.1-IC) | OK | Vp (C4); `trazado/parametros_3_1_IC.py` | `trazado/comprobacion_trazado.py` (planta/alzado/visibilidad/coordinacion) | `trazado/verificacion_trazado.py` (recuento + veredicto) |
-| Firmes (6.1-IC) | OK | IMDp/explanada (C4); `firmes/bases_firme.py` | `firmes/seleccion_firme.py` + `firmes/catalogo_6_1_IC.py` | `firmes/verificacion_firme.py` (permitida + espesores) |
-| Drenaje (5.2-IC) | OK | cuenca + lluvia + T (C4); `drenaje/hidrologia.py` | `drenaje/cuneta.py` (Manning) + `drenaje/odt.py` (entrada/salida) | `drenaje/verificacion_drenaje.py` (caudales + capacidad) |
-| Saneamiento (EN 752) | OK | demanda residual (C4); `red/bases_saneamiento.py` | `red/solver_lamina_libre.py` (Manning de red: arbol desde el vertido + Hardy-Cross) | `red/verificacion_red_lineal.py` (balance nodal + calado/velocidad/llenado) |
-| Abastecimiento (EN 805) | OK | demanda + fuente (C4); `red/bases_abastecimiento.py` | `red/solver_presion.py` (Darcy-Weisbach de red: arbol desde la fuente + Hardy-Cross; **copia del de instalaciones**) | `red/verificacion_red_presion.py` (balance nodal + presiones/velocidades) |
+| Trazado (3.1-IC) | OK | Vp (CN-3); `trazado/parametros_3_1_IC.py` | `trazado/comprobacion_trazado.py` (planta/alzado/visibilidad/coordinacion) | `trazado/verificacion_trazado.py` (recuento + veredicto) |
+| Firmes (6.1-IC) | OK | IMDp/explanada (CN-3); `firmes/bases_firme.py` | `firmes/seleccion_firme.py` + `firmes/catalogo_6_1_IC.py` | `firmes/verificacion_firme.py` (permitida + espesores) |
+| Drenaje (5.2-IC) | OK | cuenca + lluvia + T (CN-3); `drenaje/hidrologia.py` | `drenaje/cuneta.py` (Manning) + `drenaje/odt.py` (entrada/salida) | `drenaje/verificacion_drenaje.py` (caudales + capacidad) |
+| Saneamiento (EN 752) | OK | demanda residual (CN-3); `red/bases_saneamiento.py` | `red/solver_lamina_libre.py` (Manning de red: arbol desde el vertido + Hardy-Cross) | `red/verificacion_red_lineal.py` (balance nodal + calado/velocidad/llenado) |
+| Abastecimiento (EN 805) | OK | demanda + fuente (CN-3); `red/bases_abastecimiento.py` | `red/solver_presion.py` (Darcy-Weisbach de red: arbol desde la fuente + Hardy-Cross; **copia del de instalaciones**) | `red/verificacion_red_presion.py` (balance nodal + presiones/velocidades) |
 
 ## Entorno
 

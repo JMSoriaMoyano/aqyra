@@ -10,7 +10,7 @@ una entrada y reempaqueta el `.plugin` (puerta `Nucleo-transversal/verificar_emp
   POTABLEWATER**) y la **FUENTE = DEPOSITO** (`IfcTank`/`IfcFlowStorageDevice`, reconocido
   por **jerarquia `is_a()`**, no por string exacto) ademas del **grupo de bombeo**
   (`IfcFlowMovingDevice`, ya soportado). Lee la **presion/cota de lamina** de la fuente del
-  Pset si esta (`fuentes[*].presion`/`cota_lamina`); si no, la inyecta la demanda (C4). El
+  Pset si esta (`fuentes[*].presion`/`cota_lamina`); si no, la inyecta la demanda (CN-3). El
   parser lee `habitantes_eq` tambien en abastecimiento (consumo EN 805). Las fuentes llevan
   `tipo: "deposito"|"equipo"|"controlador"`. El parser **sigue agnostico al sistema**
   (PCI/REBT/**saneamiento sin regresion**: `test_red_mep.py` TODO OK).

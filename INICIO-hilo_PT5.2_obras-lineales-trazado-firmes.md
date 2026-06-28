@@ -21,7 +21,7 @@ uses `grafo_red`**.
 1. `Hoja-de-ruta_Ecosistema-ingenieria.md` — §2 (heurística plugin/skill/agente/subagente y **patrón
    de agente de disciplina**: clasificar→enrutar→orquestar→verificar→visualizar→memoria→registrar),
    §3 (multi-plugin; convención `description` ≤ 500; **un plugin por disciplina**), §4 (contratos
-   C1–C4; **C4 en obra lineal**: acción del tráfico, y para firmes la categoría de tráfico pesado),
+   C1 + CN-1/CN-2/CN-3; **CN-3 en obra lineal**: acción del tráfico, y para firmes la categoría de tráfico pesado),
    §5 (disciplina **Obras lineales**: agente `ingeniero-de-obra-lineal` a crear; tipologías
    **trazado/firmes**/drenaje/hidráulica — aquí solo las dos primeras), §6 (olas; este hilo es **Ola
    5, PT 5.2**; la Ola 6 hace drenaje/hidráulica) y §8 (**decisión nº2 ya resuelta**: plugin único
@@ -31,7 +31,7 @@ uses `grafo_red`**.
    `georref`, ganchos `secciones_tipo`/`firme`/`terreno`— y el checklist de la vía Alignment marcado
    ✅) y §6 (checklist C1 para una disciplina nueva). **Este PT RELLENA los ganchos**
    `secciones_tipo`/`firme`/`terreno` que el PT 5.1 dejó previstos (= None).
-3. `Nucleo-transversal/C2_Contrato-memoria-despacho.md` y `C3_Contrato-entregables-memoria.md` +
+3. `Nucleo-transversal/CN-1_Convencion-memoria-despacho.md` y `CN-2_Convencion-entregables-documentacion.md` (antes C2/C3, reconciliados 2026-06-27) +
    `plantilla-criterios-disciplina.md` + `plantilla-memoria.md` — cómo nace la **memoria de la
    disciplina** (`criterios-obra-lineal.md` en la raíz + memoria por obra) y la **skill
    `criterios-memoria`** del nuevo plugin, homogénea con la de `instalaciones`/estructuras.
