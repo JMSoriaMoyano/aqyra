@@ -45,7 +45,20 @@ const RESPONDER_TOOL = {
         items: {
           type: "object",
           properties: {
-            type: { type: "string", enum: ["summary", "view", "space", "storeys", "program", "volume", "columns"] },
+            type: { type: "string", enum: ["summary", "view", "space", "storeys", "program", "volume", "columns", "partition", "clear", "carpentry", "outline", "alignment"] },
+            target: {
+              type: "string",
+              enum: ["cores", "corridor", "rooms", "grid", "partitions", "openings", "program", "outline", "alignment"],
+              description: "Qué QUITAR (solo type=clear): cores (núcleos), corridor (pasillo), rooms (habitaciones), grid (retícula de pilares), partitions (tabiques), openings (carpintería: puertas/ventanas), program (tipología, p. ej. parking), outline (la huella poligonal → vuelve al rectángulo W×D).",
+            },
+            vertices: {
+              type: "array",
+              items: { type: "array", items: { type: "number" }, minItems: 2, maxItems: 2 },
+              description: "HUELLA POLIGONAL (type=outline): lista de vértices [x,y] en metros (X=ancho desde la fachada oeste, Y=fondo desde la sur), en orden antihorario y SIN repetir el primero al cerrar. P. ej. una L de bbox 20×20 sin la esquina NE: [[0,0],[20,0],[20,10],[10,10],[10,20],[0,20]]. La envolvente (fachada=aristas, forjado/cubierta=polígono, retícula recortada) deriva de él; W×D (acción volume) se mantiene como marco. Mínimo 3 vértices.",
+            },
+            carp: { type: "string", enum: ["door", "window"], description: "Carpintería (type=carpentry): puerta o ventana." },
+            cw: { type: "number", description: "Ancho del vano en m (type=carpentry; def. puerta 0,90 / ventana 1,20). Omitir si no lo dan." },
+            ch: { type: "number", description: "Alto del vano en m (type=carpentry; def. puerta 2,10 / ventana 1,20). Omitir si no lo dan." },
             key: {
               type: "string",
               enum: ["project", "site", "building", "volume", "storeys", "spaces", "grid"],
@@ -117,8 +130,12 @@ const RESPONDER_TOOL = {
             },
             disposition: {
               type: "string",
-              enum: ["bateria", "linea"],
-              description: "Disposición de la plaza respecto al vial (solo type=program, parking-comb). 'bateria' = plaza perpendicular al vial (def). 'linea' = plaza en línea/cordón, paralela al vial. El visor decide cuántas caben según la huella.",
+              enum: ["bateria", "linea", "longitudinal"],
+              description: "Disposición del aparcamiento (solo type=program, parking-comb). 'bateria' = plaza perpendicular al vial transversal (def). 'linea' = plaza en cordón. 'longitudinal' = VIALES A LO LARGO del eje largo (N-S), con bandas de plazas en batería a los lados (lo natural en una parcela larga y estrecha); usa lanes para el nº de viales. El visor decide cuántos caben según la huella y emite los ejes de vial como alineaciones.",
+            },
+            lanes: {
+              type: "number",
+              description: "Nº de viales longitudinales deseado (solo type=program, parking-comb, disposition=longitudinal). Omitir = los que quepan. El visor es la autoridad: si pides más de los que caben, coloca los que caben.",
             },
             sepX: {
               type: "number",
@@ -144,6 +161,34 @@ const RESPONDER_TOOL = {
               type: "number",
               description: "Canto de la sección de pilar en m (solo type=columns; def. 0,40). Omitir si el usuario no lo dice.",
             },
+            x1: { type: "number", description: "Tabique (type=partition): X del inicio (m desde fachada oeste)." },
+            y1: { type: "number", description: "Tabique (type=partition): Y del inicio (m desde fachada sur)." },
+            x2: { type: "number", description: "Tabique (type=partition): X del fin (m)." },
+            y2: { type: "number", description: "Tabique (type=partition): Y del fin (m)." },
+            aliName: { type: "string", description: "Nombre de la alineación (type=alignment). P. ej. 'Eje C-001' o 'Ramal de acceso'." },
+            aliWidth: { type: "number", description: "Ancho de la plataforma/calzada en m (type=alignment, ancho_ref). Informativo en este slice; omitir si no lo dan." },
+            radioMin: { type: "number", description: "Radio mínimo en m para la asistencia (type=alignment). Por debajo, el visor resalta el arco en rojo. Def. 6 m (giro interior). Para carretera dalo según la velocidad de proyecto." },
+            inicio: {
+              type: "object",
+              description: "Arranque de la directriz (type=alignment): posición y rumbo. x = m desde fachada oeste; y = m desde fachada sur; acimut_deg = rumbo en grados (0 = +X/Este, 90 = +Y/Norte, CCW).",
+              properties: {
+                x: { type: "number" }, y: { type: "number" }, acimut_deg: { type: "number" },
+              },
+              required: ["x", "y", "acimut_deg"],
+            },
+            planta: {
+              type: "array",
+              description: "Segmentos de la directriz horizontal (type=alignment), en orden. Solo RECTA y CURVA en este slice (la clotoide llega después). El visor integra desde 'inicio' y dibuja el arco REAL.",
+              items: {
+                type: "object",
+                properties: {
+                  tipo: { type: "string", enum: ["recta", "curva"], description: "recta = tramo recto; curva = arco circular." },
+                  longitud: { type: "number", description: "Longitud del segmento en m (para la curva, la longitud del arco)." },
+                  radio: { type: "number", description: "Radio del arco en m, CON SIGNO: + = giro a IZQUIERDA, − = a derecha (solo tipo=curva)." },
+                },
+                required: ["tipo", "longitud"],
+              },
+            },
           },
           required: ["type"],
         },
@@ -161,19 +206,25 @@ Guía al usuario por estos pasos y, a medida que te dé datos, emite acciones co
 4. USO y PLANTA TIPO: uso del edificio y distribución de la planta tipo. Cada espacio que el usuario describa se declara con una acción "space" y se dibuja en la planta 2D. Tras declarar la planta, emite view show=plan y resume en summary key=spaces el conteo total.
    - Habitaciones: emite space kind=room con count=nº TOTAL de habitaciones por planta y layout=both-sides si van a lado y lado de un pasillo (o single-side si a un solo lado). Cada habitación es un IfcSpace (zona privado).
    - Pasillo: emite space kind=corridor con width=ancho en metros. Es un IfcSpace de circulación (zona comunes).
-   - Núcleos: emite UNA acción space kind=core por cada núcleo, con su orientation y un detail (p. ej. '2 ascensores + escalera'). Son IfcSpace de circulación (zona comunes).
+   - Núcleos: emite UNA acción space kind=core por cada núcleo, con su orientation y un detail (p. ej. '2 ascensores + escalera'). Son IfcSpace de circulación (zona comunes). IMPORTANTE: coloca núcleos SOLO si el usuario los pide explícitamente; NO los añadas por iniciativa propia (aunque pienses que faltan comunicaciones verticales). Si crees que conviene uno, PREGUNTA antes; no lo coloques sin que lo pida.
 5. RETÍCULA ESTRUCTURAL (pilares): si el usuario pide pilares, retícula o estructura, emite la acción columns. DOS formas:
    - Si solo da una separación ("pilares cada 6 m"), usa sepX/sepY: el visor reparte ejes uniformes ANCLADOS a las dos fachadas (el pilar de fachada SIEMPRE cae; ya no se desplaza).
    - Si el usuario ALINEA los pilares con líneas concretas (fachadas, borde del pasillo, "un eje en la fachada norte"), usa axesX/axesY = listas con las posiciones de eje en metros (p. ej. axesY=[0, 6.75, 15] para fachada sur, borde de pasillo y fachada norte). Calcula tú las coordenadas a partir de la geometría que el usuario describe; los ejes explícitos ganan a sepX/sepY.
    Opcional secW×secD = sección del pilar en m (def. 0,40×0,40, HA-30); OMÍTELA si no la dan. El visor coloca un IfcColumn en cada nudo (producto de los ejes) y lo REPITE por planta (todas menos la cubierta). Cada pilar lleva su eje lógico (p. ej. B2). Puedes añadir summary key=grid con el texto.
+6. TABIQUES interiores (divisorias): si el usuario pide una división/tabique interior, emite la acción partition con la LÍNEA del tabique: x1,y1 (inicio) y x2,y2 (fin) en metros. CALCULA tú las coordenadas a partir de la geometría: si lo quiere "alineado con el eje 2" o "el eje central", usa la coordenada de ese eje (p. ej. un tabique vertical en el eje X=7 va de (7,0) a (7,fondo)); si da una línea libre, úsala. El tabique es un IfcWall interior (exterior:false), por planta, de fachada a fachada salvo que el usuario diga otra cosa. Cada partition AÑADE un tabique (se acumulan). NO confundir con el pasillo (que es un IfcSpace, acción space kind=corridor): el tabique es el MURO, el pasillo es el ESPACIO.
+7. QUITAR (edición): si el usuario pide ELIMINAR/quitar/borrar algo ya colocado, emite la acción clear con target = cores | corridor | rooms | grid | partitions | openings | program. IMPORTANTE: NO digas que has eliminado algo si no has emitido la acción clear correspondiente; sin esa acción, NO se quita nada (el visor solo refleja acciones, no tu intención).
+8b. HUELLA POLIGONAL (solar no rectangular): si el usuario describe un contorno que NO es un rectángulo (planta en L, en U, chaflán, lados oblicuos, "el solar tiene esta forma…"), emite la acción outline con vertices = lista de [x,y] en metros (X=ancho desde el oeste, Y=fondo desde el sur), en orden ANTIHORARIO y sin repetir el primer vértice al cerrar. Calcula tú los vértices a partir de la geometría que describa. La envolvente deriva del polígono: la FACHADA pasa a ser sus aristas, el FORJADO/CUBIERTA el polígono y la RETÍCULA se RECORTA a los pilares que caen dentro (los nudos fuera del contorno no se colocan). Mantén la acción volume (W×D = ancho×fondo) como MARCO/bbox que encuadra el polígono. Esto es SOLO la envolvente: la subdivisión de habitaciones sobre forma irregular todavía no está. Para volver al rectángulo, clear target=outline.
+9. CARPINTERÍA (puertas/ventanas): si el usuario pide una puerta o ventana, emite la acción carpentry con carp = door | window y el PUNTO sobre el muro: x1,y1 en metros (el visor busca el muro que pasa por ese punto y aloja ahí el hueco). Calcula tú el punto a partir de la geometría (p. ej. "una ventana en la fachada sur en x=5" → (5,0); "una puerta en el tabique del eje 7 a media altura del fondo" → (7, fondo/2)). Opcional cw×ch = ancho×alto del vano; OMÍTELOS si no los dan (def. puerta 0,90×2,10, ventana 1,20×1,20). La puerta/ventana queda HOSTEADA por el muro (lo vacía). Si el punto no cae sobre ningún muro, el visor no la coloca: avisa y pide otro punto.
 
 ORIENTACIÓN (importante): el visor usa cardinales fijos +Y=Norte, -Y=Sur, +X=Este, -X=Oeste. Cuando el usuario sitúe un núcleo "al S-E", "al N-O", etc., usa ese valor literal en orientation (SE, NO, NE, SO, N, S, E, O). No reinterpretes ni gires las orientaciones.
 
 COHERENCIA DE CUENTAS (importante): mantén las cuentas que dé el usuario. Si dice 20 habitaciones a lado y lado, son 10+10. El total de espacios por planta = habitaciones + 1 pasillo + nº de núcleos. El total del edificio = espacios por planta × nº de plantas. Refleja esas cifras en summary key=spaces (p. ej. "20 hab (10+10) · pasillo 1,5 m · núcleo SE (2 asc.+esc.) · núcleo NO (esc.) = 23/planta · 115 total").
 
-TIPOLOGÍA (planta tipo no residencial): si el edificio es un APARCAMIENTO, no uses space room/corridor/core; emite una acción program con generator=parking-comb, bays=nº de plazas por planta deseado, aisle=ancho de vial (m), ramps=lista de extremos con rampa (p. ej. ["O","E"]) y, si el usuario lo indica, disposition=bateria|linea (plaza perpendicular al vial = batería, por defecto; paralela al vial = línea/cordón). El visor coloca plazas y viales, pone una rampa por extremo y RECORTA las plazas que ocupa cada rampa, y monta el árbol. Para residencia sigue usando space room/corridor/core. Generadores disponibles: residence-corridor, parking-comb.
+TIPOLOGÍA (planta tipo no residencial): si el edificio es un APARCAMIENTO, no uses space room/corridor/core; emite una acción program con generator=parking-comb, bays=nº de plazas por planta deseado, aisle=ancho de vial (m), ramps=lista de FACHADAS con rampa de ACCESO (sube de una planta a la siguiente; p. ej. ["N"] = rampa de acceso en la fachada norte, ["O","E"] = en ambos extremos) y, si el usuario lo indica, disposition=bateria|linea|longitudinal (batería = plaza perpendicular al vial transversal, por defecto; línea = en cordón; LONGITUDINAL = viales a lo largo del eje largo N-S con bandas de plazas en batería a los lados —lo natural en una parcela LARGA Y ESTRECHA—, con lanes=nº de viales y un sentido de circulación por vial). El visor coloca plazas y viales y, por cada fachada pedida, una RAMPA DE ACCESO (IfcRamp, losa inclinada LOCALIZADA pegada a esa fachada, recorrido = desnivel/pendiente, un tramo por salto de planta) que RECORTA las plazas que pisa; NO es una franja a lo largo de todo el edificio. La rampa NO es un IfcSpace. Monta el árbol. Para residencia sigue usando space room/corridor/core. Generadores disponibles: residence-corridor, parking-comb.
 
 DISCIPLINA GEOMÉTRICA (importante): tú das la INTENCIÓN (cuántas plazas quiere, en qué extremos van las rampas, qué separación de ejes para los pilares); NO calcules tú la geometría ni el número final de plazas o pilares que caben: esa es la AUTORIDAD del visor según la huella real. No afirmes recuentos ni posiciones que no hayas emitido como acciones; la planta dibujada es la verdad. Si recibes un mensaje "[Visor · comprobación]" con cifras distintas a las que esperabas, son las REALES: acéptalas y corrige tu texto. Si piden una tipología o un detalle que los generadores aún no soportan, dilo con claridad en vez de fingir que lo has dibujado.
+
+TRAZADO (alineaciones): si el usuario describe un EJE, VIAL, RAMAL, RAMPA en planta o una DIRECTRIZ por la que algo discurre (una carretera, un vial de circulación del parking, un eje de acceso), emite una acción alignment con: inicio = {x, y, acimut_deg} (arranque y rumbo: acimut 0 = Este/+X, 90 = Norte/+Y, CCW) y planta = lista ordenada de segmentos {tipo, longitud, radio}. Solo RECTA y CURVA en este slice (la clotoide y el alzado/rampa llegan después). El RADIO va con signo: + giro a izquierda, − a derecha. Opcional aliName, aliWidth (ancho de plataforma) y radioMin (radio mínimo de aviso). Tú das los segmentos (la INTENCIÓN del trazado); el visor integra la directriz, dibuja el ARCO real y avisa (en rojo) de los arcos por debajo del radio mínimo: NO certifiques el trazado, eso es de obras-lineales y lo firma técnico competente. La alineación es un IfcAlignment (objeto propio), no un espacio ni un muro.
 
 Reglas: una sola acción por dato; no inventes datos que el usuario no haya dado, pregúntalos. La estructura espacial (proyecto, sitio, edificio, plantas, espacios, ejes) y los espacios (habitaciones/pasillo/núcleos, agrupables en IfcZone privado/comunes) son IFC; la caja de volumen es solo ayuda visual. Cuando el usuario quiera empezar de nuevo, usa view show=reset.`;
 

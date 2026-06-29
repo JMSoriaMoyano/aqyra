@@ -1,0 +1,103 @@
+{
+  "name": "alineacion-circulacion-parking",
+  "alineacion": {
+    "nombre": "Circulación parking · ramal",
+    "infraestructura": {
+      "clase": "IfcRoad",
+      "nombre": "Vial interior"
+    },
+    "ancho_ref": 3,
+    "inicio": {
+      "x": 2,
+      "y": 2,
+      "acimut_deg": 0,
+      "cota": 0
+    },
+    "planta": [
+      {
+        "tipo": "recta",
+        "longitud": 8
+      },
+      {
+        "tipo": "curva",
+        "longitud": 9.425,
+        "radio": 6
+      },
+      {
+        "tipo": "recta",
+        "longitud": 6
+      }
+    ]
+  },
+  "paso": 0.5,
+  "radioMinimo": 6,
+  "snapshot": {
+    "nombre": "Circulación parking · ramal",
+    "nSegmentos": 3,
+    "nRectas": 2,
+    "nCurvas": 1,
+    "longitudTotal": 23.425,
+    "fin": [
+      16,
+      14,
+      1.570833
+    ],
+    "nPuntos": 22,
+    "muestraPuntos": [
+      [
+        2,
+        2
+      ],
+      [
+        10,
+        2
+      ],
+      [
+        10.495,
+        2.02
+      ],
+      [
+        10.988,
+        2.082
+      ],
+      [
+        11.473,
+        2.184
+      ],
+      [
+        11.948,
+        2.325
+      ]
+    ],
+    "avisosRadio": 0,
+    "alto": {
+      "nombre": "Circulación parking · ramal",
+      "infraestructura": {
+        "clase": "IfcRoad",
+        "nombre": "Vial interior"
+      },
+      "ancho_ref": 3,
+      "inicio": {
+        "x": 2,
+        "y": 2,
+        "acimut_deg": 0,
+        "cota": 0
+      },
+      "planta": [
+        {
+          "tipo": "recta",
+          "longitud": 8
+        },
+        {
+          "tipo": "curva",
+          "longitud": 9.425,
+          "radio": 6
+        },
+        {
+          "tipo": "recta",
+          "longitud": 6
+        }
+      ]
+    }
+  }
+}

@@ -11,14 +11,19 @@
  */
 
 import { bsddClass, bsddProperties, classUri } from "./bsdd";
-import { residenceGenerator, GENERATORS } from "./generators";
+import { residenceGenerator, GENERATORS, parkingAxes, parkingTrajectories } from "./generators";
 import { toAltoSpec } from "./c1-bridge";
 import { makeFixture } from "./fixture";
+import { resolverAlineacion, selfCheckRadios, type Alineacion, type Segmento } from "./alineacion";
 import {
   buildModel, hasModel, spaceCount, columnCount, slabCount, openingCount, wallCount, stairCount, resolveGrid, buildGrid, spaceBoundaryWalls,
+  cleanOutline, pointInPolygon,
   type BuildingInput, type BuildingModel, type StoreyInstance, type SpaceInstance,
   type ZoneInstance, type ElementInstance, type GridResolved, type GridNode,
 } from "./model";
+import { auditModel, RULES } from "./audit";
+import { makeGridResizable } from "./splitter";
+import { fitContain } from "./plan-fit";
 
 const $ = (id: string) => document.getElementById(id)!;
 const log = $("log");
@@ -79,19 +84,37 @@ const polyArea = (pts: [number, number][]): number => {
   return Math.abs(a) / 2;
 };
 
-/** Retícula estructural resuelta sobre la huella actual (o null si no hay). */
+// ── Huella POLIGONAL (el SALTO) — preview de la envolvente ────────────────────
+// La huella opt-in (vértices del copiloto) sustituye al rectángulo W×D como
+// envolvente: la fachada son sus aristas, el forjado/cubierta el polígono y la
+// retícula se RECORTA a los nudos de dentro. W×D sigue como bbox/marco de cámara.
+/** Contorno poligonal actual (limpio) o null si la huella es el rectángulo. */
+function currentOutline(): [number, number][] | null { return cleanOutline(bInput.outline); }
+/** Contorno de la envolvente: el polígono si lo hay, si no el rectángulo W×D (CCW). */
+function envContour(): [number, number][] {
+  return currentOutline() ?? [[0, 0], [W, 0], [W, D], [0, D]];
+}
+/** Aristas de la envolvente como segmentos [a,b] (cierra el contorno). */
+function envEdges(): [[number, number], [number, number]][] {
+  const c = envContour();
+  return c.map((v, k) => [v, c[(k + 1) % c.length]] as [[number, number], [number, number]]);
+}
+
+/** Retícula estructural resuelta sobre la huella actual (o null si no hay). Recortada al polígono. */
 function currentGrid(): { grid: GridResolved; nodes: GridNode[] } | null {
   if (!bInput.grid) return null;
   const grid = resolveGrid(bInput.grid, { W, D });
-  return { grid, nodes: buildGrid(grid) };
+  const outline = currentOutline();
+  const nodes = outline ? buildGrid(grid).filter((nd) => pointInPolygon(nd.x, nd.y, outline)) : buildGrid(grid);
+  return { grid, nodes };
 }
 
 type Fp = { x: number; y: number; w: number; d: number };
 /** Footprints de la planta tipo (generador activo): fuente común de planta y 3D. */
 function placedSpaces(): { objectType: string; footprint: Fp; sideTag?: string }[] {
   return bInput.program
-    ? (GENERATORS[bInput.program.generator]?.generate(bInput.program.params, { W, D }) ?? [])
-    : residenceGenerator.generate(plan, { W, D });
+    ? (GENERATORS[bInput.program.generator]?.generate(bInput.program.params, { W, D, h: FF }) ?? [])
+    : residenceGenerator.generate(plan, { W, D, h: FF });
 }
 /** Anillo (4 esquinas) de una huella proyectado a la cota z de la maqueta 3D. */
 function footprintRing(f: Fp, z: number): [number, number][] {
@@ -108,6 +131,56 @@ interface PlanState {
 }
 const plan: PlanState = { rooms: null, corridor: null, cores: [] };
 function resetPlan(): void { plan.rooms = null; plan.corridor = null; plan.cores = []; }
+
+// ── alineaciones (familia de TRAZADO) ────────────────────────────────────────
+// La alineación es OBJETO PROPIO (IfcAlignment), no una 4.ª variante de Placement
+// ni parte del BuildingModel: vive en su propia colección. Opt-in (el copiloto da
+// puntos/segmentos). El cebo la PREVISUALIZA (recta+arco); C1 0.10.0 la compila.
+const aligns: Alineacion[] = [];
+let radioMinimo = 6; // mínimo de radio PARAMETRIZABLE (self-check); 3.1-IC real → después
+function resetAligns(): void { aligns.length = 0; radioMinimo = 6; }
+// Panel de planta 2D (debe casar con renderPlan): proyección [0..W]×[0..D] → inset.
+const PLAN_PANEL = { PX: 36, PY: 442, PW: 430, PH: 250 };
+function planXf(): { fx: number; fy: number; fw: number; fh: number } {
+  const { PX, PY, PW, PH } = PLAN_PANEL;
+  // Hueco útil del panel (deja sitio al título arriba y a la leyenda abajo).
+  return fitContain(W, D, { x: PX + 24, y: PY + 42, w: PW - 48, h: PH - 66 });
+}
+/**
+ * Dibuja las alineaciones (directriz recta+arco) en la maqueta 3D (cota 0) y en la
+ * planta 2D. El ARCO se discretiza REAL (no una recta). Los arcos que incumplen el
+ * radio mínimo (self-check) se resaltan en rojo: la IA AVISA, no certifica.
+ */
+function drawAlignments(): void {
+  if (aligns.length === 0) return;
+  const AL = "#e0863a"; // naranja "trazado" (familia distinta de edificación)
+  const paso = Math.max(0.5, Math.min(W, D) / 60);
+  const polyline2D = (pts: [number, number][], stroke: string, sw: number): void => {
+    const d = pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+    stage.appendChild(svg("path", { d, fill: "none", stroke, "stroke-width": String(sw), "stroke-linejoin": "round", "stroke-linecap": "round" }));
+  };
+  for (const al of aligns) {
+    const r = resolverAlineacion(al, paso);
+    const malos = new Set(selfCheckRadios(al, radioMinimo).map((a) => a.indice));
+    if (view.volume) { // 3D: polilínea a cota 0 + marca de arranque
+      const p3 = r.puntos.map(([x, y]) => iso(x, y, 0));
+      for (let i = 1; i < p3.length; i++) seg(p3[i - 1], p3[i], AL, 2.2);
+      const s0 = iso(al.inicio.x, al.inicio.y, 0);
+      stage.appendChild(svg("circle", { cx: s0[0].toFixed(1), cy: s0[1].toFixed(1), r: "3.4", fill: AL, stroke: "none" }));
+      r.segmentos.forEach((sg, i) => {
+        if (sg.tipo === "curva" && malos.has(i)) { const q = sg.puntos.map(([x, y]) => iso(x, y, 0)); for (let k = 1; k < q.length; k++) seg(q[k - 1], q[k], "#ff5a5a", 3); }
+      });
+    }
+    if (view.plan) { // 2D: en el panel de planta, misma transformación que renderPlan
+      const { fx, fy, fw, fh } = planXf();
+      const P = ([x, y]: [number, number]): [number, number] => [fx + (x / W) * fw, fy + (1 - y / D) * fh];
+      polyline2D(r.puntos.map(P), AL, 2);
+      const s0 = P([al.inicio.x, al.inicio.y]);
+      stage.appendChild(svg("circle", { cx: s0[0].toFixed(1), cy: s0[1].toFixed(1), r: "3", fill: AL, stroke: "none" }));
+      r.segmentos.forEach((sg, i) => { if (sg.tipo === "curva" && malos.has(i)) polyline2D(sg.puntos.map(P), "#ff5a5a", 3); });
+    }
+  }
+}
 
 function svg(name: string, attrs: Record<string, string>): SVGElement {
   const n = document.createElementNS(NS, name);
@@ -186,33 +259,35 @@ function render(): void {
   if (empty) return;
   if (view.volume) drawVolume();
   if (view.plan) renderPlan();
+  drawAlignments(); // familia de TRAZADO: directriz recta+arco (3D a cota 0 + planta 2D)
 }
 
 /** Maqueta volumétrica isométrica (caja + plantas + ejes), ayuda visual. */
 function drawVolume(): void {
   const GLASS = "rgba(120,170,235,0.10)", EDGE = "#6f9fd8", FAINT = "#3c5170";
-  const slab = (z: number, col: string, sw: number, dash = ""): void =>
-    poly([iso(0, 0, z), iso(W, 0, z), iso(W, D, z), iso(0, D, z)], "none", col, sw, dash);
-  poly([iso(0, 0, H), iso(W, 0, H), iso(W, D, H), iso(0, D, H)], GLASS, EDGE);
-  poly([iso(0, 0, 0), iso(0, D, 0), iso(0, D, H), iso(0, 0, H)], GLASS, EDGE);
-  poly([iso(0, D, 0), iso(W, D, 0), iso(W, D, H), iso(0, D, H)], GLASS, EDGE);
-  for (const [x, y] of [[0, 0], [W, 0], [W, D], [0, D]] as [number, number][])
-    seg(iso(x, y, 0), iso(x, y, H), EDGE, 1.2);
-  slab(0, EDGE, 1.2);
+  // Envolvente: el polígono opt-in (cualquier nº de aristas) o el rectángulo W×D.
+  const contour = envContour();
+  const ring = (z: number): [number, number][] => contour.map(([x, y]) => iso(x, y, z));
+  const slab = (z: number, col: string, sw: number, dash = ""): void => poly(ring(z), "none", col, sw, dash);
+  poly(ring(H), GLASS, EDGE);                                   // cubierta (techo de la caja)
+  for (const [a, b] of envEdges())                             // paños de fachada translúcidos
+    poly([iso(a[0], a[1], 0), iso(b[0], b[1], 0), iso(b[0], b[1], H), iso(a[0], a[1], H)], GLASS, EDGE, 0.8);
+  for (const [x, y] of contour) seg(iso(x, y, 0), iso(x, y, H), EDGE, 1.2); // aristas verticales
+  slab(0, EDGE, 1.2);                                           // huella en el terreno
   drawAxes();
   drawCardinals();
-  if (view.levels) { drawFacade(); drawPartitions(); drawDivisions(); drawCores(); drawCarpentry(); drawStairs(); } // muros + carpintería + escaleras
+  if (view.levels) { drawFacade(); drawPartitions(); drawDivisions(); drawCores(); drawCarpentry(); drawStairs(); drawRamps(); } // muros + carpintería + escaleras + rampas
   // forjados (IfcSlab): SUELO de cada planta 1..NF-1 (con sus huecos de núcleo, path
   // evenodd) y la CUBIERTA en NF (techo, sin huecos: cierra por arriba). Forjado/hueco
   // seleccionado, resaltado.
-  const holes = placedSpaces().filter((s) => s.objectType === "Nucleo").map((s) => s.footprint);
+  const holes = placedSpaces().filter((s) => s.objectType === "Nucleo" || s.objectType === "Rampa").map((s) => s.footprint);
   if (view.levels) for (let i = 1; i <= NF; i++) {
     const z = i * FF;
     const isRoof = i === NF;
     const fHoles = isRoof ? [] : holes;
     const hotSlab = selected.kind === "slab" && selected.storey === i;
     const fill = hotSlab ? "rgba(255,224,102,0.28)" : isRoof ? "rgba(150,170,205,0.18)" : "rgba(120,170,235,0.12)";
-    const rings = [footprintRing({ x: 0, y: 0, w: W, d: D }, z), ...fHoles.map((f) => footprintRing(f, z))];
+    const rings = [ring(z), ...fHoles.map((f) => footprintRing(f, z))];
     polyPath(rings, fill, hotSlab ? HILITE : FAINT, hotSlab ? 2 : 1);
     for (const f of fHoles) {
       const hot = selected.kind === "opening" && selected.storey === i
@@ -228,9 +303,7 @@ function drawVolume(): void {
 
 /** Muros de fachada: un paño vertical por planta y lado de la huella; el seleccionado, resaltado. */
 function drawFacade(): void {
-  const edges: [[number, number], [number, number]][] = [
-    [[0, 0], [W, 0]], [[W, 0], [W, D]], [[W, D], [0, D]], [[0, D], [0, 0]],
-  ];
+  const edges = envEdges(); // aristas del polígono (o los 4 lados del rectángulo)
   for (let i = 0; i < NF; i++) {
     const z0 = i * FF, z1 = (i + 1) * FF;
     for (const [a, b] of edges) {
@@ -287,6 +360,29 @@ function drawStairs(): void {
       poly([iso(f.x, f.y, z0), iso(f.x + f.w, f.y, z0), iso(f.x + f.w, f.y + f.d, z0), iso(f.x, f.y + f.d, z0)],
         hot ? "rgba(255,224,102,0.30)" : "rgba(143,185,143,0.12)", col, hot ? 2 : 0.8);
       seg(iso(f.x, f.y, z0), iso(f.x + f.w, f.y + f.d, z1), col, hot ? 2.4 : 1.4); // diagonal del tramo
+    }
+  }
+}
+
+/** Rampas de acceso: PLANO INCLINADO por salto de planta (cota baja en la fachada → alta
+ *  dentro). El borde bajo y el alto se eligen por el sideTag de la huella localizada. */
+function drawRamps(): void {
+  for (const r of placedSpaces().filter((s) => s.objectType === "Rampa")) {
+    const f = r.footprint, o = r.sideTag ?? "O";
+    // lo = borde inferior (en la fachada); hi = borde superior (hacia dentro)
+    let lo: [[number, number], [number, number]], hi: [[number, number], [number, number]];
+    if (o.includes("N")) { lo = [[f.x, f.y + f.d], [f.x + f.w, f.y + f.d]]; hi = [[f.x, f.y], [f.x + f.w, f.y]]; }
+    else if (o.includes("S")) { lo = [[f.x, f.y], [f.x + f.w, f.y]]; hi = [[f.x, f.y + f.d], [f.x + f.w, f.y + f.d]]; }
+    else if (o.includes("E")) { lo = [[f.x + f.w, f.y], [f.x + f.w, f.y + f.d]]; hi = [[f.x, f.y], [f.x, f.y + f.d]]; }
+    else { lo = [[f.x, f.y], [f.x, f.y + f.d]]; hi = [[f.x + f.w, f.y], [f.x + f.w, f.y + f.d]]; } // O/oeste
+    const fcx = f.x + f.w / 2, fcy = f.y + f.d / 2;
+    for (let i = 0; i < NF - 1; i++) {
+      const z0 = i * FF, z1 = (i + 1) * FF;
+      const hot = selected.kind === "wall" && selected.storey === i && near(selected.cx, fcx) && near(selected.cy, fcy);
+      poly(
+        [iso(lo[0][0], lo[0][1], z0), iso(lo[1][0], lo[1][1], z0), iso(hi[1][0], hi[1][1], z1), iso(hi[0][0], hi[0][1], z1)],
+        hot ? "rgba(255,224,102,0.34)" : "rgba(224,162,58,0.22)", hot ? HILITE : "#e0a23a", hot ? 2.2 : 1.2,
+      );
     }
   }
 }
@@ -404,13 +500,14 @@ function renderPlan(): void {
   txtS(PX + 16, PY + 22, "Planta tipo", "#cfd8e3", 14, "700");
   txtS(PX + PW - 16, PY + 22, "N ↑", "#9fb2c5", 12, "700", "end");
 
-  // huella del edificio (proporción W:D), N arriba
-  const fx = PX + 24, fy = PY + 42, fw = PW - 48, fh = fw * (D / W);
+  // huella del edificio (proporción W:D), N arriba — ENCAJADA en el panel (ancho y
+  // alto) para que una planta alargada no se desborde y tape la maqueta 3D.
+  const { fx, fy, fw, fh } = planXf();
 
   // los footprints los coloca el generador ACTIVO (residencia o el del programa)
   const placed = bInput.program
-    ? (GENERATORS[bInput.program.generator]?.generate(bInput.program.params, { W, D }) ?? [])
-    : residenceGenerator.generate(plan, { W, D });
+    ? (GENERATORS[bInput.program.generator]?.generate(bInput.program.params, { W, D, h: FF }) ?? [])
+    : residenceGenerator.generate(plan, { W, D, h: FF });
   const grid = currentGrid();
   // la planta tipo representa lo que haya en el nivel: espacios y/o retícula
   if (placed.length === 0 && !grid) {
@@ -418,7 +515,15 @@ function renderPlan(): void {
     txtS(fx + fw / 2, fy + fh / 2, "describe la planta tipo o coloca la retícula…", "#5a6573", 12, "600", "middle");
     return;
   }
-  rectS(fx, fy, fw, fh, "none", "#6f9fd8", 1.4); // contorno de la huella
+  // contorno de la huella: el POLÍGONO opt-in (aristas) o el rectángulo bbox
+  const outline2D = currentOutline();
+  if (outline2D) {
+    const scr = outline2D.map(([x, y]) => [fx + (x / W) * fw, fy + (1 - y / D) * fh] as [number, number]);
+    poly(scr, "rgba(111,159,216,0.06)", "#6f9fd8", 1.4);
+    rectS(fx, fy, fw, fh, "none", "#33415588", 0.8); // bbox/marco, tenue
+  } else {
+    rectS(fx, fy, fw, fh, "none", "#6f9fd8", 1.4);
+  }
 
   // dibuja cada footprint escalando [0..W]×[0..D] → inset (N arriba ⇒ Y invertida)
   const W2 = W, D2 = D;
@@ -491,6 +596,10 @@ const PLAN_DEF: [string, string] = ["rgba(140,150,165,0.12)", "#5a6573"];
 // ── árbol de estructura espacial (instancias IFC) ────────────────────────────
 const treebody = $("treebody");
 const detail = $("detail");
+const auditbox = $("audit");
+const EMPTY_AUDIT =
+  `<div id="auditEmpty" class="muted">La auditoría básica (nomenclatura AQ-* + doble clasificación bsDD · Uniclass) ` +
+  `aparecerá aquí a medida que se modele.</div>`;
 
 // El modelo se materializa de (nombres + nº plantas + planta tipo). `plan` se
 // comparte por referencia con la maqueta 2D: una sola fuente de verdad.
@@ -632,9 +741,37 @@ function renderTree(model: BuildingModel): void {
   }
 }
 
+// ── panel de AUDITORÍA BÁSICA (teaser de valor del cebo: reporta, NO certifica) ──
+// Recorre el modelo y muestra las no-conformidades de la regla básica (nomenclatura
+// AQ-* + doble clasificación bsDD · Uniclass). Las dos llaves siguen: la IA reporta,
+// JM firma; el export firmable vive en el anzuelo, nunca aquí.
+function renderAudit(model: BuildingModel): void {
+  const r = auditModel(model);
+  const head =
+    `<div class="ah"><span class="dot ${r.ok ? "ok" : "nc"}"></span>` +
+    `<span class="verdict">${r.ok ? "Sin no-conformidades" : `${r.nonConformances.length} no-conformidad(es)`}</span>` +
+    `<span class="muted">· ${r.conformant}/${r.audited} objetos</span></div>`;
+  const rules = RULES.map((rule) => {
+    const n = r.byRule[rule.id] ?? 0;
+    return `<div class="rule"><span class="k">${rule.id} · ${escapeHtml(rule.label)}</span>` +
+      `<span class="v ${n ? "bad" : "ok"}">${n ? n : "✓"}</span></div>`;
+  }).join("");
+  const list = r.nonConformances.length
+    ? `<div class="ah" style="margin-top:10px">No-conformidades</div>` +
+      r.nonConformances.map((nc) =>
+        `<div class="nc"><span class="rid">${nc.ruleId}</span>` +
+        `<span class="body"><span class="code">${escapeHtml(nc.code)}</span> · ${escapeHtml(nc.message)}</span></div>`,
+      ).join("")
+    : "";
+  const foot = `<div class="foot">Auditoría básica · reporta, no certifica. El export firmable vive en el anzuelo.</div>`;
+  auditbox.innerHTML = head + rules + list + foot;
+}
+
 function refreshTree(): void {
-  if (!hasModel(bInput)) { treebody.innerHTML = EMPTY_TREE; return; }
-  renderTree(buildModel(bInput, { W, D }));
+  if (!hasModel(bInput)) { treebody.innerHTML = EMPTY_TREE; auditbox.innerHTML = EMPTY_AUDIT; return; }
+  const m = buildModel(bInput, { W, D });
+  renderTree(m);
+  renderAudit(m);
 }
 function resetTree(): void {
   bInput.project = bInput.site = bInput.siteLong = bInput.building = bInput.buildingLong = undefined;
@@ -643,9 +780,11 @@ function resetTree(): void {
   bInput.grid = undefined;
   bInput.partitions = undefined;
   bInput.openings = undefined;
+  bInput.outline = undefined;
   selected = { kind: "none" };
   treebody.innerHTML = EMPTY_TREE;
   detail.innerHTML = `<div id="detailEmpty">Selecciona un nodo del árbol para ver sus atributos, Psets y clasificación bsDD (en vivo).</div>`;
+  auditbox.innerHTML = EMPTY_AUDIT;
 }
 
 // ── panel de detalle del nodo + bsDD en vivo ─────────────────────────────────
@@ -817,7 +956,7 @@ function selfCheck(): void {
     const plazas = st0.spaces.filter((s) => s.objectType === "PlazaAparcamiento");
     const placedBays = plazas.length;
     const reqRamps = params.ramps?.length ?? 0;
-    const placedRamps = countType(st0, "Rampa");
+    const placedRamps = st0.elements.filter((e) => e.ifcClass === "IfcRamp").length; // Rampa = IfcRamp (no IfcSpace)
     const total = m.storeys.reduce((a, s) => a + countType(s, "PlazaAparcamiento"), 0);
     const rows = new Set(plazas.map((s) => s.footprint.y.toFixed(2))).size;
     // fondo que ocupa una fila según la disposición (en línea la plaza va girada 90°)
@@ -836,8 +975,9 @@ function selfCheck(): void {
 
 // ── acciones que devuelve Claude (outbox.actions) ────────────────────────────
 interface Action {
-  type: "summary" | "view" | "space" | "storeys" | "program" | "volume" | "columns" | "partition" | "clear" | "carpentry";
-  target?: "cores" | "corridor" | "rooms" | "grid" | "partitions" | "openings" | "program"; // type=clear
+  type: "summary" | "view" | "space" | "storeys" | "program" | "volume" | "columns" | "partition" | "clear" | "carpentry" | "outline" | "alignment";
+  target?: "cores" | "corridor" | "rooms" | "grid" | "partitions" | "openings" | "program" | "outline" | "alignment"; // type=clear
+  vertices?: [number, number][];                                       // type=outline (huella poligonal)
   carp?: "door" | "window"; cw?: number; ch?: number;                         // type=carpentry
   key?: string; value?: string;
   show?: "volume" | "levels" | "grid" | "plan" | "reset";
@@ -847,10 +987,13 @@ interface Action {
   orientation?: Orient; detail?: string;
   zone?: string;
   generator?: string; bays?: number; aisle?: number; ramps?: Orient[]; // type=program
-  disposition?: "bateria" | "linea";                                   // type=program (parking)
+  disposition?: "bateria" | "linea" | "longitudinal"; lanes?: number;  // type=program (parking; lanes = nº de viales longitudinales)
   sepX?: number; sepY?: number; secW?: number; secD?: number;          // type=columns (atajo)
   axesX?: number[]; axesY?: number[];                                  // type=columns (ejes explícitos)
   x1?: number; y1?: number; x2?: number; y2?: number;                  // type=partition (línea del tabique)
+  aliName?: string; aliWidth?: number; radioMin?: number;              // type=alignment (nombre · ancho de plataforma · radio mínimo)
+  inicio?: { x: number; y: number; acimut_deg: number };               // type=alignment (arranque: posición + acimut)
+  planta?: Array<{ tipo: "recta" | "curva"; longitud: number; radio?: number }>; // type=alignment (segmentos)
 }
 function runAction(a: Action): void {
   if (a.type === "summary" && a.key) {
@@ -888,10 +1031,18 @@ function runAction(a: Action): void {
   }
   if (a.type === "program") {
     const ramps = a.ramps ?? (a.orientation ? [a.orientation] : undefined);
-    bInput.program = {
-      generator: a.generator ?? "parking-comb",
-      params: { bays: a.bays ?? 0, aisle: a.aisle, ramps, disposition: a.disposition },
-    };
+    const params = { bays: a.bays ?? 0, aisle: a.aisle, ramps, disposition: a.disposition, lanes: a.lanes };
+    bInput.program = { generator: a.generator ?? "parking-comb", params };
+    // PUENTE A→B: en parking longitudinal, la circulación se modela como ALINEACIÓN.
+    // Preferimos la TRAYECTORIA del vehículo (baja por E, GIRA 180° al fondo, sube por O):
+    // el arco define el giro con precisión, no un IfcSpace rectangular. Si no hay pareja de
+    // viales, caemos a los ejes rectos. Vehículo ligero → radio mínimo de giro 6 m.
+    aligns.length = 0;
+    if (a.disposition === "longitudinal") {
+      const tray = parkingTrajectories(params, { W, D });
+      aligns.push(...(tray.length ? tray : parkingAxes(params, { W, D })));
+      radioMinimo = 6; // mínimo de giro de vehículo ligero (parametrizable; 3.1-IC/obras-lineales → después)
+    }
     view.plan = view.volume = view.levels = true;
     render();
     refreshTree();
@@ -920,6 +1071,34 @@ function runAction(a: Action): void {
     render();
     refreshTree();
   }
+  if (a.type === "outline") {
+    // HUELLA POLIGONAL (el SALTO): el copiloto da los vértices del contorno (m, X=ancho
+    // Y=fondo). La envolvente (fachada/forjado/cubierta/retícula recortada) deriva de él;
+    // W×D sigue como bbox/marco. <3 vértices → vuelve al rectángulo.
+    bInput.outline = a.vertices && a.vertices.length >= 3 ? a.vertices : undefined;
+    view.volume = view.plan = view.levels = true;
+    render();
+    refreshTree();
+  }
+  if (a.type === "alignment" && a.inicio && a.planta && a.planta.length) {
+    // FAMILIA DE TRAZADO (opt-in): el copiloto da el arranque + los segmentos (recta+arco).
+    // La alineación es objeto propio (IfcAlignment); el cebo la previsualiza, C1 la compila.
+    const planta: Segmento[] = a.planta.map((s) =>
+      s.tipo === "curva" && s.radio !== undefined
+        ? { tipo: "curva", longitud: s.longitud, radio: s.radio }
+        : { tipo: "recta", longitud: s.longitud });
+    aligns.push({
+      nombre: a.aliName ?? `Eje ${aligns.length + 1}`,
+      infraestructura: { clase: "IfcRoad" },
+      ...(a.aliWidth !== undefined ? { ancho_ref: a.aliWidth } : {}),
+      inicio: { x: a.inicio.x, y: a.inicio.y, acimut_deg: a.inicio.acimut_deg, cota: 0 },
+      planta,
+    });
+    if (a.radioMin !== undefined) radioMinimo = a.radioMin;
+    view.volume = view.plan = true;
+    render();
+    refreshTree();
+  }
   if (a.type === "clear") {
     // QUITAR (edición no solo aditiva): borra una categoría de lo ya colocado.
     if (a.target === "cores") plan.cores = [];
@@ -929,6 +1108,8 @@ function runAction(a: Action): void {
     else if (a.target === "partitions") bInput.partitions = undefined;
     else if (a.target === "openings") bInput.openings = undefined;
     else if (a.target === "program") bInput.program = undefined;
+    else if (a.target === "outline") bInput.outline = undefined;
+    else if (a.target === "alignment") resetAligns();
     render();
     refreshTree();
   }
@@ -939,8 +1120,9 @@ function runAction(a: Action): void {
       zoom = 1; panX = panY = 0;
       bInput.grid = undefined;
       bInput.partitions = undefined;
+      bInput.outline = undefined;
       selected = { kind: "none" };
-      resetPlan(); resetTree();
+      resetPlan(); resetAligns(); resetTree();
     }
     else if (a.show === "volume") view.volume = true;
     else if (a.show === "levels") { view.volume = true; view.levels = true; }
@@ -1038,8 +1220,36 @@ $("attach").addEventListener("click", () => bubble("📎 Adjuntar un fichero —
 //  - aqyraToC1():   handoff del modelo al spec de alto nivel de C1 (Inc 3).
 //  - aqyraFixture(): congela el caso actual como fixture golden ("caso → golden").
 Object.assign(window, {
-  aqyraToC1: () => toAltoSpec(buildModel(bInput, { W, D }), { ancho: W, largo: D, altura: FF }),
+  aqyraToC1: () => toAltoSpec(buildModel(bInput, { W, D }), { ancho: W, largo: D, altura: FF }, aligns),
   aqyraFixture: (name = "caso") => makeFixture(name, structuredClone(bInput), { W, D }),
+});
+
+// ── divisores arrastrables (usabilidad): el usuario ajusta el encuadre a mano ──
+// "Lo común manda": la lógica vive en splitter.ts (reutilizable); aquí solo se
+// describe el layout de esta skin. Persistencia en localStorage (JSON, formato
+// abierto); NO es export firmable (cebo). Doble clic en una barra = reset.
+const treeAside = $("tree");
+const h3 = treeAside.querySelector("h3") as HTMLElement;
+makeGridResizable({
+  grid: $("shell"), axis: "columns", storageKey: "aqyra.diseno.cols",
+  layout: [
+    { el: treeAside, kind: "pane", key: "tree", size: 340, min: 240 },
+    { kind: "handle" },
+    { el: $("viewport"), kind: "flex", min: 360 },
+    { kind: "handle" },
+    { el: $("chatcol"), kind: "pane", key: "chat", size: 380, min: 300 },
+  ],
+});
+makeGridResizable({
+  grid: treeAside, axis: "rows", storageKey: "aqyra.diseno.rows",
+  layout: [
+    { el: h3, kind: "auto" },
+    { el: treebody, kind: "flex", min: 140 },
+    { kind: "handle" },
+    { el: detail, kind: "pane", key: "detail", size: 220, min: 80 },
+    { kind: "handle" },
+    { el: auditbox, kind: "pane", key: "audit", size: 170, min: 80 },
+  ],
 });
 
 void boot();
