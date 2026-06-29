@@ -24,8 +24,10 @@ Thumbs.db
 # Temporales
 *.tmp
 *.log
-# Sonda de montaje (carpeta conectada) — no es del proyecto
-.__write_test
+
+# Helpers de git/firma y logs reubicados (reorg 2026-06-29)
+_operativo/
+st
 .__*
 # Helpers operativos de git (no son del proyecto; se ejecutan y se borran)
 /COMMIT_motor_CN-convenciones.bat
