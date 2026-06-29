@@ -15,6 +15,7 @@
  */
 
 import { residenceGenerator, GENERATORS, type Footprint, type PlanContext } from "./generators";
+import { uniclassFor, type UniclassRef } from "./uniclass";
 
 export type Orient = "N" | "S" | "E" | "O" | "NE" | "NO" | "SE" | "SO";
 
@@ -60,9 +61,13 @@ export interface ElementInstance {
   storeyIndex: number;         // índice de esa planta (para render por tramos)
   axis?: string;               // eje lógico de la retícula (p. ej. "B2")
   uriBsdd: string;             // clasificación bsDD (IFC 4.3)
+  uniclass?: UniclassRef;      // doble clasificación: código Uniclass 2015 (determinista por clase)
   // Capa relacional (diferida en este slice, modelada con IfcWall/IfcDoor):
   host?: string;               // anfitrión (la puerta VA EN este muro)
   container?: string;          // contenido en (este lavamanos está EN esta habitación)
+  derivedFrom?: string;        // ACOPLAMIENTO: este elemento comparte driver con otro (su
+                               // código). Modo edición: un override sobre el driver arrastra
+                               // a sus derivados (la rampa mueve el hueco que perfora).
 }
 
 export interface StoreyInstance {
@@ -135,12 +140,64 @@ const BSDD_WALL = BSDD("IfcWall");
 const BSDD_DOOR = BSDD("IfcDoor");
 const BSDD_WINDOW = BSDD("IfcWindow");
 const BSDD_STAIR = BSDD("IfcStair");
+const BSDD_RAMP = BSDD("IfcRamp");
 /** Defaults de carpintería (m): ancho × alto × alféizar. */
 const CARP_DEF = { door: { w: 0.9, h: 2.1, sill: 0 }, window: { w: 1.2, h: 1.2, sill: 0.9 } };
 
 /** Contorno rectangular (m) de una huella, en orden CCW. */
 const rectContour = (f: Footprint): [number, number][] =>
   [[f.x, f.y], [f.x + f.w, f.y], [f.x + f.w, f.y + f.d], [f.x, f.y + f.d]];
+
+// ── Huella POLIGONAL (el SALTO) ───────────────────────────────────────────────
+// El rectángulo W×D deja de ser la única huella: una LISTA DE VÉRTICES (opt-in)
+// define un contorno arbitrario. De él derivan la FACHADA (sus aristas), el FORJADO/
+// CUBIERTA (el polígono) y la RETÍCULA (recortada: solo los nudos dentro). W×D se
+// mantiene como bbox/marco. Determinista → golden-able. La subdivisión poligonal de
+// ESPACIOS se difiere (caso difícil): este slice es SOLO envolvente.
+
+/** Limpia un contorno: redondea, funde vértices consecutivos iguales y exige ≥3. */
+export function cleanOutline(outline?: [number, number][]): [number, number][] | null {
+  if (!outline || outline.length < 3) return null;
+  const pts: [number, number][] = [];
+  for (const [x, y] of outline) {
+    const p: [number, number] = [round2(x), round2(y)];
+    const last = pts[pts.length - 1];
+    if (!last || last[0] !== p[0] || last[1] !== p[1]) pts.push(p);
+  }
+  // funde el cierre si el último coincide con el primero
+  if (pts.length > 1) {
+    const f = pts[0], l = pts[pts.length - 1];
+    if (f[0] === l[0] && f[1] === l[1]) pts.pop();
+  }
+  return pts.length >= 3 ? pts : null;
+}
+
+/**
+ * ¿El punto (x,y) cae DENTRO o EN EL BORDE del polígono? Ray-casting con el borde
+ * INCLUIDO (un pilar que cae justo en la fachada es válido y deseado). Determinista.
+ */
+export function pointInPolygon(x: number, y: number, poly: [number, number][]): boolean {
+  const n = poly.length;
+  for (let i = 0; i < n; i++) {                       // borde → dentro
+    const [ax, ay] = poly[i], [bx, by] = poly[(i + 1) % n];
+    const cross = (bx - ax) * (y - ay) - (by - ay) * (x - ax);
+    if (Math.abs(cross) < 1e-6) {
+      const dot = (x - ax) * (x - bx) + (y - ay) * (y - by);
+      if (dot <= 1e-6) return true;                   // entre los dos extremos
+    }
+  }
+  let inside = false;                                 // regla par/impar
+  for (let i = 0, j = n - 1; i < n; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+/** Aristas de un contorno como segmentos (cierra el polígono). */
+function contourEdges(poly: [number, number][]): Array<{ a: [number, number]; b: [number, number] }> {
+  return poly.map((v, k) => ({ a: v, b: poly[(k + 1) % poly.length] }));
+}
 
 /** Datos acumulados desde el diálogo (= parámetros del generador residencia). */
 export interface PlanInput {
@@ -162,6 +219,97 @@ export interface BuildingInput {
   partitions?: Array<{ start: [number, number]; end: [number, number] }>;
   /** Carpintería: puertas/ventanas en un punto sobre un muro (el modelo busca el anfitrión). */
   openings?: Array<{ kind: "door" | "window"; x: number; y: number; width?: number; height?: number }>;
+  /** Huella POLIGONAL (opt-in, el SALTO): vértices del contorno en m (X=ancho, Y=fondo).
+   *  Si se da (≥3 vértices), la ENVOLVENTE (fachada/forjado/cubierta/retícula recortada)
+   *  deriva de él; W×D queda como bbox/marco. Sin outline → huella rectangular W×D. */
+  outline?: [number, number][];
+  /** MODO EDICIÓN (Hito 2): manipulación directa como DATO. Por código de elemento,
+   *  una transformada {dx,dy,rotDeg} que `buildModel` aplica TRAS generar → mismo input,
+   *  misma salida → golden-able. El puente emite ya las coordenadas movidas → frontera-cero
+   *  (mueve inicio/fin·contorno que el cebo YA autora explícitos; sin tocar el contrato C1). */
+  overrides?: Record<string, ElementOverride>;
+}
+
+/**
+ * Transformada de manipulación directa de UN elemento (modo edición). DATO de entrada.
+ *  - `dx`/`dy`: traslación en planta (m).
+ *  - `rotDeg`: giro sobre el CENTROIDE del elemento (grados, CCW). En línea/polígono la
+ *    orientación vive en las coordenadas → girar es transformarlas (frontera-cero).
+ *  La cota `z` NO se incluye: es derivada del nivel (storeyIndex·altura), no vive en el
+ *  placement 2D → moverla en vertical es otro mecanismo (override de cota), diferido.
+ */
+export interface ElementOverride { dx?: number; dy?: number; rotDeg?: number; }
+
+/** Centroide del placement (pivote de giro): el punto, el punto medio de la línea, o la
+ *  media de los vértices del polígono. Determinista. */
+function placementCentroid(pl: Placement): [number, number] {
+  if (pl.kind === "point") return [pl.x, pl.y];
+  if (pl.kind === "line") return [(pl.start[0] + pl.end[0]) / 2, (pl.start[1] + pl.end[1]) / 2];
+  let sx = 0, sy = 0;
+  for (const [x, y] of pl.contour) { sx += x; sy += y; }
+  const n = pl.contour.length || 1;
+  return [sx / n, sy / n];
+}
+
+/** Gira (px,py) un ángulo `rad` (CCW) alrededor de (cx,cy). Redondeo a cm. */
+function rotateAbout(px: number, py: number, cx: number, cy: number, rad: number): [number, number] {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const dx = px - cx, dy = py - cy;
+  return [round2(cx + dx * c - dy * s), round2(cy + dx * s + dy * c)];
+}
+
+/**
+ * Aplica un override a un placement: PRIMERO gira sobre su centroide, DESPUÉS traslada.
+ * Función PURA (no muta el placement de entrada). Mismo placement+override → mismo
+ * resultado → golden-able. Un `point` no cambia al girar sobre sí mismo (la rotación de
+ * un elemento puntual con identidad —escalera— se resuelve por su `giro`, no aquí).
+ */
+export function applyOverride(pl: Placement, ov: ElementOverride): Placement {
+  const dx = ov.dx ?? 0, dy = ov.dy ?? 0;
+  const rad = ((ov.rotDeg ?? 0) * Math.PI) / 180;
+  let out: Placement = pl;
+  if (rad !== 0) {
+    const [cx, cy] = placementCentroid(pl);
+    if (pl.kind === "line") {
+      out = { kind: "line", start: rotateAbout(pl.start[0], pl.start[1], cx, cy, rad), end: rotateAbout(pl.end[0], pl.end[1], cx, cy, rad) };
+    } else if (pl.kind === "polygon") {
+      out = { kind: "polygon", contour: pl.contour.map(([x, y]) => rotateAbout(x, y, cx, cy, rad)) };
+    } // point: invariante al giro sobre sí mismo
+  }
+  if (dx !== 0 || dy !== 0) {
+    if (out.kind === "point") out = { kind: "point", x: round2(out.x + dx), y: round2(out.y + dy) };
+    else if (out.kind === "line") out = { kind: "line", start: [round2(out.start[0] + dx), round2(out.start[1] + dy)], end: [round2(out.end[0] + dx), round2(out.end[1] + dy)] };
+    else out = { kind: "polygon", contour: out.contour.map(([x, y]) => [round2(x + dx), round2(y + dy)] as [number, number]) };
+  }
+  return out;
+}
+
+/**
+ * INVERSO de `applyOverride` (puente gesto→datos del viewport). Dado el placement BASE
+ * (el que produjo `buildModel` sin override) y el placement OBSERVADO tras manipular el
+ * gizmo, recupera el `{dx, dy, rotDeg}` tal que `applyOverride(base, deriveOverride(base,
+ * observado)) ≈ observado`. Así el gizmo no inventa el dato: lo DERIVA del antes/después,
+ * y la ida-y-vuelta es golden-able. La traslación = desplazamiento del centroide; el giro
+ * = ángulo entre el vector de referencia (fin de la línea o 1.er vértice) base y observado.
+ * Un `point` no tiene giro recuperable (su rotación con identidad va por otro canal).
+ */
+export function deriveOverride(base: Placement, observed: Placement): ElementOverride {
+  const [bx, by] = placementCentroid(base);
+  const [ox, oy] = placementCentroid(observed);
+  const refVec = (pl: Placement, cx: number, cy: number): [number, number] | null => {
+    if (pl.kind === "line") return [pl.end[0] - cx, pl.end[1] - cy];
+    if (pl.kind === "polygon") return [pl.contour[0][0] - cx, pl.contour[0][1] - cy];
+    return null; // point: sin giro recuperable
+  };
+  let rotDeg = 0;
+  const vb = refVec(base, bx, by), vo = refVec(observed, ox, oy);
+  if (vb && vo) {
+    let d = (Math.atan2(vo[1], vo[0]) - Math.atan2(vb[1], vb[0])) * 180 / Math.PI;
+    while (d <= -180) d += 360;
+    while (d > 180) d -= 360;
+    rotDeg = round2(d);
+  }
+  return { dx: round2(ox - bx), dy: round2(oy - by), rotDeg };
 }
 
 /** Rectángulo de planta por defecto (m): X=ancho, Y=fondo. */
@@ -295,15 +443,23 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
   const h = inp.storeys?.height ?? 0;
   // planta tipo: la coloca el generador ACTIVO (residencia por defecto, o el del
   // programa). El núcleo solo nombra/agrupa lo que el generador produce.
+  // El generador recibe la altura de planta (rise) por si dimensiona geometría con
+  // desnivel (la rampa de acceso del parking = rise/pendiente). Determinista.
+  const gctx = { W: ctx.W, D: ctx.D, h };
   const placed = inp.program
-    ? (GENERATORS[inp.program.generator]?.generate(inp.program.params, ctx) ?? [])
-    : residenceGenerator.generate(inp.plan, ctx);
+    ? (GENERATORS[inp.program.generator]?.generate(inp.program.params, gctx) ?? [])
+    : residenceGenerator.generate(inp.plan, gctx);
 
   // retícula estructural (sistema transversal → IfcColumn). El pilar se REPITE en
   // TODAS las plantas: cada una sostiene la losa de arriba (la última, la CUBIERTA).
   const grid = inp.grid ? resolveGrid(inp.grid, ctx) : undefined;
-  const gridNodes = grid ? buildGrid(grid) : [];
-  const SLAB_CONTOUR: [number, number][] = [[0, 0], [ctx.W, 0], [ctx.W, ctx.D], [0, ctx.D]];
+  const gridNodesAll = grid ? buildGrid(grid) : [];
+  // Huella poligonal (opt-in). Si la hay, la ENVOLVENTE deriva de ella; si no, el
+  // rectángulo W×D de siempre (camino byte-idéntico → no regresiona los golden previos).
+  const outline = cleanOutline(inp.outline);
+  const SLAB_CONTOUR: [number, number][] = outline ?? [[0, 0], [ctx.W, 0], [ctx.W, ctx.D], [0, ctx.D]];
+  // Retícula RECORTADA al polígono: solo los nudos que caen dentro (o en el borde).
+  const gridNodes = outline ? gridNodesAll.filter((nd) => pointInPolygon(nd.x, nd.y, outline)) : gridNodesAll;
 
   const storeys: StoreyInstance[] = [];
   const zoneMembers = new Map<string, string[]>(); // zona → códigos (orden de aparición)
@@ -311,7 +467,10 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
   for (let i = 0; i < n; i++) {
     const p = `P${pad2(i)}`;
     const counters = new Map<string, number>();
-    const spaces: SpaceInstance[] = placed.map((g) => {
+    // La Rampa de acceso y el NÚCLEO de rampa helicoidal YA NO son IfcSpace: la rampa se
+    // promueve a IfcRamp y el núcleo helicoidal a una Alineación (directriz que sube) +
+    // huecos de forjado. El resto de lo colocado por el generador sigue siendo IfcSpace.
+    const spaces: SpaceInstance[] = placed.filter((g) => g.objectType !== "Rampa" && g.objectType !== "NucleoRampa").map((g) => {
       const ab = abbrev(g.objectType);
       let code: string;
       if (g.numbered && g.sideTag) {
@@ -359,28 +518,48 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
       level: "Cubierta", storeyIndex: n, uriBsdd: BSDD_SLAB,
     });
 
-    // Hueco de forjado: cada Nucleo (circulación vertical) vacía el forjado de PISO que
-    // atraviesa (la CUBIERTA cierra por arriba: no se vacía). `host` = el forjado de piso
-    // → estrena la capa relacional (IfcRelVoidsElement). Geometría = huella del núcleo.
-    const openings: ElementInstance[] = i >= 1
-      ? placed.filter((g) => g.objectType === "Nucleo").map((g, k) => ({
+    // Huecos de forjado de PISO (la CUBIERTA cierra por arriba: no se vacía). `host` = el
+    // forjado de piso → capa relacional (IfcRelVoidsElement). Dos drivers:
+    //  · NÚCLEO: la circulación vertical atraviesa el forjado (huella del núcleo).
+    //  · RAMPA de acceso: la rampa que SUBE de la planta i-1 EMERGE en la planta i → perfora
+    //    el forjado de esta planta (mismo XY que la huella de la rampa). Sin el hueco, la
+    //    rampa colisionaría con la losa de arriba. Frontera-cero (losas[].huecos en el puente).
+    const coreOpenings: ElementInstance[] = i >= 1
+      ? placed.filter((g) => g.objectType === "Nucleo" || g.objectType === "NucleoRampa").map((g, k) => ({
           code: `AQ-HUE-${p}-${pad2(k + 1)}`,
           ifcClass: "IfcOpeningElement", objectType: "HuecoForjado", predefinedType: "OPENING",
           placement: { kind: "polygon", contour: rectContour(g.footprint) },
           level: storeyName(i), storeyIndex: i, host: slabCode, uriBsdd: BSDD_OPENING,
         } as ElementInstance))
       : [];
+    const rampOpenings: ElementInstance[] = i >= 1
+      ? placed.filter((g) => g.objectType === "Rampa").map((g, k) => ({
+          code: `AQ-HUE-${p}-RAM-${pad2(k + 1)}`,
+          ifcClass: "IfcOpeningElement", objectType: "HuecoForjado", predefinedType: "OPENING",
+          placement: { kind: "polygon", contour: rectContour(g.footprint) },
+          level: storeyName(i), storeyIndex: i, host: slabCode, uriBsdd: BSDD_OPENING,
+          // ACOPLAMIENTO: este hueco lo perfora la rampa que EMERGE de la planta i-1.
+          // Un override sobre esa rampa debe arrastrar el hueco (si no, la rampa se mueve
+          // y el agujero se queda) → mismo driver, coherencia en modo edición.
+          derivedFrom: `AQ-RAM-P${pad2(i - 1)}-${pad2(k + 1)}`,
+        } as ElementInstance))
+      : [];
+    const openings: ElementInstance[] = [...coreOpenings, ...rampOpenings];
 
     // Muros de FACHADA (driver = envolvente): 4 por planta, los lados de la huella.
     // POR PLANTA (de suelo a techo, altura h), geometría de LÍNEA, exterior=true.
     // `spans=[i,i+1]` deja la EXTENSIÓN como propiedad: el muro pasante (núcleo) será
     // el mismo elemento con otro rango. Driver de divisoria/núcleo = clon, después.
-    const fachada: Array<{ tag: string; a: [number, number]; b: [number, number] }> = [
-      { tag: "S", a: [0, 0], b: [ctx.W, 0] },
-      { tag: "E", a: [ctx.W, 0], b: [ctx.W, ctx.D] },
-      { tag: "N", a: [ctx.W, ctx.D], b: [0, ctx.D] },
-      { tag: "O", a: [0, ctx.D], b: [0, 0] },
-    ];
+    // Con huella poligonal, la fachada = las ARISTAS del polígono (cualquier nº/ángulo),
+    // numeradas FAC-01, FAC-02… Sin outline, los 4 lados S/E/N/O del rectángulo (idéntico).
+    const fachada: Array<{ tag: string; a: [number, number]; b: [number, number] }> = outline
+      ? contourEdges(outline).map((e, k) => ({ tag: pad2(k + 1), a: e.a, b: e.b }))
+      : [
+          { tag: "S", a: [0, 0], b: [ctx.W, 0] },
+          { tag: "E", a: [ctx.W, 0], b: [ctx.W, ctx.D] },
+          { tag: "N", a: [ctx.W, ctx.D], b: [0, ctx.D] },
+          { tag: "O", a: [0, ctx.D], b: [0, 0] },
+        ];
     const walls: ElementInstance[] = fachada.map((e) => ({
       code: `AQ-MUR-${p}-FAC-${e.tag}`,
       ifcClass: "IfcWall", objectType: "Fachada", predefinedType: "SOLIDWALL",
@@ -475,12 +654,57 @@ export function buildModel(inp: BuildingInput, ctx: PlanContext = DEFAULT_CTX): 
       } as ElementInstance;
     });
 
-    const elements: ElementInstance[] = [...cols, ...slabs, ...openings, ...walls, ...partitions, ...lindes, ...coreWalls, ...carpentry, ...stairs];
+    // RAMPA DE ACCESO (IfcRamp): losa inclinada que SUBE de la planta i a la i+1, una por
+    // salto de planta (la última no tiene rampa de subida → i < n-1). El eje de subida va
+    // del borde de FACHADA (cota baja) hacia DENTRO (cota alta), según el sideTag. El cebo
+    // da identidad + eje; C1 autora la geometría real (losa inclinada) vía `rampas`.
+    const ramps: ElementInstance[] = i < n - 1
+      ? placed.filter((g) => g.objectType === "Rampa").map((g, k) => {
+          const f = g.footprint;
+          const o = g.sideTag ?? "O";
+          const cx = round2(f.x + f.w / 2), cy = round2(f.y + f.d / 2);
+          let start: [number, number], end: [number, number], width: number;
+          if (o.includes("N")) { start = [cx, round2(f.y + f.d)]; end = [cx, round2(f.y)]; width = f.w; }
+          else if (o.includes("S")) { start = [cx, round2(f.y)]; end = [cx, round2(f.y + f.d)]; width = f.w; }
+          else if (o.includes("E")) { start = [round2(f.x + f.w), cy]; end = [round2(f.x), cy]; width = f.d; }
+          else { start = [round2(f.x), cy]; end = [round2(f.x + f.w), cy]; width = f.d; } // O/oeste
+          return {
+            code: `AQ-RAM-${p}-${pad2(k + 1)}`,
+            ifcClass: "IfcRamp", objectType: "Rampa", predefinedType: "STRAIGHT",
+            placement: { kind: "line", start, end },
+            width: round2(width), height: round2(h), material: DEFAULT_MATERIAL,
+            level: storeyName(i), storeyIndex: i, uriBsdd: BSDD_RAMP,
+          } as ElementInstance;
+        })
+      : [];
+
+    const elements: ElementInstance[] = [...cols, ...slabs, ...openings, ...walls, ...partitions, ...lindes, ...coreWalls, ...carpentry, ...stairs, ...ramps];
+    // Doble clasificación: sella el código Uniclass 2015 (2.ª cara, junto a uriBsdd) en
+    // CADA elemento clasificable, desde la MISMA fuente que audita la auditoría (uniclassFor)
+    // → coherencia por construcción. Los huecos (IfcOpeningElement) no se clasifican (vacío).
+    for (const e of elements) {
+      const u = uniclassFor(e.ifcClass, e.predefinedType);
+      if (u) e.uniclass = u;
+    }
 
     storeys.push({
       code: `AQ-NIV-${p}`, ifcClass: "IfcBuildingStorey", index: i,
       name: storeyName(i), elevation: round2(i * h), spaces, elements,
     });
+  }
+
+  // MODO EDICIÓN (Hito 2): aplica los overrides como ÚLTIMO paso, sobre el modelo ya
+  // generado. Global (no por planta) para que un override sobre un driver alcance a sus
+  // derivados aunque vivan en otra planta (la rampa de Pi-1 y el hueco que perfora en Pi).
+  // Render-agnóstico: solo cambia coordenadas → el puente las emite movidas (frontera-cero).
+  if (inp.overrides) {
+    const ovs = inp.overrides;
+    for (const st of storeys) {
+      for (const e of st.elements) {
+        const ov = ovs[e.code] ?? (e.derivedFrom ? ovs[e.derivedFrom] : undefined);
+        if (ov) e.placement = applyOverride(e.placement, ov);
+      }
+    }
   }
 
   const zones: ZoneInstance[] = [];
@@ -520,3 +744,5 @@ export function wallCount(m: BuildingModel): number { return elementCount(m, "If
 export function carpentryCount(m: BuildingModel): number { return elementCount(m, "IfcDoor") + elementCount(m, "IfcWindow"); }
 /** Recuento de escaleras (IfcStair). */
 export function stairCount(m: BuildingModel): number { return elementCount(m, "IfcStair"); }
+/** Recuento de rampas de acceso (IfcRamp). */
+export function rampCount(m: BuildingModel): number { return elementCount(m, "IfcRamp"); }

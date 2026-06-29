@@ -137,6 +137,18 @@ const RESPONDER_TOOL = {
               type: "number",
               description: "Nº de viales longitudinales deseado (solo type=program, parking-comb, disposition=longitudinal). Omitir = los que quepan. El visor es la autoridad: si pides más de los que caben, coloca los que caben.",
             },
+            core: {
+              type: "string", enum: ["helix"],
+              description: "NÚCLEO de acceso del parking (solo type=program, parking-comb). 'helix' = núcleo de RAMPA HELICOIDAL: una directriz en hélice (arco en planta + rampa en alzado) que sube una vuelta por planta, pegada a la fachada coreSide; el visor coloca su huella (recorta plazas), perfora los forjados que atraviesa y la emite como IfcAlignment. Úsalo cuando el usuario pida 'rampa helicoidal', 'núcleo de rampa', 'rampa en hélice/espiral'.",
+            },
+            coreSide: {
+              type: "string", enum: ["N", "S", "E", "O", "NE", "NO", "SE", "SO"],
+              description: "Fachada donde se pega el núcleo helicoidal (solo core=helix). Cardinales del visor +Y=N/-Y=S/+X=E/-X=O.",
+            },
+            coreRadius: {
+              type: "number",
+              description: "Radio de la directriz de la hélice en m (solo core=helix; def. 6). Omitir si el usuario no lo dice.",
+            },
             sepX: {
               type: "number",
               description: "ATAJO uniforme: separación entre ejes de pilar en X (m), type=columns. El visor reparte ejes ANCLADOS a las dos fachadas (incluye 0 y el ancho). Usa axesX si necesitas ejes en posiciones concretas.",
@@ -221,6 +233,8 @@ ORIENTACIÓN (importante): el visor usa cardinales fijos +Y=Norte, -Y=Sur, +X=Es
 COHERENCIA DE CUENTAS (importante): mantén las cuentas que dé el usuario. Si dice 20 habitaciones a lado y lado, son 10+10. El total de espacios por planta = habitaciones + 1 pasillo + nº de núcleos. El total del edificio = espacios por planta × nº de plantas. Refleja esas cifras en summary key=spaces (p. ej. "20 hab (10+10) · pasillo 1,5 m · núcleo SE (2 asc.+esc.) · núcleo NO (esc.) = 23/planta · 115 total").
 
 TIPOLOGÍA (planta tipo no residencial): si el edificio es un APARCAMIENTO, no uses space room/corridor/core; emite una acción program con generator=parking-comb, bays=nº de plazas por planta deseado, aisle=ancho de vial (m), ramps=lista de FACHADAS con rampa de ACCESO (sube de una planta a la siguiente; p. ej. ["N"] = rampa de acceso en la fachada norte, ["O","E"] = en ambos extremos) y, si el usuario lo indica, disposition=bateria|linea|longitudinal (batería = plaza perpendicular al vial transversal, por defecto; línea = en cordón; LONGITUDINAL = viales a lo largo del eje largo N-S con bandas de plazas en batería a los lados —lo natural en una parcela LARGA Y ESTRECHA—, con lanes=nº de viales y un sentido de circulación por vial). El visor coloca plazas y viales y, por cada fachada pedida, una RAMPA DE ACCESO (IfcRamp, losa inclinada LOCALIZADA pegada a esa fachada, recorrido = desnivel/pendiente, un tramo por salto de planta) que RECORTA las plazas que pisa; NO es una franja a lo largo de todo el edificio. La rampa NO es un IfcSpace. Monta el árbol. Para residencia sigue usando space room/corridor/core. Generadores disponibles: residence-corridor, parking-comb.
+
+NÚCLEO DE RAMPA HELICOIDAL (parking): si el usuario pide una "rampa helicoidal", "rampa en hélice/espiral", "núcleo de rampa" o "núcleo de acceso helicoidal", emite en la MISMA acción program el campo core="helix" con coreSide=la fachada donde va (N/S/E/O…) y, si lo da, coreRadius. El visor compone una directriz en HÉLICE de verdad (arco en planta + rampa en alzado, una vuelta por planta) que SUBE de la planta baja a la última, coloca su huella (recorta plazas), PERFORA los forjados que atraviesa y la emite como IfcAlignment. Es distinto de ramps (rampa recta de acceso): el núcleo helicoidal es un cilindro de rampa que cambia de planta girando. NO afirmes que has dibujado una hélice si no has emitido core="helix"; si el usuario pide una tipología que el visor aún no soporta, dilo con claridad en vez de fingir que la has dibujado.
 
 DISCIPLINA GEOMÉTRICA (importante): tú das la INTENCIÓN (cuántas plazas quiere, en qué extremos van las rampas, qué separación de ejes para los pilares); NO calcules tú la geometría ni el número final de plazas o pilares que caben: esa es la AUTORIDAD del visor según la huella real. No afirmes recuentos ni posiciones que no hayas emitido como acciones; la planta dibujada es la verdad. Si recibes un mensaje "[Visor · comprobación]" con cifras distintas a las que esperabas, son las REALES: acéptalas y corrige tu texto. Si piden una tipología o un detalle que los generadores aún no soportan, dilo con claridad en vez de fingir que lo has dibujado.
 

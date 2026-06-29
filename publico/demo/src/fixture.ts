@@ -11,7 +11,7 @@
  * se guarda en `demo/fixtures/<nombre>.json` → el test golden lo replica con checkFixture.
  */
 
-import { buildModel, columnCount, slabCount, openingCount, wallCount, type BuildingInput } from "./model";
+import { buildModel, columnCount, slabCount, openingCount, wallCount, stairCount, type BuildingInput } from "./model";
 import type { PlanContext } from "./generators";
 
 export interface CaseSnapshot {
@@ -28,6 +28,7 @@ export interface CaseSnapshot {
   totalSlabs?: number;                              // IfcSlab (forjados) en todo el edificio
   totalOpenings?: number;                           // IfcOpeningElement (huecos de forjado)
   totalWalls?: number;                              // IfcWall (muros) en todo el edificio
+  totalStairs?: number;                             // IfcStair (escaleras) en todo el edificio
 }
 
 export interface CaseFixture {
@@ -56,6 +57,7 @@ export function snapshot(input: BuildingInput, ctx: PlanContext): CaseSnapshot {
     totalSlabs: slabCount(m),
     totalOpenings: openingCount(m),
     totalWalls: wallCount(m),
+    totalStairs: stairCount(m),
   };
 }
 
@@ -86,5 +88,6 @@ export function checkFixture(fx: CaseFixture): { ok: boolean; diffs: string[] } 
   cmp("totalSlabs", fx.snapshot.totalSlabs ?? 0, now.totalSlabs ?? 0);
   cmp("totalOpenings", fx.snapshot.totalOpenings ?? 0, now.totalOpenings ?? 0);
   cmp("totalWalls", fx.snapshot.totalWalls ?? 0, now.totalWalls ?? 0);
+  cmp("totalStairs", fx.snapshot.totalStairs ?? 0, now.totalStairs ?? 0);
   return { ok: diffs.length === 0, diffs };
 }

@@ -10,12 +10,12 @@
   "ctx": { "W": 120, "D": 24 },
   "snapshot": {
     "storeys": 3,
-    "spacesPerStorey": 91,
-    "totalSpaces": 273,
-    "byObjectType": { "PlazaAparcamiento": 88, "Vial": 1, "Rampa": 2 },
+    "spacesPerStorey": 97,
+    "totalSpaces": 291,
+    "byObjectType": { "PlazaAparcamiento": 96, "Vial": 1 },
     "zones": [
-      { "code": "AQ-ZON-APA", "kind": "aparcamiento", "members": 264 },
-      { "code": "AQ-ZON-CIR", "kind": "circulacion", "members": 9 }
+      { "code": "AQ-ZON-APA", "kind": "aparcamiento", "members": 288 },
+      { "code": "AQ-ZON-CIR", "kind": "circulacion", "members": 3 }
     ],
     "sampleCodes": [
       "AQ-ESP-PLA-P00-F1-01",
@@ -29,7 +29,7 @@
     "columnsPerStorey": 0,
     "sampleColumnCodes": [],
     "totalSlabs": 3,
-    "totalOpenings": 0,
+    "totalOpenings": 4,
     "totalWalls": 12
   }
 }

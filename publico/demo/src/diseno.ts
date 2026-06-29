@@ -15,6 +15,7 @@ import { residenceGenerator, GENERATORS, parkingAxes, parkingTrajectories } from
 import { toAltoSpec } from "./c1-bridge";
 import { makeFixture } from "./fixture";
 import { resolverAlineacion, selfCheckRadios, type Alineacion, type Segmento } from "./alineacion";
+import { helixAlineacion, DEFAULT_HELIX_RADIUS } from "./parking-helix";
 import {
   buildModel, hasModel, spaceCount, columnCount, slabCount, openingCount, wallCount, stairCount, resolveGrid, buildGrid, spaceBoundaryWalls,
   cleanOutline, pointInPolygon,
@@ -162,10 +163,12 @@ function drawAlignments(): void {
   for (const al of aligns) {
     const r = resolverAlineacion(al, paso);
     const malos = new Set(selfCheckRadios(al, radioMinimo).map((a) => a.indice));
-    if (view.volume) { // 3D: polilínea a cota 0 + marca de arranque
-      const p3 = r.puntos.map(([x, y]) => iso(x, y, 0));
+    if (view.volume) { // 3D: si hay alzado (hélice/rampa) la directriz SUBE (puntos3D); si no, a cota 0
+      const p3 = r.puntos3D
+        ? r.puntos3D.map(([x, y, z]) => iso(x, y, z))
+        : r.puntos.map(([x, y]) => iso(x, y, 0));
       for (let i = 1; i < p3.length; i++) seg(p3[i - 1], p3[i], AL, 2.2);
-      const s0 = iso(al.inicio.x, al.inicio.y, 0);
+      const s0 = iso(al.inicio.x, al.inicio.y, al.inicio.cota ?? 0);
       stage.appendChild(svg("circle", { cx: s0[0].toFixed(1), cy: s0[1].toFixed(1), r: "3.4", fill: AL, stroke: "none" }));
       r.segmentos.forEach((sg, i) => {
         if (sg.tipo === "curva" && malos.has(i)) { const q = sg.puntos.map(([x, y]) => iso(x, y, 0)); for (let k = 1; k < q.length; k++) seg(q[k - 1], q[k], "#ff5a5a", 3); }
@@ -988,6 +991,7 @@ interface Action {
   zone?: string;
   generator?: string; bays?: number; aisle?: number; ramps?: Orient[]; // type=program
   disposition?: "bateria" | "linea" | "longitudinal"; lanes?: number;  // type=program (parking; lanes = nº de viales longitudinales)
+  core?: "helix"; coreSide?: Orient; coreRadius?: number;             // type=program (núcleo de rampa helicoidal)
   sepX?: number; sepY?: number; secW?: number; secD?: number;          // type=columns (atajo)
   axesX?: number[]; axesY?: number[];                                  // type=columns (ejes explícitos)
   x1?: number; y1?: number; x2?: number; y2?: number;                  // type=partition (línea del tabique)
@@ -1031,7 +1035,8 @@ function runAction(a: Action): void {
   }
   if (a.type === "program") {
     const ramps = a.ramps ?? (a.orientation ? [a.orientation] : undefined);
-    const params = { bays: a.bays ?? 0, aisle: a.aisle, ramps, disposition: a.disposition, lanes: a.lanes };
+    const core = a.core === "helix" ? { kind: "helix" as const, side: a.coreSide ?? "N", radius: a.coreRadius } : undefined;
+    const params = { bays: a.bays ?? 0, aisle: a.aisle, ramps, disposition: a.disposition, lanes: a.lanes, core };
     bInput.program = { generator: a.generator ?? "parking-comb", params };
     // PUENTE A→B: en parking longitudinal, la circulación se modela como ALINEACIÓN.
     // Preferimos la TRAYECTORIA del vehículo (baja por E, GIRA 180° al fondo, sube por O):
@@ -1043,6 +1048,10 @@ function runAction(a: Action): void {
       aligns.push(...(tray.length ? tray : parkingAxes(params, { W, D })));
       radioMinimo = 6; // mínimo de giro de vehículo ligero (parametrizable; 3.1-IC/obras-lineales → después)
     }
+    // NÚCLEO DE RAMPA HELICOIDAL: la directriz que SUBE (arco en planta + alzado en rampa)
+    // se compone aquí y se enchufa al MISMO canal de alineaciones → render 3D que sube +
+    // puente `alineaciones[]` (frontera-cero). Una vuelta por planta; C1 monta el IfcAlignment.
+    if (core) aligns.push(helixAlineacion(core.side, core.radius ?? DEFAULT_HELIX_RADIUS, W, D, NF, FF, "Núcleo rampa helicoidal"));
     view.plan = view.volume = view.levels = true;
     render();
     refreshTree();

@@ -224,6 +224,19 @@
 
 ---
 
+## D-024 · P1 Hito 2 (modo edición) — capa de overrides (datos) + puente gesto→datos
+
+- **Fecha de firma:** 2026-06-29 · **Firmante:** JM · **FIRMA: ☐ Pendiente**
+- **Decisión:** abrir el modo edición por la **capa de datos (overrides)** antes que el viewport. La manipulación directa entra como **entrada** —`BuildingInput.overrides: Record<code,{dx,dy,rotDeg}>`— que `buildModel` aplica tras generar (gira sobre el centroide, luego traslada; el punto es invariante al giro). Es render-agnóstica, determinista y golden-able; el puente emite las coordenadas ya movidas → **frontera-cero con C1** (sin bump). El hueco de forjado que perfora la rampa queda **acoplado** (`derivedFrom`) y se mueve con ella. El **puente gesto→datos** `deriveOverride` (inverso de `applyOverride`) cierra el contrato que cualquier renderer debe cumplir: el gizmo deriva el dato del antes/después, no lo inventa.
+- **Slice cerrado por JM:** overrides primero · viewport **Three híbrido** (Pieza 2) · familias con **identidad propia** · gesto **trasladar + girar**.
+- **Hallazgo de frontera:** el **giro de esta familia es frontera-cero** (rampa/carpintería = `línea`, forjados/huecos = `polígono`: la orientación vive en las coordenadas que el cebo ya autora). La cota **z se difiere** (derivada del nivel, no del placement 2D). Único caso que pediría dato nuevo en `alto.json`: giro de pilar (puntual con sección) → fuera de la familia editable.
+- **Reservado a JM (residual):** el **núcleo** es composite/driver → editar solo elementos de código único ahora vs. implementar override de driver ya (a decidir al cablear la Pieza 2).
+- **Evidencia (Llave 1):** suite golden **verde** — `pnpm test` en `publico/demo` (run de JM 2026-06-29) = **11 archivos / 115 tests passed**, `overrides.golden.test.ts` (11) verde y los 10 previos **sin regresión** (`derivedFrom` invisible al snapshot). NUEVO: `test/derive-override.golden.test.ts` (ida-y-vuelta de `deriveOverride`) — núcleo verificado verbatim, **pendiente de re-run de la suite por JM**. Código: `publico/demo/src/model.ts` + `test/overrides.golden.test.ts` + `test/derive-override.golden.test.ts`. Detalle en `P1_para-firma_modo-edicion-overrides.md`.
+- **Estado del viewport (Pieza 2):** módulo Three **preparado** en `publico/demo/proposals/edit-viewport.ts` (`EditViewport`: picking + `TransformControls` → escribe `overrides`), **fuera de `src/`** para no romper el build (importa `three`, aún no dep del demo). **NO verificado en pantalla** (sandbox sin GL).
+- **Acciones que dispara:** (1) cablear la Pieza 2 — `pnpm add three @types/three` en `publico/demo`, mover el módulo a `src/`, enganchar en `diseno.ts`, **probar en pantalla**; (2) coordinar el gesto con el hilo de usabilidad de skins (un gesto = lo mismo en todas las skins); (3) resolver el residual del núcleo-como-driver.
+
+---
+
 ## Pendientes que bloquean el arranque de código
 
 | # | Pendiente | Bloqueado por | Dueño |

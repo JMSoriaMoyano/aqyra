@@ -15,7 +15,7 @@
         font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
       /* tres columnas: árbol (izq.) · maqueta (centro) · chat (der.) */
       #shell { display: grid; grid-template-columns: 340px 1fr 380px; grid-template-rows: 48px 1fr; height: 100%; }
-      header { grid-column: 1 / 4; display: flex; align-items: center; gap: 12px;
+      header { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px;
         padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
       header .logo { font-weight: 700; letter-spacing: .3px; }
       header .skin { font-size: 12px; color: var(--muted); border: 1px solid var(--line);
@@ -24,7 +24,11 @@
       header .mock { font-size: 11px; color: #d98a00; }
 
       /* ── columna izquierda: árbol de estructura espacial ── */
-      #tree { display: grid; grid-template-rows: auto 1fr auto; border-right: 1px solid var(--line);
+      /* El ÁRBOL (estructura espacial) es el panel primario: se le reserva un SUELO
+         (minmax) para que detalle y auditoría —aunque crezcan— scrolleen por dentro
+         en vez de ocultarlo. */
+      /* Sin border-right: la línea entre columnas la pone la barra del divisor (una sola). */
+      #tree { display: grid; grid-template-rows: auto minmax(140px, 1fr) auto auto;
         background: var(--panel); min-height: 0; }
       #tree h3 { margin: 0; padding: 12px 14px 8px; font-size: 12px; text-transform: uppercase;
         letter-spacing: .5px; color: var(--muted); }
@@ -54,7 +58,9 @@
       .leaf.sel, .node > summary.sel { background: rgba(43,108,176,.28); }
 
       /* panel de detalle del nodo seleccionado */
-      #detail { border-top: 1px solid var(--line); padding: 10px 12px; max-height: 44%;
+      /* Altura gobernada por el divisor arrastrable (splitter); min-height:0 deja
+         que el contenido scrollee dentro del track en vez de empujar al árbol. */
+      #detail { padding: 10px 12px; min-height: 0;
         overflow-y: auto; background: #12161d; font-size: 12px; }
       #detail .dh { font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin-bottom: 6px; }
       #detail .drow { display: flex; justify-content: space-between; gap: 10px; padding: 2px 0; border-bottom: 1px dashed #1f2630; }
@@ -69,6 +75,36 @@
       #detail .loading { color: var(--muted); font-style: italic; }
       #detailEmpty { color: #5a6573; }
 
+      /* panel de AUDITORÍA BÁSICA (teaser de valor del cebo: reporta, NO certifica) */
+      #audit { padding: 10px 12px; min-height: 0;
+        overflow-y: auto; background: #0f1620; font-size: 12px; }
+
+      /* ── divisores arrastrables (splitter) ── */
+      .aq-split { position: relative; z-index: 6; background: transparent; }
+      .aq-split-col { cursor: col-resize; }
+      .aq-split-row { cursor: row-resize; }
+      .aq-split::after { content: ""; position: absolute; background: var(--line); transition: background .12s; }
+      .aq-split-col::after { top: 0; bottom: 0; left: 50%; width: 1px; transform: translateX(-.5px); }
+      .aq-split-row::after { left: 0; right: 0; top: 50%; height: 1px; transform: translateY(-.5px); }
+      .aq-split:hover::after, .aq-split.aq-active::after { background: var(--accent2); }
+      #audit .ah { display: flex; align-items: center; gap: 8px; font-size: 11px;
+        text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin-bottom: 8px; }
+      #audit .dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+      #audit .dot.ok { background: #4bb673; }
+      #audit .dot.nc { background: #e0683a; }
+      #audit .dot.idle { background: #3a4655; }
+      #audit .verdict { color: #cfd8e3; font-weight: 600; text-transform: none; letter-spacing: 0; }
+      #audit .muted { color: #5a6573; }
+      #audit .nc { display: flex; gap: 8px; padding: 4px 0; border-bottom: 1px dashed #1f2630; }
+      #audit .nc .rid { color: #e0a23a; font-variant-numeric: tabular-nums; flex: 0 0 auto; font-size: 11px; }
+      #audit .nc .body { color: #cfd8e3; overflow-wrap: anywhere; }
+      #audit .nc .body .code { color: #cf7be0; }
+      #audit .rule { display: flex; justify-content: space-between; gap: 10px; padding: 2px 0; }
+      #audit .rule .k { color: var(--muted); }
+      #audit .rule .v.ok { color: #4bb673; }
+      #audit .rule .v.bad { color: #e0683a; }
+      #audit .foot { margin-top: 8px; font-size: 10.5px; color: #5a6573; font-style: italic; }
+
       /* ── columna central: maqueta (lienzo de diseño) ── */
       #viewport { position: relative; overflow: hidden; background:
         radial-gradient(1200px 700px at 60% 40%, #141a23 0%, #0e1116 70%); }
@@ -79,14 +115,15 @@
         color: var(--muted); font-size: 14px; text-align: center; pointer-events: none; padding: 0 40px; }
 
       /* ── columna derecha: diálogo ── */
-      #chatcol { display: grid; grid-template-rows: 1fr auto; border-left: 1px solid var(--line);
+      /* Sin border-left: la línea entre columnas la pone la barra del divisor (una sola). */
+      #chatcol { display: grid; grid-template-rows: 1fr auto;
         background: var(--panel); min-height: 0; }
       #log { overflow-y: auto; overflow-x: hidden; min-width: 0; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-      #log, #treebody, #detail, #composer textarea { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .12) transparent; }
-      #log::-webkit-scrollbar, #treebody::-webkit-scrollbar, #detail::-webkit-scrollbar, #composer textarea::-webkit-scrollbar { width: 7px; }
-      #log::-webkit-scrollbar-track, #treebody::-webkit-scrollbar-track, #detail::-webkit-scrollbar-track, #composer textarea::-webkit-scrollbar-track { background: transparent; }
-      #log::-webkit-scrollbar-thumb, #treebody::-webkit-scrollbar-thumb, #detail::-webkit-scrollbar-thumb, #composer textarea::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .09); border-radius: 8px; }
-      #log:hover::-webkit-scrollbar-thumb, #treebody:hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .18); }
+      #log, #treebody, #detail, #audit, #composer textarea { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .12) transparent; }
+      #log::-webkit-scrollbar, #treebody::-webkit-scrollbar, #detail::-webkit-scrollbar, #audit::-webkit-scrollbar, #composer textarea::-webkit-scrollbar { width: 7px; }
+      #log::-webkit-scrollbar-track, #treebody::-webkit-scrollbar-track, #detail::-webkit-scrollbar-track, #audit::-webkit-scrollbar-track, #composer textarea::-webkit-scrollbar-track { background: transparent; }
+      #log::-webkit-scrollbar-thumb, #treebody::-webkit-scrollbar-thumb, #detail::-webkit-scrollbar-thumb, #audit::-webkit-scrollbar-thumb, #composer textarea::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .09); border-radius: 8px; }
+      #log:hover::-webkit-scrollbar-thumb, #treebody:hover::-webkit-scrollbar-thumb, #audit:hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .18); }
       .msg { max-width: 86%; padding: 9px 12px; border-radius: 12px; font-size: 13.5px; line-height: 1.45;
         white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
       .msg.ai { align-self: flex-start; background: var(--ai); border: 1px solid #243043; border-top-left-radius: 4px; }
@@ -136,6 +173,9 @@
         </div>
         <div id="detail">
           <div id="detailEmpty">Selecciona un nodo del árbol para ver sus atributos, Psets y clasificación bsDD (en vivo).</div>
+        </div>
+        <div id="audit">
+          <div id="auditEmpty" class="muted">La auditoría básica (nomenclatura AQ-* + doble clasificación bsDD · Uniclass) aparecerá aquí a medida que se modele.</div>
         </div>
       </aside>
 

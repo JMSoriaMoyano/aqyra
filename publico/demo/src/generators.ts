@@ -14,6 +14,15 @@
 import type { Orient } from "./model";
 import { cambioDeCarrilClotoide, resolverAlineacion } from "./alineacion";
 import type { Alineacion, Segmento } from "./alineacion";
+import { helixFootprint, DEFAULT_HELIX_RADIUS } from "./parking-helix";
+
+/** Huella del núcleo helicoidal de acceso (o null si no se pidió). Compartida por las
+ *  disposiciones: coloca el núcleo y RECORTA las plazas que pisa. */
+function coreFoot(p: ParkingParams, ctx: PlanContext): { o: Orient; x: number; y: number; w: number; d: number } | null {
+  if (p.core?.kind !== "helix") return null;
+  const f = helixFootprint(p.core.side, p.core.radius ?? DEFAULT_HELIX_RADIUS, ctx.W, ctx.D);
+  return { o: p.core.side, ...f };
+}
 
 /** Huella en planta, en metros. Ejes: X=ancho (0..W), Y=fondo (0..D), N=+Y. */
 export interface Footprint { x: number; y: number; w: number; d: number; }
@@ -131,6 +140,10 @@ export interface ParkingParams {
   ramp?: Orient;                // compat: una sola rampa
   disposition?: ParkingDisposition; // batería (90°, def) | línea/cordón (0°) | longitudinal (viales N-S)
   lanes?: number;               // longitudinal: nº de viales deseado (omitir = los que quepan)
+  /** NÚCLEO de acceso HELICOIDAL (rampa en hélice) pegado a una fachada. La huella se
+   *  coloca aquí (recorta plazas); la directriz helicoidal (Alineacion) la compone
+   *  `parking-helix.ts` y se enchufa al canal de alineaciones (igual que los ejes de vial). */
+  core?: { kind: "helix"; side: Orient; radius?: number };
 }
 
 /**
@@ -178,8 +191,11 @@ export const parkingGenerator: DistributionGenerator<ParkingParams> = {
       if (o.includes("E")) return { o, x: round2(Math.max(0, W - run)), y: round2((D - rampWide) / 2), w: round2(Math.min(run, W)), d: rampWide };
       return { o, x: 0, y: round2((D - rampWide) / 2), w: round2(Math.min(run, W)), d: rampWide }; // O/oeste por defecto
     });
+    // núcleo helicoidal de acceso (opt-in): su huella también recorta plazas
+    const cf = coreFoot(p, ctx);
+    const blockers = [...rampFoots, ...(cf ? [cf] : [])];
     const overlaps = (bx: number, by: number, bw: number, bd: number): boolean =>
-      rampFoots.some((r) => bx < r.x + r.w - 1e-6 && bx + bw > r.x + 1e-6 && by < r.y + r.d - 1e-6 && by + bd > r.y + 1e-6);
+      blockers.some((r) => bx < r.x + r.w - 1e-6 && bx + bw > r.x + 1e-6 && by < r.y + r.d - 1e-6 && by + bd > r.y + 1e-6);
 
     // nº de FILAS que caben en el fondo: n·rowDepth + (n-1)·aisle ≤ D (doble fila = 2
     // filas compartiendo un vial central). Se centra el conjunto y NO se dejan viales
@@ -216,6 +232,10 @@ export const parkingGenerator: DistributionGenerator<ParkingParams> = {
         footprint: { x: r.x, y: r.y, w: r.w, d: r.d },
       });
     }
+    if (cf) out.push({
+      objectType: "NucleoRampa", longName: `Núcleo de rampa helicoidal ${cf.o}`, zone: "circulacion", sideTag: cf.o,
+      footprint: { x: cf.x, y: cf.y, w: cf.w, d: cf.d },
+    });
     return out;
   },
 };
@@ -282,8 +302,10 @@ function longitudinalParking(p: ParkingParams, ctx: PlanContext, dockY?: number)
     if (o.includes("E")) return { o, x: round2(Math.max(0, W - run)), y: round2((D - rampWide) / 2), w: round2(Math.min(run, W)), d: rampWide };
     return { o, x: 0, y: round2((D - rampWide) / 2), w: round2(Math.min(run, W)), d: rampWide };
   });
+  const cf = coreFoot(p, ctx); // núcleo helicoidal de acceso (opt-in): recorta plazas
+  const blockers = [...rampFoots, ...(cf ? [cf] : [])];
   const overlaps = (bx: number, by: number, bw: number, bd: number): boolean =>
-    rampFoots.some((r) => bx < r.x + r.w - 1e-6 && bx + bw > r.x + 1e-6 && by < r.y + r.d - 1e-6 && by + bd > r.y + 1e-6);
+    blockers.some((r) => bx < r.x + r.w - 1e-6 && bx + bw > r.x + 1e-6 && by < r.y + r.d - 1e-6 && by + bd > r.y + 1e-6);
   // ÁREA DE GIRO (apron) al fondo S: con ≥2 viales la circulación gira 180° al final
   // (S), así que ese fondo NO puede llevar plazas. Se deja libre una franja de
   // apronClear = R + holgura, con R = media separación entre viales (el radio del giro).
@@ -338,6 +360,10 @@ function longitudinalParking(p: ParkingParams, ctx: PlanContext, dockY?: number)
   for (const r of rampFoots) out.push({
     objectType: "Rampa", longName: `Rampa de acceso ${r.o}`, zone: "circulacion", sideTag: r.o,
     footprint: { x: r.x, y: r.y, w: r.w, d: r.d },
+  });
+  if (cf) out.push({
+    objectType: "NucleoRampa", longName: `Núcleo de rampa helicoidal ${cf.o}`, zone: "circulacion", sideTag: cf.o,
+    footprint: { x: cf.x, y: cf.y, w: cf.w, d: cf.d },
   });
   return out;
 }

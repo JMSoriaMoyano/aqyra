@@ -30,11 +30,10 @@ venv/
 /PUSH_entorno_main.bat
 /LIMPIAR_entorno_eol.bat
 
-# ── Salidas / temporales ──
-*_resultado.txt
-_resultados/
-dist/
-build/
+# �
+# Helpers de git/firma y logs reubicados (reorg 2026-06-29)
+_operativo/
+d/
 *.log
 *.tmp
 
