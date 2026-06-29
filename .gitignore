@@ -28,12 +28,10 @@ venv/
 /ESTADO_contratos.bat
 /COMMIT_contratos.bat
 /PUSH_contratos_main.bat
-/LIMPIAR_contratos_eol.bat
-
-# ── Salidas / temporales ──
-*_resultado.txt
-_resultados/
-dist/
+/LIMPIAR_contratos_eol.
+# Helpers de git/firma y logs reubicados (reorg 2026-06-29)
+_operativo/
+st/
 build/
 *.log
 *.tmp
