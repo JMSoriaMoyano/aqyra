@@ -1,0 +1,256 @@
+{
+  "proyecto": "Golden C1 - apertura de familias P1",
+  "esquema": "IFC4X3",
+  "unidades": "m",
+  "niveles": [
+    {
+      "nombre": "Planta Baja",
+      "cota": 0.0
+    },
+    {
+      "nombre": "Planta 1",
+      "cota": 3.0
+    }
+  ],
+  "pilares": [
+    {
+      "nombre": "P1",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "P2",
+      "nivel": "Planta Baja",
+      "pos": [
+        6.0,
+        0.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "P3",
+      "nivel": "Planta Baja",
+      "pos": [
+        6.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "P4",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        6.0
+      ],
+      "seccion": [
+        0.4,
+        0.4
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    }
+  ],
+  "muros": [
+    {
+      "nombre": "M-Fachada",
+      "nivel": "Planta Baja",
+      "inicio": [
+        0.0,
+        0.0
+      ],
+      "fin": [
+        6.0,
+        0.0
+      ],
+      "espesor": 0.25,
+      "altura": 3.0,
+      "material": "HA-30",
+      "exterior": true,
+      "huecos": [
+        {
+          "ancho": 1.0,
+          "alto": 2.1,
+          "pos": 3.0,
+          "alfeizar": 0.0,
+          "tipo": "puerta"
+        }
+      ]
+    }
+  ],
+  "losas": [
+    {
+      "nombre": "Forjado-P1",
+      "nivel": "Planta 1",
+      "contorno": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.0
+        ],
+        [
+          6.0,
+          6.0
+        ],
+        [
+          0.0,
+          6.0
+        ]
+      ],
+      "espesor": 0.3,
+      "material": "HA-30",
+      "huecos": [
+        {
+          "pos": [
+            1.2,
+            1.2
+          ],
+          "ancho": 1.6,
+          "largo": 1.8
+        }
+      ]
+    }
+  ],
+  "elementos": [
+    {
+      "ifcClass": "IfcTransportElement",
+      "predefined": "ELEVATOR",
+      "nombre": "Ascensor-01",
+      "nivel": "Planta Baja",
+      "pos": [
+        1.2,
+        1.2
+      ],
+      "material": "Acero"
+    }
+  ],
+  "alineaciones": [
+    {
+      "nombre": "Eje C-001",
+      "infraestructura": {
+        "clase": "IfcRoad",
+        "nombre": "Vial de acceso"
+      },
+      "ancho_ref": 3.5,
+      "inicio": {
+        "x": 0.0,
+        "y": 0.0,
+        "acimut_deg": 0.0,
+        "cota": 100.0
+      },
+      "planta": [
+        {
+          "tipo": "recta",
+          "longitud": 100.0
+        },
+        {
+          "tipo": "clotoide",
+          "longitud": 60.0,
+          "radio_fin": 300.0
+        },
+        {
+          "tipo": "curva",
+          "longitud": 80.0,
+          "radio": 300.0
+        },
+        {
+          "tipo": "clotoide",
+          "longitud": 60.0,
+          "radio_ini": 300.0
+        },
+        {
+          "tipo": "recta",
+          "longitud": 100.0
+        }
+      ],
+      "alzado": [
+        {
+          "tipo": "rampa",
+          "longitud": 150.0,
+          "pendiente_ini": 0.02,
+          "pendiente_fin": 0.02
+        },
+        {
+          "tipo": "acuerdo",
+          "longitud": 100.0,
+          "pendiente_ini": 0.02,
+          "pendiente_fin": -0.03,
+          "kv": 2000.0
+        },
+        {
+          "tipo": "rampa",
+          "longitud": 150.0,
+          "pendiente_ini": -0.03,
+          "pendiente_fin": -0.03
+        }
+      ],
+      "peralte": [
+        {
+          "tipo": "constante",
+          "longitud": 100.0,
+          "peralte_ini_pct": 0.0,
+          "peralte_fin_pct": 0.0
+        },
+        {
+          "tipo": "transicion",
+          "longitud": 60.0,
+          "peralte_ini_pct": 0.0,
+          "peralte_fin_pct": 7.0
+        },
+        {
+          "tipo": "constante",
+          "longitud": 80.0,
+          "peralte_ini_pct": 7.0,
+          "peralte_fin_pct": 7.0
+        },
+        {
+          "tipo": "transicion",
+          "longitud": 60.0,
+          "peralte_ini_pct": 7.0,
+          "peralte_fin_pct": 0.0
+        },
+        {
+          "tipo": "constante",
+          "longitud": 100.0,
+          "peralte_ini_pct": 0.0,
+          "peralte_fin_pct": 0.0
+        }
+      ],
+      "georref": {
+        "epsg": "EPSG:25830",
+        "descripcion": "ETRS89 / UTM zone 30N",
+        "datum_geodesico": "ETRS89",
+        "datum_vertical": "EGM2008",
+        "map_projection": "UTM",
+        "map_zone": "30N",
+        "origen_e": 337000.0,
+        "origen_n": 4610000.0,
+        "altura": 700.0,
+        "rotacion_deg": 0.0,
+        "escala": 1.0
+      }
+    }
+  ]
+}

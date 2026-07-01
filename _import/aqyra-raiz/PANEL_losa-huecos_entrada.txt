@@ -1,0 +1,13 @@
+PANEL_Ahora-cebo.md — §7 (Estado), bajo «P1 Visor/Editor»
+Entrada para el cierre de la frontera C1 «losas[].huecos»
+============================================================
+
+
+[ENTRADA NUEVA — frontera C1 abierta]
+
+- **Frontera C1 ABIERTA — `losas[].huecos` (hueco de forjado), pendiente de tu bump:** la capa de elementos del cebo ya está completa (IfcColumn · IfcSlab+huecos · IfcWall fachada/tabique/divisoria/núcleo-pasante · IfcDoor/IfcWindow · IfcStair; golden `columns.golden` **35/35 verde** + `parking.golden` 7/7). **Toda la cadena cebo→C1 es frontera-cero salvo esta pieza:** el cebo modela que el núcleo vacía los forjados que atraviesa y emite `losas[].huecos`, pero la `losa` de C1 hoy es un **contorno macizo, sin agujeros**. Es el **único cruce de frontera** de toda la capa. La IA dejó el parche preparado en `Entorno/publico/demo/C1-PATCH_losa-huecos.md`: **~8 líneas** en el bucle de losas de `spec_to_ifc.py`, **reutilizan el `_voids`/`IfcOpeningElement` que C1 ya usa en los muros** y **no tocan el esquema** (`losas` admite campos extra) → cruce de frontera barato. Camino de adopción (regla *bump → golden → adoptar si verde → anclar*, reservado a JM): (1) aplicar el parche en C1, (2) **bump** de C1 (`iso19650-openbim`), (3) **golden de C1** — un `alto.json` con `losas[].huecos` debe compilar un IFC con la losa **vaciada** (Llave 1), (4) anclar la versión en `integracion/versions.lock`, (5) **firma JM** (Llave 2). El cebo ya emite el dato correcto (`aqyraToC1()` → `losas[].huecos`); solo falta que C1 lo ejecute. **Estado: Llave 1 y Llave 2 pendientes.**
+
+
+[«SIGUIENTE ACCIÓN» — sustituye la línea actual]
+
+- **Siguiente acción:** (a) firmar el parking en peine (`parking.golden` 7/7, commit aparte) y la capa de elementos (`columns.golden` 35/35); (b) **cerrar la única frontera abierta**: aplicar el parche `losas[].huecos` en C1 → bump → golden de C1 → anclar en `versions.lock` → 2ª llave. Cosmético pendiente: reconciliar docs de estado de C5 (`C5_motor-fem.md`, `golden/README` Llave 2) **sin tocar el manifiesto firmado**.
