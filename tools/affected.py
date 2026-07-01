@@ -23,15 +23,15 @@ REPO = Path(__file__).resolve().parents[1]
 # Regla de dependencia (Fase 0): tocar un contrato o el core reejecuta la golden,
 # porque la golden es quien los ejercita.
 PATH_TARGETS: list[tuple[str, set[str]]] = [
-    ("packages/contracts/", {"golden"}),   # cambiar un esquema -> revalidar golden
+    ("packages/contracts/", {"golden"}),        # cambiar un esquema -> revalidar golden
     ("packages/golden/",    {"golden"}),
-    ("packages/core/",      {"golden"}),    # core alimenta a los engines/golden (0.5)
+    ("packages/core/",      {"core"}),          # core -> sus tests (pytest)
     ("engines/",            {"golden"}),
     ("apps/visor/",         {"visor"}),
-    ("versions.lock",       {"golden"}),
-    ("justfile",            {"golden", "visor"}),
-    ("tools/",              {"golden", "visor"}),
-    ("pyproject.toml",      {"golden"}),
+    ("versions.lock",       {"golden", "core"}),
+    ("justfile",            {"golden", "visor", "core"}),
+    ("tools/",              {"golden", "visor", "core"}),
+    ("pyproject.toml",      {"golden", "core"}),
 ]
 
 # Cómo se construye/prueba cada objetivo (Fase 0). La golden es el test real.
@@ -41,13 +41,17 @@ RUN_COMMANDS: dict[str, dict[str, list[str]]] = {
         "test":  ["uv", "run", "--package", "aqyra-golden",
                   "aqyra-golden", "--golden-dir", "packages/golden"],
     },
+    "core": {
+        "build": ["uv", "sync"],
+        "test":  ["uv", "run", "pytest", "packages/core", "-q"],
+    },
     "visor": {
         "build": ["pnpm", "--filter", "visor", "build"],
         "test":  ["pnpm", "--filter", "visor", "test"],
     },
 }
 
-ALL_TARGETS = {"golden", "visor"}
+ALL_TARGETS = {"golden", "core", "visor"}
 
 
 def changed_files(base: str) -> list[str] | None:
@@ -88,7 +92,7 @@ def main() -> int:
         targets = affected_targets(files)
         print(f"[affected] {len(files)} fichero(s) cambiado(s) vs {args.base}", file=sys.stderr)
 
-    ordered = [t for t in ("golden", "visor") if t in targets]
+    ordered = [t for t in ("core", "golden", "visor") if t in targets]
     if not ordered:
         print("[affected] nada afectado.", file=sys.stderr)
         return 0

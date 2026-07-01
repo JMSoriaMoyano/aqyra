@@ -14,6 +14,16 @@ estado          = "esquema-formalizado"  # engine firmado; su import al monorepo
 # nota: en Fase 0 el runner recomputa el oráculo desde el IFC congelado de la golden.
 #       cuando engines/ifc se importe (0.5), se antepone el paso compile contra el mismo expected.json.
 
+# --- core (0.5): núcleo compartido, extraído del canónico Nucleo-transversal ---
+# No es un contrato (no produce/consume C-); se ancla su PROCEDENCIA e IDENTIDAD byte a byte.
+# El test packages/core/tests/test_identidad_nucleo.py verifica estos md5 (LF) en el CI.
+[core]
+version         = "0.1.0"
+origen          = "Estructurando/Nucleo-transversal/nucleo"
+ifc_utils_md5   = "ad06f87d648fc0388b35d10deeb290b7"
+grafo_red_md5   = "fe5dfebb4c5adb73f90718d57978e8a4"
+estado          = "extraído (fin del espejo en el monorepo); retirada del espejo en los 5 plugins aguas arriba = pendiente (requiere importar engines)"
+
 # --- packs (vacío en Fase 0; data/ es 0.6) ---
 # [packs.codigo]     id = "EC-ES"   version = "2021"
 # [packs.banco]      id = "BEDEC"   version = "2026-Q1"
