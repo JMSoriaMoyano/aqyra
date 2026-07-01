@@ -3,7 +3,7 @@
   "contrato": "C1",
   "descripcion": "Apertura de familias P1: huecos en losa+muro, ascensor (catálogo abierto), alineación clotoide+acuerdo, doble clasificación bsDD+Uniclass.",
   "esquema": "IFC4X3",
-  "huecos": { "losa": 1, "muro": 1 },
+  "huecos": { "losa": 99, "muro": 1 },
   "transporte": { "total": 1, "predefinidos": ["ELEVATOR"] },
   "alineacion": {
     "planta_secuencia": ["LINE", "CLOTHOID", "CIRCULARARC", "CLOTHOID", "LINE"],
