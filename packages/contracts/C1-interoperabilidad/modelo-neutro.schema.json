@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/contracts/C1/modelo-neutro.schema.json",
+  "title": "C1 · modelo neutro (la lengua franca del cálculo)",
+  "description": "Salida de C1 en dirección PARSEAR. El IFC es el soporte de intercambio; el cálculo opera sobre este JSON. Modelos HERMANOS por dominio: cada vista reutiliza las convenciones invariables (§2.1). Forward-open: SOLO se añaden claves, nunca se cambia la semántica de las existentes.",
+  "type": "object",
+  "required": ["unidades"],
+  "additionalProperties": true,
+  "properties": {
+    "unidades": { "$ref": "#/$defs/unidades" },
+    "materiales": { "type": "object", "additionalProperties": { "$ref": "#/$defs/material" } },
+    "secciones": { "type": "object", "additionalProperties": { "$ref": "#/$defs/seccion" } },
+    "nodos": { "type": "object", "additionalProperties": { "$ref": "#/$defs/nodo" } },
+    "barras": { "type": "object", "additionalProperties": { "$ref": "#/$defs/barra" } },
+    "superficies": { "type": "array", "items": { "$ref": "#/$defs/superficie" } },
+    "cargas": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "sistema": { "$ref": "#/$defs/vista_red" },
+    "elementos": { "type": "array", "items": { "$ref": "#/$defs/elemento_medicion" } },
+    "alineacion": { "$ref": "#/$defs/vista_lineal" }
+  },
+  "$comment": "Vistas hermanas: estructural (§2.2 · consume C9), red (§2.3 · C4/C10), medición (§2.4 · C5), lineal (§2.5 · C11+). No hay superconjunto único; cada dominio emite su vista con estas convenciones.",
+  "$defs": {
+    "unidades": {
+      "description": "Bloque de unidades SI declaradas (convención invariable §2.1).",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "longitud": { "type": "string" },
+        "fuerza": { "type": "string" },
+        "momento": { "type": "string" }
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "E": { "type": "number" }, "G": { "type": "number" }, "nu": { "type": "number" },
+        "rho": { "type": "number" }, "fy": { "type": "number" },
+        "fck": { "type": "number" }, "fctm": { "type": "number" }
+      }
+    },
+    "seccion": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "A": { "type": "number" }, "Iy": { "type": "number" }, "Iz": { "type": "number" },
+        "J": { "type": "number" }, "Wply": { "type": "number" }, "Wely": { "type": "number" },
+        "h": { "type": "number" }, "Avz": { "type": "number" }, "clase": { "type": "integer" }
+      }
+    },
+    "nodo": {
+      "description": "Apoyo = vector booleano de 6 GdL [DX,DY,DZ,RX,RY,RZ] (True = coacción).",
+      "type": "object",
+      "required": ["x", "y", "z"],
+      "additionalProperties": true,
+      "properties": {
+        "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" },
+        "apoyo": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": { "type": "boolean" }
+        }
+      }
+    },
+    "barra": {
+      "description": "Topología por nombres de nodo; respaldo por geometría.",
+      "type": "object",
+      "required": ["ni", "nj"],
+      "additionalProperties": true,
+      "properties": {
+        "ni": { "type": "string" }, "nj": { "type": "string" },
+        "seccion": { "type": "string" }, "material": { "type": "string" },
+        "tipo": { "type": "string" }
+      }
+    },
+    "superficie": {
+      "description": "2D: las cargas se anidan aquí (el consumidor contempla cargas raíz y anidadas).",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "esquinas": { "type": "array", "items": { "type": "array", "items": { "type": "number" } } },
+        "espesor": { "type": "number" },
+        "malla": {},
+        "material": { "type": "string" },
+        "cargas": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+      }
+    },
+    "vista_red": {
+      "description": "Grafo agnóstico al sistema (§2.3). La disciplina la resuelve el engine.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "tipo": { "type": "string", "enum": ["PCI", "clima", "electrico", "saneamiento", "abastecimiento"] },
+        "nodos": {}, "tramos": {}, "terminales": {}, "fuentes": {}, "demanda": {}
+      }
+    },
+    "elemento_medicion": {
+      "description": "Base de la medición trazable (§2.4): cada cantidad → sus objetos.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "clase": { "type": "string" },
+        "clasificacion": {},
+        "cantidades": {},
+        "ubicacion": {},
+        "GUID": { "type": "string" }
+      }
+    },
+    "vista_lineal": {
+      "description": "Eje/directriz (§2.5): planta + alzado + peralte por PK, con georreferenciación EPSG. No es footprint 2D.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "planta": { "type": "array" },
+        "alzado": { "type": "array" },
+        "peralte": { "type": "array" },
+        "georref": { "type": "object", "additionalProperties": true }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+[project]
+name = "aqyra"
+version = "0.0.0"
+description = "Monorepo industrial de Aqyra (ACE / OpenBIM) — raíz del workspace uv."
+requires-python = ">=3.10"
+
+# La raíz NO es un paquete instalable: es el contenedor del workspace.
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["packages/core", "packages/golden"]
+# engines/*, services/* se añaden como miembros cuando aterricen (0.5+).

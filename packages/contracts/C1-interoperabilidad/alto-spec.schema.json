@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/contracts/C1/alto-spec.schema.json",
+  "title": "C1 · alto-spec (narración de alto nivel → compilable a IFC)",
+  "description": "Entrada de C1 en dirección COMPILAR: lo que emitiría el cebo/narración. Forward-open: se AÑADEN claves, nunca se cambia la semántica de las existentes. El catálogo de elementos es abierto (ifcClass arbitrario).",
+  "type": "object",
+  "required": ["proyecto", "esquema"],
+  "additionalProperties": true,
+  "properties": {
+    "proyecto": { "type": "string", "minLength": 1 },
+    "esquema": { "type": "string", "enum": ["IFC4X3", "IFC4", "IFC2X3"] },
+    "unidades": { "type": "string", "default": "m" },
+    "niveles": { "type": "array", "items": { "$ref": "#/$defs/nivel" } },
+    "pilares": { "type": "array", "items": { "$ref": "#/$defs/pilar" } },
+    "muros": { "type": "array", "items": { "$ref": "#/$defs/muro" } },
+    "losas": { "type": "array", "items": { "$ref": "#/$defs/losa" } },
+    "cubiertas": { "type": "array", "items": { "type": "object" } },
+    "elementos": { "type": "array", "items": { "$ref": "#/$defs/elemento_catalogo" } },
+    "alineaciones": { "type": "array", "items": { "$ref": "#/$defs/alineacion" } }
+  },
+  "$defs": {
+    "punto2d": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": { "type": "number" }
+    },
+    "nivel": {
+      "type": "object",
+      "required": ["nombre", "cota"],
+      "additionalProperties": true,
+      "properties": {
+        "nombre": { "type": "string" },
+        "cota": { "type": "number" }
+      }
+    },
+    "pilar": {
+      "type": "object",
+      "required": ["nombre", "nivel", "pos", "seccion", "altura"],
+      "additionalProperties": true,
+      "properties": {
+        "nombre": { "type": "string" },
+        "nivel": { "type": "string" },
+        "pos": { "$ref": "#/$defs/punto2d" },
+        "seccion": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": { "type": "number", "exclusiveMinimum": 0 }
+        },
+        "altura": { "type": "number", "exclusiveMinimum": 0 },
+        "material": { "type": "string" }
+      }
+    },
+    "hueco_muro": {
+      "type": "object",
+      "required": ["ancho", "alto", "pos"],
+      "additionalProperties": true,
+      "properties": {
+        "ancho": { "type": "number", "exclusiveMinimum": 0 },
+        "alto": { "type": "number", "exclusiveMinimum": 0 },
+        "pos": { "type": "number" },
+        "alfeizar": { "type": "number" },
+        "tipo": { "type": "string" }
+      }
+    },
+    "muro": {
+      "type": "object",
+      "required": ["nombre", "nivel", "inicio", "fin", "espesor", "altura"],
+      "additionalProperties": true,
+      "properties": {
+        "nombre": { "type": "string" },
+        "nivel": { "type": "string" },
+        "inicio": { "$ref": "#/$defs/punto2d" },
+        "fin": { "$ref": "#/$defs/punto2d" },
+        "espesor": { "type": "number", "exclusiveMinimum": 0 },
+        "altura": { "type": "number", "exclusiveMinimum": 0 },
+        "material": { "type": "string" },
+        "exterior": { "type": "boolean" },
+        "huecos": { "type": "array", "items": { "$ref": "#/$defs/hueco_muro" } }
+      }
+    },
+    "hueco_losa": {
+      "type": "object",
+      "required": ["pos", "ancho", "largo"],
+      "additionalProperties": true,
+      "properties": {
+        "pos": { "$ref": "#/$defs/punto2d" },
+        "ancho": { "type": "number", "exclusiveMinimum": 0 },
+        "largo": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "losa": {
+      "type": "object",
+      "required": ["nombre", "nivel", "contorno", "espesor"],
+      "additionalProperties": true,
+      "properties": {
+        "nombre": { "type": "string" },
+        "nivel": { "type": "string" },
+        "contorno": {
+          "type": "array", "minItems": 3,
+          "items": { "$ref": "#/$defs/punto2d" }
+        },
+        "espesor": { "type": "number", "exclusiveMinimum": 0 },
+        "material": { "type": "string" },
+        "huecos": { "type": "array", "items": { "$ref": "#/$defs/hueco_losa" } }
+      }
+    },
+    "elemento_catalogo": {
+      "description": "Catálogo ABIERTO: cualquier subtipo de IfcElement. ifcClass obligatorio; el resto libre (forward-open).",
+      "type": "object",
+      "required": ["ifcClass", "nombre"],
+      "additionalProperties": true,
+      "properties": {
+        "ifcClass": { "type": "string", "pattern": "^Ifc[A-Za-z0-9]+$" },
+        "predefined": { "type": "string" },
+        "nombre": { "type": "string" },
+        "nivel": { "type": "string" },
+        "pos": { "$ref": "#/$defs/punto2d" },
+        "material": { "type": "string" }
+      }
+    },
+    "segmento_planta": {
+      "type": "object",
+      "required": ["tipo", "longitud"],
+      "additionalProperties": true,
+      "properties": {
+        "tipo": { "type": "string", "enum": ["recta", "clotoide", "curva"] },
+        "longitud": { "type": "number", "exclusiveMinimum": 0 },
+        "radio": { "type": "number" },
+        "radio_ini": { "type": "number" },
+        "radio_fin": { "type": "number" }
+      }
+    },
+    "segmento_alzado": {
+      "type": "object",
+      "required": ["tipo", "longitud"],
+      "additionalProperties": true,
+      "properties": {
+        "tipo": { "type": "string", "enum": ["rampa", "acuerdo"] },
+        "longitud": { "type": "number", "exclusiveMinimum": 0 },
+        "pendiente_ini": { "type": "number" },
+        "pendiente_fin": { "type": "number" },
+        "kv": { "type": "number" }
+      }
+    },
+    "segmento_peralte": {
+      "type": "object",
+      "required": ["tipo", "longitud"],
+      "additionalProperties": true,
+      "properties": {
+        "tipo": { "type": "string", "enum": ["constante", "transicion"] },
+        "longitud": { "type": "number", "exclusiveMinimum": 0 },
+        "peralte_ini_pct": { "type": "number" },
+        "peralte_fin_pct": { "type": "number" }
+      }
+    },
+    "alineacion": {
+      "type": "object",
+      "required": ["nombre", "inicio", "planta"],
+      "additionalProperties": true,
+      "properties": {
+        "nombre": { "type": "string" },
+        "infraestructura": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "clase": { "type": "string", "pattern": "^Ifc[A-Za-z0-9]+$" },
+            "nombre": { "type": "string" }
+          }
+        },
+        "ancho_ref": { "type": "number" },
+        "inicio": {
+          "type": "object",
+          "required": ["x", "y"],
+          "additionalProperties": true,
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "acimut_deg": { "type": "number" },
+            "cota": { "type": "number" }
+          }
+        },
+        "planta": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/segmento_planta" } },
+        "alzado": { "type": "array", "items": { "$ref": "#/$defs/segmento_alzado" } },
+        "peralte": { "type": "array", "items": { "$ref": "#/$defs/segmento_peralte" } },
+        "georref": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "epsg": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+name: CI (Llave 1)
+
+# Llave 1 — automática. En cada PR corre la golden + validación de esquemas de lo AFECTADO.
+# Rojo bloquea el merge (regla de protección de rama). El CI NUNCA certifica: la firma
+# (Llave 2) es humana, en el flujo de release.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# cancela runs viejos del mismo PR
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: esquema + golden (afectados)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # historia completa para el cálculo de "afectado"
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sincronizar workspace
+        run: uv sync --all-packages
+
+      - name: Calcular objetivos afectados (informativo)
+        run: uv run python tools/affected.py --base origin/${{ github.base_ref || 'main' }} || true
+
+      - name: Paso 1 · esquemas de contrato bien formados
+        run: uv run --package aqyra-golden aqyra-golden --schema-only --golden-dir packages/golden
+
+      - name: Paso 2 · golden C1 (VERDE/ROJO — Llave 1)
+        run: uv run --package aqyra-golden aqyra-golden --golden-dir packages/golden
+
+  visor-typecheck:
+    name: visor typecheck (si afectado)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Instalar deps del visor
+        run: pnpm install --frozen-lockfile || pnpm install
+      - name: Typecheck del visor (placeholder en Fase 0)
+        run: pnpm --filter visor typecheck

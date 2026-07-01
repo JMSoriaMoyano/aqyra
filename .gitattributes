@@ -1,0 +1,12 @@
+# Normalización de fin de línea. Regla del ecosistema: los artefactos firmados o
+# byte-sensibles NO se normalizan (evita invalidar hashes/firmas por EOL).
+
+* text=auto eol=lf
+
+# Golden: artefactos byte-sensibles (el IFC y los oráculos son la verdad congelada).
+# -text = git no toca sus bytes (ni EOL). Un cambio de EOL NO debe romper la golden.
+packages/golden/**/*.ifc   -text
+packages/golden/**/*.json  -text
+
+# Windows scripts en CRLF
+*.bat text eol=crlf

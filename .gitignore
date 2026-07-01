@@ -1,0 +1,27 @@
+# Python / uv
+.venv/
+__pycache__/
+*.pyc
+.uv/
+dist/
+build/
+*.egg-info/
+
+# Node / pnpm
+node_modules/
+apps/**/dist/
+
+# Entorno
+.env
+.env.*
+*.key
+*.gpg-agent
+.DS_Store
+Thumbs.db
+
+# Rastro del probe del entorno montado (se limpia en el .bat de arranque)
+.probe_test/
+
+# Operativa local (.bat de arranque + logs): no es producto
+_operativo/
+COMMIT_aqyra_fase0.bat

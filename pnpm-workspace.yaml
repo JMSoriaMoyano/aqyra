@@ -1,0 +1,4 @@
+# Workspace pnpm — el TS del ecosistema (visor y futuros paquetes front).
+# El visor se desarrolla aquí; en Fase 0 es un esqueleto.
+packages:
+  - "apps/*"

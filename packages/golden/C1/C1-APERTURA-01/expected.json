@@ -1,0 +1,15 @@
+{
+  "caso": "C1-APERTURA-01",
+  "contrato": "C1",
+  "descripcion": "Apertura de familias P1: huecos en losa+muro, ascensor (catálogo abierto), alineación clotoide+acuerdo, doble clasificación bsDD+Uniclass.",
+  "esquema": "IFC4X3",
+  "huecos": { "losa": 1, "muro": 1 },
+  "transporte": { "total": 1, "predefinidos": ["ELEVATOR"] },
+  "alineacion": {
+    "planta_secuencia": ["LINE", "CLOTHOID", "CIRCULARARC", "CLOTHOID", "LINE"],
+    "longitud_total_m": 400.0,
+    "clotoide_A": 134.164
+  },
+  "doble_clasificacion": { "elementos": 7, "sin_clasif": 0 },
+  "_procedencia": "Derivado del IFC congelado y cuadrado con RESULTADO_oraculo.txt (run 2026-06-28). El oráculo NO sale del código del runner: es la verdad compilada aguas arriba (iso19650-openbim 0.10.0)."
+}

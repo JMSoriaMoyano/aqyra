@@ -1,0 +1,20 @@
+# versions.lock — ancla la versión del ESQUEMA de contrato, del ENGINE y del PACK.
+# Invariante (FUNDACION_C6 §3): un resultado solo es reproducible si se fija engine + pack.
+# Fase 0: solo C1. El resto entra contract-first, por fase (C4 → C3 → C5 → C9/C10 …).
+# Este fichero es la fuente de verdad que el CI lee. Se toca por PR (zona de gobierno).
+
+[contracts.C1]
+nombre          = "interoperabilidad"
+schema_version  = "0.1.0"              # esquema formalizado en este hilo (Fase 0)
+engine          = "iso19650-openbim"
+engine_version  = "0.10.0"             # firmado aguas arriba (Llave 2) — golden C1-APERTURA-01
+golden          = "C1-APERTURA-01"
+oraculo         = "conteo de entidades + round-trip"
+estado          = "esquema-formalizado"  # engine firmado; su import al monorepo es 0.5
+# nota: en Fase 0 el runner recomputa el oráculo desde el IFC congelado de la golden.
+#       cuando engines/ifc se importe (0.5), se antepone el paso compile contra el mismo expected.json.
+
+# --- packs (vacío en Fase 0; data/ es 0.6) ---
+# [packs.codigo]     id = "EC-ES"   version = "2021"
+# [packs.banco]      id = "BEDEC"   version = "2026-Q1"
+# [packs.ids]        id = "proyecto" version = "v3"

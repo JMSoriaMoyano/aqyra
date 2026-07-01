@@ -1,0 +1,46 @@
+name: Release (verifica las dos llaves)
+
+# Se dispara al empujar un tag vX.Y.Z. NO firma nada: la firma (Llave 2) la hace JM en local
+# con su clave GPG (ed25519). Este workflow solo VERIFICA que:
+#   - la golden está VERDE (Llave 1), y
+#   - el tag está FIRMADO por GPG (Llave 2 presente).
+# Si falta cualquiera, el release no es autoritativo.
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  verificar:
+    name: Llave 1 (golden) + Llave 2 (firma presente)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Sincronizar workspace
+        run: uv sync --all-packages
+
+      - name: Llave 1 · golden VERDE
+        run: uv run --package aqyra-golden aqyra-golden --golden-dir packages/golden
+
+      - name: Llave 2 · el tag está firmado (GPG)
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          echo "Verificando firma del tag $TAG"
+          # el objeto de tag debe ser 'tag' (anotado) y llevar firma PGP
+          TYPE=$(git cat-file -t "$TAG")
+          if [ "$TYPE" != "tag" ]; then
+            echo "::error::$TAG no es un tag ANOTADO/firmado (es $TYPE). Release NO autoritativo."
+            exit 1
+          fi
+          if git cat-file -p "$TAG" | grep -q "BEGIN PGP SIGNATURE"; then
+            echo "OK: el tag $TAG lleva firma GPG (Llave 2 presente)."
+          else
+            echo "::error::$TAG no lleva firma GPG. La firma es humana e insustituible."
+            exit 1
+          fi

@@ -1,0 +1,12 @@
+{
+  "name": "visor",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Visor IFC del ecosistema Aqyra (el cebo). Esqueleto en Fase 0.",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"[visor] build placeholder (Fase 0)\" && exit 0",
+    "test": "echo \"[visor] sin tests aún (Fase 0)\" && exit 0",
+    "typecheck": "echo \"[visor] typecheck placeholder (Fase 0)\" && exit 0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "conteos": "exacto",
+  "longitud_total_m": 1e-6,
+  "clotoide_A": 0.1,
+  "_regla_de_oro": "Un fallo se corrige en el código, NUNCA aflojando la golden ni editando el esperado."
+}

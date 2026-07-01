@@ -1,0 +1,18 @@
+# CODEOWNERS — zona de gobierno. Un cambio en contratos o golden requiere aprobación
+# del responsable en el PR (Llave 1 de revisión humana; la firma GPG es la Llave 2).
+#
+# Sustituir @JM por el usuario/equipo de GitHub de JM al crear el repo.
+
+# Todo, por defecto: revisión normal.
+*                           @JM
+
+# Contratos autoritativos: la frontera. No se toca sin PR aprobado.
+/packages/contracts/        @JM
+/versions.lock              @JM
+
+# Corpus golden: los oráculos. Un fallo se corrige en el código, no aflojando la golden.
+/packages/golden/           @JM
+
+# Gobierno / CI y firma.
+/.github/                   @JM
+/CODEOWNERS                 @JM
