@@ -22,7 +22,7 @@ engine_version  = "0.10.0"                   # aditivo sobre el tag firmado 0.8.
 tag_firmado     = "iso19650-openbim-v0.8.2"  # record histórico (firma GPG); NO es el engine vivo
 origen          = "_import/aqyra-motor (narracion-ifc/ + iso19650-openbim/scripts/lineal/)"
 corte           = "compile narración→IFC: compilar_spec+spec_to_ifc+clasificacion+catalogo_ifc+alineaciones_ifc+validar+spec.schema+construir_alineacion"
-estado          = "importado (corte mínimo C1); espejo aguas arriba = guardián+plan (engines/ifc/ESPEJO_plan-retirada.md)"
+estado          = "importado (corte mínimo C1); espejo del ENGINE retirado (PR-E1): plugins/iso19650-openbim consume engines/ifc por build (tools/build_plugin_iso19650.py, 0.10.0); guardián test_no_reaparicion_espejo.py"
 
 # md5 LF-normalizado de cada fichero del corte mínimo (== hashes de test_identidad_ifc).
 [engines.ifc.md5]
@@ -43,7 +43,7 @@ version         = "0.1.0"
 origen          = "Estructurando/Nucleo-transversal/nucleo"
 ifc_utils_md5   = "ad06f87d648fc0388b35d10deeb290b7"
 grafo_red_md5   = "fe5dfebb4c5adb73f90718d57978e8a4"
-estado          = "extraído (fin del espejo en el monorepo); retirada del espejo aguas arriba = pendiente"
+estado          = "extraído (fin del espejo en el monorepo); retirada aguas arriba PENDIENTE (PR-E2…E5). La copia en plugins/iso19650-openbim/scripts/nucleo queda atada byte a byte al canónico por test_no_reaparicion_espejo.py"
 
 # --- packs (0.6): conocimiento externo versionado. data/packs/<familia>/<id>/<version>/ ---
 # Cambiar de pack es una decisión explícita: se re-ancla aquí y se actualiza su golden.
