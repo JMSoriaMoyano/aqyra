@@ -32,8 +32,12 @@ test-core:
 test-packs:
     uv run pytest packages/packs -q
 
-# puerta completa que exige el CI: esquema válido + tests de core/packs + golden verde
-check: schema-check test-core test-packs golden
+# tests del engine C1 (identidad byte a byte del corte mínimo importado)
+test-engine:
+    uv run pytest engines/ifc -q
+
+# puerta completa que exige el CI: esquema válido + tests de core/packs/engine + golden verde
+check: schema-check test-core test-packs test-engine golden
 
 # lista los objetivos afectados por el diff contra {{base}}
 affected base=base:

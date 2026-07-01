@@ -10,7 +10,31 @@ engine          = "iso19650-openbim"
 engine_version  = "0.10.0"             # firmado aguas arriba (Llave 2) — golden C1-APERTURA-01
 golden          = "C1-APERTURA-01"
 oraculo         = "conteo de entidades + round-trip"
-estado          = "esquema-formalizado"  # engine firmado; su import al monorepo es posterior
+estado          = "engine-importado"     # Fase I·h1: corte mínimo en engines/ifc; la golden compila con el engine real
+
+# --- engine C1 (Fase I·h1): corte mínimo narración→IFC importado del canónico 0.10.0 ---
+# Copiado BYTE A BYTE de _import/aqyra-motor (procedencia). Identidad vigilada por
+# engines/ifc/tests/test_identidad_ifc.py (hash fijo) y test_espejo_ifc.py (vs procedencia).
+# La firma 0.8.2 sigue intacta en _import/tag como record histórico; el engine vivo se ancla por md5.
+[engines.ifc]
+engine          = "iso19650-openbim"
+engine_version  = "0.10.0"                   # aditivo sobre el tag firmado 0.8.2 (diff verificado)
+tag_firmado     = "iso19650-openbim-v0.8.2"  # record histórico (firma GPG); NO es el engine vivo
+origen          = "_import/aqyra-motor (narracion-ifc/ + iso19650-openbim/scripts/lineal/)"
+corte           = "compile narración→IFC: compilar_spec+spec_to_ifc+clasificacion+catalogo_ifc+alineaciones_ifc+validar+spec.schema+construir_alineacion"
+estado          = "importado (corte mínimo C1); espejo aguas arriba = guardián+plan (engines/ifc/ESPEJO_plan-retirada.md)"
+
+# md5 LF-normalizado de cada fichero del corte mínimo (== hashes de test_identidad_ifc).
+[engines.ifc.md5]
+"narracion-ifc/compilar_spec.py"             = "eff7e9c34ba633480738afd9b8ac3565"
+"narracion-ifc/spec_to_ifc.py"               = "45284c396d37f1ee591abc9e2e7ded4f"
+"narracion-ifc/clasificacion.py"             = "a5bc92893ed3db52475b14d481d83d2e"
+"narracion-ifc/catalogo_ifc.py"              = "6aabeac4663da34dd00a95a0f4a7b228"
+"narracion-ifc/catalogo-ifc4x3.json"         = "84840734f3ad19120dd67254b2d2c43f"
+"narracion-ifc/alineaciones_ifc.py"          = "da20508e06cd54435e0691fa32508311"
+"narracion-ifc/validar.py"                   = "c45940bfd69ffd9e2dd663319254aef4"
+"narracion-ifc/spec.schema.json"             = "a1db77f5771de282719429fa4aad2596"
+"scripts/lineal/generate_test_ifc_lineal.py" = "344f975b6e25a95dcce819c11f7089ad"
 
 # --- core (0.5): núcleo compartido, extraído del canónico Nucleo-transversal ---
 # No es un contrato; se ancla su procedencia e IDENTIDAD byte a byte (test_identidad_nucleo).
