@@ -11,3 +11,7 @@ package = false
 [tool.uv.workspace]
 members = ["packages/core", "packages/golden"]
 # engines/*, services/* se añaden como miembros cuando aterricen (0.5+).
+
+# Dependencias de desarrollo del workspace (uv las instala en `uv sync`).
+[dependency-groups]
+dev = ["pytest>=8"]

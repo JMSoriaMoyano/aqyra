@@ -22,6 +22,6 @@ Thumbs.db
 # Rastro del probe del entorno montado (se limpia en el .bat de arranque)
 .probe_test/
 
-# Operativa local (.bat de arranque + logs): no es producto
+# Operativa local (.bat de arranque/PR + logs): no es producto
 _operativo/
-COMMIT_aqyra_fase0.bat
+*.bat

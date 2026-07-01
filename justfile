@@ -24,8 +24,12 @@ schema-check:
 golden:
     uv run --package aqyra-golden aqyra-golden --golden-dir packages/golden
 
-# puerta completa que exige el CI: esquema válido + golden verde
-check: schema-check golden
+# tests del núcleo (comportamiento + identidad byte a byte con el canónico)
+test-core:
+    uv run pytest packages/core -q
+
+# puerta completa que exige el CI: esquema válido + tests de core + golden verde
+check: schema-check test-core golden
 
 # lista los objetivos afectados por el diff contra {{base}}
 affected base=base:
