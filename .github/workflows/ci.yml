@@ -5,6 +5,8 @@ name: CI (Llave 1)
 # (Llave 2) es humana, en el flujo de release.
 # NOTA DE GOBIERNO: el contexto requerido por la protección de main es el `name:` del job,
 # que DEBE ser exactamente `gate`. No renombrar sin actualizar la protección de rama.
+# El typecheck del visor se re-añadirá (con un tsc real y filtrado a apps/**) cuando exista
+# el paquete del visor; hasta entonces no se gatea sobre algo que no existe.
 
 on:
   pull_request:
@@ -44,21 +46,3 @@ jobs:
 
       - name: Paso 3 · golden C1 (VERDE/ROJO — Llave 1)
         run: uv run --package aqyra-golden aqyra-golden --golden-dir packages/golden
-
-  visor-typecheck:
-    name: visor typecheck (si afectado)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Instalar pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - name: Instalar deps del visor
-        run: pnpm install --frozen-lockfile || pnpm install
-      - name: Typecheck del visor (placeholder en Fase 0)
-        run: pnpm --filter visor typecheck
