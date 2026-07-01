@@ -32,3 +32,32 @@ estado          = "esqueleto (subconjunto mínimo de coeficientes estándar)"
 # [packs.banco]      id = "BEDEC"   version = "2026-Q1"   (0.6+, cuando C5 lo consuma)
 # [packs.normativa]  id = "CTE"     version = "2019"      (cuando C3 lo consuma)
 # [packs.ids]        id = "proyecto" version = "v3"       (cuando C4/C7 lo consuman)
+
+# --- historia (0.7): importación de los 4 repos aguas arriba PRESERVANDO firmas ---
+# Estrategia A: `git subtree add --prefix=_import/<repo>` conserva los SHA de los commits,
+# de modo que los objetos firmados siguen intactos y sus tags GPG verifican en el monorepo.
+# La zona firmada NO se reescribe; los 4 repos originales quedan archivados read-only.
+[historia]
+estrategia      = "subtree add (hashes preservados)"
+clave_firma     = "EDDSA/ed25519 8FD1E413A02021DD3E7903CA7D59BA28515E0942 (JM Soria <jmsoria@ciccp.es>)"
+backup          = "_backup-fase0.7-2026-07-01.tar.gz (4 espejos --mirror + MANIFIESTO-FIRMAS.txt)"
+
+[historia.aqyra-motor]
+origen          = "Estructurando (github.com/JMSoriaMoyano/aqyra-motor)"
+prefijo         = "_import/aqyra-motor"
+tags_firmados   = ["c1-evolucion-2026-06-28","iso19650-openbim-v0.8.2","motor-calculo-v0.1.0","motor-fem-v0.1.0"]
+
+[historia.aqyra-entorno]
+origen          = "Entorno (github.com/JMSoriaMoyano/aqyra-entorno)"
+prefijo         = "_import/aqyra-entorno"
+tags_firmados   = ["cebo-elementos-2026-06-28","cebo-parking-2026-06-28","cebo-trazado-2026-06-29"]
+
+[historia.aqyra-contratos-golden]
+origen          = "Estructurando 2.0 (github.com/JMSoriaMoyano/aqyra-contratos-golden)"
+prefijo         = "_import/aqyra-contratos-golden"
+tags_firmados   = ["c1-golden-2026-06-28"]
+
+[historia.aqyra-raiz]
+origen          = "Aqyra-Raiz (github.com/JMSoriaMoyano/aqyra-raiz)"
+prefijo         = "_import/aqyra-raiz"
+tags_firmados   = []

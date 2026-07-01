@@ -57,8 +57,24 @@ just affected       # lista los objetivos afectados por el diff contra origin/ma
 - **0.2** esquema de C1 (modelo neutro + alto-spec) formalizado, anclado — hecho.
 - **0.3** golden C1 (`C1-APERTURA-01`) importada + runner — hecho.
 - **0.4** CI (golden + typecheck) + CODEOWNERS + firma en release — hecho.
-- **0.5** `packages/core` (extraer núcleo, retirar espejo) — pendiente.
-- **0.6** `data/packs` (packs versionados) — pendiente.
-- **0.7** importar historia git de los 4 repos preservando firmas — pendiente (la última).
+- **0.5** `packages/core` (extraer núcleo, retirar espejo) — hecho.
+- **0.6** `data/packs` (packs versionados) — hecho.
+- **0.7** importar historia git de los 4 repos preservando firmas — **hecho** (la última).
+
+**Fase 0 COMPLETA (0.1–0.7).** Cimientos cerrados.
+
+## Historia importada (0.7)
+
+La historia completa de los 4 repos aguas arriba está bajo `_import/<repo>`, importada con
+`git subtree add` (**conserva los SHA**, así que los objetos firmados siguen intactos y sus
+tags GPG verifican en el monorepo). Los 4 repos originales quedan archivados read-only; la
+zona firmada **no se reescribe**. Procedencia y tags firmados: ver `versions.lock` §`[historia]`.
+
+| Repo origen | Prefijo | Tags firmados |
+|---|---|---|
+| `aqyra-motor` (`Estructurando`) | `_import/aqyra-motor` | 4 |
+| `aqyra-entorno` (`Entorno`) | `_import/aqyra-entorno` | 3 |
+| `aqyra-contratos-golden` (`Estructurando 2.0`) | `_import/aqyra-contratos-golden` | 1 |
+| `aqyra-raiz` (`Aqyra-Raiz`) | `_import/aqyra-raiz` | 0 |
 
 *Fase 0 = cimientos. El diseño está cerrado (ver `Aqyra-Raiz`); este árbol lo construye.*
