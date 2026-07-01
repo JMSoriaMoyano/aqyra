@@ -28,12 +28,12 @@ PATH_TARGETS: list[tuple[str, set[str]]] = [
     ("packages/core/",      {"core"}),          # core -> sus tests (pytest)
     ("packages/packs/",     {"packs"}),         # loader de packs -> sus tests
     ("data/packs/",         {"packs"}),         # datos de packs -> golden de pack
-    ("engines/",            {"golden"}),
+    ("engines/",            {"ifc", "golden"}), # engine -> su identidad + la golden que lo compila
     ("apps/visor/",         {"visor"}),
-    ("versions.lock",       {"golden", "core", "packs"}),
-    ("justfile",            {"golden", "visor", "core", "packs"}),
-    ("tools/",              {"golden", "visor", "core", "packs"}),
-    ("pyproject.toml",      {"golden", "core", "packs"}),
+    ("versions.lock",       {"golden", "core", "packs", "ifc"}),
+    ("justfile",            {"golden", "visor", "core", "packs", "ifc"}),
+    ("tools/",              {"golden", "visor", "core", "packs", "ifc"}),
+    ("pyproject.toml",      {"golden", "core", "packs", "ifc"}),
 ]
 
 # Cómo se construye/prueba cada objetivo (Fase 0). La golden es el test real.
@@ -51,13 +51,17 @@ RUN_COMMANDS: dict[str, dict[str, list[str]]] = {
         "build": ["uv", "sync"],
         "test":  ["uv", "run", "pytest", "packages/packs", "-q"],
     },
+    "ifc": {
+        "build": ["uv", "sync"],
+        "test":  ["uv", "run", "pytest", "engines/ifc", "-q"],
+    },
     "visor": {
         "build": ["pnpm", "--filter", "visor", "build"],
         "test":  ["pnpm", "--filter", "visor", "test"],
     },
 }
 
-ALL_TARGETS = {"golden", "core", "packs", "visor"}
+ALL_TARGETS = {"golden", "core", "packs", "ifc", "visor"}
 
 
 def changed_files(base: str) -> list[str] | None:
@@ -98,7 +102,7 @@ def main() -> int:
         targets = affected_targets(files)
         print(f"[affected] {len(files)} fichero(s) cambiado(s) vs {args.base}", file=sys.stderr)
 
-    ordered = [t for t in ("core", "packs", "golden", "visor") if t in targets]
+    ordered = [t for t in ("core", "packs", "ifc", "golden", "visor") if t in targets]
     if not ordered:
         print("[affected] nada afectado.", file=sys.stderr)
         return 0

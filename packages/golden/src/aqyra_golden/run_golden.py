@@ -5,10 +5,10 @@ Dos pasos de validación (ver CONTRATOS_estado-validacion-ubicacion.md §2):
   1. El esquema de contrato es JSON Schema bien formado.
   2. La golden lo ejercita: el caso conforma el esquema y coincide con el oráculo (± tolerancia).
 
-Fase 0: el oráculo real de C1 es *compilar→parsear→contar*, pero la transformación (compile)
-vive en engines/ifc (0.5). Aquí el runner recomputa el oráculo desde el IFC CONGELADO de la
-golden y lo compara con expected.json. Costura: cuando engines/ifc aterrice, se antepone el
-paso compile contra el MISMO expected.json.
+El oráculo real de C1 es *compilar→parsear→contar*. Fase I (hilo 1): el compile aterriza en
+engines/ifc (corte mínimo importado del canónico iso19650-openbim 0.10.0). El runner COMPILA
+`caso.alto.json` → IFC con el engine y recomputa las métricas sobre ESE IFC, comparándolas con
+el MISMO expected.json. La costura de Fase 0 (recomputar desde el IFC congelado) queda cerrada.
 
 Regla de oro: un fallo se corrige en el código, NUNCA aflojando la golden.
 """
@@ -25,6 +25,7 @@ _HERE = Path(__file__).resolve()
 DEFAULT_GOLDEN_DIR = _HERE.parents[2]           # aqyra/packages/golden
 DEFAULT_REPO = _HERE.parents[4]                 # aqyra
 DEFAULT_CONTRACTS = DEFAULT_REPO / "packages" / "contracts"
+DEFAULT_ENGINE = DEFAULT_REPO / "engines" / "ifc"   # engine C1 (compile narración→IFC)
 
 # Familias de elemento que declaran las golden C1 y que deben llevar doble clasificación.
 # (4 pilares → IfcColumn, 1 muro → IfcWall, 1 losa → IfcSlab, 1 ascensor → IfcTransportElement).
@@ -78,6 +79,21 @@ def _attr(seg, name, idx):
         return getattr(seg, name)
     except Exception:  # noqa: BLE001
         return seg[idx]
+
+
+def compile_case(alto_path: Path, out_ifc: Path, engine_dir: Path = DEFAULT_ENGINE) -> None:
+    """Cierra la costura: compila caso.alto.json → IFC con el engine (engines/ifc).
+
+    El oráculo NO recibe ya un IFC congelado, sino el IFC que produce el compile real
+    del canónico importado. Un fallo aquí se investiga en el compile, jamás en expected.json.
+    """
+    import json as _json
+    p = str(engine_dir)
+    if p not in sys.path:
+        sys.path.insert(0, p)
+    import compile_c1  # engines/ifc/compile_c1.py
+    alto = _json.loads(alto_path.read_text(encoding="utf-8"))
+    compile_c1.compilar_alto_a_ifc(alto, out_ifc)
 
 
 def compute_metrics(ifc_path: Path) -> dict:
@@ -253,19 +269,23 @@ def run(golden_dir: Path, contracts_dir: Path, schema_only: bool) -> int:
             print_checks([("caso conforma alto-spec", ok, detail)])
             case_ok &= ok
 
-        # 2b. oráculo recomputado desde el IFC congelado
-        ifc_path = case_dir / "golden.ifc"
-        if not ifc_path.exists():
-            print_checks([("golden.ifc presente", False, "no encontrado")])
+        # 2b. oráculo: COMPILE REAL (caso.alto.json → IFC con el engine) + recompute
+        if not alto_path.exists():
+            print_checks([("caso.alto.json presente", False, "no encontrado (necesario para compilar)")])
             case_ok = False
         else:
+            import tempfile
             try:
-                got = compute_metrics(ifc_path)
-                checks = compare(expected, got, tol)
-                print_checks(checks)
-                case_ok &= all(ok for _, ok, _ in checks)
+                with tempfile.TemporaryDirectory() as td:
+                    compiled = Path(td) / "compilado.ifc"
+                    compile_case(alto_path, compiled)
+                    print_checks([("compile narración→IFC", True, f"engine → {compiled.name}")])
+                    got = compute_metrics(compiled)
+                    checks = compare(expected, got, tol)
+                    print_checks(checks)
+                    case_ok &= all(ok for _, ok, _ in checks)
             except Exception as e:  # noqa: BLE001
-                print_checks([("oráculo recomputado", False, f"{type(e).__name__}: {e}")])
+                print_checks([("compile+oráculo", False, f"{type(e).__name__}: {e}")])
                 case_ok = False
 
         all_ok &= case_ok
@@ -293,3 +313,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+# Fase I · hilo 1: costura cerrada (compile real narración→IFC). Ver engines/ifc/compile_c1.py.
