@@ -1,0 +1,43 @@
+# ── Dependencias (se regeneran; nunca en git) ──
+node_modules/
+**/node_modules/
+.bin/
+.npmcache/
+
+# ── Secretos / credenciales (NUNCA subir) ──
+.env
+.env.*
+**/.env
+*.key
+*.pem
+secrets.*
+
+# ── Python temporales ──
+__pycache__/
+**/__pycache__/
+*.pyc
+.venv/
+venv/
+*aqyra_venv*/
+.pytest_cache/
+
+# ── Artefactos de release (binarios) — el manifiesto y su .asc SÍ se versionan ──
+*.plugin
+
+# ── Helpers operativos de git (no son del proyecto) ──
+/ESTADO_contratos.bat
+/COMMIT_contratos.bat
+/PUSH_contratos_main.bat
+/LIMPIAR_contratos_eol.
+# Helpers de git/firma y logs reubicados (reorg 2026-06-29)
+_operativo/
+st/
+build/
+*.log
+*.tmp
+
+# ── Sistema / editores ──
+.DS_Store
+Thumbs.db
+*.swp
+*~

@@ -1,0 +1,17 @@
+# Entorno de QA — Decopak HQ (donde el FEM SÍ se ejecuta)
+# Stack del motor de cálculo estructural (FEM + lectura IFC + EC + plots).
+# Python 3.10+ recomendado. Instalar en venv dedicado:
+#   python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+#
+# Versiones ancladas (ajustar al entorno del despacho; estas son las de referencia
+# usadas en el ecosistema). El oráculo por defecto de QA es PyNite (Gobierno §B.3).
+
+numpy>=1.24,<3
+scipy>=1.10                 # solver / álgebra (lo arrastra PyNite y los módulos de lámina)
+PyNiteFEA>=0.0.94           # ORÁCULO FEM por defecto (barras/celosías; Euler-Bernoulli + DKMQ)
+ifcopenshell>=0.8           # lectura del IFC con nudos/geometría reales
+anastruct>=1.5              # 2.º código para validación cruzada de pórticos planos
+matplotlib>=3.7             # diagramas de esfuerzos / plots de evidencia
+
+# Memorias en Word (opcional, vía Node): npm i -g docx
+# NODE_PATH=$(npm root -g) node generate_memoria*.js

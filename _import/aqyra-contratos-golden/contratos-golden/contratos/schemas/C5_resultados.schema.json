@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.openbim/contratos/C5/resultados/v0.json",
+  "title": "C5 v0 — Resultados del motor-fem (salida)",
+  "description": "Salida del motor: deformada, reacciones, esfuerzos (barra y lamina), modal y aprovechamientos. Equivalente a los Pset_AqyraStructuralResult_* del IFC (ver C5_psets_resultado.md). Unidades SI. Cada run declara su trazabilidad y su oraculo.",
+  "type": "object",
+  "required": ["meta", "desplazamientos", "reacciones", "aprovechamientos"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["contrato", "motor_version", "estado"],
+      "properties": {
+        "contrato": { "const": "C5 v0" },
+        "motor_version": { "type": "string", "description": "tag de release del motor-fem (versions.lock)" },
+        "build_interno": { "type": "string", "description": "version del plugin.json (opcional, traza build<->release)" },
+        "estado": { "enum": ["proposal", "verified"], "description": "verified solo tras golden verde + firma JM (dos llaves)" },
+        "oraculo": { "enum": ["analitico", "segundo_fem", "pynite", "mms", "mano_JM"], "description": "procedencia del oraculo de referencia que valida este run" },
+        "normas": { "type": "array", "items": { "type": "string" } },
+        "hipotesis": { "type": "array", "items": { "type": "string" } },
+        "run_id": { "type": "string" }
+      }
+    },
+    "desplazamientos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nodo", "combinacion"],
+        "properties": {
+          "nodo": { "type": "string" }, "combinacion": { "type": "string" },
+          "ux": {"type":"number"},"uy":{"type":"number"},"uz":{"type":"number"},
+          "rx": {"type":"number"},"ry":{"type":"number"},"rz":{"type":"number"}
+        }
+      }
+    },
+    "reacciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nodo", "combinacion"],
+        "properties": {
+          "nodo": { "type": "string" }, "combinacion": { "type": "string" },
+          "Fx":{"type":"number"},"Fy":{"type":"number"},"Fz":{"type":"number"},
+          "Mx":{"type":"number"},"My":{"type":"number"},"Mz":{"type":"number"}
+        }
+      }
+    },
+    "esfuerzos_barra": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["barra", "combinacion"],
+        "properties": {
+          "barra": { "type": "string" }, "combinacion": { "type": "string" },
+          "x_rel": { "type": "number", "minimum": 0, "maximum": 1, "description": "posicion a lo largo de la barra (0=i,1=j)" },
+          "N":{"type":"number"},"Vy":{"type":"number"},"Vz":{"type":"number"},
+          "Mt":{"type":"number"},"My":{"type":"number"},"Mz":{"type":"number"},
+          "envolvente": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    "esfuerzos_lamina": {
+      "type": "array",
+      "description": "esfuerzos por unidad de ancho en lamina (alcance v0)",
+      "items": {
+        "type": "object",
+        "required": ["lamina", "combinacion"],
+        "properties": {
+          "lamina": { "type": "string" }, "combinacion": { "type": "string" },
+          "punto": { "type": "string", "description": "centro/vano/esquina/borde o id de nodo" },
+          "mx":{"type":"number"},"my":{"type":"number"},"mxy":{"type":"number"},
+          "nx":{"type":"number"},"ny":{"type":"number"},"nxy":{"type":"number"},
+          "vx":{"type":"number"},"vy":{"type":"number"}
+        }
+      }
+    },
+    "modal": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["modo", "f"],
+        "properties": {
+          "modo": { "type": "integer" },
+          "f": { "type": "number", "description": "frecuencia propia [Hz]" },
+          "T": { "type": "number", "description": "periodo [s]" },
+          "masa_participante": { "type": "object", "properties": { "x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"} } }
+        }
+      }
+    },
+    "aprovechamientos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["elemento", "comprobacion", "norma", "Ed", "Rd", "u", "veredicto"],
+        "properties": {
+          "elemento": { "type": "string", "description": "id de barra/lamina/grupo" },
+          "comprobacion": { "type": "string", "description": "pandeo/flexion/cortante/flecha/vibracion/punzonamiento/bielas-tirantes/capacidad-geotecnica/fisuracion" },
+          "norma": { "type": "string", "description": "p.ej. 'EC3 6.3.1'" },
+          "Ed": { "type": "number" }, "Rd": { "type": "number" },
+          "u": { "type": "number", "description": "Ed/Rd" },
+          "veredicto": { "enum": ["CUMPLE", "NO_CUMPLE"] }
+        }
+      }
+    }
+  }
+}

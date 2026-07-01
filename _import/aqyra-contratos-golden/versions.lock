@@ -1,0 +1,52 @@
+# versions.lock — versiones ANCLADAS que consume Estructurando 2.0
+# Regla: 2.0 nunca consume "latest" ni la rama viva. Subir una versión es
+# deliberado: bump aquí -> re-correr la suite golden -> adoptar solo si verde.
+# SemVer MAJOR.MINOR.PATCH; MAJOR = cambia un contrato (C1..C8).
+#
+# SINCRONIZADO 2026-06-26: alineado con la base anclada del primer corte N1.1,
+# en PARIDAD con entorno/integracion/versions.lock. Los dos consumidores
+# (2.0 y Entorno) anclan la MISMA base; deben moverse juntos.
+#
+# P4 EJECUTADO 2026-06-26: golden C5 v0 en VERDE con PyNite (qa/run_golden.py).
+# Tags certificados via Estructurando/release.manifest.json (+ N1.1.sha256).
+# Falta P5: firma GPG de JM del manifiesto (segunda llave). built_from por componente abajo.
+#
+# AVISO DE BRECHA (2026-06-26): el productor (Estructurando) ya ha EMPAQUETADO
+# versiones MÁS NUEVAS que esta base anclada (ver bloque "disponible-no-adoptado"
+# abajo). Adoptarlas es una decisión deliberada que exige golden en verde + firma
+# de JM (cierre N1.1 / Foco 6). NO se suben aquí automáticamente.
+
+nucleo:
+  motor-fem:            "0.1.0"   # C5 · built_from 0.1.0 · GOLDEN VERDE (P3 PyNite 2026-06-26) · paridad Entorno
+  motor-calculo:        "0.1.0"   # built_from 0.23.0 (DEC-A1 Opción A + P3) · GOLDEN VERDE · tag cortado en P4 · paridad Entorno
+
+plugins:
+  iso19650-openbim:        "0.8.2"   # C1 · built_from 0.8.2 · GOLDEN VERDE · paridad Entorno
+  estructuras-eurocodigos: "0.1.0"   # skills EC en uso (N1.1). Paridad con Entorno.
+  visor-ifc:               "0.1.0"   # base del visor (V1), N0 artesanal (N1.1). Paridad con Entorno.
+  instalaciones:           "0.0.0"   # fuera del primer corte N1.1; pendiente de release-ready + golden
+  obras-lineales:          "0.0.0"   # fuera del primer corte N1.1; pendiente de release-ready + golden
+  puentes:                 "0.0.0"   # fuera del primer corte N1.1; pendiente de release-ready + golden
+  cte-documentos-basicos:  "0.0.0"   # sin paquete .plugin publicado aún
+
+# DISPONIBLE-NO-ADOPTADO — versiones ya empaquetadas por el productor en disco
+# (Estructurando/*.plugin) a 2026-06-26, por DELANTE de la base anclada. Subir
+# a estas requiere: bump -> golden verde -> firma JM. Mientras tanto NO se consumen.
+disponible-no-adoptado:
+  iso19650-openbim:     "0.9.2"   # vs 0.8.2 anclado
+  motor-calculo:        "0.23.0"  # vs 0.1.0 anclado  (es el build built_from del tag 0.1.0; golden verde)
+  motor-fem:            "0.3.0"   # vs 0.1.0 anclado
+  puentes:              "0.6.0"   # vs 0.0.0 anclado
+  obras-lineales:       "0.4.0"   # vs 0.0.0 anclado
+  instalaciones:        "0.3.0"   # vs 0.0.0 anclado
+
+# contratos vigentes (la golden vN valida la versión de contrato vN):
+# Registro canónico de numeración (evita colisiones entre hilos):
+contratos:
+  C1: "v0"   # parser / lectura IFC
+  C4: "v0"   # red
+  C5: "v0"   # motor-fem
+  C6: "v0"   # corpus golden / recuperación por OIR   (PROPUESTO · proyecto Entorno, capa 7)
+  C7: "v0"   # operador IA (criterio del copiloto)     (PROPUESTO · proyecto Entorno, capa 6)
+  C8: "v0"   # intercambio con el CDE                   (PROPUESTO · contratos-golden/contratos/C8_intercambio_CDE.md)
+# (C2, C3 sin asignar / reservados.)
