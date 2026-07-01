@@ -1,0 +1,45 @@
+{
+  "materiales": {
+    "C30/37": {
+      "E": 32840000000.0,
+      "G": 13680000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "muro": {
+    "tipo": "mensula",
+    "Hm": 5.5,
+    "t_alz": 0.45,
+    "e_z": 0.7,
+    "puntera": 1.0,
+    "talon": 2.55,
+    "B": 4.0,
+    "Df": 0.8,
+    "material": "C30/37"
+  },
+  "terreno": {
+    "metodo": "rankine",
+    "gamma": 19000.0,
+    "phi": 30.0,
+    "c": 0.0,
+    "beta": 0.0,
+    "delta": 0.0,
+    "phi_pas": 30.0,
+    "gamma_pas": 19000.0,
+    "f_pas": 0.5,
+    "phi_base": 30.0,
+    "adh_base": 0.0,
+    "Rd": 350000.0,
+    "nf": -1.0,
+    "gamma_w": 9810.0
+  },
+  "sobrecarga": 10000.0,
+  "coronacion": {
+    "N_G_N": 0.0,
+    "N_Q_N": 0.0,
+    "H_Q_N": 0.0
+  }
+}

@@ -1,0 +1,24 @@
+=== VALIDACION IFC caso-14.ifc ===
+Esquema: IFC4
+  IfcStructuralCurveMember         2
+  IfcStructuralPointConnection     3
+  IfcBoundaryNodeCondition         3
+  IfcRectangleProfileDef           1
+  IfcMaterialProfileSet            2
+  IfcMaterial                      1
+  IfcStructuralCurveAction         4
+  IfcStructuralLoadLinearForce     4
+  IfcStructuralLoadGroup           2
+  IfcStructuralAnalysisModel       1
+  IfcPropertySet                   2
+--- Curve members ---
+   VIGA_vano1 x: [0.0, 20.0]
+   VIGA_vano2 x: [20.0, 40.0]
+--- Apoyos (point connections) ---
+   APOYO_ext_0 x=0.0 GDL[Ux,Uy,Uz,Rx,Ry,Rz]= [True, True, True, False, False, True]
+   APOYO_central x=20.0 GDL[Ux,Uy,Uz,Rx,Ry,Rz]= [False, True, True, False, False, True]
+   APOYO_ext_2 x=40.0 GDL[Ux,Uy,Uz,Rx,Ry,Rz]= [False, True, True, False, False, True]
+--- Pset_Estructurando_Pretensado (vano1) ---
+   n_cordones=14 Ap=2100.0 mm2 Pm_inf=2343.6 kN P0=2811.0 kN
+   e_centro_vano=0.3 e_apoyo_central=-0.3 drape=0.45
+VALIDACION: IFC abre correctamente, 2 vanos + 3 apoyos + pretensado por vano. OK

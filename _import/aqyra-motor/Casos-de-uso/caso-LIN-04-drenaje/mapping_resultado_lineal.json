@@ -1,0 +1,14 @@
+{
+  "elementos": {
+    "Eje C-001": {
+      "Pset_Estructurando_ResultadoLineal": {
+        "Drenaje_norma": "5.2-IC",
+        "Drenaje_veredicto": "CUMPLE",
+        "Drenaje_n_cunetas": 1,
+        "Drenaje_n_odt": 1,
+        "Drenaje_n_no_cumple": 0,
+        "Drenaje_Q_max_m3_s": 5.0659
+      }
+    }
+  }
+}

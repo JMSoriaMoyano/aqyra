@@ -1,0 +1,41 @@
+{
+  "name": "visor-ifc",
+  "version": "1.2.0",
+  "description": "Visor IFC — Estructurando (app de escritorio)",
+  "main": "main.js",
+  "author": "Estructurando",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable"
+  },
+  "build": {
+    "appId": "com.estructurando.visorifc",
+    "productName": "Visor IFC",
+    "directories": { "output": "dist" },
+    "files": [
+      "main.js",
+      "app/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Visor IFC"
+    },
+    "portable": {
+      "artifactName": "Visor IFC portable.exe"
+    }
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  }
+}

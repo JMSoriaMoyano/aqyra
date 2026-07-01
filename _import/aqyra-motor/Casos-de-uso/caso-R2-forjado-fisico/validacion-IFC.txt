@@ -1,0 +1,85 @@
+VALIDACION IFC caso-R2.ifc  (schema IFC4)
+
+FORJADO FISICO REAL -- segundo caso de la DIRECCION 2 (puente IFC fisico -> modelo
+analitico con SUPERFICIES). Como el caso R1, es un IFC FISICO (elementos
+constructivos con GEOMETRIA, no entidades de analisis) y SIN cargas; a diferencia de
+R1 (solo barras), aqui hay una SUPERFICIE fisica (IfcSlab) ademas de barras. El agente
+debe AMPLIAR el puente para DERIVAR la superficie media y el espesor de la losa desde
+la geometria + IfcMaterialLayerSet, ademas de los ejes de viga (ya resuelto en R1).
+
+Entidades (IFC fisico, no de analisis):
+  IfcProject / IfcSite / IfcBuilding / IfcBuildingStorey   estructura espacial
+  IfcSlab                            1   (C30/37, canto 120 mm, planta 6,0 x 4,0 m)
+  IfcBeam                            2   (IPE 400, S275, paralelas, luz 6,0 m, sep 4,0 m)
+  IfcExtrudedAreaSolid               3   (geometria Body: losa = barrido del contorno;
+                                          vigas = barrido del perfil por el eje)
+  IfcIShapeProfileDef                2   (IPE 400 x2)
+  IfcRectangleProfileDef             1   (contorno en planta de la losa, 6,0 x 4,0)
+  IfcMaterialProfileSetUsage         2   -> IfcMaterialProfileSet -> IfcMaterialProfile  (vigas)
+  IfcMaterialLayerSetUsage           1   -> IfcMaterialLayerSet -> IfcMaterialLayer       (losa)
+  IfcMaterial                        2   (S275, C30/37)
+  IfcRelContainedInSpatialStructure  1   (planta contiene los 3 elementos)
+  IfcRelAssociatesMaterial / IfcRelAggregates / IfcRelDefinesByProperties
+  NO hay IfcStructuralCurveMember/SurfaceMember, NI acciones, NI apoyos de analisis.
+
+Geometria identica al CASO 2 (para validar el puente contra un resultado conocido):
+  losa C30/37 t=120 mm sobre 2 vigas IPE 400 S275, luz 6,0 m, separacion 4,0 m,
+  carga de superficie G=4,5 / Q=3,0 kN/m2 (q_ELU=10,575 kN/m2).
+
+PRUEBA 1 -- el parser de ANALISIS no ve nada (esta es la brecha de la D2):
+  laminas/ifc_to_model_3d.py sobre caso-R2.ifc -> nodos=0  barras=0  superficies=0
+  (correcto: no hay entidades del dominio de analisis; hace falta el puente).
+
+PRUEBA 2a -- el puente de R1 (puente_analitico) lee las VIGAS pero IGNORA la LOSA
+(esta es la BRECHA del caso R2 -- el puente aun no lee superficies fisicas):
+  puente.parse(caso-R2.ifc) -> nodos=4  barras=2  (las 2 vigas), superficies=0
+  IfcBeam Viga_1  eje (0,0,0) -> (6,0,0)   L=6,00  perfil IPE 400  mat S275
+  IfcBeam Viga_2  eje (0,4,0) -> (6,4,0)   L=6,00  perfil IPE 400  mat S275
+  -> la IfcSlab NO aparece: falta la extraccion de superficie media + espesor.
+
+PRUEBA 2b -- simulacion del PUENTE de superficies (lo que el modulo nuevo debe hacer):
+extraer de la GEOMETRIA de la IfcSlab la SUPERFICIE MEDIA (footprint del barrido + z
+medio) y el ESPESOR del IfcMaterialLayerSet, y el material:
+  IfcSlab Losa_forjado  planta X[0,0;6,0] Y[0,0;4,0]  z_med=-0,060
+                        espesor 0,120 m (= Sigma LayerThickness de IfcMaterialLayerSet)
+                        material C30/37
+  -> superficie media 6,0 x 4,0 m apoyada en las 2 vigas (y=0 y y=4,0): losa
+     unidireccional que salva 4,0 m entre vigas.
+
+Datos SIN entidad estandar en un IFC fisico (van en Pset, hipotesis de proyecto):
+  Carga    -> Pset_Estructurando_CargaHipotesis (G_kN_m2=4,5, Q_kN_m2=3,0, Direccion -Z)
+              en la losa
+  Apoyos   -> Pset_Estructurando_ApoyoBase (Cota_z=0, Tipo=biarticulado,
+              Ubicacion=extremos_viga) en las vigas
+  Proyecto -> Pset_Estructurando_ProyectoAnalisis (Norma, materiales, sistema)
+  (En BIM real, cargas y apoyos NO estan en el IFC; son hipotesis del calculista.)
+
+Propiedades de material (IfcMaterialProperties):
+  S275   E=210 GPa  G=80,77 GPa  nu=0,30  rho=7850   fy=275 MPa
+  C30/37 E=33 GPa   G=13,75 GPa  nu=0,20  rho=2500   fck=30 MPa
+
+CLASIFICACION/ENRUTADO esperado del agente (tras ampliar el puente):
+  el modelo neutro derivado (1 superficie horizontal de hormigon = losa + 2 barras
+  horizontales de acero I = vigas) -> losa a `laminas` (EC2) + vigas a `barras` (EC3)
+  con REPARTO por ancho tributario (run_forjado), igual que el caso 2.
+
+OK: el IFC fisico abre con ifcopenshell (IFC4); la geometria de losa y vigas, las
+secciones, el espesor (IfcMaterialLayerSet) y los materiales son extraibles; las
+hipotesis de carga/apoyo estan en Pset. El parser de analisis (correctamente) no lo
+lee, y el puente de R1 (solo barras) lee las vigas pero no la losa. Listo para R2.
+
+BRECHA del caso R2 (lo que hay que CREAR/AMPLIAR en el proximo hilo):
+  1. AMPLIAR puente_analitico a SUPERFICIES fisicas: por cada IfcSlab (y, en R3,
+     IfcWall/IfcFooting), extraer la SUPERFICIE MEDIA (footprint del IfcExtrudedAreaSolid
+     + placement a mundo, z medio) y el ESPESOR de IfcMaterialLayerSetUsage ->
+     IfcMaterialLayerSet (Sigma LayerThickness; geometria de respaldo) + material.
+  2. CONECTIVIDAD superficie<->barras: asociar la losa a las vigas que la soportan
+     (vigas bajo/dentro del contorno en planta), generar nudos y apoyos de borde.
+  3. Aplicar la HIPOTESIS de carga de SUPERFICIE (G/Q kN/m2) -> salida en el MISMO
+     modelo neutro estandar (superficie + barras) -> enrutar a `laminas`+`barras` con
+     reparto por ancho tributario (run_forjado).
+  4. VALIDACION clave: el puente debe REPRODUCIR el caso 2 -> m_Ed=21,15 kN.m/m
+     (losa, phi10/125, w_k~0,18 mm), reaccion por extremo 63,45 kN, vigas IPE 400
+     aprov. ~26,5 %, equilibrio global ~0 %.
+  (Los OFFSETS/excentricidades eje fisico de viga <-> plano medio de la losa se dejan
+   para R5; en R2 la losa y los ejes de viga se idealizan coplanares, como en el caso 2.)

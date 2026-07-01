@@ -1,0 +1,26 @@
+{
+  "elementos": {
+    "CAJON": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "cajon_postesado",
+        "A_m2": 7.982,
+        "Iy_m4": 8.5556,
+        "J_Bredt_m4": 17.7635,
+        "P0_kN": 70000.0,
+        "P_inf_kN": 57400.0,
+        "w_postesado_kN_m": 315.7,
+        "Sigma_constr_sup_MPa": -6.66,
+        "Sigma_constr_inf_MPa": -12.67,
+        "Sigma_servicio_sup_MPa": -7.91,
+        "Sigma_servicio_inf_MPa": -6.32,
+        "M_Ed_ELU_kNm": 55223.8,
+        "M_Rd_kNm": 166231.7,
+        "Interaccion_V_T": 0.532,
+        "Shear_lag_beff_frac": 0.844,
+        "Frecuencia_fundamental_Hz": 3.14,
+        "Aprovechamiento_max": 0.754,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

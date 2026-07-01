@@ -1,0 +1,17 @@
+{
+  "elementos": {
+    "LOSA": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "losa_postesada",
+        "M_Ed_ELU_vano_kNm_m": 1480.4,
+        "M_Rd_vano_kNm_m": 1481.1,
+        "Sigma_servicio_inf_MPa": 2.04,
+        "Sigma_servicio_sup_MPa": -5.14,
+        "w_postesado_kN_m2": 21.11,
+        "Frecuencia_fundamental_Hz": 5.98,
+        "Aprovechamiento_max": 0.999,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

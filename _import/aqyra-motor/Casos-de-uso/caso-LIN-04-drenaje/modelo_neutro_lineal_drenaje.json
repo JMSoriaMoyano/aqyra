@@ -1,0 +1,288 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "angulo": "rad",
+    "pendiente": "m/m"
+  },
+  "georref": {
+    "epsg": "EPSG:25830",
+    "descripcion_crs": "ETRS89 / UTM zone 30N",
+    "datum_geodesico": "ETRS89",
+    "datum_vertical": "EGM2008",
+    "map_projection": "UTM",
+    "map_zone": "30N",
+    "origen_e": 337000.0,
+    "origen_n": 4610000.0,
+    "altura": 700.0,
+    "rotacion_rad": 0.0,
+    "escala": 1.0
+  },
+  "infraestructura": {
+    "clase": "IfcRoad",
+    "nombre": "Carretera C-001"
+  },
+  "eje": {
+    "nombre": "Eje C-001",
+    "global_id": "2VrALScSj5NPRJHDT7TlMe"
+  },
+  "alineacion": {
+    "planta": [
+      {
+        "pk_ini": 0.0,
+        "tipo": "LINE",
+        "longitud": 100.0,
+        "x_ini": 0.0,
+        "y_ini": 0.0,
+        "acimut_ini_rad": 0.0,
+        "radio_ini": null,
+        "radio_fin": null,
+        "A_clotoide": null
+      },
+      {
+        "pk_ini": 100.0,
+        "tipo": "CLOTHOID",
+        "longitud": 60.0,
+        "x_ini": 100.0,
+        "y_ini": 0.0,
+        "acimut_ini_rad": 0.0,
+        "radio_ini": null,
+        "radio_fin": 300.0,
+        "A_clotoide": 134.1641
+      },
+      {
+        "pk_ini": 160.0,
+        "tipo": "CIRCULARARC",
+        "longitud": 80.0,
+        "x_ini": 159.94,
+        "y_ini": 1.9986,
+        "acimut_ini_rad": 0.1,
+        "radio_ini": 300.0,
+        "radio_fin": 300.0,
+        "A_clotoide": null
+      },
+      {
+        "pk_ini": 240.0,
+        "tipo": "CLOTHOID",
+        "longitud": 60.0,
+        "x_ini": 237.5417,
+        "y_ini": 20.4415,
+        "acimut_ini_rad": 0.36666667,
+        "radio_ini": 300.0,
+        "radio_fin": null,
+        "A_clotoide": 134.1641
+      },
+      {
+        "pk_ini": 300.0,
+        "tipo": "LINE",
+        "longitud": 100.0,
+        "x_ini": 291.9717,
+        "y_ini": 45.6244,
+        "acimut_ini_rad": 0.46666667,
+        "radio_ini": null,
+        "radio_fin": null,
+        "A_clotoide": null
+      }
+    ],
+    "alzado": [
+      {
+        "pk_ini": 0.0,
+        "tipo": "CONSTANTGRADIENT",
+        "longitud_h": 150.0,
+        "cota_ini": 100.0,
+        "pendiente_ini": 0.02,
+        "pendiente_fin": 0.02,
+        "kv": null
+      },
+      {
+        "pk_ini": 150.0,
+        "tipo": "PARABOLICARC",
+        "longitud_h": 100.0,
+        "cota_ini": 103.0,
+        "pendiente_ini": 0.02,
+        "pendiente_fin": -0.03,
+        "kv": 2000.0
+      },
+      {
+        "pk_ini": 250.0,
+        "tipo": "CONSTANTGRADIENT",
+        "longitud_h": 150.0,
+        "cota_ini": 102.5,
+        "pendiente_ini": -0.03,
+        "pendiente_fin": -0.03,
+        "kv": null
+      }
+    ],
+    "peralte": [
+      {
+        "pk_ini": 0.0,
+        "tipo": "CONSTANTCANT",
+        "longitud": 100.0,
+        "peralte_ini_pct": 0.0,
+        "peralte_fin_pct": 0.0,
+        "cant_ini_m": 0.0,
+        "cant_fin_m": 0.0
+      },
+      {
+        "pk_ini": 100.0,
+        "tipo": "LINEARTRANSITION",
+        "longitud": 60.0,
+        "peralte_ini_pct": 0.0,
+        "peralte_fin_pct": 7.0,
+        "cant_ini_m": 0.0,
+        "cant_fin_m": 0.245
+      },
+      {
+        "pk_ini": 160.0,
+        "tipo": "CONSTANTCANT",
+        "longitud": 80.0,
+        "peralte_ini_pct": 7.0,
+        "peralte_fin_pct": 7.0,
+        "cant_ini_m": 0.245,
+        "cant_fin_m": 0.245
+      },
+      {
+        "pk_ini": 240.0,
+        "tipo": "LINEARTRANSITION",
+        "longitud": 60.0,
+        "peralte_ini_pct": 7.0,
+        "peralte_fin_pct": 0.0,
+        "cant_ini_m": 0.245,
+        "cant_fin_m": 0.0
+      },
+      {
+        "pk_ini": 300.0,
+        "tipo": "CONSTANTCANT",
+        "longitud": 100.0,
+        "peralte_ini_pct": 0.0,
+        "peralte_fin_pct": 0.0,
+        "cant_ini_m": 0.0,
+        "cant_fin_m": 0.0
+      }
+    ]
+  },
+  "pk_inicio": 0.0,
+  "pk_fin": 400.0,
+  "longitud_total": 400.0,
+  "secciones_tipo": null,
+  "firme": null,
+  "terreno": null,
+  "metricas": {
+    "n_planta": 5,
+    "n_alzado": 3,
+    "n_peralte": 5,
+    "factor_escala_ifc": 1.0,
+    "esquema": "IFC4X3"
+  },
+  "drenaje": {
+    "norma": "5.2-IC",
+    "metodo_hidrologico": "Racional modificado 5.2-IC (Temez)",
+    "cuencas": [
+      {
+        "cuenca": "C-plataforma",
+        "tipo_elemento": "plataforma",
+        "periodo_retorno_anos": 25.0,
+        "area_km2": 0.0096,
+        "longitud_km": 0.4,
+        "pendiente_m_m": 0.02,
+        "pd_mm": 80.0,
+        "i1_id": 9.0,
+        "po_mm": 1.0,
+        "tc_h": 0.3144,
+        "intensidad_mm_h": 55.05,
+        "coef_escorrentia": 0.9826,
+        "factor_reductor_KA": 1.0,
+        "coef_uniformidad_Kt": 1.0165,
+        "caudal_m3_s": 0.1466,
+        "metodo": "Racional modificado 5.2-IC (Temez)",
+        "nota": "Predimensionado 5.2-IC. Pd/I1Id/Po regionales; cuenca del GIS/Pset si existe. NDP [confirmar AN]."
+      },
+      {
+        "cuenca": "C-vertiente",
+        "tipo_elemento": "odt",
+        "periodo_retorno_anos": 100.0,
+        "area_km2": 0.85,
+        "longitud_km": 1.6,
+        "pendiente_m_m": 0.035,
+        "pd_mm": 95.0,
+        "i1_id": 10.0,
+        "po_mm": 18.0,
+        "tc_h": 0.8107,
+        "intensidad_mm_h": 44.67,
+        "coef_escorrentia": 0.4565,
+        "factor_reductor_KA": 1.0,
+        "coef_uniformidad_Kt": 1.0521,
+        "caudal_m3_s": 5.0659,
+        "metodo": "Racional modificado 5.2-IC (Temez)",
+        "nota": "Predimensionado 5.2-IC. Pd/I1Id/Po regionales; cuenca del GIS/Pset si existe. NDP [confirmar AN]."
+      }
+    ],
+    "cunetas": [
+      {
+        "id": "CUN-MD",
+        "tipo": "triangular",
+        "seccion": {
+          "b_m": 0.0,
+          "z1": 3.0,
+          "z2": 3.0,
+          "profundidad_m": 0.3
+        },
+        "n_manning": 0.015,
+        "pendiente_long_m_m": 0.02,
+        "revestimiento": "hormigon",
+        "Q_calculo_m3_s": 0.1466,
+        "capacidad_total_m3_s": 0.6938,
+        "capacidad_util_m3_s": 0.4267,
+        "calado_normal_m": 0.1675,
+        "resguardo_min_m": 0.05,
+        "resguardo_real_m": 0.1325,
+        "velocidad_m_s": 1.742,
+        "velocidad_adm_m_s": [
+          0.5,
+          6.0
+        ],
+        "veredicto": "CUMPLE",
+        "errores": [],
+        "info": [
+          "Capacidad util (con resguardo 0.05 m) 0.427 m3/s >= Q 0.147 m3/s",
+          "Calado normal 0.167 m (profundidad 0.30 m, resguardo real 0.133 m)",
+          "Velocidad 1.74 m/s en rango [0.50, 6.00] m/s."
+        ],
+        "norma": "5.2-IC"
+      }
+    ],
+    "odt": [
+      {
+        "id": "ODT-1",
+        "seccion": {
+          "tipo": "circular",
+          "D_m": 1.8
+        },
+        "material": "hormigon",
+        "n_manning": 0.013,
+        "pendiente_long_m_m": 0.015,
+        "Q_cuenca_m3_s": 5.0659,
+        "capacidad_m3_s": 7.5914,
+        "control_gobernante": "entrada (embocadura/orificio)",
+        "capacidad_salida_m3_s": 12.8375,
+        "capacidad_entrada_m3_s": 7.5914,
+        "dimension_libre_m": 1.8,
+        "dimension_min_m": 1.8,
+        "velocidad_m_s": 5.08,
+        "velocidad_adm_m_s": [
+          0.5,
+          6.0
+        ],
+        "veredicto": "CUMPLE",
+        "errores": [],
+        "info": [
+          "Capacidad 7.591 m3/s (control de entrada (embocadura/orificio)) >= Q cuenca 5.066 m3/s",
+          "Control de salida 12.838 m3/s vs control de entrada 7.591 m3/s (gobierna el menor).",
+          "Dimension libre 1.80 m >= minima 1.80 m.",
+          "Velocidad 5.08 m/s en rango [0.50, 6.00] m/s."
+        ],
+        "norma": "5.2-IC"
+      }
+    ],
+    "nota": "Predimensionado 5.2-IC (calculo local por elemento, sin grafo de red). Cuenca/lluvia del GIS/Pset si existen. NDP [confirmar AN]."
+  }
+}

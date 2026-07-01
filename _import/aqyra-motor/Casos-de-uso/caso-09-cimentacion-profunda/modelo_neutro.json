@@ -1,0 +1,199 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N"
+  },
+  "materiales": {
+    "C30/37": {
+      "E": 32840000000.0,
+      "G": 13683333333.333334,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "secciones": {
+    "Pilote D600": {
+      "A": 0.2827433388230814,
+      "Iy": 0.0063617251235193305,
+      "Iz": 0.0063617251235193305,
+      "J": 0.012723450247038661,
+      "Wely": 0.021205750411731103,
+      "Wply": 0.036,
+      "Welz": 0.021205750411731103,
+      "Wplz": 0.036,
+      "Avz": 0.25446900494077324,
+      "h": 0.6,
+      "b": 0.6,
+      "D": 0.6,
+      "clase": 1,
+      "fuente": "geometria_circ"
+    },
+    "Pantalla e600": {
+      "A": 0.6,
+      "Iy": 0.049999999999999996,
+      "Iz": 0.018,
+      "J": 0.04507793279999999,
+      "Wely": 0.09999999999999999,
+      "Wply": 0.15,
+      "Welz": 0.06,
+      "Wplz": 0.09,
+      "Avz": 0.5,
+      "h": 1.0,
+      "b": 0.6,
+      "clase": 1,
+      "fuente": "geometria_rect"
+    }
+  },
+  "nodos": {
+    "PIL-1_cabeza": {
+      "x": -0.9,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "PIL-1_punta": {
+      "x": -0.9,
+      "y": 0.0,
+      "z": -12.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "PIL-2_cabeza": {
+      "x": 0.9,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "PIL-2_punta": {
+      "x": 0.9,
+      "y": 0.0,
+      "z": -12.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "Pilar_base": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "PANT_coronacion": {
+      "x": 15.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "PANT_pie": {
+      "x": 15.0,
+      "y": 0.0,
+      "z": -11.5,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "barras": {
+    "Pilote_PIL-1": {
+      "ni": "PIL-1_cabeza",
+      "nj": "PIL-1_punta",
+      "seccion": "Pilote D600",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "Pilote_PIL-2": {
+      "ni": "PIL-2_cabeza",
+      "nj": "PIL-2_punta",
+      "seccion": "Pilote D600",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "PANTALLA": {
+      "ni": "PANT_coronacion",
+      "nj": "PANT_pie",
+      "seccion": "Pantalla e600",
+      "material": "C30/37",
+      "tipo": "pilar"
+    }
+  },
+  "superficies": [
+    {
+      "nombre": "ENCEPADO_2pilotes",
+      "esquinas": [],
+      "esquinas_coords": [
+        [
+          -1.35,
+          -0.45,
+          0.0
+        ],
+        [
+          1.35,
+          -0.45,
+          0.0
+        ],
+        [
+          1.35,
+          0.45,
+          0.0
+        ],
+        [
+          -1.35,
+          0.45,
+          0.0
+        ]
+      ],
+      "espesor": 0.9,
+      "malla": 0.5,
+      "material": "C30/37",
+      "apoyo": "",
+      "cargas": []
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "nombre": "CELOSIA",
+  "celosia": {
+    "L": 36.0,
+    "h": 4.0,
+    "n": 8,
+    "material": {
+      "E": 210000000000.0,
+      "nu": 0.3,
+      "G": 81000000000.0,
+      "rho": 7850.0,
+      "fy": 355000000.0
+    },
+    "g_N_m": 18000.0,
+    "curva_pandeo": "b",
+    "n_carriles": 1,
+    "posiciones": 33,
+    "cordon_sec": {
+      "A": 0.022,
+      "Iy": 0.0006,
+      "Iz": 0.0006,
+      "J": 1e-05
+    },
+    "diagonal_sec": {
+      "A": 0.012,
+      "Iy": 0.00025,
+      "Iz": 0.00025,
+      "J": 5e-06
+    },
+    "montante_sec": {
+      "A": 0.0115,
+      "Iy": 0.00024,
+      "Iz": 0.00024,
+      "J": 4e-06
+    }
+  },
+  "_tipologia": "celosia"
+}

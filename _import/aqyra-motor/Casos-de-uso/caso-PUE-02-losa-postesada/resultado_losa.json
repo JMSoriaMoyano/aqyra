@@ -1,0 +1,772 @@
+{
+  "nombre_tablero": "LOSA_PUE02",
+  "tipologia": "losa_postesada",
+  "tablero": {
+    "L": 14.0,
+    "B": 9.0,
+    "t": 0.7,
+    "nx": 14,
+    "ny": 9,
+    "g2_N_m2": 3000.0,
+    "posiciones": 15,
+    "n_carriles": 2,
+    "material": {
+      "E": 34000000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "G": 14200000000.0,
+      "fck": 40000000.0
+    },
+    "fck_transferencia": 28000000.0,
+    "viga_borde": {
+      "A": 0.42,
+      "Iy": 0.038,
+      "Iz": 0.012,
+      "J": 0.02
+    }
+  },
+  "postesado": {
+    "P0_x_N_m": 1100000.0,
+    "P0_y_N_m": 250000.0,
+    "a_x": 0.45,
+    "a_y": 0.18,
+    "Ap_x_m2_m": 0.0008,
+    "fpk": 1860000000.0,
+    "perdidas_pct": 18.0,
+    "d_p": 0.6,
+    "d_s": 0.62,
+    "As_pas_x_m2_m": 0.0013
+  },
+  "permanentes": {
+    "g1_N_m2": 17167.5,
+    "g2_N_m2": 3000.0,
+    "w_equilibrar_N_m2": 20167.5
+  },
+  "postesado_balance": {
+    "w_p_N_m2": 20211.79138321996,
+    "w_px_N_m2": 16567.346938775514,
+    "w_py_N_m2": 3644.4444444444453,
+    "Pinfx_N_m": 902000.0000000001,
+    "Pinfy_N_m": 205000.00000000003
+  },
+  "carriles": [
+    "carril1",
+    "carril2"
+  ],
+  "termica_nota": "Losa de un vano (isostatica): gradiente termico libre, M_restriccion ~ 0.",
+  "f1_Hz": 6.430354346179523,
+  "modal": {
+    "frecuencias_Hz": [
+      6.430354346179523,
+      13.01894178161294,
+      25.646012054260986,
+      34.957220851469394
+    ]
+  },
+  "franjas": [
+    {
+      "elem": "Q_6_0",
+      "Mx_G1": -320873.68726394826,
+      "Mx_G2": -56072.291352371976,
+      "Mx_P": 377773.8183977569,
+      "Mx_lm1_sag": 341203.72230722033,
+      "M_Ed_ELU": 969502.0962467799,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.9129230109697388,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3283584.79106002,
+          "limite": -16800000.0,
+          "aprov": 0.19545147565833454,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 140727.64820287703,
+          "limite": 3508821.2858554386,
+          "aprov": 0.04010681557654998,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5456439.377866739,
+          "limite": -24000000.0,
+          "aprov": 0.22735164074444747,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 2879296.520723882,
+          "limite": 3508821.2858554386,
+          "aprov": 0.8205879656312902,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 969502.0962467799,
+          "limite": 1061975.7466918714,
+          "aprov": 0.9129230109697388,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 140727.64820287703,
+        "transfer_inf_Pa": -3283584.79106002,
+        "servicio_sup_Pa": -5456439.377866739,
+        "servicio_inf_Pa": 2879296.520723882,
+        "descompresion_inf_cp_Pa": -463107.2896325623
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    },
+    {
+      "elem": "Q_6_1",
+      "Mx_G1": -320818.80107518187,
+      "Mx_G2": -56062.700056824804,
+      "Mx_P": 377709.199309528,
+      "Mx_lm1_sag": 361810.102909096,
+      "M_Ed_ELU": 997233.6654554886,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.9390361960354943,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3283291.9227657374,
+          "limite": -16800000.0,
+          "aprov": 0.1954340430217701,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 140434.77990859444,
+          "limite": 3508821.2858554386,
+          "aprov": 0.040023349286755404,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5708764.139570303,
+          "limite": -24000000.0,
+          "aprov": 0.23786517248209596,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 3131621.282427445,
+          "limite": 3508821.2858554386,
+          "aprov": 0.8924995111752939,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 997233.6654554886,
+          "limite": 1061975.7466918714,
+          "aprov": 0.9390361960354943,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 140434.77990859444,
+        "transfer_inf_Pa": -3283291.9227657374,
+        "servicio_sup_Pa": -5708764.139570303,
+        "servicio_inf_Pa": 3131621.282427445,
+        "descompresion_inf_cp_Pa": -412640.9501514549
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    },
+    {
+      "elem": "Q_6_2",
+      "Mx_G1": -321601.8958418818,
+      "Mx_G2": -56199.544926497125,
+      "Mx_P": 378631.1592954202,
+      "Mx_lm1_sag": 375537.7333703216,
+      "M_Ed_ELU": 1017007.8850872458,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.9576564137696142,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3287470.4535352495,
+          "limite": -16800000.0,
+          "aprov": 0.1956827650913839,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 144613.31067810603,
+          "limite": 3508821.2858554386,
+          "aprov": 0.041214213804807616,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5876832.834815679,
+          "limite": -24000000.0,
+          "aprov": 0.24486803478398664,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 3299689.977672821,
+          "limite": 3508821.2858554386,
+          "aprov": 0.940398415551782,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 1017007.8850872458,
+          "limite": 1061975.7466918714,
+          "aprov": 0.9576564137696142,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 144613.31067810603,
+        "transfer_inf_Pa": -3287470.4535352495,
+        "servicio_sup_Pa": -5876832.834815679,
+        "servicio_inf_Pa": 3299689.977672821,
+        "descompresion_inf_cp_Pa": -379047.002281351
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    },
+    {
+      "elem": "Q_6_3",
+      "Mx_G1": -322167.91084270744,
+      "Mx_G2": -56298.45536788226,
+      "Mx_P": 379297.545031054,
+      "Mx_lm1_sag": 382128.4406060209,
+      "M_Ed_ELU": 1026802.9892024244,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.9668798862883521,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3290490.6641120045,
+          "limite": -16800000.0,
+          "aprov": 0.19586253953047644,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 147633.5212548615,
+          "limite": 3508821.2858554386,
+          "aprov": 0.042074961711499353,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5957517.491251715,
+          "limite": -24000000.0,
+          "aprov": 0.2482298954688215,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 3380374.6341088573,
+          "limite": 3508821.2858554386,
+          "aprov": 0.9633932191803646,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 1026802.9892024244,
+          "limite": 1061975.7466918714,
+          "aprov": 0.9668798862883521,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 147633.5212548615,
+        "transfer_inf_Pa": -3290490.6641120045,
+        "servicio_sup_Pa": -5957517.491251715,
+        "servicio_inf_Pa": 3380374.6341088573,
+        "descompresion_inf_cp_Pa": -362924.3759093075
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    },
+    {
+      "elem": "Q_6_4",
+      "Mx_G1": -322395.88110327633,
+      "Mx_G2": -56338.292897033796,
+      "Mx_P": 379565.9409738658,
+      "Mx_lm1_sag": 382221.4260814181,
+      "M_Ed_ELU": 1027290.0601103331,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.9673385322691346,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3291707.0951096946,
+          "limite": -16800000.0,
+          "aprov": 0.19593494613748183,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 148849.95225255168,
+          "limite": 3508821.2858554386,
+          "aprov": 0.04242163966930638,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5958648.887035051,
+          "limite": -24000000.0,
+          "aprov": 0.2482770369597938,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 3381506.029892193,
+          "limite": 3508821.2858554386,
+          "aprov": 0.9637156624429772,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 1027290.0601103331,
+          "limite": 1061975.7466918714,
+          "aprov": 0.9673385322691346,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 148849.95225255168,
+        "transfer_inf_Pa": -3291707.0951096946,
+        "servicio_sup_Pa": -5958648.887035051,
+        "servicio_inf_Pa": 3381506.029892193,
+        "descompresion_inf_cp_Pa": -362703.8582523109
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    },
+    {
+      "elem": "Q_6_5",
+      "Mx_G1": -322167.91084270936,
+      "Mx_G2": -56298.455367882794,
+      "Mx_P": 379297.5450310545,
+      "Mx_lm1_sag": 363459.3725221255,
+      "M_Ed_ELU": 1001599.7472891689,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.9431474780937531,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3290490.664111989,
+          "limite": -16800000.0,
+          "aprov": 0.19586253953047555,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 147633.5212548459,
+          "limite": 3508821.2858554386,
+          "aprov": 0.042074961711494906,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5728916.657571387,
+          "limite": -24000000.0,
+          "aprov": 0.23870486073214112,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 3151773.8004285283,
+          "limite": 3508821.2858554386,
+          "aprov": 0.8982428980164309,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 1001599.7472891689,
+          "limite": 1061975.7466918714,
+          "aprov": 0.9431474780937531,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 147633.5212548459,
+        "transfer_inf_Pa": -3290490.664111989,
+        "servicio_sup_Pa": -5728916.657571387,
+        "servicio_inf_Pa": 3151773.8004285283,
+        "descompresion_inf_cp_Pa": -408644.5426453545
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    },
+    {
+      "elem": "Q_6_6",
+      "Mx_G1": -321601.89584188204,
+      "Mx_G2": -56199.54492649763,
+      "Mx_P": 378631.15929542336,
+      "Mx_lm1_sag": 344884.8282259933,
+      "M_Ed_ELU": 975626.4631424036,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.9186899664908056,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3287470.4535352928,
+          "limite": -16800000.0,
+          "aprov": 0.19568276509138646,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 144613.31067814957,
+          "limite": 3508821.2858554386,
+          "aprov": 0.04121421380482003,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5501491.139170813,
+          "limite": -24000000.0,
+          "aprov": 0.22922879746545055,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 2924348.282027955,
+          "limite": 3508821.2858554386,
+          "aprov": 0.833427536995521,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 975626.4631424036,
+          "limite": 1061975.7466918714,
+          "aprov": 0.9186899664908056,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 144613.31067814957,
+        "transfer_inf_Pa": -3287470.4535352928,
+        "servicio_sup_Pa": -5501491.139170813,
+        "servicio_inf_Pa": 2924348.282027955,
+        "descompresion_inf_cp_Pa": -454115.3414103475
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    },
+    {
+      "elem": "Q_6_7",
+      "Mx_G1": -320818.80107518134,
+      "Mx_G2": -56062.70005682517,
+      "Mx_P": 377709.19930952985,
+      "Mx_lm1_sag": 325547.25960395264,
+      "M_Ed_ELU": 948278.8269935449,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.8929383085701341,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3283291.922765772,
+          "limite": -16800000.0,
+          "aprov": 0.19543404302177214,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 140434.7799086289,
+          "limite": 3508821.2858554386,
+          "aprov": 0.04002334928676522,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5264729.323588932,
+          "limite": -24000000.0,
+          "aprov": 0.2193637218162055,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 2687586.4664460737,
+          "limite": 3508821.2858554386,
+          "aprov": 0.7659513687061008,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 948278.8269935449,
+          "limite": 1061975.7466918714,
+          "aprov": 0.8929383085701341,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 140434.7799086289,
+        "transfer_inf_Pa": -3283291.922765772,
+        "servicio_sup_Pa": -5264729.323588932,
+        "servicio_inf_Pa": 2687586.4664460737,
+        "descompresion_inf_cp_Pa": -501447.9133477486
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    },
+    {
+      "elem": "Q_6_8",
+      "Mx_G1": -320873.68726395065,
+      "Mx_G2": -56072.29135237253,
+      "Mx_P": 377773.8183977606,
+      "Mx_lm1_sag": 304935.58237219264,
+      "M_Ed_ELU": 920540.1073344965,
+      "M_Rd_Nm_m": 1061975.7466918714,
+      "aprov_max": 0.8668183903465245,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -3283584.7910600463,
+          "limite": -16800000.0,
+          "aprov": 0.1954514756583361,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 140727.64820290334,
+          "limite": 3508821.2858554386,
+          "aprov": 0.04010681557655748,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -5012339.705192923,
+          "limite": -24000000.0,
+          "aprov": 0.20884748771637177,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 2435196.8480500644,
+          "limite": 3508821.2858554386,
+          "aprov": 0.6940213392647531,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU_vano",
+          "valor": 920540.1073344965,
+          "limite": 1061975.7466918714,
+          "aprov": 0.8668183903465245,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup_Pa": 140727.64820290334,
+        "transfer_inf_Pa": -3283584.7910600463,
+        "servicio_sup_Pa": -5012339.705192923,
+        "servicio_inf_Pa": 2435196.8480500644,
+        "descompresion_inf_cp_Pa": -551927.2241673335
+      },
+      "As_pas_req_cm2_m": 0.0,
+      "balance": {
+        "w_px_N_m2": 16567.346938775514,
+        "w_py_N_m2": 3644.4444444444453,
+        "w_p_N_m2": 20211.79138321996,
+        "w_equilibrar_N_m2": 20167.5,
+        "residual_N_m2": -44.29138321995924,
+        "residual_pct": 0.21961761854448614,
+        "sigma_cp_x_Pa": 1288571.4285714289,
+        "sigma_cp_y_Pa": 292857.1428571429,
+        "sigma_cp_Pa": 790714.2857142859,
+        "P_x_para_equilibrar_N_m": 549004.1666666666,
+        "P_y_para_equilibrar_N_m": 567210.9375
+      }
+    }
+  ],
+  "franja_critica": "Q_6_4",
+  "aprovechamiento_max": 0.9673385322691346,
+  "veredicto_global": "CUMPLE",
+  "mapping_writeback": {
+    "elementos": {
+      "LOSA_PUE02": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "losa_postesada",
+          "M_Ed_ELU_vano_kNm_m": 1027.3,
+          "M_Rd_vano_kNm_m": 1062.0,
+          "Sigma_servicio_inf_MPa": 3.38,
+          "Sigma_servicio_sup_MPa": -5.96,
+          "w_postesado_kN_m2": 20.21,
+          "Frecuencia_fundamental_Hz": 6.43,
+          "Aprovechamiento_max": 0.967,
+          "Veredicto_global": "CUMPLE"
+        }
+      }
+    }
+  }
+}

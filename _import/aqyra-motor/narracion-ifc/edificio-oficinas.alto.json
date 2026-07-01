@@ -1,0 +1,18 @@
+{
+  "proyecto": "Edificio oficinas — narración→IFC (Ruta 1, compilador)",
+  "esquema": "IFC4",
+  "niveles": { "plantas": 3, "altura": 3.2, "base": 0.0 },
+  "edificios": [
+    {
+      "nombre": "Of",
+      "origen": [0.0, 0.0],
+      "ancho": 18.0,
+      "largo": 12.0,
+      "luz_max": 6.0,
+      "seccion_pilar": [0.40, 0.40],
+      "espesor_muro": 0.25,
+      "espesor_forjado": 0.30,
+      "material": "HA-30"
+    }
+  ]
+}

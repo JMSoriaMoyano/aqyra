@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visor estructural — Caso 10 (edificio integrado)</title>
+<style>
+  html,body{margin:0;height:100%;background:#0e1116;color:#e6edf3;font-family:system-ui,Segoe UI,Arial,sans-serif;overflow:hidden}
+  #c{position:fixed;inset:0}
+  #hud{position:fixed;top:12px;left:12px;background:#161b22cc;border:1px solid #30363d;border-radius:10px;padding:12px 14px;max-width:300px;backdrop-filter:blur(4px)}
+  #hud h1{font-size:14px;margin:0 0 4px} #hud p{font-size:11px;margin:2px 0;color:#9da7b3}
+  .leg{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12px}
+  .sw{width:14px;height:14px;border-radius:3px;flex:none}
+  #tip{position:fixed;bottom:12px;left:12px;font-size:11px;color:#7d8590;background:#161b22aa;padding:6px 10px;border-radius:8px}
+  #info{position:fixed;top:12px;right:12px;background:#161b22cc;border:1px solid #30363d;border-radius:10px;padding:10px 12px;font-size:12px;min-width:150px;display:none}
+  #info b{color:#e6edf3} #info .k{color:#9da7b3}
+  button{background:#21262d;color:#e6edf3;border:1px solid #30363d;border-radius:6px;padding:5px 9px;font-size:11px;cursor:pointer;margin-top:8px}
+  button:hover{background:#30363d}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">
+  <h1>Caso 10 — Edificio integrado</h1>
+  <p>Modelo de análisis estructural (4 sistemas en un mismo IFC, separados en planta).</p>
+  <div class="leg"><span class="sw" style="background:#3b82f6"></span>A · Pórtico de acero (EC3)</div>
+  <div class="leg"><span class="sw" style="background:#22c55e"></span>B · Forjado mixto (EC4)</div>
+  <div class="leg"><span class="sw" style="background:#f59e0b"></span>C · Muro de carga (EC2)</div>
+  <div class="leg"><span class="sw" style="background:#ef4444"></span>D · Cimentación (EC2+EC7)</div>
+  <div class="leg"><span class="sw" style="background:#e6edf3;border-radius:50%"></span>Nodo · ▣ apoyo/lecho</div>
+  <button id="fit">Reencuadrar</button> <button id="spin">Girar auto</button>
+</div>
+<div id="info"></div>
+<div id="tip">Arrastrar = orbitar · rueda = zoom · clic en un elemento = propiedades</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const DATA = {"nodes": {"PORT_base_1": [0.0, 0.0, 0.0, true], "PORT_base_2": [6.0, 0.0, 0.0, true], "PORT_top_1": [0.0, 0.0, 4.0, false], "PORT_top_2": [6.0, 0.0, 4.0, false], "MIX_ap_1": [0.0, 20.0, 0.0, true], "MIX_ap_2": [8.0, 20.0, 0.0, true], "MURO_cabeza": [30.5, 0.0, 3.0, false], "ZAP_esq_-1_-1": [38.75, -1.25, 0.0, true], "ZAP_esq_-1_1": [38.75, 1.25, 0.0, true], "ZAP_esq_1_-1": [41.25, -1.25, 0.0, true], "ZAP_esq_1_1": [41.25, 1.25, 0.0, true], "ZAP_pilar_cabeza": [40.0, 0.0, 1.0, false], "ZAP_pilar_pie": [40.0, 0.0, 0.0, false]}, "bars": [{"id": "PORT_pilar_1", "a": [0.0, 0.0, 0.0], "b": [0.0, 0.0, 4.0], "sec": "HEB 240", "fam": "portico", "clase": "pilar EC3"}, {"id": "PORT_pilar_2", "a": [6.0, 0.0, 0.0], "b": [6.0, 0.0, 4.0], "sec": "HEB 240", "fam": "portico", "clase": "pilar EC3"}, {"id": "PORT_dintel", "a": [0.0, 0.0, 4.0], "b": [6.0, 0.0, 4.0], "sec": "IPE 360", "fam": "portico", "clase": "viga/dintel EC3"}, {"id": "MIX_viga", "a": [0.0, 20.0, 0.0], "b": [8.0, 20.0, 0.0], "sec": "IPE 400", "fam": "mixta", "clase": "viga mixta EC4"}, {"id": "ZAP_pilar", "a": [40.0, 0.0, 0.0], "b": [40.0, 0.0, 1.0], "sec": "Pilar 400x400", "fam": "cimentacion", "clase": "pilar->cimiento (EC2)"}], "surfs": [{"id": "MIX_losa", "corners": [[0.0, 18.5, 0.0], [8.0, 18.5, 0.0], [8.0, 21.5, 0.0], [0.0, 21.5, 0.0]], "t": 0.12, "mat": "C25/30", "fam": "mixta", "clase": "losa colaborante EC4"}, {"id": "MURO_carga", "corners": [[30.0, 0.0, 0.0], [31.0, 0.0, 0.0], [31.0, 0.0, 3.0], [30.0, 0.0, 3.0]], "t": 0.2, "mat": "C30/37", "fam": "muro", "clase": "muro de carga EC2"}, {"id": "ZAPATA_aislada", "corners": [[38.75, -1.25, 0.0], [41.25, -1.25, 0.0], [41.25, 1.25, 0.0], [38.75, 1.25, 0.0]], "t": 0.6, "mat": "C30/37", "fam": "cimentacion", "clase": "zapata EC2+EC7"}]};
+const COL={portico:0x3b82f6,mixta:0x22c55e,muro:0xf59e0b,cimentacion:0xef4444,otro:0x8b949e};
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x0e1116);
+const cam=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.05,5000); cam.up.set(0,0,1);
+const rnd=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+rnd.setSize(innerWidth,innerHeight); rnd.setPixelRatio(devicePixelRatio);
+const ctr=new THREE.OrbitControls(cam,rnd.domElement); ctr.enableDamping=true;
+scene.add(new THREE.AmbientLight(0xffffff,0.75));
+const dl=new THREE.DirectionalLight(0xffffff,0.7); dl.position.set(20,30,40); scene.add(dl);
+const grid=new THREE.GridHelper(120,60,0x30363d,0x21262d); grid.rotation.x=Math.PI/2; scene.add(grid);
+scene.add(new THREE.AxesHelper(3));
+const pick=[]; const box=new THREE.Box3();
+function V(a){return new THREE.Vector3(a[0],a[1],a[2]);}
+// barras como cilindros
+DATA.bars.forEach(b=>{
+  const a=V(b.a),d=V(b.b); const len=a.distanceTo(d); const mid=a.clone().add(d).multiplyScalar(0.5);
+  const g=new THREE.CylinderGeometry(0.06,0.06,len,12);
+  const m=new THREE.MeshStandardMaterial({color:COL[b.fam],metalness:0.3,roughness:0.6});
+  const cyl=new THREE.Mesh(g,m); cyl.position.copy(mid);
+  cyl.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().sub(a).normalize());
+  cyl.userData={t:b.id,c:b.clase,extra:'Sección '+(b.sec||'-')}; scene.add(cyl); pick.push(cyl); box.expandByPoint(a); box.expandByPoint(d);
+});
+// superficies como paneles
+DATA.surfs.forEach(s=>{
+  const pts=s.corners.map(V); const geo=new THREE.BufferGeometry();
+  const idx=pts.length===4?[0,1,2,0,2,3]:[0,1,2];
+  const pos=[]; pts.forEach(p=>pos.push(p.x,p.y,p.z));
+  geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); geo.setIndex(idx); geo.computeVertexNormals();
+  const m=new THREE.MeshStandardMaterial({color:COL[s.fam],transparent:true,opacity:0.5,side:THREE.DoubleSide,metalness:0.1,roughness:0.8});
+  const mesh=new THREE.Mesh(geo,m); mesh.userData={t:s.id,c:s.clase,extra:'Espesor '+(s.t||'-')+' m · '+(s.mat||'')};
+  scene.add(mesh); pick.push(mesh); pts.forEach(p=>box.expandByPoint(p));
+  // borde
+  const eg=new THREE.EdgesGeometry(geo); scene.add(new THREE.LineSegments(eg,new THREE.LineBasicMaterial({color:COL[s.fam]})));
+});
+// nodos
+Object.entries(DATA.nodes).forEach(([k,n])=>{
+  const sup=n[3]; const g=new THREE.SphereGeometry(sup?0.13:0.08,14,14);
+  const m=new THREE.MeshStandardMaterial({color:sup?0xffd166:0xe6edf3});
+  const s=new THREE.Mesh(g,m); s.position.set(n[0],n[1],n[2]);
+  s.userData={t:k,c:sup?'nodo con apoyo / lecho':'nodo',extra:'('+n[0]+', '+n[1]+', '+n[2]+')'};
+  scene.add(s); pick.push(s); box.expandByPoint(s.position);
+});
+const ctrZ=box.getCenter(new THREE.Vector3()), sz=box.getSize(new THREE.Vector3());
+function fit(){const r=Math.max(sz.x,sz.y,sz.z)*0.6+5; ctr.target.copy(ctrZ); cam.position.set(ctrZ.x+r,ctrZ.y-r*1.2,ctrZ.z+r*0.9); cam.near=0.05; cam.far=r*20; cam.updateProjectionMatrix();}
+fit();
+const ray=new THREE.Raycaster(), mouse=new THREE.Vector2(), info=document.getElementById('info');
+addEventListener('pointerdown',e=>{
+  mouse.x=e.clientX/innerWidth*2-1; mouse.y=-(e.clientY/innerHeight)*2+1; ray.setFromCamera(mouse,cam);
+  const hit=ray.intersectObjects(pick)[0];
+  if(hit&&hit.object.userData.t){const u=hit.object.userData; info.style.display='block';
+    info.innerHTML='<b>'+u.t+'</b><br><span class="k">'+(u.c||'')+'</span><br>'+(u.extra||'');}
+  else info.style.display='none';
+});
+let spin=false; document.getElementById('spin').onclick=()=>spin=!spin;
+document.getElementById('fit').onclick=fit;
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();rnd.setSize(innerWidth,innerHeight);});
+(function loop(){requestAnimationFrame(loop); if(spin){ctr.autoRotate=true;ctr.autoRotateSpeed=1.2;}else ctr.autoRotate=false; ctr.update(); rnd.render(scene,cam);})();
+</script>
+</body></html>

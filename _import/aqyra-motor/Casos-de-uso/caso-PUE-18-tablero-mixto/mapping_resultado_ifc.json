@@ -1,0 +1,22 @@
+{
+  "elementos": {
+    "MIXTO": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "mixto_acero_hormigon",
+        "Clase_seccion": 2,
+        "A_acero_m2": 0.0445,
+        "I_comp_m4": 0.02705,
+        "b_eff_losa_m": 2.5,
+        "M_Ed_ELU_kNm": 25343.0,
+        "M_Rd_total_kNm": 43872.3,
+        "PNA_zona": "ala superior",
+        "Conexion_eta": 1.325,
+        "Fatiga_Dsigma_E2_MPa": 38.5,
+        "Fatiga_Dsigma_Rd_MPa": 66.7,
+        "Frecuencia_fundamental_Hz": 2.99,
+        "Aprovechamiento_max": 0.755,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

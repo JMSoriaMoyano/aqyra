@@ -1,0 +1,26 @@
+VALIDACION IFC caso-04.ifc  (schema IFC4)
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralPointConnection       4
+  IfcStructuralSurfaceMember         1
+  IfcBoundaryNodeCondition           4
+  IfcFaceSurface                     1
+  IfcPolyLoop                        1
+  IfcStructuralLoadGroup             2
+  IfcStructuralSurfaceAction         2
+  IfcStructuralLoadPlanarForce       2
+  IfcRelConnectsStructuralActivity   2
+  IfcRelAssociatesMaterial           1
+  IfcMaterialProperties              1
+  IfcPlane                           1
+LoadedBy: ['G', 'Q']
+Materiales: ['C30/37']
+  Faldon 'Faldon' espesor=0.200 m
+  Esquinas (z!=0 -> superficie INCLINADA):
+    (0.000, 0.000, 0.000)
+    (8.000, 0.000, 0.000)
+    (8.000, 5.196, 3.000)
+    (0.000, 5.196, 3.000)
+  Cargas: [('G', -6000.0), ('Q', -1000.0)]
+  Nodos (apoyos alero+cumbrera): 4
+OK: el IFC abre correctamente con ifcopenshell.

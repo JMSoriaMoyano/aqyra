@@ -1,0 +1,65 @@
+VALIDACION IFC caso-R1.ifc  (schema IFC4)
+
+PORTICO FISICO REAL -- primer caso de la DIRECCION 2 (puente IFC fisico -> modelo
+analitico). A diferencia de los casos 1-11 (IFC ORTODOXO del dominio de ANALISIS),
+este es un IFC FISICO como el que entrega una herramienta BIM: elementos
+constructivos con GEOMETRIA (no entidades de analisis) y SIN cargas. El agente debe
+DERIVAR el modelo analitico (ejes, nudos, apoyos) desde la geometria -- ese es el
+"puente" que hay que construir.
+
+Entidades (IFC fisico, no de analisis):
+  IfcProject / IfcSite / IfcBuilding / IfcBuildingStorey   estructura espacial
+  IfcColumn                          2   (HEB 200, S275, verticales 4,0 m)
+  IfcBeam                            1   (IPE 330, S275, horizontal luz 6,0 m)
+  IfcExtrudedAreaSolid               3   (geometria Body: barrido del perfil por el eje)
+  IfcIShapeProfileDef                3   (HEB 200 x2, IPE 330)
+  IfcMaterialProfileSetUsage         3   -> IfcMaterialProfileSet -> IfcMaterialProfile
+  IfcMaterial                        1   (S275)
+  IfcRelContainedInSpatialStructure  1   (planta contiene los 3 elementos)
+  IfcRelAssociatesMaterial / IfcRelAggregates / IfcRelDefinesByProperties
+  NO hay IfcStructuralCurveMember/SurfaceMember, NI acciones, NI apoyos de analisis.
+
+Geometria identica al CASO 1 (para validar el puente contra un resultado conocido):
+  portico HEB 200 + IPE 330, S275, luz 6,0 m, altura 4,0 m, G=12 / Q=10 kN/m.
+
+PRUEBA 1 -- el parser de ANALISIS no ve nada (esta es la brecha):
+  laminas/ifc_to_model_3d.py sobre caso-R1.ifc -> nodos=0  barras=0  superficies=0
+  (correcto: no hay entidades del dominio de analisis; hace falta el puente).
+
+PRUEBA 2 -- simulacion del PUENTE (lo que el modulo nuevo debe hacer): extraer de la
+GEOMETRIA el eje (placement + directriz del IfcExtrudedAreaSolid), el perfil
+(IfcMaterialProfileSetUsage -> IfcIShapeProfileDef) y el material:
+  IfcColumn Pilar_1  eje (0,0,0) -> (0,0,4)   L=4,00  perfil HEB 200  mat S275
+  IfcColumn Pilar_2  eje (6,0,0) -> (6,0,4)   L=4,00  perfil HEB 200  mat S275
+  IfcBeam   Dintel   eje (0,0,4) -> (6,0,4)   L=6,00  perfil IPE 330  mat S275
+  estructura espacial: ['Planta baja']
+  hipotesis de carga (Pset del dintel): G=12 kN/m, Q=10 kN/m, direccion -Z
+  -> los ejes se cortan en (0,0,4) y (6,0,4): 4 nudos analiticos esperados.
+
+Datos SIN entidad estandar en un IFC fisico (van en Pset, hipotesis de proyecto):
+  Carga    -> Pset_Estructurando_CargaHipotesis (G_kN_m, Q_kN_m, Direccion) en el dintel
+  Apoyos   -> Pset_Estructurando_ApoyoBase (Cota_z, Tipo=biarticulado) en los pilares
+  Proyecto -> Pset_Estructurando_ProyectoAnalisis (Norma, material por defecto)
+  (En BIM real, cargas y apoyos NO estan en el IFC; son hipotesis del calculista.)
+
+CLASIFICACION/ENRUTADO esperado del agente (tras el puente):
+  el modelo neutro derivado (4 nudos + 3 barras: 2 pilares verticales de acero I +
+  1 dintel horizontal de acero I) -> `barras` (EC3), igual que el caso 1.
+
+OK: el IFC fisico abre con ifcopenshell (IFC4); la geometria, las secciones y el
+material son extraibles; las hipotesis de carga/apoyo estan en Pset. El parser de
+analisis (correctamente) no lo lee. Listo para el caso R1.
+
+BRECHA del caso R1 (lo que hay que CREAR en el proximo hilo):
+  1. NUEVO modulo `puente_analitico/` (fisico -> modelo neutro): leer
+     IfcColumn/IfcBeam (y, en R2-R4, IfcWall/IfcSlab/IfcFooting/IfcPile), extraer el
+     EJE (directriz del barrido = placement + ExtrudedDirection*Depth), el PERFIL
+     (IfcMaterialProfileSetUsage -> IfcIShapeProfileDef; geometria de respaldo) y el
+     MATERIAL.
+  2. Construir NUDOS por interseccion de ejes con TOLERANCIA, troceo de barras en
+     cruces, fusion de nudos coincidentes (R1: ejes limpios que se cortan; los
+     OFFSETS/excentricidades se endurecen en R5).
+  3. Inferir APOYOS (Pset/cota base) y aplicar las HIPOTESIS de carga (Pset) -> salida
+     en el MISMO modelo neutro estandar -> reutilizar clasificador/enrutador + `barras`.
+  4. VALIDACION clave: el puente debe REPRODUCIR el caso 1 -> 93,60 kN/apoyo;
+     pilares HEB 200 aprov. 32,0 %; dintel IPE 330 aprov. 44,6 %; equilibrio ~0 %.

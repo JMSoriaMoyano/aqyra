@@ -1,0 +1,81 @@
+{
+  "elementos": {
+    "COND-0": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 200.0,
+        "Caudal_l_s": 24.8018,
+        "Velocidad_m_s": 0.7895,
+        "Perdida_carga_kPa": 1.0854,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "COND-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 125.0,
+        "Caudal_l_s": 12.6378,
+        "Velocidad_m_s": 1.0298,
+        "Perdida_carga_kPa": 12.8728,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "COND-2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 125.0,
+        "Caudal_l_s": 8.0082,
+        "Velocidad_m_s": 0.6526,
+        "Perdida_carga_kPa": 5.4206,
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "COND-3": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 125.0,
+        "Caudal_l_s": 8.6918,
+        "Velocidad_m_s": 0.7083,
+        "Perdida_carga_kPa": 6.3268,
+        "Sentido_flujo": "nj->ni"
+      }
+    },
+    "COND-4": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_dimensionado_mm": 125.0,
+        "Caudal_l_s": 12.164,
+        "Velocidad_m_s": 0.9912,
+        "Perdida_carga_kPa": 11.9667,
+        "Sentido_flujo": "nj->ni"
+      }
+    },
+    "ACO-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 4.6296,
+        "Presion_disponible_kPa": 299.334,
+        "Presion_min_kPa": 250.0,
+        "Margen_kPa": 49.334,
+        "Cumple": true
+      }
+    },
+    "ACO-2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 3.4722,
+        "Presion_disponible_kPa": 290.45,
+        "Presion_min_kPa": 250.0,
+        "Margen_kPa": 40.45,
+        "Cumple": true
+      }
+    },
+    "HIDRANTE-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_l_s": 16.7,
+        "Presion_disponible_kPa": 313.494,
+        "Presion_min_kPa": 250.0,
+        "Margen_kPa": 63.494,
+        "Cumple": true
+      }
+    }
+  },
+  "_meta": {
+    "pset": "Pset_Estructurando_ResultadoRed",
+    "fuente": "obras-lineales/red (solver Darcy a presion, abastecimiento EN 805)",
+    "nota": "Predimensionado; revisar y firmar por tecnico competente."
+  }
+}

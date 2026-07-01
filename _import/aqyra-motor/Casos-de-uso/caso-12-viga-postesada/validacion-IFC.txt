@@ -1,0 +1,45 @@
+VALIDACION IFC - Caso 12 (viga postesada isostatica, EC2 §5.10)
+================================================================
+Generador: generate_caso12_ifc.py  ->  caso-12.ifc  (IFC4, SI: m, N, Pa)
+
+Recuento de entidades esperado (al ejecutar el generador):
+  IfcProject ............................. 1
+  IfcUnitAssignment / IfcSIUnit .......... 1 / 2 (METRE, NEWTON)
+  IfcGeometricRepresentationContext ...... 1
+  IfcMaterial (C40/50) ................... 1
+  IfcMaterialProperties (mecanico) ....... 1
+  IfcRectangleProfileDef (500x1300) ...... 1
+  IfcMaterialProfile / IfcMaterialProfileSet . 1 / 1
+  IfcStructuralCurveMember (VIGA) ........ 1
+  IfcStructuralPointConnection (apoyos) .. 2 (APOYO_0 fijo, APOYO_L movil)
+  IfcBoundaryNodeCondition ............... 2
+  IfcStructuralCurveAction ............... 2 (g2, q)
+  IfcStructuralLoadLinearForce ........... 2
+  IfcStructuralLoadGroup ................. 2 (permanente g2, variable q)
+  IfcStructuralAnalysisModel ............. 1
+  IfcRelAssociatesMaterial ............... 1
+  IfcRelDefinesByProperties (Pset) ....... 1
+  IfcPropertySet (Pset_Estructurando_Pretensado) . 1
+  IfcRelConnectsStructuralActivity ....... 2
+  IfcRelAssignsToGroup ................... 3 (2 cargas->grupos + 1 modelo)
+
+Comprobacion de apertura: ifcopenshell.open("caso-12.ifc") sin errores;
+ifc.by_type("IfcStructuralCurveMember") -> 1 elemento con
+Pset_Estructurando_Pretensado (P0=2535 kN, Pm,inf=2125 kN, Ap=1950 mm2,
+fpk=1860 MPa, trazado parabolico e_centro=0.50 m, e_apoyo=0.0, mu=0.19, k=0.01).
+
+Datos del pretensado (Pset_Estructurando_Pretensado):
+  Sistema=postesado_adherente, n_tendones=1, n_cordones=13, Y1860S7 0.6"
+  Ap=1950 mm2, fpk=1860 MPa, fp01k=1640 MPa, Ep=195 GPa
+  P0=2535 kN (sigma_p0=1300 MPa ~0.70 fpk), Pm,inf=2125 kN (sigma_p,inf=1090 MPa ~0.59 fpk)
+  trazado parabolico: e_centro=0.50 m, e_apoyo=0.00 m, recubrimiento_mec=0.15 m
+  mu=0.19 rad^-1, k=0.01 m^-1, penetracion_cuna=6 mm, relajacion clase 2 (rho1000=2.5%)
+
+NOTA DE EJECUCION
+-----------------
+El IFC binario (caso-12.ifc) se genera ejecutando generate_caso12_ifc.py en un
+entorno con ifcopenshell (sandbox Linux). En este hilo el codigo fuente del
+generador y del modulo pretensado/ esta entregado y validado por revision; los
+entregables numericos (modelo_neutro.json, verificacion_pretensado.json)
+reproducen el chequeo de mano del INICIO-hilo.md. Veanse las incidencias al final
+del resumen del hilo.

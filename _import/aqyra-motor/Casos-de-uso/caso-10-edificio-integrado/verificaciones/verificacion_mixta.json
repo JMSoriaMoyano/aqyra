@@ -1,0 +1,70 @@
+{
+  "info": {
+    "L": 8.0,
+    "sep": 3.0,
+    "perfil": "HEB 240",
+    "apeado": 0,
+    "acero": "S275",
+    "hormigon": "C25/30"
+  },
+  "b_eff_m": 2.1,
+  "conexion": {
+    "PRd1_kN": 81.6562762521059,
+    "PRd2_kN": 73.73030628988326,
+    "kt": 0.85,
+    "PRd_kN": 62.67076034640077,
+    "Na_kN": 2322.65,
+    "Fcf_kN": 1844.5,
+    "Nc_kN": 1844.5,
+    "Nf_total": 29.431588029327795,
+    "n_disp_media_luz": 19.32367149758454,
+    "grado_eta": 0.6565623125170486,
+    "eta_min": 0.4,
+    "conexion_total": false,
+    "ok": true
+  },
+  "flexion_mixta": {
+    "M_pl_Rd_total_kNm": 498.0437887499998,
+    "M_a_Rd_kNm": 359.425,
+    "M_Rd_kNm": 450.4368725000121,
+    "M_Ed_kNm": 332.82446894283055,
+    "PNA_desde_base_mm": 232.695,
+    "PNA_zona": "ala superior",
+    "grado_conexion": 0.6565623125170486,
+    "tipo_conexion": "parcial",
+    "u": 0.7388925935294554,
+    "ok": true
+  },
+  "cortante": {
+    "Vpl_Rd_kN": 677.7947822718909,
+    "V_Ed_kN": 166.41223447141547,
+    "u": 0.245520087826024,
+    "ok": true
+  },
+  "construccion": {
+    "Mc_Rd_kNm": 359.425,
+    "M_Ed_kNm": 115.02446894281564,
+    "u": 0.3200235624756643,
+    "ok": true,
+    "nota": "verificar pandeo lateral (PLT) si el ala comprimida no esta arriostrada por la chapa"
+  },
+  "flecha": {
+    "n0": 6.774193548387097,
+    "nL": 20.32258064516129,
+    "I_acero_cm4": 23130.0,
+    "I_corto_cm4": 49375.80187580423,
+    "I_largo_cm4": 39248.93336970042,
+    "d_construccion_mm": 8.949184434150661,
+    "d_muertas_mm": 3.88242276409448,
+    "d_uso_mm": 7.715365958219712,
+    "d_total_mm": 20.54697315646485,
+    "lim_total_mm": 32.0,
+    "u_total": 0.6420929111395266,
+    "ok_total": true,
+    "d_activa_mm": 7.715365958219712,
+    "lim_activa_mm": 22.857142857142858,
+    "u_activa": 0.3375472606721124,
+    "ok_activa": true
+  },
+  "veredicto": "CUMPLE"
+}

@@ -1,0 +1,121 @@
+{
+  "veredicto": "CUMPLE",
+  "metodo": "Darcy-Weisbach (friccion Swamee-Jain) [confirmar AN]",
+  "hipotesis": {
+    "rho_kg_m3": 998.0,
+    "nu_m2_s": 1.01e-06,
+    "k_accesorios": 1.2,
+    "v_max_m_s": 6.0,
+    "rugosidad_def_mm": 0.045
+  },
+  "simultaneos": [
+    "BIE-1",
+    "BIE-2"
+  ],
+  "presion_fuente_disponible_kPa": 600.0,
+  "presion_fuente_requerida_kPa": 352.919,
+  "margen_fuente_kPa": 247.081,
+  "velocidad_pico_m_s": 0.9945,
+  "tramos": {
+    "T1": {
+      "caudal_l_s": 6.6,
+      "dn": 100.0,
+      "longitud_m": 10.0,
+      "velocidad_m_s": 0.8403,
+      "Re": 83201.8,
+      "f": 0.02072,
+      "dp_kPa": 0.876,
+      "ni": "N1",
+      "nj": "N2"
+    },
+    "T2": {
+      "caudal_l_s": 3.3,
+      "dn": 65.0,
+      "longitud_m": 5.0,
+      "velocidad_m_s": 0.9945,
+      "Re": 64001.4,
+      "f": 0.02243,
+      "dp_kPa": 1.0216,
+      "ni": "N2",
+      "nj": "N3"
+    },
+    "T3": {
+      "caudal_l_s": 3.3,
+      "dn": 65.0,
+      "longitud_m": 10.0,
+      "velocidad_m_s": 0.9945,
+      "Re": 64001.4,
+      "f": 0.02243,
+      "dp_kPa": 2.0432,
+      "ni": "N2",
+      "nj": "N4"
+    },
+    "T4": {
+      "caudal_l_s": 0.0,
+      "dn": 65.0,
+      "longitud_m": 5.0,
+      "velocidad_m_s": 0.0,
+      "Re": 0.0,
+      "f": 0.0,
+      "dp_kPa": 0.0,
+      "ni": "N2",
+      "nj": "N5"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "presion_kPa": 600.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "presion_kPa": 599.124,
+      "tipo": "union"
+    },
+    "N3": {
+      "presion_kPa": 598.102,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "presion_kPa": 597.081,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "presion_kPa": 599.124,
+      "tipo": "terminal"
+    }
+  },
+  "terminales": [
+    {
+      "id": "BIE-1",
+      "nodo": "N3",
+      "activo": true,
+      "caudal_l_s": 3.3,
+      "presion_disponible_kPa": 598.102,
+      "presion_min_kPa": 350.0,
+      "margen_kPa": 248.102,
+      "cumple": true
+    },
+    {
+      "id": "BIE-2",
+      "nodo": "N4",
+      "activo": true,
+      "caudal_l_s": 3.3,
+      "presion_disponible_kPa": 597.081,
+      "presion_min_kPa": 350.0,
+      "margen_kPa": 247.081,
+      "cumple": true
+    },
+    {
+      "id": "BIE-3",
+      "nodo": "N5",
+      "activo": false,
+      "caudal_l_s": 3.3,
+      "presion_disponible_kPa": 599.124,
+      "presion_min_kPa": 350.0,
+      "margen_kPa": 249.124,
+      "cumple": null
+    }
+  ],
+  "errores": [],
+  "avisos": []
+}

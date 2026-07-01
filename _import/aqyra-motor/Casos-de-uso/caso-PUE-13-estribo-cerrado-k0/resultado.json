@@ -1,0 +1,191 @@
+{
+  "nombre_tablero": "ESTRIBO",
+  "tipologia": "estribo",
+  "estribo": {
+    "geom": {
+      "Hm": 4.5,
+      "t_alz": 0.9,
+      "e_z": 2.0,
+      "puntera": 4.2,
+      "talon": 4.4,
+      "Df": 2.0
+    },
+    "terreno": {
+      "gamma": 19000.0,
+      "phi": 32.0,
+      "c": 0.0,
+      "metodo": "rankine",
+      "metodo_empuje": "reposo",
+      "phi_base": 32.0,
+      "adh_base": 0.0,
+      "Rd": 650000.0,
+      "nf": -1.0,
+      "phi_pas": 32.0,
+      "gamma_pas": 19000.0,
+      "f_pas": 0.5
+    },
+    "material": {
+      "fck": 30000000.0
+    },
+    "reacciones": {
+      "N_G_N": 600000.0,
+      "N_LM1_N": 250000.0,
+      "H_frenado_N": 80000.0
+    },
+    "sobrecarga": 10000.0
+  },
+  "Ka": 0.4700807357667951,
+  "metodo_empuje": "reposo",
+  "H_total_m": 6.5,
+  "reacciones": {
+    "N_G_N": 600000.0,
+    "N_Q_N": 250000.0,
+    "H_Q_N": 80000.0
+  },
+  "vuelco": {
+    "M_estab_d_kNm": 7692.00148125,
+    "M_vuelco_d_kNm": 1380.32868239976,
+    "u": 0.17944987215153885,
+    "FS_caracteristico": 8.30061645738389,
+    "ok": true
+  },
+  "deslizamiento": {
+    "H_d_kN": 421.18584687879854,
+    "R_d_kN": 1010.5021723418653,
+    "R_friccion_kN": 966.3327596542243,
+    "R_pasivo_kN": 44.169412687640985,
+    "N_favorable_kN": 1701.10125,
+    "u": 0.4168084526752568,
+    "FS_caracteristico": 4.366000514496575,
+    "ok": true
+  },
+  "hundimiento": {
+    "N_d_kN": 2737.4866875000002,
+    "e_m": 0.26390000018722404,
+    "e_lim_B6_m": 1.5833333333333333,
+    "Bp_m": 8.972199999625552,
+    "q_Ed_kPa": 305.1076310842655,
+    "Rd_kPa": 650.0,
+    "u": 0.4693963555142546,
+    "ok_despegue": true,
+    "ok": true
+  },
+  "alzado": {
+    "d_mm": 840.0,
+    "flexion": {
+      "M_Ed_kNm_m": 795.1537178335188,
+      "As_cm2_m": 22.422655470642322,
+      "As_min_cm2_m": 12.651772895872172,
+      "As_prov_cm2_m": 22.422655470642322,
+      "rho": 0.0026693637465050385,
+      "ok": true
+    },
+    "cortante": {
+      "V_Ed_kN_m": 273.8133547474267,
+      "VRdc_kN_m": 300.07182390279127,
+      "u": 0.9124927198633916,
+      "ok": true
+    },
+    "armado": "phi25/200 (trasdos)",
+    "As_prov_cm2_m": 24.54369260617026,
+    "fisuracion": {
+      "w_k_mm": 0.09457664693695682,
+      "lim_mm": 0.3,
+      "u": 0.31525548978985607,
+      "ok": true,
+      "sigma_s_MPa": 73.35943911925942,
+      "phi_mm": 25,
+      "s_mm": 200,
+      "rho_ef": 0.016362461737446824
+    }
+  },
+  "puntera": {
+    "d_mm": 1940.0,
+    "p_borde_kPa": 336.18459784279935,
+    "p_cara_kPa": 290.9370678875748,
+    "flexion": {
+      "M_Ed_kNm_m": 2115.0543268367705,
+      "As_cm2_m": 25.437941750543537,
+      "As_min_cm2_m": 29.219570735704774,
+      "As_prov_cm2_m": 29.219570735704774,
+      "rho": 0.0015061634399847824,
+      "ok": true
+    },
+    "cortante": {
+      "V_Ed_kN_m": 489.3596749059201,
+      "VRdc_kN_m": 564.7085959584075,
+      "u": 0.8665702601452218,
+      "ok": true
+    },
+    "armado": "phi25/125 (inferior)",
+    "As_prov_cm2_m": 39.269908169872416,
+    "fisuracion": {
+      "w_k_mm": 0.2683024923828873,
+      "lim_mm": 0.3,
+      "u": 0.894341641276291,
+      "ok": true,
+      "sigma_s_MPa": 212.74011993457245,
+      "phi_mm": 25,
+      "s_mm": 125,
+      "rho_ef": 0.02617993877991492
+    }
+  },
+  "talon": {
+    "d_mm": 1940.0,
+    "p_cara_kPa": 286.3870369423567,
+    "p_borde_kPa": 240.12838899930594,
+    "flexion": {
+      "M_Ed_kNm_m": 570.2046428761919,
+      "As_cm2_m": 6.785958920738555,
+      "As_min_cm2_m": 29.219570735704774,
+      "As_prov_cm2_m": 29.219570735704774,
+      "rho": 0.0015061634399847824,
+      "ok": true
+    },
+    "cortante": {
+      "V_Ed_kN_m": 162.04075295541702,
+      "VRdc_kN_m": 564.7085959584075,
+      "u": 0.28694578781894764,
+      "ok": true
+    },
+    "armado": "phi20/100 (superior)",
+    "As_prov_cm2_m": 31.41592653589793,
+    "fisuracion": {
+      "w_k_mm": 0.0714775974717954,
+      "lim_mm": 0.3,
+      "u": 0.238258658239318,
+      "ok": true,
+      "sigma_s_MPa": 71.6916597445944,
+      "phi_mm": 20,
+      "s_mm": 100,
+      "rho_ef": 0.020943951023931935
+    }
+  },
+  "aprovechamientos": {
+    "vuelco": 0.17944987215153885,
+    "deslizamiento": 0.4168084526752568,
+    "hundimiento": 0.4693963555142546,
+    "alzado_cortante": 0.9124927198633916,
+    "puntera_cortante": 0.8665702601452218,
+    "talon_cortante": 0.28694578781894764
+  },
+  "aprovechamiento_max": 0.9124927198633916,
+  "veredicto_global": "CUMPLE",
+  "mapping_writeback": {
+    "elementos": {
+      "ESTRIBO": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "estribo",
+          "Empuje": "reposo",
+          "Ka": 0.47,
+          "Aprov_vuelco": 0.179,
+          "Aprov_deslizamiento": 0.417,
+          "Aprov_hundimiento": 0.469,
+          "As_alzado_cm2_m": 24.5,
+          "Aprovechamiento_max": 0.912,
+          "Veredicto_global": "CUMPLE"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+VALIDACION IFC - caso-R4.ifc (IFC FISICO: edificio multi-elemento por plantas)
+schema=IFC4  archivo=/sessions/practical-beautiful-keller/mnt/outputs/work/caso-R4.ifc
+
+Recuento de entidades:
+  IfcProject                         1
+  IfcSite                            1
+  IfcBuilding                        1
+  IfcBuildingStorey                  3
+  IfcColumn                          3
+  IfcBeam                            2
+  IfcSlab                            1
+  IfcWall                            1
+  IfcFooting                         1
+  IfcExtrudedAreaSolid               8
+  IfcIShapeProfileDef                4
+  IfcRectangleProfileDef             4
+  IfcMaterial                        3
+  IfcMaterialProperties              3
+  IfcMaterialProfileSetUsage         5
+  IfcMaterialLayerSet                3
+  IfcMaterialLayerSetUsage           3
+  IfcRelAssociatesMaterial           8
+  IfcPropertySet                     16
+  IfcRelDefinesByProperties          16
+  IfcRelContainedInSpatialStructure  3
+
+Plantas (IfcBuildingStorey):
+  'Cimentacion' elev=-0.60 m -> ['Zapata_Aislada', 'Cim_Pilar']
+  'Planta Baja' elev=0.00 m -> ['Portico_Pilar_1', 'Portico_Pilar_2', 'Mixta_Viga', 'Mixta_Losa', 'Muro_Carga']
+  'Planta Primera' elev=4.00 m -> ['Portico_Dintel']
+
+Elementos fisicos (geometria Body, extrusion +Z, SIN entidades de analisis):
+  IfcColumn  'Portico_Pilar_1'  Depth=4.000  perfil=HEB 240
+  IfcColumn  'Portico_Pilar_2'  Depth=4.000  perfil=HEB 240
+  IfcColumn  'Cim_Pilar'  Depth=1.000  perfil=Pilar 400x400
+  IfcBeam    'Portico_Dintel'  Depth=6.000  perfil=IPE 360
+  IfcBeam    'Mixta_Viga'  Depth=8.000  perfil=IPE 400
+  IfcSlab    'Mixta_Losa'  Depth=0.120  perfil=Mixta_Losa_planta
+  IfcWall    'Muro_Carga'  Depth=3.000  perfil=Muro_Carga_planta
+  IfcFooting 'Zapata_Aislada'  Depth=0.600  perfil=Zapata_Aislada_planta
+
+Material/espesor por IfcMaterialLayerSet (losa/muro/zapata):
+  Mixta_Losa_capas  t=0.120 m  material=C25/30
+  Muro_Carga_capas  t=0.200 m  material=C30/37
+  Zapata_Aislada_capas  t=0.600 m  material=C30/37
+
+Comprobacion: entidades de ANALISIS (deben ser 0 en un IFC fisico):
+  IfcStructuralCurveMember           0
+  IfcStructuralSurfaceMember         0
+  IfcStructuralPointAction           0
+  IfcStructuralLoadGroup             0
+  IfcBoundaryNodeCondition           0
+  IfcStructuralAnalysisModel         0

@@ -1,0 +1,33 @@
+{
+  "elementos": {
+    "DINTEL": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "portico",
+        "M_Ed_ELU_kNm": 7047.4,
+        "M_Rd_kNm": 59387.9,
+        "Aprovechamiento_max": 0.145,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "PILA": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "portico",
+        "M_Ed_ELU_kNm": 191.3,
+        "M_Rd_kNm": 2779.1,
+        "Aprovechamiento_max": 0.069,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "PORTICO": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "portico",
+        "Empuje_K": 0.531,
+        "Tension_max_terreno_kPa": 221.5,
+        "Aprov_hundimiento": 0.738,
+        "Frecuencia_fundamental_Hz": 3.16,
+        "Aprovechamiento_max": 0.738,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

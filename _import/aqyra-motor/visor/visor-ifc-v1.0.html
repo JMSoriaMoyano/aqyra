@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta http-equiv="Cache-Control" content="no-store, max-age=0">
+<link rel="manifest" href="visor.webmanifest">
+<meta name="theme-color" content="#1e2330">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Visor IFC">
+<script>
+window.__bip=null;
+addEventListener("beforeinstallprompt",function(e){ e.preventDefault(); window.__bip=e; var b=document.getElementById("installBtn"); if(b) b.style.display=""; });
+if("serviceWorker" in navigator){ addEventListener("load",function(){ navigator.serviceWorker.register("sw.js").then(function(r){ console.info("SW registrado:",r.scope); }).catch(function(e){ console.warn("SW error:",e); }); }); }
+</script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Visor IFC v1.0 — edición de datos e ingesta (ThatOpen/fragments)</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#1e2330;font-family:system-ui,Segoe UI,sans-serif;color:#e8ecf4;overflow:hidden}
+  #grid{position:fixed;inset:0;display:grid;grid-template-columns:340px 1fr 320px;grid-template-rows:46px 1fr}
+  header{grid-column:1/4;display:flex;align-items:center;gap:10px;padding:0 14px;background:#161b27;border-bottom:1px solid #2a3142;z-index:20}
+  header b{color:#7fd1ff}
+  header .v{font-size:11px;opacity:.6}
+  select,button,input{background:#222a3a;color:#e8ecf4;border:1px solid #38415a;border-radius:7px;padding:5px 9px;font-size:12px}
+  button{cursor:pointer}
+  select:hover,button:hover{border-color:#5a6a8c}
+  input{outline:none}
+  input:focus,select:focus{border-color:#5a6a8c}
+  label.lbl{font-size:11px;opacity:.7}
+  #left,#right{background:#171c28;overflow:auto;border-right:1px solid #2a3142}
+  #right{border-right:none;border-left:1px solid #2a3142}
+  #viewport{position:relative;background:#1e2330}
+  #canvas-host{position:absolute;inset:0}
+  .tabs{display:flex;border-bottom:1px solid #2a3142;position:sticky;top:0;background:#171c28;z-index:5}
+  .tab{flex:1;text-align:center;padding:9px 2px;font-size:11.5px;cursor:pointer;color:#9fb0c8;border-bottom:2px solid transparent;white-space:nowrap}
+  .tab.active{color:#7fd1ff;border-bottom-color:#7fd1ff}
+  .pane{display:none;padding:8px 10px}
+  .pane.active{display:block}
+  .mdl{border:1px solid #28304a;border-radius:8px;margin:7px 2px;padding:7px 8px;background:#1a2030}
+  .mdl-top{display:flex;align-items:center;gap:7px}
+  .mdl-sw{width:13px;height:13px;border-radius:3px;border:1px solid #0006;flex:none}
+  .mdl-name{flex:1;font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .disc{font-size:10px;border-radius:6px;padding:1px 6px;color:#0c1018;font-weight:700;flex:none}
+  .mdl-meta{font-size:10.5px;color:#8aa0c0;margin:3px 0 5px}
+  .mdl-actions{display:flex;gap:5px;flex-wrap:wrap}
+  .mdl-actions button{padding:3px 7px;font-size:11px}
+  .mdl-actions button.on{background:#1d4666;border-color:#3a7bd5;color:#bfe6ff}
+  .gctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:4px 2px 8px;border-bottom:1px solid #232b3b;margin-bottom:4px}
+  .node{user-select:none}
+  .node-row{display:flex;align-items:center;gap:5px;padding:2px 4px;border-radius:5px;cursor:pointer;font-size:12.5px;line-height:1.45;white-space:nowrap}
+  .node-row:hover{background:#222a3a}
+  .node-row.sel{background:#1d4666;color:#bfe6ff}
+  .node-row.mroot{font-weight:700}
+  .twisty{width:12px;display:inline-block;text-align:center;opacity:.6;flex:none}
+  .cat{color:#8aa0c0;font-size:10.5px;flex:none}
+  .nm{overflow:hidden;text-overflow:ellipsis;flex:1}
+  .kids{margin-left:13px;border-left:1px solid #232b3b;padding-left:3px}
+  .hidden{display:none}
+  .rowacts{display:none;gap:3px;flex:none}
+  .node-row:hover .rowacts,.cls-row:hover .rowacts{display:flex}
+  .rowacts button{padding:0 5px;font-size:10.5px;line-height:17px;border-radius:5px}
+  .cls-grp-h{font-size:11px;color:#9ad0ff;margin:9px 2px 3px;font-weight:700;display:flex;align-items:center;gap:6px}
+  .cls-row{display:flex;align-items:center;gap:8px;padding:3px 4px;font-size:12.5px}
+  .sw{width:14px;height:14px;border-radius:3px;border:1px solid #00000040;flex:none;cursor:pointer}
+  .cls-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cls-n{opacity:.55;font-size:11px;flex:none}
+  .fctl{display:flex;flex-direction:column;gap:6px;padding:2px 2px 8px;border-bottom:1px solid #232b3b;margin-bottom:6px}
+  .fctl .row{display:flex;gap:6px;align-items:center}
+  .fctl input,.fctl select{flex:1;min-width:0}
+  .fbtns{display:flex;gap:5px;flex-wrap:wrap}
+  .fbtns button{flex:1}
+  .res-bar{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin:2px 0 6px}
+  .res-bar .cnt{font-size:11.5px;color:#9ad0ff;flex:1}
+  .res-bar button{padding:3px 7px;font-size:11px}
+  .res-row{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:6px;cursor:pointer;font-size:12px;border:1px solid #1f2940;margin:3px 0;background:#1a2030}
+  .res-row:hover{background:#222a3a;border-color:#33405e}
+  .res-row .rn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .res-row .rc{color:#8aa0c0;font-size:10px}
+  .res-row.sel{background:#1d4666;border-color:#3a7bd5}
+  .pl-modes{display:flex;gap:6px;margin:2px 2px 8px}
+  .pl-modes button{flex:1;padding:5px;font-size:11.5px}
+  .pl-modes button.on{background:#1d4666;border-color:#3a7bd5;color:#bfe6ff}
+  .pl-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;border:1px solid #1f2940;margin:4px 2px;background:#1a2030}
+  .pl-row:hover{background:#222a3a;border-color:#33405e}
+  .pl-row.on{background:#1d4666;border-color:#3a7bd5}
+  .pl-cota{font-weight:700;font-size:13px;flex:none;min-width:74px}
+  .pl-info{flex:1;font-size:11px;color:#9fb0c8;overflow:hidden}
+  .pl-discs{display:flex;gap:3px;flex:none}
+  .pl-d{width:11px;height:11px;border-radius:3px;border:1px solid #0006}
+  #right h3{margin:10px 10px 4px;font-size:12px;color:#7fd1ff;text-transform:uppercase;letter-spacing:.04em}
+  .selacts{display:flex;gap:5px;flex-wrap:wrap;padding:6px 10px 2px}
+  .selacts button{padding:3px 8px;font-size:11px}
+  .kv{display:grid;grid-template-columns:42% 58%;gap:1px 8px;padding:0 10px;font-size:12.5px}
+  .kv .k{color:#9fb0c8;overflow:hidden;text-overflow:ellipsis}
+  .kv .val{color:#e8ecf4;word-break:break-word}
+  .pset{margin:6px 10px;background:#1b2230;border-left:2px solid #3a7bd5;border-radius:6px;padding:6px 8px}
+  .pset .pname{font-size:11.5px;color:#9ad0ff;margin-bottom:3px;font-weight:600}
+  .empty{padding:14px 12px;color:#7d8aa3;font-size:12.5px;line-height:1.5}
+  .pill{display:inline-block;background:#243049;color:#9ad0ff;border-radius:10px;padding:1px 8px;font-size:11px;margin:2px 2px 0 0}
+  #log{position:fixed;bottom:10px;left:352px;right:332px;max-height:30vh;overflow:auto;background:rgba(10,12,18,.93);padding:8px 12px;border-radius:9px;font:11.5px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;z-index:30;border:1px solid #2a3142}
+  #log.hide{display:none}
+  .ok{color:#8fe388}.err{color:#ff8a8a}.warn{color:#ffd479}.dim{opacity:.65}
+  #toggleLog{position:fixed;bottom:10px;right:336px;z-index:31}
+  .badge{font-size:10.5px;background:#2a3450;color:#9ad0ff;border-radius:6px;padding:2px 7px}
+  /* v0.8 — herramientas de seccion y medicion */
+  #tools{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:8px;z-index:15;width:214px}
+  .tool-card{background:rgba(22,27,39,.94);border:1px solid #2a3142;border-radius:10px;padding:8px 10px}
+  .tool-h{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#7fd1ff;margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em}
+  .tool-h .t{flex:1}
+  .tool-row{display:flex;gap:5px;align-items:center;margin:4px 0}
+  .tool-row.wrap{flex-wrap:wrap}
+  .tool-card button{padding:3px 7px;font-size:11px}
+  .tool-card button.on{background:#1d4666;border-color:#3a7bd5;color:#bfe6ff}
+  .tool-card select,.tool-card input[type=range]{flex:1;min-width:0}
+  .seg{display:flex;gap:0}
+  .seg button{border-radius:0;flex:1;border-left-width:0}
+  .seg button:first-child{border-radius:6px 0 0 6px;border-left-width:1px}
+  .seg button:last-child{border-radius:0 6px 6px 0}
+  .tool-val{font-size:11px;color:#9fb0c8;min-width:58px;text-align:right;font-variant-numeric:tabular-nums}
+  .tool-hint{font-size:10.5px;color:#7d8aa3;line-height:1.35;margin-top:3px}
+  #labels{position:absolute;inset:0;pointer-events:none;z-index:12;overflow:hidden}
+  .mlabel{position:absolute;transform:translate(-50%,-130%);background:rgba(13,18,28,.9);border:1px solid #3a7bd5;color:#bfe6ff;border-radius:6px;padding:1px 6px;font:11.5px/1.4 ui-monospace,Consolas,monospace;white-space:nowrap}
+  .mlabel.tot{border-color:#8fe388;color:#bff5b3}
+  .mdot{position:absolute;width:9px;height:9px;border-radius:50%;background:#ffd34d;border:1.5px solid #1e2330;transform:translate(-50%,-50%)}
+  .qset{margin:6px 10px;background:#16211b;border-left:2px solid #59a14f;border-radius:6px;padding:6px 8px}
+  .qset .pname{font-size:11.5px;color:#9ce0a6;margin-bottom:3px;font-weight:600}
+  /* ===== v0.9 — clasificación ===== */
+  .cl-top{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:6px 8px}
+  .cl-top select{flex:1;min-width:80px}
+  .cl-colorbtn{font-size:11px}
+  .cl-row{display:flex;align-items:center;gap:7px;padding:3px 8px;border-bottom:1px solid #222a38}
+  .cl-row .sw{width:15px;height:15px;border-radius:4px;cursor:pointer;flex:none;border:1px solid #0006}
+  .cl-tx{flex:1;min-width:0;overflow:hidden}
+  .cl-code{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;color:#bfe6ff}
+  .cl-name{font-size:11px;color:#9fb0c8}
+  .clset{margin:6px 10px;background:#1b2233;border-left:2px solid #3a7bd5;border-radius:6px;padding:6px 8px}
+  .clset .pname{font-size:11.5px;color:#9cc2e0;margin-bottom:3px;font-weight:600}
+  /* ===== v0.9 — BCF ===== */
+  .bcf-ctl{padding:6px 8px}
+  .bcf-btns{display:flex;gap:5px;flex-wrap:wrap;margin:4px 0}
+  .bcf-btns button{padding:3px 8px;font-size:11px}
+  .bcf-form{margin:4px 8px;padding:8px;background:#161d2b;border:1px solid #2a3550;border-radius:8px}
+  .bcf-form .row{margin:4px 0;display:flex;gap:5px}
+  .bcf-form input,.bcf-form select,.bcf-form textarea{width:100%;background:#0e1420;border:1px solid #2a3550;color:#dbe6f5;border-radius:6px;padding:4px 6px;font:inherit;font-size:12px}
+  .bcf-snap{width:100%;border-radius:6px;margin:4px 0;border:1px solid #2a3550}
+  .vp-info{font-size:11px;color:#8fb0d8;margin:3px 0}
+  .bcf-card{margin:6px 8px;background:#161d2b;border:1px solid #232d44;border-radius:8px;overflow:hidden}
+  .bcf-head{display:flex;gap:8px;padding:7px}
+  .bcf-thumb{width:74px;height:54px;object-fit:cover;border-radius:5px;border:1px solid #2a3550;cursor:pointer;flex:none}
+  .bcf-thumb.noimg{display:flex;align-items:center;justify-content:center;font-size:10px;color:#6b7890;background:#0e1420}
+  .bcf-meta{min-width:0;flex:1}
+  .bcf-title{font-weight:600;font-size:12.5px;color:#e6eefb}
+  .bcf-sub{font-size:11px;color:#9fb0c8;margin-top:2px}
+  .bcf-sub.dim{color:#6f7d96}
+  .bcf-status{display:inline-block;padding:0 6px;border-radius:8px;font-size:10px;color:#0d1018;background:#9fb0c8}
+  .bcf-status.s-active{background:#f2c14e}.bcf-status.s-resolved{background:#6fcf73}.bcf-status.s-closed{background:#8a98b0}
+  .bcf-desc{padding:0 8px 6px;font-size:11.5px;color:#c4d0e2;white-space:pre-wrap}
+  #pane-bcf .bcf-card .bcf-btns{padding:0 8px 8px}
+  .bcf-labels{display:flex;flex-wrap:wrap;gap:4px;padding:0 8px 4px}
+  .bcf-label{background:#243049;color:#bcd0ee;border:1px solid #36476a;border-radius:10px;padding:0 7px;font-size:10px}
+  .bcf-assign{padding:0 8px 4px}
+  .bcf-comments{padding:0 8px 4px;display:flex;flex-direction:column;gap:4px}
+  .bcf-cm{border-left:2px solid #36476a;padding:2px 7px}
+  .bcf-cm-h{font-size:10.5px}
+  .bcf-cm-b{font-size:11.5px;color:#c4d0e2;white-space:pre-wrap}
+  .bcf-ctr{display:flex;gap:5px;align-items:center;padding:4px 8px}
+  .bcf-ctr select{flex:none}
+  .bcf-cin{flex:1;min-width:0;background:#0e1420;border:1px solid #2a3550;color:#dbe6f5;border-radius:6px;padding:3px 6px;font:inherit;font-size:11.5px}
+#dropOverlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(20,30,50,.55);border:3px dashed #7db4ff;z-index:50;pointer-events:none}
+#dropOverlay.on{display:flex}
+#dropOverlay .dropmsg{font-size:20px;color:#cfe3ff;background:rgba(30,35,48,.85);padding:18px 26px;border-radius:10px;border:1px solid #3a4663}
+.ed-in{width:100%;box-sizing:border-box;background:#161a24;border:1px solid #3a4663;color:#dce6f5;border-radius:5px;padding:3px 6px;font-size:12px}
+.edit-head{display:flex;align-items:center;gap:8px;margin:2px 0 8px;font-weight:600}
+.edit-foot{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.edit-foot .primary{background:#2f6bd8;border-color:#2f6bd8;color:#fff}
+.ed-report{margin-top:10px;font-size:12px;line-height:1.5}
+.ed-report .qi{padding:1px 0}
+.ed-report .lvl-warn{color:#ffd34d}.ed-report .lvl-err{color:#ff8080}.ed-report .lvl-info{color:#8fb6ff}.ed-report .lvl-ok{color:#7fd18f}
+.ed-addp{font-size:10px;margin-left:6px;padding:1px 6px}
+.mdl-del{color:#ff9a9a;border-color:#5a3a44}
+.mdl-del:hover{background:#5a3a44;color:#fff}
+</style>
+</head>
+<body>
+<div id="grid">
+  <header>
+    <b>Visor IFC</b><span class="v">v1.0 · edición de datos e ingesta · build b6</span>
+    <span style="flex:1"></span>
+    <span id="modelInfo" class="badge dim">cargando…</span>
+    <label class="lbl">Color</label>
+    <select id="colorMode" title="Modo de color del conjunto">
+      <option value="original">Original</option>
+      <option value="disciplina">Por disciplina</option>
+      <option value="modelo">Por modelo</option>
+      <option value="clasif">Por clasificación</option>
+    </select>
+    <button id="openIfcBtn" title="Abrir un .ifc (o arrástralo al visor)">Abrir IFC…</button>
+    <button id="installBtn" title="Instalar el visor como aplicación" style="display:none">⤓ Instalar app</button>
+    <button id="showAllBtn" title="Mostrar todo (G)">Mostrar todo</button>
+    <button id="fitAllBtn" title="Encuadrar todo (F)">Encuadrar todo</button>
+  </header>
+
+  <div id="left">
+    <div class="tabs">
+      <div class="tab active" data-pane="models">Modelos</div>
+      <div class="tab" data-pane="tree">Árbol</div>
+      <div class="tab" data-pane="classes">Clases</div>
+      <div class="tab" data-pane="search">Buscar</div>
+      <div class="tab" data-pane="plantas">Plantas</div>
+      <div class="tab" data-pane="classif">Clasif.</div>
+      <div class="tab" data-pane="bcf">BCF</div>
+    </div>
+    <div id="pane-models" class="pane active"></div>
+    <div id="pane-tree" class="pane"></div>
+    <div id="pane-classes" class="pane"></div>
+    <div id="pane-search" class="pane"></div>
+    <div id="pane-plantas" class="pane"></div>
+    <div id="pane-classif" class="pane"></div>
+    <div id="pane-bcf" class="pane"></div>
+  </div>
+
+  <div id="viewport">
+    <div id="canvas-host"></div>
+    <div id="labels"></div>
+    <div id="tools">
+      <div class="tool-card">
+        <div class="tool-h"><span class="t">Sección</span><button id="secToggle" title="Activar / desactivar el plano de recorte">Off</button></div>
+        <div class="tool-row seg" id="secAxis">
+          <button data-ax="x">X</button><button data-ax="y">Y</button><button data-ax="z" class="on">Z</button>
+        </div>
+        <div class="tool-row"><input id="secOff" type="range" min="0" max="100" value="50"/><span class="tool-val" id="secOffV">—</span></div>
+        <div class="tool-row wrap"><button id="secFlip" title="Invertir el lado visible">Invertir</button><button id="secClear">Limpiar cortes</button></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-h"><span class="t">Medición</span></div>
+        <div class="tool-row seg" id="measMode">
+          <button data-m="dist">Distancia</button><button data-m="area">Área</button>
+        </div>
+        <div class="tool-row wrap"><button id="measFinish" title="Cerrar polígono / terminar (Enter)">Terminar</button><button id="measClear">Limpiar medidas</button></div>
+        <div class="tool-val" id="measRead" style="text-align:left;width:100%">—</div>
+        <div class="tool-hint" id="measHint">Elige un modo y haz clic sobre el modelo para fijar puntos.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="right">
+    <div id="props"><div class="empty">Selecciona un elemento (clic en el modelo o en el árbol) para ver sus propiedades y Property Sets. La cabecera indica a qué disciplina/modelo pertenece.</div></div>
+  </div>
+</div>
+
+<button id="toggleLog">Consola</button>
+<div id="log" class="hide"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://esm.sh/three@0.184.0",
+    "three/": "https://esm.sh/three@0.184.0/",
+    "@thatopen/fragments": "https://esm.sh/@thatopen/fragments@3.4.5?external=three,web-ifc",
+    "web-ifc": "https://cdn.jsdelivr.net/npm/web-ifc@0.0.77/web-ifc-api.js"
+  }
+}
+</script>
+
+<script type="module">
+const $ = s => document.querySelector(s);
+const logEl = $("#log");
+const log = (m,c)=>{ const d=document.createElement("div"); if(c)d.className=c; d.textContent=m; logEl.appendChild(d); logEl.scrollTop=1e9; };
+$("#toggleLog").onclick = ()=> logEl.classList.toggle("hide");
+window.addEventListener("error", e=>{ logEl.classList.remove("hide"); log("ERROR JS: "+(e.message||e.error||e),"err"); });
+window.addEventListener("unhandledrejection", e=>{ logEl.classList.remove("hide"); log("PROMESA RECHAZADA: "+(e.reason&&(e.reason.message||e.reason)),"err"); });
+
+let THREE, OrbitControls, FRAGS;
+let scene, camera, renderer, controls, host;
+let fragments = null;
+let manifest = null;
+let DISC = {};
+const LOADED = new Map();
+let sel = null;
+let colorMode = "original";
+let CUR_RESULTS = [];
+let plantaMode = "cota";
+let activePlanta = null;
+// v0.8 — estado de seccion y medicion
+let clipAxis = "z", clipFlip = false, clipOn = false, clipPlane = null, fedBox = null;
+let measMode = null;            // null | "dist" | "area"
+let measPts = [];               // THREE.Vector3[]
+let measGroup = null;           // grupo 3D de lineas de medida
+const measLabels = [];          // {pos:Vector3, el, kind}
+const SEL_COLOR = 0x00b3ff;
+const FILTER_COLOR = 0xffd34d;
+const PALETTE = [0x4e79a7,0xf28e2b,0x59a14f,0xe15759,0x76b7b2,0xedc948,0xb07aa1,0xff9da7,0x9c755f,0x86bcb6];
+const hex = n => "#"+(n>>>0).toString(16).padStart(6,"0").slice(-6);
+const num = s => typeof s==="number" ? s : parseInt(String(s).replace("#",""),16);
+const esc = s => String(s==null?"":s).replace(/[<>&]/g,m=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[m]));
+const NUL = " ";
+const discLabel = d => (DISC[d]||{label:d}).label;
+
+async function loadLibs(){
+  if(location.protocol==="file:"){ logEl.classList.remove("hide"); log("⚠ Abierto como file:// — el worker de fragments NO arranca aquí. Usa servir_visor.bat (http).","warn"); }
+  log("→ cargando three / OrbitControls / fragments…","dim");
+  THREE = await import("three");
+  ({ OrbitControls } = await import("three/examples/jsm/controls/OrbitControls.js"));
+  FRAGS = await import("@thatopen/fragments");
+  log("✓ librerías cargadas (three "+THREE.REVISION+")","ok");
+}
+
+function initScene(){
+  host = $("#canvas-host");
+  scene = new THREE.Scene(); scene.background = new THREE.Color(0x1e2330);
+  camera = new THREE.PerspectiveCamera(60, host.clientWidth/host.clientHeight, 0.01, 8000);
+  camera.position.set(14,12,14);
+  renderer = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
+  renderer.setSize(host.clientWidth, host.clientHeight); renderer.setPixelRatio(devicePixelRatio);
+  renderer.localClippingEnabled = true;
+  host.appendChild(renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true;
+  scene.add(new THREE.GridHelper(60,60,0x44506a,0x2a3142));
+  scene.add(new THREE.AxesHelper(3));
+  measGroup = new THREE.Group(); scene.add(measGroup);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x444466,1.1));
+  const dir = new THREE.DirectionalLight(0xffffff,1.0); dir.position.set(10,20,10); scene.add(dir);
+  new ResizeObserver(()=>{ if(!host.clientWidth) return; camera.aspect=host.clientWidth/host.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(host.clientWidth,host.clientHeight); }).observe(host);
+  renderer.domElement.addEventListener("click", onPick);
+  addEventListener("keydown", e=>{ if(e.target&&/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+    if(e.key==="f"||e.key==="F") fitAll(); if(e.key==="g"||e.key==="G") showAllGlobal();
+    if(e.key==="Enter") finishMeasure();
+    if(e.key==="Escape"){ if(measMode) clearMeasure(); else clearSelection(); } });
+  (function animate(){ requestAnimationFrame(animate); controls.update(); if(fragments) fragments.update(); updateMeasureLabels(); renderer.render(scene,camera); })();
+  log("✓ escena 3D lista","ok");
+}
+
+let workerUrl = null;
+async function getWorker(){
+  if(workerUrl) return workerUrl;
+  const url = "https://cdn.jsdelivr.net/npm/@thatopen/fragments@3.4.5/dist/Worker/worker.mjs";
+  const resp = await fetch(url); if(!resp.ok) throw new Error("worker HTTP "+resp.status);
+  const blob = await resp.blob();
+  workerUrl = URL.createObjectURL(new File([blob],"worker.mjs",{type:"text/javascript"}));
+  log("✓ worker de fragments descargado ("+(blob.size/1024|0)+" KB)","ok");
+  return workerUrl;
+}
+
+async function loadModel(entry, color){
+  log("→ "+entry.id+" · "+entry.props,"dim");
+  const index = await (await fetch(entry.props)).json();
+  const ng = (index.geometryLocalIds||[]).length;
+  const fragBytes = ng>0 ? new Uint8Array(await (await fetch(entry.frag)).arrayBuffer()) : null;
+  return addModelData(entry, index, fragBytes, color);
+}
+
+// v1.0 — registra un modelo desde datos ya en memoria (compartido por loadModel y la ingesta por arrastre)
+async function addModelData(entry, index, fragBytes, color){
+  const classToLocalIds = {};
+  for(const it of Object.values(index.items)){
+    if(it.localId==null) continue;
+    (classToLocalIds[it.category] ||= []).push(it.localId);
+  }
+  const geomIds = (index.geometryLocalIds||[]).slice();
+  let object=null;
+  const ng = geomIds.length;
+  if(ng>0 && fragBytes){
+    let done=false; const p = fragments.load(fragBytes,{modelId:entry.id}); p.then(()=>done=true);
+    setTimeout(()=>{ if(!done){ logEl.classList.remove("hide"); log("✗ "+entry.id+": load() no resolvió en 8 s (¿worker/file://?). Sirve por http.","err"); } },8000);
+    object = await p;
+    if(object.useCamera) object.useCamera(camera);
+    scene.add(object.object);
+  }
+  const M = { entry, index, classToLocalIds, geomIds, geomSet:new Set(geomIds), object, color, disc: entry.disciplina, visible:true, isolated:false };
+  M.fragBytes = fragBytes || null;
+  if(entry._ifcBytes) M.ifcBytes = entry._ifcBytes;
+  M.storeys = collectStoreys(M);
+  LOADED.set(entry.id, M);
+  log("✓ "+entry.id+": "+index.stats.items+" ítems · "+ng+(ng?" con geometría":" (sólo datos)")+" · "+M.storeys.length+" plantas",(ng?"ok":"warn"));
+  return M;
+}
+
+function collectStoreys(M){
+  const res=[];
+  function geomDesc(node, acc){
+    if(node.localId!=null && M.geomSet.has(node.localId)) acc.push(node.localId);
+    for(const c of (node.children||[])) geomDesc(c,acc);
+  }
+  function walk(node){
+    if(node.category==="IFCBUILDINGSTOREY"){
+      const acc=[]; geomDesc(node,acc);
+      res.push({ modelId:M.entry.id, localId:node.localId, name:node.name||("#"+node.localId),
+                 elevation:(node.elevation!=null?node.elevation:null), geomLocalIds:acc, disc:M.disc });
+    }
+    for(const c of (node.children||[])) walk(c);
+  }
+  if(M.index.tree) walk(M.index.tree);
+  return res;
+}
+
+function boxOf(objects){
+  const box = new THREE.Box3(); box.makeEmpty();
+  let any=false;
+  for(const o of objects){ const b=new THREE.Box3().setFromObject(o); if(!b.isEmpty()){ box.union(b); any=true; } }
+  return any?box:null;
+}
+function frameBox(box){
+  if(!box) return;
+  const size = box.getSize(new THREE.Vector3()).length()||10;
+  const c = box.getCenter(new THREE.Vector3());
+  controls.target.copy(c);
+  camera.position.copy(c).add(new THREE.Vector3(1,0.8,1).multiplyScalar(size*0.7));
+  camera.near = Math.max(size/100,0.001); camera.far = size*100; camera.updateProjectionMatrix(); controls.update();
+}
+function fitAll(){
+  const objs = [...LOADED.values()].filter(M=>M.object && M.visible).map(M=>M.object.object);
+  const box = boxOf(objs);
+  if(box) frameBox(box); else log("Sin geometría que encuadrar.","dim");
+}
+function fitModel(M){
+  if(!M.object){ log(M.entry.id+": sin geometría.","dim"); return; }
+  frameBox(boxOf([M.object.object]));
+}
+async function fitPairs(pairs){
+  const box=new THREE.Box3(); box.makeEmpty(); let any=false;
+  for(const [mid,ids] of groupByModel(pairs)){ const M=LOADED.get(mid); if(!M||!M.object) continue;
+    try{ const boxes=await M.object.getBoxes(ids); for(const b of (boxes||[])){ if(b&&!b.isEmpty()){ box.union(b); any=true; } } }catch(_){}
+  }
+  if(any) frameBox(box);
+}
+
+function groupByModel(pairs){
+  const m=new Map();
+  for(const p of pairs){ if(!m.has(p.modelId)) m.set(p.modelId,[]); m.get(p.modelId).push(p.localId); }
+  return m;
+}
+async function setPairsVisible(pairs, vis){
+  for(const [mid,ids] of groupByModel(pairs)){
+    const M=LOADED.get(mid); if(!M||!M.object) continue;
+    const g=ids.filter(id=>M.geomSet.has(id));
+    if(!g.length) continue;
+    try{ await M.object.setVisible(g, vis); }catch(e){ log("vis: "+e.message,"dim"); }
+  }
+}
+async function isolatePairs(pairs){
+  for(const M of LOADED.values()){
+    if(!M.object) continue;
+    if(M.object.object) M.object.object.visible = true;
+    M.visible = true; M.isolated = false;
+    if(M.geomIds.length){ try{ await M.object.setVisible(M.geomIds, false); }catch(_){} }
+  }
+  await setPairsVisible(pairs, true);
+  if(typeof refreshModelRows==="function") refreshModelRows();
+  await fitPairs(pairs);
+}
+async function showAllGlobal(){
+  for(const M of LOADED.values()){
+    if(!M.object) continue;
+    if(M.object.object) M.object.object.visible = true;
+    M.visible = true; M.isolated = false;
+    if(M.geomIds.length){ try{ await M.object.setVisible(M.geomIds, true); }catch(_){} }
+  }
+  await clearAllColor();
+  await applyColorMode(colorMode);
+  activePlanta = null;
+  if(typeof refreshModelRows==="function") refreshModelRows();
+  markPlantaActive();
+  log("✓ mostrar todo","dim");
+}
+async function clearAllColor(){
+  for(const M of LOADED.values()){
+    if(M.object && M.geomIds.length){ try{ if(colorMode==="original") await M.object.resetColor(M.geomIds); }catch(_){} }
+  }
+}
+
+async function pickClosest(ev){
+  const mouse = new THREE.Vector2(ev.clientX, ev.clientY);
+  let best=null;
+  for(const M of LOADED.values()){
+    if(!M.object || !M.visible || !M.object.object.visible) continue;
+    let r=null;
+    try{ r = await M.object.raycast({ camera, mouse, dom: renderer.domElement }); }
+    catch(e){}
+    if(r && (r.localId!=null || r.point)){
+      const pt = r.point ? new THREE.Vector3(r.point.x,r.point.y,r.point.z) : null;
+      let d = (typeof r.distance==="number") ? r.distance : (pt ? camera.position.distanceTo(pt) : Infinity);
+      if(!best || d<best.d) best = { d, modelId:M.entry.id, localId:r.localId, point:pt };
+    }
+  }
+  return best;
+}
+async function onPick(ev){
+  const best = await pickClosest(ev);
+  if(measMode){ if(best && best.point) addMeasurePoint(best.point); else log("Sin impacto para medir (clic sobre el modelo).","dim"); return; }
+  if(best && best.localId!=null) selectItem(best.modelId, best.localId, {focus:false});
+  else clearSelection();
+}
+
+async function selectItem(modelId, localId, opts={}){
+  if(sel){ const PM=LOADED.get(sel.modelId); if(PM&&PM.object){ try{ await PM.object.resetHighlight([sel.localId]); }catch(_){} } }
+  const M = LOADED.get(modelId);
+  sel = { modelId, localId };
+  if(M && M.object){
+    try{ await M.object.highlight([localId], { color:new THREE.Color(SEL_COLOR), renderedFaces:FRAGS.RenderedFaces.TWO, opacity:1, transparent:false }); }
+    catch(e){ log("highlight: "+e.message,"dim"); }
+  }
+  showProps(M, localId);
+  markTreeSelection(modelId, localId);
+  markResultSelection(modelId, localId);
+  if(opts.focus) focusItem(M, localId);
+}
+
+async function clearSelection(){
+  if(sel){ const M=LOADED.get(sel.modelId); if(M&&M.object){ try{ await M.object.resetHighlight([sel.localId]); }catch(_){} } }
+  sel = null;
+  markTreeSelection(null,null);
+  markResultSelection(null,null);
+}
+
+async function focusItem(M, localId){
+  if(!M||!M.object) return;
+  try{
+    const boxes = await M.object.getBoxes([localId]);
+    if(boxes && boxes[0] && !boxes[0].isEmpty()){
+      const b=boxes[0], c=b.getCenter(new THREE.Vector3()), s=b.getSize(new THREE.Vector3()).length()||2;
+      controls.target.copy(c);
+      camera.position.copy(c).add(new THREE.Vector3(1,0.8,1).multiplyScalar(Math.max(s*1.8,2)));
+      controls.update();
+    }
+  }catch(_){}
+}
+
+function showProps(M, localId){
+  const el = $("#props");
+  if(!M){ el.innerHTML = '<div class="empty">Sin modelo para #'+localId+'.</div>'; return; }
+  const index = M.index;
+  const guid = (index.localIdToGuid||{})[localId];
+  const it = guid ? index.items[guid] : Object.values(index.items).find(x=>x.localId===localId);
+  if(!it){ el.innerHTML = '<div class="empty">Sin datos para el elemento #'+localId+'.</div>'; return; }
+  const dcfg = DISC[M.disc] || {label:M.disc,color:"#888"};
+  let h = "";
+  h += '<div class="selacts">';
+  h += '<button id="selIso">Aislar</button><button id="selHide">Ocultar</button><button id="selShow">Mostrar</button><button id="selFit">Encuadrar</button>'+(M.ifcBytes?'<button id="selEdit" title="Editar datos y exportar IFC">\u270e Editar datos</button>':'');
+  h += '</div>';
+  h += '<h3>Modelo</h3><div class="kv">';
+  h += '<div class="k">Disciplina</div><div class="val"><span class="disc" style="background:'+dcfg.color+'">'+esc(dcfg.label)+'</span></div>';
+  h += '<div class="k">Modelo</div><div class="val">'+esc(M.entry.label)+'</div>';
+  h += '</div>';
+  if(!M.ifcBytes) h += '<div class="empty" style="padding:6px 0;color:#9fb0c8">\u270e Para <b>editar datos</b>, abre el modelo por <b>arrastre</b> (o \u00abAbrir IFC\u2026\u00bb). Este se cargó sin su IFC fuente, así que no es editable.</div>';
+  h += '<h3>Elemento</h3><div class="kv">';
+  h += '<div class="k">Clase</div><div class="val"><span class="pill">'+esc(it.category)+'</span></div>';
+  h += '<div class="k">Nombre</div><div class="val">'+esc(it.name||"—")+'</div>';
+  h += '<div class="k">GlobalId</div><div class="val" style="font-family:ui-monospace,Consolas,monospace;font-size:11.5px">'+esc(guid||"—")+'</div>';
+  h += '</div>';
+  const attrs = it.attributes||{};
+  const shown = Object.entries(attrs).filter(([k])=>!/^_/.test(k) && k!=="Name");
+  if(shown.length){
+    h += '<h3>Atributos</h3><div class="kv">';
+    for(const [k,v] of shown) h += '<div class="k">'+esc(k)+'</div><div class="val">'+esc(v)+'</div>';
+    h += '</div>';
+  }
+  const psets = it.psets||{};
+  const pk = Object.keys(psets);
+  if(pk.length){
+    h += '<h3>Property Sets</h3>';
+    for(const pn of pk){
+      h += '<div class="pset"><div class="pname">'+esc(pn)+'</div><div class="kv">';
+      for(const [k,v] of Object.entries(psets[pn])) h += '<div class="k">'+esc(k)+'</div><div class="val">'+esc(v)+'</div>';
+      h += '</div></div>';
+    }
+  } else h += '<div class="empty" style="padding-top:6px">Sin Property Sets.</div>';
+  const qts = it.quantities||{};
+  const qk = Object.keys(qts);
+  if(qk.length){
+    h += '<h3>Cantidades (Qto)</h3>';
+    for(const qn of qk){
+      h += '<div class="qset"><div class="pname">'+esc(qn)+'</div><div class="kv">';
+      for(const [k,q] of Object.entries(qts[qn])){
+        const val=(q&&typeof q==="object")?q.value:q; const kind=(q&&q.kind)?q.kind:"";
+        const unit = kind==="Length"?" m":kind==="Area"?" m²":kind==="Volume"?" m³":kind==="Weight"?" kg":"";
+        h += '<div class="k">'+esc(k)+'</div><div class="val">'+esc(val)+esc(unit)+'</div>';
+      }
+      h += '</div></div>';
+    }
+  }
+  const cls = it.classifications||[];
+  if(cls.length){
+    h += '<h3>Clasificación</h3>';
+    for(const c of cls){
+      h += '<div class="clset"><div class="pname">'+esc(c.system||"Clasificación")+'</div><div class="kv">';
+      h += '<div class="k">Código</div><div class="val">'+esc(c.code||"—")+'</div>';
+      if(c.name) h += '<div class="k">Denominación</div><div class="val">'+esc(c.name)+'</div>';
+      if(c.location) h += '<div class="k">URI</div><div class="val" style="word-break:break-all"><a href="'+esc(c.location)+'" target="_blank" rel="noopener" style="color:#7db4ff">'+esc(c.location)+'</a></div>';
+      h += '</div></div>';
+    }
+  }
+  el.innerHTML = h;
+  const pair = [{modelId:M.entry.id, localId}];
+  const has = M.geomSet.has(localId);
+  $("#selIso").onclick = ()=>{ if(has) isolatePairs(pair); else log("El elemento no tiene geometría.","dim"); };
+  $("#selHide").onclick = ()=> setPairsVisible(pair, false);
+  $("#selShow").onclick = ()=> setPairsVisible(pair, true);
+  $("#selFit").onclick  = ()=> focusItem(M, localId);
+  if(M.ifcBytes){ const eb=$("#selEdit"); if(eb) eb.onclick=()=>openEditor(M, guid); }
+}
+
+function buildModelsPanel(){
+  const host = $("#pane-models");
+  host.innerHTML = "";
+  const g = document.createElement("div"); g.className="gctl";
+  const bFit = document.createElement("button"); bFit.textContent="Encuadrar todo"; bFit.onclick=fitAll;
+  const bAll = document.createElement("button"); bAll.textContent="Mostrar todo"; bAll.onclick=showAllGlobal;
+  g.append(bFit,bAll);
+  host.appendChild(g);
+  if(LOADED.size===0){ const e=document.createElement("div"); e.className="empty"; e.style.padding="14px 6px"; e.innerHTML="No hay modelos cargados.<br>Arrastra un <b>.ifc</b> a la ventana o pulsa <b>\u00abAbrir IFC\u2026\u00bb</b>."; host.appendChild(e); }
+  for(const M of LOADED.values()){
+    const dcfg = DISC[M.disc] || {label:M.disc,color:"#888"};
+    const card = document.createElement("div"); card.className="mdl"; card.dataset.id=M.entry.id;
+    const top = document.createElement("div"); top.className="mdl-top";
+    const sw = document.createElement("div"); sw.className="mdl-sw"; sw.style.background=hex(M.color);
+    const nm = document.createElement("div"); nm.className="mdl-name"; nm.textContent=M.entry.label;
+    const db = document.createElement("span"); db.className="disc"; db.style.background=dcfg.color; db.textContent=dcfg.label;
+    top.append(sw,nm,db);
+    const meta = document.createElement("div"); meta.className="mdl-meta";
+    const ng=M.geomIds.length, ni=Object.keys(M.index.items).length;
+    meta.textContent = ni+" ítems · "+ng+(ng?" con geometría":" (sólo datos)");
+    const act = document.createElement("div"); act.className="mdl-actions";
+    const bVis = document.createElement("button"); bVis.dataset.role="vis";
+    bVis.onclick=()=>{ setModelVisible(M, !M.visible, false); refreshModelRows(); };
+    const bIso = document.createElement("button"); bIso.dataset.role="iso"; bIso.textContent="Aislar";
+    bIso.onclick=()=>{ toggleIsolate(M); };
+    const bFitM = document.createElement("button"); bFitM.textContent="Encuadrar"; bFitM.onclick=()=>fitModel(M);
+    act.append(bVis,bIso,bFitM);
+    if(M.entry._ingested){ const bCache=document.createElement("button"); bCache.textContent="⬇ caché"; bCache.title="Guardar/descargar .frag + .props.json"; bCache.onclick=()=>downloadCache(M.entry.id); act.append(bCache); }
+    const bDel=document.createElement("button"); bDel.textContent="✕"; bDel.title="Quitar este modelo del visor"; bDel.className="mdl-del"; bDel.onclick=()=>removeModel(M.entry.id); act.append(bDel);
+    card.append(top,meta,act);
+    host.appendChild(card);
+  }
+  refreshModelRows();
+}
+function refreshModelRows(){
+  for(const M of LOADED.values()){
+    const card = document.querySelector('.mdl[data-id="'+M.entry.id+'"]'); if(!card) continue;
+    const bVis = card.querySelector('button[data-role="vis"]');
+    if(bVis){ bVis.textContent = M.visible ? "Visible" : "Oculto"; bVis.classList.toggle("on", M.visible); }
+    const bIso = card.querySelector('button[data-role="iso"]');
+    if(bIso) bIso.classList.toggle("on", M.isolated);
+    card.style.opacity = M.visible ? "1" : ".5";
+  }
+}
+function setModelVisible(M, vis, clearIso=true){
+  M.visible = vis;
+  if(M.object) M.object.object.visible = vis;
+  if(clearIso) M.isolated=false;
+}
+function toggleIsolate(M){
+  const wasIso = M.isolated;
+  for(const X of LOADED.values()){ X.isolated=false; setModelVisible(X, wasIso ? true : (X===M), false); }
+  M.isolated = !wasIso;
+  refreshModelRows();
+  if(!wasIso) fitModel(M);
+}
+
+async function applyColorMode(mode){
+  colorMode = mode;
+  for(const M of LOADED.values()){
+    if(!M.object || !M.geomIds.length) continue;
+    try{
+      if(mode==="original"){ await M.object.resetColor(M.geomIds); }
+      else if(mode==="clasif"){
+        await M.object.resetColor(M.geomIds);
+        if(classifSystem){
+          const map = classifColorBySystem[classifSystem]||{};
+          const byCode={};
+          for(const it of Object.values(M.index.items)){
+            if(it.localId==null || !M.geomSet.has(it.localId)) continue;
+            const code = classifCodeOf(it, classifSystem) || "__none";
+            (byCode[code] ||= []).push(it.localId);
+          }
+          for(const [code,ids] of Object.entries(byCode)){
+            const col = code==="__none" ? NOCLASS_COLOR : (map[code] ?? NOCLASS_COLOR);
+            await M.object.setColor(ids, new THREE.Color(col));
+          }
+        }
+      }
+      else{
+        const c = mode==="disciplina" ? num((DISC[M.disc]||{}).color||"#888") : M.color;
+        await M.object.setColor(M.geomIds, new THREE.Color(c));
+      }
+    }catch(e){ log("color "+M.entry.id+": "+e.message,"dim"); }
+  }
+  if(sel){ const M=LOADED.get(sel.modelId); if(M&&M.object){ try{ await M.object.highlight([sel.localId], { color:new THREE.Color(SEL_COLOR), renderedFaces:FRAGS.RenderedFaces.TWO, opacity:1, transparent:false }); }catch(_){} } }
+}
+
+const treeRowByKey = new Map();
+function buildTree(){
+  treeRowByKey.clear();
+  const host = $("#pane-tree"); host.innerHTML = "";
+  const g = document.createElement("div"); g.className="gctl";
+  const bAll = document.createElement("button"); bAll.textContent="Mostrar todo"; bAll.onclick=showAllGlobal;
+  g.append(bAll); host.appendChild(g);
+  for(const M of LOADED.values()){
+    const dcfg = DISC[M.disc] || {label:M.disc,color:"#888"};
+    const wrap = document.createElement("div"); wrap.className="node";
+    const row = document.createElement("div"); row.className="node-row mroot";
+    const tw = document.createElement("span"); tw.className="twisty"; tw.textContent="▾";
+    const db = document.createElement("span"); db.className="disc"; db.style.background=dcfg.color; db.textContent=dcfg.label;
+    const nm = document.createElement("span"); nm.className="nm"; nm.textContent=" "+M.entry.label;
+    const acts = nodeActions(M, M.index.tree);
+    row.append(tw,db,nm,acts);
+    const kids = document.createElement("div"); kids.className="kids";
+    const t = M.index.tree;
+    if(t) kids.appendChild(renderNode(M, t, true));
+    else { const e=document.createElement("div"); e.className="empty"; e.textContent="Sin estructura espacial."; kids.appendChild(e); }
+    tw.onclick=()=>{ const h=kids.classList.toggle("hidden"); tw.textContent=h?"▸":"▾"; };
+    wrap.append(row,kids); host.appendChild(wrap);
+  }
+}
+function nodeGeomPairs(M, node){
+  const acc=[];
+  (function w(n){ if(n.localId!=null && M.geomSet.has(n.localId)) acc.push({modelId:M.entry.id, localId:n.localId}); for(const c of (n.children||[])) w(c); })(node);
+  return acc;
+}
+function nodeActions(M, node){
+  const acts = document.createElement("span"); acts.className="rowacts";
+  const mk=(t,title,fn)=>{ const b=document.createElement("button"); b.textContent=t; b.title=title; b.onclick=e=>{ e.stopPropagation(); fn(); }; return b; };
+  acts.append(
+    mk("◎","Aislar este nodo",()=>{ const p=nodeGeomPairs(M,node); if(p.length) isolatePairs(p); else log("Nodo sin geometría.","dim"); }),
+    mk("⦸","Ocultar este nodo",()=>setPairsVisible(nodeGeomPairs(M,node),false)),
+    mk("◉","Mostrar este nodo",()=>setPairsVisible(nodeGeomPairs(M,node),true))
+  );
+  return acts;
+}
+function renderNode(M, node, open){
+  const wrap = document.createElement("div"); wrap.className="node";
+  const row = document.createElement("div"); row.className="node-row";
+  const hasKids = node.children && node.children.length;
+  const tw = document.createElement("span"); tw.className="twisty"; tw.textContent = hasKids ? (open?"▾":"▸") : "·";
+  const cat = document.createElement("span"); cat.className="cat"; cat.textContent=(node.category||"").replace(/^IFC/,"");
+  let nmTxt = node.name || (node.localId!=null?("#"+node.localId):"");
+  if(node.category==="IFCBUILDINGSTOREY" && node.elevation!=null){ const ev=Number(node.elevation); nmTxt += "  ("+(ev>=0?"+":"")+ev.toFixed(2)+" m)"; }
+  const nm = document.createElement("span"); nm.className="nm"; nm.textContent = nmTxt;
+  const acts = nodeActions(M, node);
+  row.append(tw,cat,nm,acts);
+  let kids=null;
+  if(hasKids){
+    kids = document.createElement("div"); kids.className="kids"+(open?"":" hidden");
+    for(const c of node.children) kids.appendChild(renderNode(M,c,false));
+    tw.onclick=e=>{ e.stopPropagation(); const h=kids.classList.toggle("hidden"); tw.textContent=h?"▸":"▾"; };
+  }
+  if(node.localId!=null){
+    treeRowByKey.set(M.entry.id+":"+node.localId, row);
+    row.onclick=()=>selectItem(M.entry.id, node.localId, {focus:true});
+  }
+  wrap.appendChild(row); if(kids) wrap.appendChild(kids);
+  return wrap;
+}
+function markTreeSelection(modelId, localId){
+  for(const r of treeRowByKey.values()) r.classList.remove("sel");
+  const r = (modelId!=null) && treeRowByKey.get(modelId+":"+localId);
+  if(r){ r.classList.add("sel"); r.scrollIntoView({block:"nearest"}); }
+}
+
+function buildClasses(){
+  const host = $("#pane-classes"); host.innerHTML="";
+  for(const M of LOADED.values()){
+    const dcfg = DISC[M.disc] || {label:M.disc,color:"#888"};
+    const hd = document.createElement("div"); hd.className="cls-grp-h";
+    const db = document.createElement("span"); db.className="disc"; db.style.background=dcfg.color; db.textContent=dcfg.label;
+    hd.append(db, document.createTextNode(M.entry.label)); host.appendChild(hd);
+    const geom = M.index.geometryClasses || {};
+    const geomCats = Object.keys(geom).sort();
+    if(geomCats.length){
+      geomCats.forEach((cat,i)=>{
+        const color = PALETTE[i%PALETTE.length];
+        const row = document.createElement("div"); row.className="cls-row";
+        const chk = document.createElement("input"); chk.type="checkbox"; chk.checked=true; chk.title="Visibilidad";
+        chk.onchange = async ()=>{ if(!M.object) return; try{ await M.object.setVisible(M.classToLocalIds[cat]||[], chk.checked); }catch(e){ log("visible: "+e.message,"dim"); } };
+        const sw = document.createElement("div"); sw.className="sw"; sw.style.background=hex(color); sw.title="Colorear / restaurar"; let colored=false;
+        sw.onclick = async ()=>{ if(!M.object) return; const ids=M.classToLocalIds[cat]||[];
+          try{ if(colored){ await M.object.resetColor(ids); sw.style.outline="none"; } else { await M.object.setColor(ids, new THREE.Color(color)); sw.style.outline="2px solid #fff6"; } colored=!colored; }catch(e){ log("color: "+e.message,"dim"); } };
+        const nm = document.createElement("span"); nm.className="cls-name"; nm.textContent=cat.replace(/^IFC/,"");
+        const n = document.createElement("span"); n.className="cls-n"; n.textContent=geom[cat];
+        const acts = document.createElement("span"); acts.className="rowacts";
+        const pairsFn=()=> (M.classToLocalIds[cat]||[]).filter(id=>M.geomSet.has(id)).map(id=>({modelId:M.entry.id,localId:id}));
+        const mk=(t,title,fn)=>{ const b=document.createElement("button"); b.textContent=t; b.title=title; b.onclick=e=>{e.stopPropagation();fn();}; return b; };
+        acts.append(mk("◎","Aislar clase",()=>isolatePairs(pairsFn())), mk("⦸","Ocultar clase",()=>setPairsVisible(pairsFn(),false)));
+        row.append(chk,sw,nm,n,acts); host.appendChild(row);
+      });
+    } else {
+      const e=document.createElement("div"); e.className="empty"; e.style.padding="4px 8px"; e.textContent="Sin clases con geometría teselada."; host.appendChild(e);
+    }
+    const all = M.index.countByClass||{};
+    const dataCats = Object.keys(all).filter(c=>!geom[c]).sort();
+    if(dataCats.length){
+      const box=document.createElement("div"); box.style.padding="2px 4px";
+      for(const c of dataCats){ const s=document.createElement("span"); s.className="pill"; s.textContent=c.replace(/^IFC/,"")+" ("+all[c]+")"; box.appendChild(s); }
+      host.appendChild(box);
+    }
+  }
+}
+
+function fieldValue(M, it, field){
+  if(field==="__cat") return it.category;
+  if(field==="__disc") return discLabel(M.disc);
+  if(field==="__name") return it.name;
+  if(field.startsWith("attr:")) return (it.attributes||{})[field.slice(5)];
+  if(field.startsWith("pset:")){ const [pn,pk]=field.slice(5).split(NUL); return (it.psets||{})[pn]?.[pk]; }
+  if(field.startsWith("cls:")){ return classifCodeOf(it, field.slice(4)); }
+  return undefined;
+}
+function searchableText(M, it){
+  let s = (it.category||"")+" "+(it.name||"")+" "+discLabel(M.disc);
+  for(const [k,v] of Object.entries(it.attributes||{})){ if(/^_/.test(k)) continue; s += " "+v; }
+  for(const props of Object.values(it.psets||{})) for(const v of Object.values(props)) s += " "+v;
+  for(const c of (it.classifications||[])) s += " "+(c.code||"")+" "+(c.name||"")+" "+(c.system||"");
+  return s.toLowerCase();
+}
+function distinctValues(field){
+  const set=new Set();
+  for(const M of LOADED.values()) for(const it of Object.values(M.index.items)){
+    if(it.localId==null) continue;
+    const v=fieldValue(M,it,field);
+    if(v!=null && v!=="") set.add(String(v));
+  }
+  return [...set].sort((a,b)=> a.localeCompare(b,undefined,{numeric:true}));
+}
+function buildSearchPane(){
+  const host = $("#pane-search"); host.innerHTML="";
+  const attrKeys=new Set(), psetFields=new Set();
+  for(const M of LOADED.values()) for(const it of Object.values(M.index.items)){
+    if(it.localId==null) continue;
+    for(const k of Object.keys(it.attributes||{})) if(!/^_/.test(k) && k!=="Name") attrKeys.add(k);
+    for(const [pn,props] of Object.entries(it.psets||{})) for(const pk of Object.keys(props)) psetFields.add(pn+NUL+pk);
+  }
+  const c = document.createElement("div"); c.className="fctl";
+  c.innerHTML =
+    '<div class="row"><input id="fText" type="text" placeholder="texto libre (nombre, clase, valores…)"/></div>'+
+    '<div class="row"><select id="fField"></select></div>'+
+    '<div class="row"><select id="fOp"><option value="eq">es igual a</option><option value="contains">contiene</option></select>'+
+    '<select id="fVal"></select></div>'+
+    '<div class="row"><input id="fValText" type="text" placeholder="…o valor a mano"/></div>'+
+    '<div class="fbtns"><button id="fRun">Filtrar</button><button id="fClear">Limpiar</button></div>';
+  host.appendChild(c);
+  const sf = $("#fField");
+  const opt=(v,t)=>{ const o=document.createElement("option"); o.value=v; o.textContent=t; return o; };
+  sf.appendChild(opt("__any","— cualquier propiedad —"));
+  sf.appendChild(opt("__cat","Clase (category)"));
+  sf.appendChild(opt("__disc","Disciplina"));
+  [...attrKeys].sort().forEach(k=> sf.appendChild(opt("attr:"+k, "Atributo · "+k)));
+  [...psetFields].sort().forEach(k=>{ const [pn,pk]=k.split(NUL); sf.appendChild(opt("pset:"+k, "Pset · "+pn+" ▸ "+pk)); });
+  for(const sys of uiClassifSystems()) sf.appendChild(opt("cls:"+sys, "Clasif · "+sys));
+  function refreshVals(){
+    const fv=$("#fVal"); fv.innerHTML="";
+    const f=sf.value;
+    fv.appendChild(opt("","— cualquier valor —"));
+    if(f && f!=="__any"){ for(const v of distinctValues(f)) fv.appendChild(opt(v,v)); }
+  }
+  sf.onchange=refreshVals; refreshVals();
+  $("#fRun").onclick=runFilter;
+  $("#fClear").onclick=()=>{ $("#fText").value=""; $("#fValText").value=""; sf.value="__any"; refreshVals(); CUR_RESULTS=[]; renderResults(); clearAllColor().then(()=>applyColorMode(colorMode)); };
+  const bar = document.createElement("div"); bar.id="resBar"; host.appendChild(bar);
+  const list = document.createElement("div"); list.id="resList"; host.appendChild(list);
+  renderResults();
+}
+function runFilter(){
+  const text=($("#fText").value||"").trim().toLowerCase();
+  const field=$("#fField").value;
+  const op=$("#fOp").value;
+  const value=$("#fVal").value;
+  const valText=($("#fValText").value||"").trim().toLowerCase();
+  const out=[];
+  for(const M of LOADED.values()){
+    for(const it of Object.values(M.index.items)){
+      if(it.localId==null) continue;
+      if(text && !searchableText(M,it).includes(text)) continue;
+      if(field && field!=="__any"){
+        const fv=fieldValue(M,it,field);
+        const want = value!=="" ? value.toLowerCase() : valText;
+        if(want){
+          if(fv==null) continue;
+          const fvs=String(fv).toLowerCase();
+          if(op==="contains"){ if(!fvs.includes(want)) continue; }
+          else { if(fvs!==want) continue; }
+        } else {
+          if(fv==null || fv==="") continue;
+        }
+      }
+      out.push({modelId:M.entry.id, localId:it.localId, it, M});
+    }
+  }
+  CUR_RESULTS=out;
+  renderResults();
+  log("Filtro: "+out.length+" resultados","dim");
+}
+function renderResults(){
+  const bar=$("#resBar"), list=$("#resList");
+  if(!bar||!list) return;
+  const n=CUR_RESULTS.length;
+  const nGeom=CUR_RESULTS.filter(r=>r.M.geomSet.has(r.localId)).length;
+  bar.className="res-bar";
+  bar.innerHTML='<span class="cnt">'+n+' resultado'+(n===1?"":"s")+(n?(' · '+nGeom+' con geometría'):"")+'</span>';
+  if(n){
+    const mkb=(id,t)=>{ const b=document.createElement("button"); b.id=id; b.textContent=t; return b; };
+    bar.append(mkb("rIso","Aislar"), mkb("rCol","Colorear"), mkb("rHide","Ocultar"));
+    const geomPairs=()=>CUR_RESULTS.filter(r=>r.M.geomSet.has(r.localId)).map(r=>({modelId:r.modelId, localId:r.localId}));
+    setTimeout(()=>{
+      const i=$("#rIso"), c=$("#rCol"), h=$("#rHide");
+      if(i) i.onclick=()=>{ const p=geomPairs(); if(p.length) isolatePairs(p); else log("Resultados sin geometría.","dim"); };
+      if(c) c.onclick=()=>colorResults();
+      if(h) h.onclick=()=>setPairsVisible(geomPairs(),false);
+    },0);
+  }
+  list.innerHTML="";
+  if(!n){ list.innerHTML='<div class="empty">Sin resultados. Escribe un texto, o elige una propiedad y un valor, y pulsa Filtrar.</div>'; return; }
+  const MAX=400;
+  CUR_RESULTS.slice(0,MAX).forEach(r=>{
+    const dcfg=DISC[r.M.disc]||{label:r.M.disc,color:"#888"};
+    const row=document.createElement("div"); row.className="res-row"; row.dataset.k=r.modelId+":"+r.localId;
+    const db=document.createElement("span"); db.className="disc"; db.style.background=dcfg.color; db.textContent=dcfg.label;
+    const tx=document.createElement("span"); tx.className="rn";
+    tx.innerHTML='<b>'+esc(r.it.name||("#"+r.localId))+'</b> <span class="rc">'+esc((r.it.category||"").replace(/^IFC/,""))+' · '+esc(r.M.entry.label)+'</span>';
+    row.append(db,tx);
+    row.onclick=()=>selectItem(r.modelId, r.localId, {focus:true});
+    list.appendChild(row);
+  });
+  if(n>MAX){ const e=document.createElement("div"); e.className="empty"; e.textContent="… y "+(n-MAX)+" más (acota el filtro)."; list.appendChild(e); }
+}
+function markResultSelection(modelId, localId){
+  document.querySelectorAll("#resList .res-row").forEach(r=>r.classList.remove("sel"));
+  if(modelId==null) return;
+  const r=document.querySelector('#resList .res-row[data-k="'+modelId+':'+localId+'"]');
+  if(r){ r.classList.add("sel"); r.scrollIntoView({block:"nearest"}); }
+}
+async function colorResults(){
+  const byModel=groupByModel(CUR_RESULTS.map(r=>({modelId:r.modelId,localId:r.localId})));
+  for(const [mid,ids] of byModel){ const M=LOADED.get(mid); if(!M||!M.object) continue;
+    const g=ids.filter(id=>M.geomSet.has(id)); if(!g.length) continue;
+    try{ await M.object.setColor(g, new THREE.Color(FILTER_COLOR)); }catch(e){ log("color: "+e.message,"dim"); }
+  }
+  if(sel){ const M=LOADED.get(sel.modelId); if(M&&M.object){ try{ await M.object.highlight([sel.localId], { color:new THREE.Color(SEL_COLOR), renderedFaces:FRAGS.RenderedFaces.TWO, opacity:1, transparent:false }); }catch(_){} } }
+}
+
+function buildPlantasPane(){
+  const host = $("#pane-plantas"); host.innerHTML="";
+  const modes = document.createElement("div"); modes.className="pl-modes";
+  const bC = document.createElement("button"); bC.textContent="Por cota"; bC.dataset.m="cota";
+  const bP = document.createElement("button"); bP.textContent="Por planta"; bP.dataset.m="planta";
+  modes.append(bC,bP); host.appendChild(modes);
+  const g = document.createElement("div"); g.className="gctl";
+  const bAll = document.createElement("button"); bAll.textContent="Todas las plantas"; bAll.onclick=showAllGlobal;
+  g.append(bAll); host.appendChild(g);
+  const list = document.createElement("div"); list.id="plList"; host.appendChild(list);
+  bC.onclick=()=>{ plantaMode="cota"; renderPlantas(); };
+  bP.onclick=()=>{ plantaMode="planta"; renderPlantas(); };
+  renderPlantas();
+}
+function allStoreys(){
+  const res=[];
+  for(const M of LOADED.values()) for(const s of (M.storeys||[])) res.push(s);
+  return res;
+}
+function renderPlantas(){
+  const list=$("#plList"); if(!list) return;
+  document.querySelectorAll(".pl-modes button").forEach(b=>b.classList.toggle("on", b.dataset.m===plantaMode));
+  list.innerHTML="";
+  const storeys=allStoreys().filter(s=>s.geomLocalIds.length>0);
+  if(!storeys.length){ list.innerHTML='<div class="empty">No hay plantas con geometría en la federación.</div>'; return; }
+  let entries=[];
+  if(plantaMode==="cota"){
+    const byElev=new Map();
+    for(const s of storeys){
+      const key=(s.elevation==null)?"s/c":Number(s.elevation).toFixed(2);
+      if(!byElev.has(key)) byElev.set(key,[]);
+      byElev.get(key).push(s);
+    }
+    entries=[...byElev.entries()].map(([key,arr])=>{
+      const elev = key==="s/c"?null:parseFloat(key);
+      return { key:"cota:"+key, elev, storeys:arr,
+               pairs:arr.flatMap(s=>s.geomLocalIds.map(id=>({modelId:s.modelId,localId:id}))) };
+    }).sort((a,b)=> (b.elev==null?-1e9:b.elev)-(a.elev==null?-1e9:a.elev));
+  } else {
+    entries=storeys.map(s=>({ key:"pl:"+s.modelId+":"+s.localId, elev:s.elevation, storeys:[s],
+               pairs:s.geomLocalIds.map(id=>({modelId:s.modelId,localId:id})) }))
+               .sort((a,b)=> (b.elev==null?-1e9:b.elev)-(a.elev==null?-1e9:a.elev));
+  }
+  for(const e of entries){
+    const row=document.createElement("div"); row.className="pl-row"; row.dataset.k=e.key;
+    if(e.key===activePlanta) row.classList.add("on");
+    const cota=document.createElement("div"); cota.className="pl-cota";
+    cota.textContent = e.elev==null ? "s/cota" : ((e.elev>=0?"+":"")+e.elev.toFixed(2)+" m");
+    const info=document.createElement("div"); info.className="pl-info";
+    if(plantaMode==="cota"){
+      const names=[...new Set(e.storeys.map(s=>s.name))].join(" · ");
+      info.textContent = names + "  ("+e.pairs.length+" elem.)";
+    } else {
+      const s=e.storeys[0];
+      info.innerHTML = esc(s.name)+' <span class="rc" style="color:#8aa0c0;font-size:10px">'+esc(LOADED.get(s.modelId).entry.label)+'</span>  ('+e.pairs.length+" elem.)";
+    }
+    const discs=document.createElement("div"); discs.className="pl-discs";
+    for(const d of [...new Set(e.storeys.map(s=>s.disc))]){ const sw=document.createElement("div"); sw.className="pl-d"; sw.style.background=(DISC[d]||{color:"#888"}).color; sw.title=discLabel(d); discs.appendChild(sw); }
+    row.append(cota,info,discs);
+    row.onclick=()=>{ activePlanta=e.key; markPlantaActive(); isolatePairs(e.pairs); };
+    list.appendChild(row);
+  }
+}
+function markPlantaActive(){
+  document.querySelectorAll("#plList .pl-row").forEach(r=>r.classList.toggle("on", r.dataset.k===activePlanta));
+}
+
+// ================= v0.8 — SECCIÓN (clipping) =================
+function computeFedBox(){
+  const box=new THREE.Box3(); box.makeEmpty(); let any=false;
+  for(const M of LOADED.values()){ if(M.object && M.object.object){ const b=new THREE.Box3().setFromObject(M.object.object); if(!b.isEmpty()){ box.union(b); any=true; } } }
+  return any?box:null;
+}
+function axisNormal(ax, flip){
+  const v = ax==="x"?new THREE.Vector3(1,0,0): ax==="y"?new THREE.Vector3(0,1,0): new THREE.Vector3(0,0,1);
+  return flip ? v.multiplyScalar(-1) : v;
+}
+function offsetToCoord(t){
+  fedBox = fedBox || computeFedBox();
+  if(!fedBox) return 0;
+  const min=fedBox.min, max=fedBox.max;
+  const lo = clipAxis==="x"?min.x: clipAxis==="y"?min.y: min.z;
+  const hi = clipAxis==="x"?max.x: clipAxis==="y"?max.y: max.z;
+  return lo + (hi-lo)*(t/100);
+}
+function applyClip(){
+  if(!clipOn){ renderer.clippingPlanes=[]; const v=$("#secOffV"); if(v) v.textContent="—"; return; }
+  const t = parseFloat($("#secOff").value);
+  const coord = offsetToCoord(t);
+  const n = axisNormal(clipAxis, clipFlip);
+  const onAxis = clipAxis==="x"?n.x: clipAxis==="y"?n.y: n.z;
+  const constant = -(onAxis*coord);
+  clipPlane = clipPlane || new THREE.Plane();
+  clipPlane.set(n.clone(), constant);
+  renderer.clippingPlanes=[clipPlane];
+  const v=$("#secOffV"); if(v) v.textContent=(coord>=0?"+":"")+coord.toFixed(2)+" m";
+}
+function clearSection(){
+  clipOn=false; renderer.clippingPlanes=[]; clipPlane=null;
+  const b=$("#secToggle"); if(b){ b.textContent="Off"; b.classList.remove("on"); }
+  const v=$("#secOffV"); if(v) v.textContent="—";
+}
+
+// ================= v0.8 — MEDICIÓN =================
+function setRead(t){ const r=$("#measRead"); if(r) r.textContent=t; }
+function clearMeasLabels(){ while(measLabels.length){ const l=measLabels.pop(); if(l.el) l.el.remove(); } }
+function mkLabel(text, cls){ const el=document.createElement("div"); el.className="mlabel"+(cls?(" "+cls):""); el.textContent=text; $("#labels").appendChild(el); return el; }
+function mkDot(){ const el=document.createElement("div"); el.className="mdot"; $("#labels").appendChild(el); return el; }
+function addSeg(a,b){
+  const g=new THREE.BufferGeometry().setFromPoints([a,b]);
+  const m=new THREE.LineBasicMaterial({color:0xffd34d, depthTest:false});
+  const ln=new THREE.Line(g,m); ln.renderOrder=999; measGroup.add(ln);
+}
+function polygonArea(pts){
+  const n=new THREE.Vector3();
+  for(let i=0;i<pts.length;i++){ const a=pts[i], b=pts[(i+1)%pts.length]; n.add(new THREE.Vector3().crossVectors(a,b)); }
+  return n.length()/2;
+}
+function polygonPerim(pts,closed){ let s=0; for(let i=1;i<pts.length;i++) s+=pts[i-1].distanceTo(pts[i]); if(closed&&pts.length>=2) s+=pts[pts.length-1].distanceTo(pts[0]); return s; }
+function centroid(pts){ const c=new THREE.Vector3(); for(const p of pts) c.add(p); return c.multiplyScalar(1/Math.max(pts.length,1)); }
+function setMeasMode(m){
+  measMode = (measMode===m)?null:m;
+  document.querySelectorAll("#measMode button").forEach(b=>b.classList.toggle("on", b.dataset.m===measMode));
+  const hint=$("#measHint");
+  if(measMode==="dist") hint.textContent="Clic en puntos sucesivos: cada tramo muestra su distancia y se acumula el total.";
+  else if(measMode==="area") hint.textContent="Clic en 3+ vértices del contorno y pulsa Terminar (Enter) para cerrar y medir el área.";
+  else hint.textContent="Elige un modo y haz clic sobre el modelo para fijar puntos.";
+  measPts = []; redrawMeasure();
+}
+function addMeasurePoint(p){ measPts.push(p.clone()); redrawMeasure(); }
+function redrawMeasure(close){
+  if(measGroup) measGroup.clear();
+  clearMeasLabels();
+  const pts=measPts;
+  for(const p of pts) measLabels.push({pos:p, el:mkDot(), kind:"dot"});
+  if(measMode==="dist"){
+    let tot=0;
+    for(let i=1;i<pts.length;i++){
+      addSeg(pts[i-1],pts[i]);
+      const d=pts[i-1].distanceTo(pts[i]); tot+=d;
+      const mid=pts[i-1].clone().add(pts[i]).multiplyScalar(.5);
+      measLabels.push({pos:mid, el:mkLabel(d.toFixed(3)+" m"), kind:"seg"});
+    }
+    if(pts.length>=2) measLabels.push({pos:pts[pts.length-1].clone(), el:mkLabel("Σ "+tot.toFixed(3)+" m","tot"), kind:"tot"});
+    setRead(pts.length<1?"—":(pts.length===1?"1 punto — clic para el siguiente":("Total: "+tot.toFixed(3)+" m  ("+(pts.length-1)+" tramo"+(pts.length-1===1?"":"s")+")")));
+  } else if(measMode==="area"){
+    for(let i=1;i<pts.length;i++) addSeg(pts[i-1],pts[i]);
+    if(close && pts.length>=3){
+      addSeg(pts[pts.length-1],pts[0]);
+      const a=polygonArea(pts), per=polygonPerim(pts,true), c=centroid(pts);
+      measLabels.push({pos:c, el:mkLabel("A = "+a.toFixed(3)+" m²","tot"), kind:"area"});
+      setRead("Área: "+a.toFixed(3)+" m²  ·  Perímetro: "+per.toFixed(3)+" m");
+    } else {
+      setRead(pts.length?(pts.length+" vértice"+(pts.length===1?"":"s")+" — pulsa Terminar para cerrar"):"—");
+    }
+  } else setRead("—");
+}
+function finishMeasure(){ if(measMode==="area" && measPts.length>=3) redrawMeasure(true); }
+function clearMeasure(){ measPts=[]; if(measGroup) measGroup.clear(); clearMeasLabels(); setRead("—"); }
+function updateMeasureLabels(){
+  if(!measLabels.length || !host) return;
+  const w=host.clientWidth, h=host.clientHeight, v=new THREE.Vector3();
+  for(const L of measLabels){
+    v.copy(L.pos).project(camera);
+    const x=(v.x*0.5+0.5)*w, y=(-v.y*0.5+0.5)*h;
+    const vis = v.z<1 && x>=-60 && x<=w+60 && y>=-60 && y<=h+60;
+    L.el.style.display = vis ? "block" : "none";
+    L.el.style.left=x+"px"; L.el.style.top=y+"px";
+  }
+}
+// =================== v0.9 — CLASIFICACIÓN + BCF ===================
+let CLASSIF = { systems:{} };
+let classifSystem = null;
+let classifColorBySystem = {};
+const CLASSIF_PALETTE = [0x4e79a7,0xf28e2b,0x59a14f,0xe15759,0x76b7b2,0xedc948,0xb07aa1,0xff9da7,0x9c755f,0x86bcb6,0xbab0ac,0xd37295,0xfabfd2,0xb6992d,0x499894];
+const NOCLASS_COLOR = 0x39414f;
+let TOPICS = [];
+let bcfEditing = null;
+let BCF_AUTHOR = "jmsoria@ciccp.es";
+const genGuid = ()=> (self.crypto && crypto.randomUUID) ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==="x"?r:(r&0x3|0x8)).toString(16);});
+const nowIso = ()=> new Date().toISOString().replace(/\.\d+Z$/,"Z");
+// bSDD - IFC es la entidad IFC (redundante con la clase): se relega de selector/leyenda/Buscar, pero se muestra en la ficha.
+const isRealClassif = sys => !!sys && sys.toLowerCase().indexOf("bsdd")===-1;
+
+function buildClassifIndex(){
+  CLASSIF = { systems:{} };
+  for(const M of LOADED.values()) for(const it of Object.values(M.index.items)){
+    if(it.localId==null || !it.classifications) continue;
+    for(const c of it.classifications){
+      const sys = c.system || "Clasificación";
+      const S = (CLASSIF.systems[sys] ||= { codes:{} });
+      const code = c.code || "(sin código)";
+      const E = (S.codes[code] ||= { name:c.name||"", location:c.location||null, pairs:[] });
+      E.pairs.push({ modelId:M.entry.id, localId:it.localId });
+    }
+  }
+  const syslist = Object.keys(CLASSIF.systems);
+  const real = syslist.filter(isRealClassif);
+  classifSystem = syslist.find(s=>/uniclass/i.test(s)) || real[0] || syslist[0] || null;
+  classifColorBySystem = {};
+  for(const sys of syslist){
+    const codes = Object.keys(CLASSIF.systems[sys].codes).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    const map={}; codes.forEach((code,i)=> map[code]=CLASSIF_PALETTE[i%CLASSIF_PALETTE.length]);
+    classifColorBySystem[sys]=map;
+  }
+}
+function hasClassif(){ return Object.keys(CLASSIF.systems).length>0; }
+function uiClassifSystems(){
+  const all = Object.keys(CLASSIF.systems);
+  const real = all.filter(isRealClassif).sort();
+  return real.length ? real : all.sort();
+}
+function classifCodeOf(it, system){
+  if(!it || !it.classifications) return null;
+  const c = it.classifications.find(x=>(x.system||"Clasificación")===system);
+  return c ? (c.code || "(sin código)") : null;
+}
+
+function buildClassifPane(){
+  const host = $("#pane-classif"); host.innerHTML="";
+  if(!hasClassif()){ host.innerHTML='<div class="empty">Ningún modelo cargado trae clasificaciones (IfcClassificationReference). Enriquece un modelo con la skill bsdd-clasificacion y vuelve a convertir con el pipeline.</div>'; return; }
+  const systems = uiClassifSystems();
+  if(classifSystem && !systems.includes(classifSystem)) classifSystem = systems[0];
+  const top = document.createElement("div"); top.className="cl-top";
+  const lab = document.createElement("label"); lab.className="lbl"; lab.textContent="Sistema"; top.appendChild(lab);
+  const selS = document.createElement("select"); selS.id="clSystem";
+  for(const s of systems){ const o=document.createElement("option"); o.value=s; o.textContent=s+" ("+Object.keys(CLASSIF.systems[s].codes).length+")"; if(s===classifSystem)o.selected=true; selS.appendChild(o); }
+  top.appendChild(selS);
+  const bCol = document.createElement("button"); bCol.textContent="Colorear por este sistema"; bCol.className="cl-colorbtn";
+  top.appendChild(bCol);
+  host.appendChild(top);
+  const legend = document.createElement("div"); legend.id="clLegend"; host.appendChild(legend);
+  selS.onchange = ()=>{ classifSystem = selS.value; renderClassifLegend(); if(colorMode==="clasif") applyColorMode("clasif"); };
+  bCol.onclick = ()=>{ const cm=$("#colorMode"); if(cm) cm.value="clasif"; applyColorMode("clasif"); };
+  renderClassifLegend();
+}
+function renderClassifLegend(){
+  const legend = $("#clLegend"); if(!legend) return; legend.innerHTML="";
+  const S = CLASSIF.systems[classifSystem]; if(!S) return;
+  const map = classifColorBySystem[classifSystem]||{};
+  const codes = Object.keys(S.codes).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  for(const code of codes){
+    const E = S.codes[code];
+    const geomPairs = E.pairs.filter(p=>{ const M=LOADED.get(p.modelId); return M&&M.geomSet.has(p.localId); });
+    const row = document.createElement("div"); row.className="cl-row";
+    const sw = document.createElement("div"); sw.className="sw"; sw.style.background=hex(map[code]||NOCLASS_COLOR); sw.title="Colorear sólo este código"; let colored=false;
+    sw.onclick = async ()=>{
+      for(const [mid,ids] of groupByModel(geomPairs)){ const M=LOADED.get(mid); if(!M||!M.object) continue; const g=ids.filter(id=>M.geomSet.has(id)); if(!g.length) continue;
+        try{ if(colored){ await M.object.resetColor(g); sw.style.outline="none"; } else { await M.object.setColor(g, new THREE.Color(map[code]||NOCLASS_COLOR)); sw.style.outline="2px solid #fff6"; } }catch(_){}
+      } colored=!colored;
+    };
+    const tx = document.createElement("div"); tx.className="cl-tx";
+    tx.innerHTML = '<span class="cl-code">'+esc(code)+'</span> <span class="cl-name">'+esc(E.name||"")+'</span>';
+    const n = document.createElement("span"); n.className="cls-n"; n.textContent=E.pairs.length;
+    const acts = document.createElement("span"); acts.className="rowacts";
+    const mk=(t,title,fn)=>{ const b=document.createElement("button"); b.textContent=t; b.title=title; b.onclick=e=>{e.stopPropagation();fn();}; return b; };
+    acts.append(mk("◎","Aislar este código",()=>{ if(geomPairs.length) isolatePairs(geomPairs); else log("Sin geometría para "+code,"dim"); }),
+                mk("⦸","Ocultar este código",()=>setPairsVisible(geomPairs,false)));
+    row.append(sw,tx,n,acts); legend.appendChild(row);
+  }
+}
+
+// ----- BCF: viewpoint capturar / restaurar -----
+function captureViewpoint(){
+  const pos = camera.position.clone();
+  const tgt = controls.target.clone();
+  const dir = tgt.clone().sub(pos).normalize();
+  const up = camera.up.clone().normalize();
+  const selection = [];
+  if(sel){ const M=LOADED.get(sel.modelId); const g=M&&(M.index.localIdToGuid||{})[sel.localId]; if(g) selection.push({ ifcGuid:g, model:sel.modelId }); }
+  let clipping = [];
+  if(clipOn && clipPlane){
+    const n = clipPlane.normal.clone();
+    const p = n.clone().multiplyScalar(-clipPlane.constant);
+    clipping = [{ location:{x:p.x,y:p.y,z:p.z}, direction:{x:n.x,y:n.y,z:n.z} }];
+  }
+  let snapshot=null; try{ snapshot = renderer.domElement.toDataURL("image/png"); }catch(_){}
+  return {
+    guid: genGuid(),
+    camera: { type:"perspective", position:{x:pos.x,y:pos.y,z:pos.z}, direction:{x:dir.x,y:dir.y,z:dir.z}, up:{x:up.x,y:up.y,z:up.z}, fov:camera.fov, _target:{x:tgt.x,y:tgt.y,z:tgt.z} },
+    components: { selection, visibility:{ defaultVisibility:true, exceptions:[] }, coloring:[] },
+    clipping, snapshot
+  };
+}
+// Acepta componentes {ifcGuid, model} o guid string; desambigua por modelo para evitar colisión de GlobalId.
+function compsToPairs(comps){
+  const out=[];
+  for(const c of (comps||[])){
+    const guid = (typeof c==="string") ? c : c.ifcGuid;
+    const model = (typeof c==="object" && c) ? c.model : null;
+    if(!guid) continue;
+    let chosen=null;
+    if(model && LOADED.has(model)){ const it=LOADED.get(model).index.items[guid]; if(it&&it.localId!=null) chosen={modelId:model, localId:it.localId}; }
+    if(!chosen){ for(const M of LOADED.values()){ const it=M.index.items[guid]; if(it&&it.localId!=null){ chosen={modelId:M.entry.id, localId:it.localId}; break; } } }
+    if(chosen) out.push(chosen);
+  }
+  return out;
+}
+async function showAllForRestore(){
+  for(const M of LOADED.values()){ if(M.object){ if(M.object.object)M.object.object.visible=true; M.visible=true; M.isolated=false; if(M.geomIds.length){ try{await M.object.setVisible(M.geomIds,true);}catch(_){}} } }
+  if(typeof refreshModelRows==="function") refreshModelRows();
+}
+function syncSectionUIFromPlane(){
+  const b=$("#secToggle"); if(b){ b.textContent=clipOn?"On":"Off"; b.classList.toggle("on",clipOn); }
+  const v=$("#secOffV");
+  if(!clipOn || !clipPlane){ if(v) v.textContent="—"; return; }
+  const n=clipPlane.normal;
+  const ax = Math.abs(Math.abs(n.x)-1)<0.02?"x" : Math.abs(Math.abs(n.y)-1)<0.02?"y" : Math.abs(Math.abs(n.z)-1)<0.02?"z" : null;
+  if(ax){
+    clipAxis=ax; clipFlip = (ax==="x"?n.x: ax==="y"?n.y:n.z) < 0;
+    document.querySelectorAll("#secAxis button").forEach(x=>x.classList.toggle("on", x.dataset.ax===ax));
+    const fb=$("#secFlip"); if(fb) fb.classList.toggle("on",clipFlip);
+    fedBox=computeFedBox();
+    const p=n.clone().multiplyScalar(-clipPlane.constant);
+    const coord = ax==="x"?p.x: ax==="y"?p.y:p.z;
+    if(fedBox){ const lo=ax==="x"?fedBox.min.x:ax==="y"?fedBox.min.y:fedBox.min.z; const hi=ax==="x"?fedBox.max.x:ax==="y"?fedBox.max.y:fedBox.max.z; const t=Math.max(0,Math.min(100,(coord-lo)/((hi-lo)||1)*100)); const s=$("#secOff"); if(s)s.value=t; }
+    if(v) v.textContent=(coord>=0?"+":"")+coord.toFixed(2)+" m";
+  } else { if(v) v.textContent="(plano BCF)"; }
+}
+async function restoreViewpoint(vp){
+  if(!vp) return;
+  const c = vp.camera||{};
+  if(c.position){
+    const pos=new THREE.Vector3(c.position.x,c.position.y,c.position.z);
+    const dir=c.direction?new THREE.Vector3(c.direction.x,c.direction.y,c.direction.z).normalize():new THREE.Vector3(0,0,-1);
+    if(c.up) camera.up.set(c.up.x,c.up.y,c.up.z);
+    camera.position.copy(pos);
+    if(typeof c.fov==="number"){ camera.fov=c.fov; camera.updateProjectionMatrix(); }
+    let tgt;
+    if(c._target){ tgt=new THREE.Vector3(c._target.x,c._target.y,c._target.z); }
+    else { const box=computeFedBox(); let D=10; if(box){ const ctr=box.getCenter(new THREE.Vector3()); D=Math.max(pos.distanceTo(ctr),1); } tgt=pos.clone().add(dir.clone().multiplyScalar(D)); }
+    controls.target.copy(tgt); camera.lookAt(tgt); controls.update();
+  }
+  if(vp.clipping && vp.clipping.length){
+    const cp=vp.clipping[0];
+    const n=new THREE.Vector3(cp.direction.x,cp.direction.y,cp.direction.z).normalize();
+    const p=new THREE.Vector3(cp.location.x,cp.location.y,cp.location.z);
+    clipPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(n,p);
+    renderer.clippingPlanes=[clipPlane]; clipOn=true;
+    syncSectionUIFromPlane();
+  } else { clearSection(); }
+  const comp = vp.components||{};
+  const vis = comp.visibility||{};
+  if(vis.defaultVisibility===false){
+    for(const M of LOADED.values()){ if(M.object&&M.geomIds.length){ try{ await M.object.setVisible(M.geomIds,false);}catch(_){} } }
+    await setPairsVisible(compsToPairs(vis.exceptions||[]),true);
+  } else {
+    await showAllForRestore();
+    if((vis.exceptions||[]).length) await setPairsVisible(compsToPairs(vis.exceptions),false);
+  }
+  if((comp.selection||[]).length){ const pr=compsToPairs(comp.selection); if(pr.length) await selectItem(pr[0].modelId, pr[0].localId, {focus:false}); else await clearSelection(); }
+  else await clearSelection();
+}
+
+// ----- BCF: panel e incidencias -----
+function buildBcfPane(){
+  const host=$("#pane-bcf"); host.innerHTML="";
+  const ctl=document.createElement("div"); ctl.className="bcf-ctl";
+  ctl.innerHTML='<div class="bcf-btns"><button id="bcfNew">+ Nueva incidencia</button><button id="bcfImport">Importar .bcfzip</button><button id="bcfExport">Exportar .bcfzip</button></div>'+
+    '<input id="bcfFile" type="file" accept=".bcfzip,.zip" style="display:none"/>'+
+    '<div class="tool-hint">Captura la vista actual (cámara, elemento seleccionado, sección y snapshot) como viewpoint de la incidencia.</div>';
+  host.appendChild(ctl);
+  const form=document.createElement("div"); form.id="bcfForm"; form.className="bcf-form hide"; host.appendChild(form);
+  const list=document.createElement("div"); list.id="bcfList"; host.appendChild(list);
+  $("#bcfNew").onclick=()=> openTopicForm();
+  $("#bcfExport").onclick=()=> exportBcf().catch(e=>log("BCF export: "+e.message,"err"));
+  $("#bcfImport").onclick=()=> $("#bcfFile").click();
+  $("#bcfFile").onchange=(e)=>{ const f=e.target.files[0]; if(f) importBcf(f).catch(err=>log("BCF import: "+err.message,"err")); e.target.value=""; };
+  renderTopics();
+}
+function openTopicForm(){
+  const vp = captureViewpoint(); bcfEditing = vp;
+  const form=$("#bcfForm"); form.classList.remove("hide");
+  form.innerHTML =
+    '<div class="row"><input id="tTitle" type="text" placeholder="Título de la incidencia"/></div>'+
+    '<div class="row"><select id="tType"><option>Issue</option><option>Clash</option><option>Comment</option><option>Request</option></select>'+
+    '<select id="tStatus"><option>Active</option><option>Resolved</option><option>Closed</option></select>'+
+    '<select id="tPrio"><option>Normal</option><option>Low</option><option>High</option><option>Critical</option></select></div>'+
+    '<div class="row"><input id="tAssignee" type="text" placeholder="Asignada a (correo)"/><input id="tDue" type="date" title="Fecha límite"/></div>'+
+    '<div class="row"><input id="tLabels" type="text" placeholder="Etiquetas (separadas por comas)"/></div>'+
+    '<div class="row"><textarea id="tDesc" rows="3" placeholder="Descripción / comentario"></textarea></div>'+
+    (vp.snapshot?'<img class="bcf-snap" src="'+vp.snapshot+'"/>':'<div class="tool-hint">Sin snapshot disponible.</div>')+
+    '<div class="vp-info">Viewpoint: '+(vp.components.selection.length?'1 elemento sel.':'sin selección')+(vp.clipping.length?' · sección activa':'')+'</div>'+
+    '<div class="bcf-btns"><button id="tSave">Guardar incidencia</button><button id="tCancel">Cancelar</button></div>';
+  $("#tSave").onclick=()=>{
+    const title=($("#tTitle").value||"").trim()||"(sin título)";
+    const desc=($("#tDesc").value||"").trim();
+    const labels=($("#tLabels").value||"").split(",").map(s=>s.trim()).filter(Boolean);
+    const topic={ guid:genGuid(), title, type:$("#tType").value, status:$("#tStatus").value, priority:$("#tPrio").value,
+      author:BCF_AUTHOR, creationDate:nowIso(), modifiedDate:nowIso(),
+      assignedTo:($("#tAssignee").value||"").trim(), dueDate:($("#tDue").value||"").trim(), labels,
+      description:desc, comments:[], viewpoint:bcfEditing };
+    if(desc) topic.comments.push({ guid:genGuid(), date:nowIso(), author:BCF_AUTHOR, comment:desc, viewpointGuid:bcfEditing.guid });
+    TOPICS.push(topic); bcfEditing=null; form.classList.add("hide"); form.innerHTML=""; renderTopics();
+    log("✓ incidencia creada: "+title,"ok");
+  };
+  $("#tCancel").onclick=()=>{ bcfEditing=null; form.classList.add("hide"); form.innerHTML=""; };
+}
+function renderTopics(){
+  const list=$("#bcfList"); if(!list) return; list.innerHTML="";
+  if(!TOPICS.length){ list.innerHTML='<div class="empty">Sin incidencias. Pulsa “+ Nueva incidencia” para crear una con la vista actual, o importa un .bcfzip.</div>'; return; }
+  const STATUSES=["Active","Resolved","Closed"];
+  for(const t of TOPICS){
+    const card=document.createElement("div"); card.className="bcf-card";
+    const sn = (t.viewpoint&&t.viewpoint.snapshot) ? '<img class="bcf-thumb" src="'+t.viewpoint.snapshot+'"/>' : '<div class="bcf-thumb noimg">sin vista</div>';
+    const head=document.createElement("div"); head.className="bcf-head";
+    head.innerHTML = sn + '<div class="bcf-meta"><div class="bcf-title">'+esc(t.title)+'</div>'+
+      '<div class="bcf-sub"><span class="bcf-status s-'+esc((t.status||"").toLowerCase())+'">'+esc(t.status||"")+'</span> · '+esc(t.type||"")+' · '+esc(t.priority||"")+'</div>'+
+      '<div class="bcf-sub dim">'+esc(t.author||"")+' · '+esc((t.creationDate||"").slice(0,10))+'</div></div>';
+    card.appendChild(head);
+    if(t.labels && t.labels.length){ const lb=document.createElement("div"); lb.className="bcf-labels"; for(const L of t.labels){ const s=document.createElement("span"); s.className="bcf-label"; s.textContent=L; lb.appendChild(s); } card.appendChild(lb); }
+    if(t.assignedTo || t.dueDate){ const a=document.createElement("div"); a.className="bcf-sub dim bcf-assign"; a.textContent=(t.assignedTo?("Asignada a "+t.assignedTo):"")+(t.assignedTo&&t.dueDate?" · ":"")+(t.dueDate?("Vence "+t.dueDate.slice(0,10)):""); card.appendChild(a); }
+    if(t.description){ const d=document.createElement("div"); d.className="bcf-desc"; d.textContent=t.description; card.appendChild(d); }
+    if(t.comments && t.comments.length){
+      const cl=document.createElement("div"); cl.className="bcf-comments";
+      for(const c of t.comments){ const cm=document.createElement("div"); cm.className="bcf-cm";
+        cm.innerHTML='<span class="bcf-cm-h"><b>'+esc(c.author||"")+'</b> <span class="dim">'+esc((c.date||"").slice(0,16).replace("T"," "))+'</span></span><div class="bcf-cm-b">'+esc(c.comment||"")+'</div>';
+        cl.appendChild(cm);
+      }
+      card.appendChild(cl);
+    }
+    // controles: cambiar estado + añadir comentario
+    const ctr=document.createElement("div"); ctr.className="bcf-ctr";
+    const stSel=document.createElement("select"); stSel.title="Cambiar estado";
+    for(const s of STATUSES){ const o=document.createElement("option"); o.value=s; o.textContent=s; if(s===t.status)o.selected=true; stSel.appendChild(o); }
+    stSel.onchange=()=>{ t.status=stSel.value; t.modifiedDate=nowIso(); renderTopics(); log("estado → "+t.status,"dim"); };
+    ctr.appendChild(stSel);
+    const cin=document.createElement("input"); cin.type="text"; cin.placeholder="Añadir comentario…"; cin.className="bcf-cin";
+    const cbtn=document.createElement("button"); cbtn.textContent="Comentar";
+    const addCm=()=>{ const v=(cin.value||"").trim(); if(!v) return; t.comments.push({ guid:genGuid(), date:nowIso(), author:BCF_AUTHOR, comment:v }); t.modifiedDate=nowIso(); cin.value=""; renderTopics(); };
+    cbtn.onclick=addCm; cin.onkeydown=e=>{ if(e.key==="Enter") addCm(); };
+    ctr.append(cin,cbtn); card.appendChild(ctr);
+    const acts=document.createElement("div"); acts.className="bcf-btns";
+    const bGo=document.createElement("button"); bGo.textContent="Ir a la vista"; bGo.onclick=()=> restoreViewpoint(t.viewpoint).catch(e=>log("vp: "+e.message,"dim"));
+    const bExp=document.createElement("button"); bExp.textContent="Exportar"; bExp.onclick=()=> exportBcf([t]).catch(e=>log("BCF: "+e.message,"err"));
+    const bDel=document.createElement("button"); bDel.textContent="Eliminar"; bDel.onclick=()=>{ TOPICS=TOPICS.filter(x=>x!==t); renderTopics(); };
+    acts.append(bGo,bExp,bDel); card.appendChild(acts);
+    const th=head.querySelector(".bcf-thumb"); if(th) th.onclick=()=> restoreViewpoint(t.viewpoint).catch(()=>{});
+    list.appendChild(card);
+  }
+}
+
+// ----- BCF: XML (2.1) -----
+const xmlEsc = s => String(s==null?"":s).replace(/[<>&"']/g,m=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;","'":"&apos;"}[m]));
+function vec3Xml(tag,v){ return "<"+tag+"><X>"+v.x+"</X><Y>"+v.y+"</Y><Z>"+v.z+"</Z></"+tag+">"; }
+function markupXml(t){
+  let x='<?xml version="1.0" encoding="UTF-8"?>\n<Markup>\n';
+  x+=' <Topic Guid="'+xmlEsc(t.guid)+'" TopicType="'+xmlEsc(t.type||"Issue")+'" TopicStatus="'+xmlEsc(t.status||"Active")+'">\n';
+  x+='  <Title>'+xmlEsc(t.title)+'</Title>\n';
+  if(t.priority) x+='  <Priority>'+xmlEsc(t.priority)+'</Priority>\n';
+  for(const L of (t.labels||[])) x+='  <Labels>'+xmlEsc(L)+'</Labels>\n';
+  x+='  <CreationDate>'+xmlEsc(t.creationDate||nowIso())+'</CreationDate>\n';
+  x+='  <CreationAuthor>'+xmlEsc(t.author||BCF_AUTHOR)+'</CreationAuthor>\n';
+  if(t.modifiedDate){ x+='  <ModifiedDate>'+xmlEsc(t.modifiedDate)+'</ModifiedDate>\n  <ModifiedAuthor>'+xmlEsc(t.author||BCF_AUTHOR)+'</ModifiedAuthor>\n'; }
+  if(t.dueDate) x+='  <DueDate>'+xmlEsc(t.dueDate)+'</DueDate>\n';
+  if(t.assignedTo) x+='  <AssignedTo>'+xmlEsc(t.assignedTo)+'</AssignedTo>\n';
+  if(t.description) x+='  <Description>'+xmlEsc(t.description)+'</Description>\n';
+  x+=' </Topic>\n';
+  for(const c of (t.comments||[])){
+    x+=' <Comment Guid="'+xmlEsc(c.guid)+'">\n  <Date>'+xmlEsc(c.date)+'</Date>\n  <Author>'+xmlEsc(c.author)+'</Author>\n  <Comment>'+xmlEsc(c.comment)+'</Comment>\n';
+    if(c.viewpointGuid) x+='  <Viewpoint Guid="'+xmlEsc(c.viewpointGuid)+'"/>\n';
+    x+=' </Comment>\n';
+  }
+  if(t.viewpoint){ x+=' <Viewpoints Guid="'+xmlEsc(t.viewpoint.guid)+'">\n  <Viewpoint>viewpoint.bcfv</Viewpoint>\n'+(t.viewpoint.snapshot?'  <Snapshot>snapshot.png</Snapshot>\n':'')+' </Viewpoints>\n'; }
+  x+='</Markup>\n'; return x;
+}
+function viewpointXml(vp){
+  let x='<?xml version="1.0" encoding="UTF-8"?>\n<VisualizationInfo Guid="'+xmlEsc(vp.guid)+'">\n';
+  const comp=vp.components||{};
+  x+=' <Components>\n';
+  if((comp.selection||[]).length){ x+='  <Selection>\n'; for(const g of comp.selection){ const ig=(typeof g==="string")?g:g.ifcGuid; const md=(typeof g==="object"&&g)?g.model:null; x+='   <Component IfcGuid="'+xmlEsc(ig)+'"'+(md?(' AuthoringToolId="'+xmlEsc(md)+'"'):'')+'/>\n'; } x+='  </Selection>\n'; }
+  const vis=comp.visibility||{defaultVisibility:true};
+  x+='  <Visibility DefaultVisibility="'+(vis.defaultVisibility===false?"false":"true")+'">\n';
+  if((vis.exceptions||[]).length){ x+='   <Exceptions>\n'; for(const g of vis.exceptions){ const ig=(typeof g==="string")?g:g.ifcGuid; const md=(typeof g==="object"&&g)?g.model:null; x+='    <Component IfcGuid="'+xmlEsc(ig)+'"'+(md?(' AuthoringToolId="'+xmlEsc(md)+'"'):'')+'/>\n'; } x+='   </Exceptions>\n'; }
+  x+='  </Visibility>\n </Components>\n';
+  const c=vp.camera;
+  if(c&&c.position){
+    x+=' <PerspectiveCamera>\n  '+vec3Xml("CameraViewPoint",c.position)+'\n  '+vec3Xml("CameraDirection",c.direction)+'\n  '+vec3Xml("CameraUpVector",c.up)+'\n  <FieldOfView>'+(c.fov||60)+'</FieldOfView>\n </PerspectiveCamera>\n';
+  }
+  if((vp.clipping||[]).length){
+    x+=' <ClippingPlanes>\n';
+    for(const cp of vp.clipping){ x+='  <ClippingPlane>\n   '+vec3Xml("Location",cp.location)+'\n   '+vec3Xml("Direction",cp.direction)+'\n  </ClippingPlane>\n'; }
+    x+=' </ClippingPlanes>\n';
+  }
+  x+='</VisualizationInfo>\n'; return x;
+}
+const versionXml = '<?xml version="1.0" encoding="UTF-8"?>\n<Version VersionId="2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n <DetailedVersion>2.1</DetailedVersion>\n</Version>\n';
+
+// ----- ZIP propio (STORE en escritura; lectura STORE+deflate) -----
+const CRC_TABLE=(()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); t[n]=c>>>0; } return t; })();
+function crc32(bytes){ let c=0xFFFFFFFF; for(let i=0;i<bytes.length;i++) c=CRC_TABLE[(c^bytes[i])&0xFF]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+const _te=new TextEncoder();
+function strBytes(s){ return _te.encode(s); }
+function dataUrlToBytes(durl){ const i=durl.indexOf(","); const bin=atob(durl.slice(i+1)); const u=new Uint8Array(bin.length); for(let j=0;j<bin.length;j++) u[j]=bin.charCodeAt(j); return u; }
+function concatU8(arrs){ let len=0; for(const a of arrs) len+=a.length; const out=new Uint8Array(len); let o=0; for(const a of arrs){ out.set(a,o); o+=a.length; } return out; }
+function buildZip(files){
+  const u16=v=>{ const b=new Uint8Array(2); b[0]=v&0xFF; b[1]=(v>>8)&0xFF; return b; };
+  const u32=v=>{ const b=new Uint8Array(4); b[0]=v&0xFF; b[1]=(v>>8)&0xFF; b[2]=(v>>16)&0xFF; b[3]=(v>>>24)&0xFF; return b; };
+  const locals=[], central=[]; let offset=0;
+  for(const f of files){
+    const name=strBytes(f.name), data=f.data, crc=crc32(data);
+    const lh=concatU8([u32(0x04034b50),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),name,data]);
+    locals.push(lh);
+    central.push(concatU8([u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset),name]));
+    offset+=lh.length;
+  }
+  const cd=concatU8(central), cdOffset=offset;
+  const eocd=concatU8([u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(cd.length),u32(cdOffset),u16(0)]);
+  return concatU8([...locals, cd, eocd]);
+}
+async function parseZip(bytes){
+  const dv=new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let p=-1; for(let i=bytes.length-22;i>=0;i--){ if(dv.getUint32(i,true)===0x06054b50){ p=i; break; } }
+  if(p<0) throw new Error("EOCD no encontrado (¿zip válido?)");
+  const count=dv.getUint16(p+10,true); let cdOff=dv.getUint32(p+16,true);
+  const files=[];
+  for(let n=0;n<count;n++){
+    if(dv.getUint32(cdOff,true)!==0x02014b50) break;
+    const method=dv.getUint16(cdOff+10,true);
+    const compSize=dv.getUint32(cdOff+20,true);
+    const nameLen=dv.getUint16(cdOff+28,true);
+    const extraLen=dv.getUint16(cdOff+30,true);
+    const cmtLen=dv.getUint16(cdOff+32,true);
+    const lhOff=dv.getUint32(cdOff+42,true);
+    const name=new TextDecoder().decode(bytes.subarray(cdOff+46, cdOff+46+nameLen));
+    const lhNameLen=dv.getUint16(lhOff+26,true), lhExtra=dv.getUint16(lhOff+28,true);
+    const dataStart=lhOff+30+lhNameLen+lhExtra;
+    const raw=bytes.subarray(dataStart, dataStart+compSize);
+    let data;
+    if(method===0){ data=raw.slice(); }
+    else if(method===8){ data=new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer()); }
+    else throw new Error("método zip no soportado: "+method);
+    files.push({ name, data });
+    cdOff+=46+nameLen+extraLen+cmtLen;
+  }
+  return files;
+}
+async function exportBcf(topics){
+  const list = topics||TOPICS;
+  if(!list.length){ log("No hay incidencias que exportar.","warn"); return; }
+  const files=[{ name:"bcf.version", data:strBytes(versionXml) }];
+  for(const t of list){
+    const dir=t.guid+"/";
+    files.push({ name:dir+"markup.bcf", data:strBytes(markupXml(t)) });
+    if(t.viewpoint){
+      files.push({ name:dir+"viewpoint.bcfv", data:strBytes(viewpointXml(t.viewpoint)) });
+      if(t.viewpoint.snapshot) files.push({ name:dir+"snapshot.png", data:dataUrlToBytes(t.viewpoint.snapshot) });
+    }
+  }
+  const zip=buildZip(files);
+  const blob=new Blob([zip],{type:"application/octet-stream"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=(list.length===1?("incidencia-"+String(list[0].title||"bcf").replace(/[^\w\-]+/g,"_").slice(0,40)):"incidencias")+".bcfzip";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  log("✓ exportadas "+list.length+" incidencia(s) → "+a.download,"ok");
+}
+function elsByLocal(root,name){ const out=[]; const all=root.getElementsByTagName("*"); for(const e of all){ if(e.localName===name) out.push(e); } return out; }
+function elByLocal(root,name){ return elsByLocal(root,name)[0]||null; }
+function txtOf(root,name){ const e=root?elByLocal(root,name):null; return e?e.textContent:""; }
+function vec3Of(parent,tag){ const e=parent?elByLocal(parent,tag):null; if(!e) return null; const g=s=>parseFloat(txtOf(e,s)||"0"); return {x:g("X"),y:g("Y"),z:g("Z")}; }
+async function importBcf(file){
+  const bytes=new Uint8Array(await file.arrayBuffer());
+  const files=await parseZip(bytes);
+  const byName={}; for(const f of files) byName[f.name]=f;
+  const dec=new TextDecoder(); const parser=new DOMParser();
+  const markups=files.filter(f=>/(^|\/)markup\.bcf$/i.test(f.name));
+  let added=0;
+  for(const mk of markups){
+    const dir=mk.name.replace(/markup\.bcf$/i,"");
+    const xml=parser.parseFromString(dec.decode(mk.data),"text/xml");
+    const tp=elByLocal(xml,"Topic"); if(!tp) continue;
+    const g=tp.getAttribute("Guid")||genGuid();
+    const labels=elsByLocal(tp,"Labels").map(e=>e.textContent).filter(Boolean);
+    const topic={ guid:g, title:txtOf(tp,"Title")||"(sin título)", type:tp.getAttribute("TopicType")||"Issue", status:tp.getAttribute("TopicStatus")||"Active",
+      priority:txtOf(tp,"Priority"), author:txtOf(tp,"CreationAuthor")||BCF_AUTHOR, creationDate:txtOf(tp,"CreationDate")||nowIso(), modifiedDate:txtOf(tp,"ModifiedDate")||"",
+      assignedTo:txtOf(tp,"AssignedTo")||"", dueDate:txtOf(tp,"DueDate")||"", labels,
+      description:txtOf(tp,"Description"), comments:[], viewpoint:null };
+    for(const cm of elsByLocal(xml,"Comment")){ topic.comments.push({ guid:cm.getAttribute("Guid")||genGuid(), date:txtOf(cm,"Date"), author:txtOf(cm,"Author"), comment:txtOf(cm,"Comment") }); }
+    const vpsEl=elByLocal(xml,"Viewpoints");
+    const vpRef=vpsEl?elByLocal(vpsEl,"Viewpoint"):null;
+    const vpFileName=vpRef?vpRef.textContent:"viewpoint.bcfv";
+    const vpf=byName[dir+vpFileName]||files.find(f=>f.name.startsWith(dir)&&/\.bcfv$/i.test(f.name));
+    if(vpf){
+      const vx=parser.parseFromString(dec.decode(vpf.data),"text/xml");
+      const viz=elByLocal(vx,"VisualizationInfo");
+      const vp={ guid:(viz&&viz.getAttribute("Guid"))||genGuid(), camera:null, components:{ selection:[], visibility:{defaultVisibility:true,exceptions:[]}, coloring:[] }, clipping:[], snapshot:null };
+      const cam=elByLocal(vx,"PerspectiveCamera");
+      if(cam){ const fovE=elByLocal(cam,"FieldOfView"); vp.camera={ type:"perspective", position:vec3Of(cam,"CameraViewPoint"), direction:vec3Of(cam,"CameraDirection"), up:vec3Of(cam,"CameraUpVector"), fov:fovE?parseFloat(fovE.textContent):60 }; }
+      const selEl=elByLocal(vx,"Selection"); if(selEl) for(const c of elsByLocal(selEl,"Component")){ const ig=c.getAttribute("IfcGuid"); if(ig) vp.components.selection.push({ ifcGuid:ig, model:c.getAttribute("AuthoringToolId")||null }); }
+      const visEl=elByLocal(vx,"Visibility"); if(visEl){ vp.components.visibility.defaultVisibility=(visEl.getAttribute("DefaultVisibility")!=="false"); const exc=elByLocal(visEl,"Exceptions"); if(exc) for(const c of elsByLocal(exc,"Component")){ const ig=c.getAttribute("IfcGuid"); if(ig) vp.components.visibility.exceptions.push({ ifcGuid:ig, model:c.getAttribute("AuthoringToolId")||null }); } }
+      for(const cp of elsByLocal(vx,"ClippingPlane")){ const loc=vec3Of(cp,"Location"), drc=vec3Of(cp,"Direction"); if(loc&&drc) vp.clipping.push({location:loc,direction:drc}); }
+      const snapRef=vpsEl?elByLocal(vpsEl,"Snapshot"):null; const snapName=snapRef?snapRef.textContent:"snapshot.png";
+      const snf=byName[dir+snapName]||files.find(f=>f.name.startsWith(dir)&&/\.png$/i.test(f.name));
+      if(snf){ let bin=""; for(let i=0;i<snf.data.length;i++) bin+=String.fromCharCode(snf.data[i]); vp.snapshot="data:image/png;base64,"+btoa(bin); }
+      topic.viewpoint=vp;
+    }
+    if(!TOPICS.some(x=>x.guid===topic.guid)){ TOPICS.push(topic); added++; }
+  }
+  renderTopics();
+  log("✓ importadas "+added+" incidencia(s) de "+file.name,"ok");
+  const tab=document.querySelector('.tab[data-pane="bcf"]'); if(tab) tab.click();
+  if(added){ const last=TOPICS[TOPICS.length-1]; if(last.viewpoint) restoreViewpoint(last.viewpoint).catch(()=>{}); }
+}
+// ================= fin v0.9 =================
+
+function setupTools(){
+  $("#secToggle").onclick=()=>{ clipOn=!clipOn; const b=$("#secToggle"); b.textContent=clipOn?"On":"Off"; b.classList.toggle("on",clipOn); if(clipOn) fedBox=computeFedBox(); applyClip(); };
+  document.querySelectorAll("#secAxis button").forEach(b=> b.onclick=()=>{ clipAxis=b.dataset.ax; document.querySelectorAll("#secAxis button").forEach(x=>x.classList.toggle("on",x===b)); fedBox=computeFedBox(); applyClip(); });
+  $("#secOff").oninput=()=>{ if(clipOn) applyClip(); };
+  $("#secFlip").onclick=()=>{ clipFlip=!clipFlip; $("#secFlip").classList.toggle("on",clipFlip); if(clipOn) applyClip(); };
+  $("#secClear").onclick=()=> clearSection();
+  document.querySelectorAll("#measMode button").forEach(b=> b.onclick=()=> setMeasMode(b.dataset.m));
+  $("#measFinish").onclick=()=> finishMeasure();
+  $("#measClear").onclick=()=> clearMeasure();
+}
+
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".pane").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    $("#pane-"+t.dataset.pane).classList.add("active");
+  };
+});
+
+async function main(){
+  try{ await loadLibs(); }catch(e){ logEl.classList.remove("hide"); log("✗ No se pudieron cargar las librerías (¿sin internet / CDN bloqueado?): "+e.message,"err"); return; }
+  initScene();
+
+  try{ manifest = await (await fetch("models/manifest.json")).json(); }
+  catch(e){ log("✗ No se pudo leer models/manifest.json: "+e.message,"err"); return; }
+  let models;
+  if(Array.isArray(manifest)){ models = manifest.map(m=>({...m, disciplina:m.disciplina||"estructura", load:true})); DISC={}; }
+  else { models = manifest.models||[]; DISC = manifest.disciplinas||{}; }
+  let di=0; for(const k of new Set(models.map(m=>m.disciplina))){ if(!DISC[k]) DISC[k]={label:k,color:hex(PALETTE[di++%PALETTE.length])}; }
+
+  const toLoad = models.filter(m=>m.load!==false);
+  $("#modelInfo").textContent = "cargando "+toLoad.length+" modelos…";
+  fragments = new FRAGS.FragmentsModels(await getWorker());
+
+  let i=0;
+  for(const entry of toLoad){
+    try{ await loadModel(entry, PALETTE[i%PALETTE.length]); }
+    catch(e){ log("✗ "+entry.id+": "+e.message,"err"); }
+    i++;
+  }
+  if(fragments) await fragments.update(true);
+
+  buildClassifIndex();
+  buildModelsPanel(); buildTree(); buildClasses(); buildSearchPane(); buildPlantasPane(); buildClassifPane(); buildBcfPane();
+
+  refreshCounts();
+
+  $("#fitAllBtn").onclick = fitAll;
+  $("#showAllBtn").onclick = showAllGlobal;
+  $("#colorMode").onchange = (e)=> applyColorMode(e.target.value).catch(err=>log("color: "+err.message,"dim"));
+  setupTools();
+  setupIngest();
+
+  fitAll();
+  log("✓ federación cargada: "+[...LOADED.values()].map(M=>M.entry.id).join(", "),"ok");
+}
+
+/* ===================== v1.0 — Ingesta por arrastre (IFC -> fragments + indice, en el navegador) ===================== */
+const WASM_CDN = "https://cdn.jsdelivr.net/npm/web-ifc@0.0.77/";
+
+function refreshCounts(){
+  const totItems=[...LOADED.values()].reduce((a,M)=>a+Object.keys(M.index.items).length,0);
+  const totGeom =[...LOADED.values()].reduce((a,M)=>a+M.geomIds.length,0);
+  const totPl   =[...LOADED.values()].reduce((a,M)=>a+(M.storeys?M.storeys.length:0),0);
+  const el=$("#modelInfo"); if(el) el.textContent = LOADED.size ? (LOADED.size+" modelos · "+totItems+" ítems · "+totGeom+" geom · "+totPl+" plantas") : "sin modelos · arrastra un .ifc o usa «Abrir IFC…»";
+}
+
+function ifcStrUnescape(s){
+  if(s==null) return s;
+  s=s.replace(/\\X2\\([0-9A-Fa-f]+)\\X0\\/g,(m,x)=>{ let o=""; for(let i=0;i+4<=x.length;i+=4) o+=String.fromCharCode(parseInt(x.substr(i,4),16)); return o; });
+  s=s.replace(/\\X\\([0-9A-Fa-f]{2})/g,(m,x)=>String.fromCharCode(parseInt(x,16)));
+  s=s.replace(/\\S\\(.)/g,(m,c)=>String.fromCharCode(c.charCodeAt(0)+128));
+  s=s.replace(/\\\\/g,"\\");
+  return s;
+}
+function storeyElevationsFromIfc(ifcText){
+  const map={}; const re=/=\s*IFCBUILDINGSTOREY\s*\(\s*'([^']*)'\s*,(.*?)\)\s*;/gis; let m;
+  while((m=re.exec(ifcText))!==null){
+    const guid=m[1], args=m[2];
+    const last=args.slice(args.lastIndexOf(",")+1).trim();
+    if(last && last!=="$"){ const v=Number(last); if(Number.isFinite(v)) map[guid]=v; }
+  }
+  return map;
+}
+function classificationsFromIfc(ifcText){
+  const ent=new Map(); const reLine=/^#(\d+)\s*=\s*([A-Z0-9_]+)\s*\((.*)\)\s*;\s*$/;
+  for(const raw of ifcText.split(/\r?\n/)){ const m=raw.match(reLine); if(m) ent.set(m[1],{type:m[2].toUpperCase(),args:m[3]}); }
+  function splitArgs(s){ const out=[]; let depth=0,cur="",q=false;
+    for(let i=0;i<s.length;i++){ const ch=s[i];
+      if(q){ cur+=ch; if(ch==="'"){ if(s[i+1]==="'"){ cur+="'"; i++; } else q=false; } continue; }
+      if(ch==="'"){ q=true; cur+=ch; continue; }
+      if(ch==="("){ depth++; cur+=ch; continue; }
+      if(ch===")"){ depth--; cur+=ch; continue; }
+      if(ch==="," && depth===0){ out.push(cur.trim()); cur=""; continue; }
+      cur+=ch; }
+    out.push(cur.trim()); return out; }
+  const unq=v=>{ v=(v||"").trim(); if(v==="$"||v==="*"||v==="") return null; const mm=v.match(/^'([\s\S]*)'$/); return mm?ifcStrUnescape(mm[1].replace(/''/g,"'")):v; };
+  const refId=v=>{ const mm=(v||"").trim().match(/^#(\d+)$/); return mm?mm[1]:null; };
+  function systemName(id,guard){ guard=guard||0; if(id==null||guard>8) return null; const e=ent.get(id); if(!e) return null;
+    if(e.type==="IFCCLASSIFICATION"){ return unq(splitArgs(e.args)[3]); }
+    if(e.type==="IFCCLASSIFICATIONREFERENCE"){ return systemName(refId(splitArgs(e.args)[3]),guard+1); }
+    return null; }
+  function refInfo(id){ const e=ent.get(id); if(!e||e.type!=="IFCCLASSIFICATIONREFERENCE") return null;
+    const a=splitArgs(e.args); return { location:unq(a[0]), code:unq(a[1]), name:unq(a[2]), system:systemName(refId(a[3])) }; }
+  function guidOf(id){ const e=ent.get(id); if(!e) return null; return unq(splitArgs(e.args)[0]); }
+  const guidToCl={};
+  for(const [,e] of ent){ if(e.type!=="IFCRELASSOCIATESCLASSIFICATION") continue;
+    const a=splitArgs(e.args); const info=refInfo(refId(a[5])); if(!info) continue;
+    const objs=(a[4]||"").replace(/^\s*\(/,"").replace(/\)\s*$/,"").split(",").map(refId).filter(Boolean);
+    for(const oid of objs){ const g=guidOf(oid); if(!g) continue;
+      (guidToCl[g]||=[]).push({ system:info.system||"Clasificación", code:info.code, name:info.name, location:info.location }); } }
+  return guidToCl;
+}
+
+function buildIndexFromFrag(base, fragBytes, ifcText, source){
+  const storeyElev = storeyElevationsFromIfc(ifcText);
+  const guidToCl = classificationsFromIfc(ifcText);
+  const model = new FRAGS.SingleThreadedFragmentsModel(base, fragBytes);
+  const categories = model.getCategories().filter(c=>/^IFC/i.test(c));
+  const ifcCats = categories.map(c=>new RegExp("^"+c+"$"));
+  const byCat = model.getItemsOfCategories(ifcCats);
+  const localToCat = new Map();
+  for(const [cat,ids] of Object.entries(byCat)) for(const id of ids) localToCat.set(id,cat);
+  const allLocalIds=[...localToCat.keys()];
+  const guids = model.getGuidsByLocalIds(allLocalIds);
+  const data = model.getItemsData(allLocalIds,{ attributesDefault:true,
+    relationsDefault:{attributes:true,relations:false},
+    relations:{ IsDefinedBy:{attributes:true,relations:true}, ContainedInStructure:{attributes:true,relations:false} } });
+  const items={}, localIdToGuid={};
+  allLocalIds.forEach((lid,i)=>{
+    const guid=guids[i]; const d=data[i]||{}; const attrs={}; let name=null;
+    for(const [k,v] of Object.entries(d)){ if(Array.isArray(v)) continue;
+      const val=(v&&typeof v==="object"&&"value" in v)?v.value:v; attrs[k]=val; if(k==="Name") name=val; }
+    const psets={}, quantities={}; const defined=d.IsDefinedBy;
+    if(Array.isArray(defined)){
+      for(const rel of defined){
+        const pname=(rel&&rel.Name&&rel.Name.value)||(rel&&rel.Name)||"Pset";
+        const hp=rel&&rel.HasProperties;
+        if(Array.isArray(hp)){ const props={};
+          for(const p of hp){ const pn=(p&&p.Name&&p.Name.value)||(p&&p.Name);
+            const pv=(p&&p.NominalValue&&p.NominalValue.value)??(p&&p.NominalValue)??(p&&p.Value&&p.Value.value)??null;
+            if(pn!=null) props[pn]=pv; }
+          if(Object.keys(props).length) psets[pname]=props; }
+        const qs=rel&&rel.Quantities;
+        if(Array.isArray(qs)){ const qset={};
+          for(const q of qs){ const qn=(q&&q.Name&&q.Name.value)||(q&&q.Name); if(qn==null) continue;
+            let qv=null,qkind=null;
+            for(const [kk,vv] of Object.entries(q)){ if(/Value$/.test(kk)){ qv=(vv&&typeof vv==="object"&&"value" in vv)?vv.value:vv; qkind=kk.replace(/Value$/,""); break; } }
+            if(qv!=null) qset[qn]={value:qv,kind:qkind}; }
+          if(Object.keys(qset).length) quantities[pname]=qset; } }
+    }
+    if(localToCat.get(lid)==="IFCBUILDINGSTOREY" && guid && guid in storeyElev) attrs.Elevation=storeyElev[guid];
+    const key=guid||("local:"+lid);
+    items[key]={ localId:lid, category:localToCat.get(lid), name, attributes:attrs, psets };
+    if(Object.keys(quantities).length) items[key].quantities=quantities;
+    if(guid && guidToCl[guid] && guidToCl[guid].length) items[key].classifications=guidToCl[guid];
+    if(guid) localIdToGuid[lid]=guid;
+  });
+  const spatial=model.getSpatialStructure();
+  let geomIds=model.getItemsWithGeometry();
+  geomIds=Array.isArray(geomIds)?geomIds:[...(geomIds||[])];
+  const geomSet=new Set(geomIds.map(x=>(x&&typeof x==="object"&&"localId" in x)?x.localId:x));
+  const geometryClasses={};
+  for(const lid of geomSet){ const c=localToCat.get(lid); if(c) geometryClasses[c]=(geometryClasses[c]||0)+1; }
+  const nameByLocal={}, elevByLocal={};
+  for(const it of Object.values(items)){ if(it.localId==null) continue; nameByLocal[it.localId]=it.name;
+    if(it.category==="IFCBUILDINGSTOREY" && it.attributes && it.attributes.Elevation!=null) elevByLocal[it.localId]=it.attributes.Elevation; }
+  function elementsOf(catGroup){ const cat=catGroup.category; const res=[];
+    for(const wrapper of (catGroup.children||[])){ const localId=wrapper.localId;
+      const node={ category:cat, localId, name:localId!=null?(nameByLocal[localId]||null):null, children:[] };
+      if(localId!=null && localId in elevByLocal) node.elevation=elevByLocal[localId];
+      for(const childGroup of (wrapper.children||[])) for(const el of elementsOf(childGroup)) node.children.push(el);
+      res.push(node); }
+    return res; }
+  const roots=elementsOf(spatial);
+  const tree=roots.length===1?roots[0]:{ category:spatial.category||"IFCPROJECT", localId:null, name:null, children:roots };
+  const countByClass={};
+  for(const [cat,ids] of Object.entries(byCat)) countByClass[cat]=ids.length;
+  const nClassified=Object.values(items).filter(it=>it.classifications).length;
+  const index={ model:base, source:source||(base+".ifc"), generated:new Date().toISOString(),
+    stats:{ classes:categories.length, items:allLocalIds.length, classified:nClassified, convert_ms:0 },
+    categories, countByClass, localIdToGuid, geometryClasses, geometryLocalIds:[...geomSet], items, tree };
+  if(model.dispose) model.dispose();
+  return index;
+}
+
+async function removeModel(id){
+  const M = LOADED.get(id); if(!M) return;
+  try{ if(M.object && M.object.object) scene.remove(M.object.object); }catch(_){}
+  try{ if(M.object && M.object.dispose) M.object.dispose(); }catch(_){}
+  try{ if(fragments && fragments.disposeModel) await fragments.disposeModel(id); }catch(_){}
+  try{ if(M._wifcId!=null && IFCAPI){ IFCAPI.CloseModel(M._wifcId); M._wifcId=null; } }catch(_){}
+  if(sel && sel.modelId===id){ sel=null; const pe=$("#props"); if(pe) pe.innerHTML='<div class="empty">Selecciona un elemento (clic en el modelo o en el árbol) para ver sus propiedades.</div>'; }
+  LOADED.delete(id);
+  try{ if(fragments) await fragments.update(true); }catch(_){}
+  buildClassifIndex(); buildModelsPanel(); buildTree(); buildClasses(); buildSearchPane(); buildPlantasPane(); buildClassifPane();
+  refreshCounts();
+  log("✓ modelo quitado: "+id,"ok");
+}
+
+let INGEST_N = 0;
+async function ingestIfcFile(file){
+  try{
+    log("→ ingiriendo "+file.name+" ("+(file.size/1024|0)+" KB)…","dim");
+    const buf = new Uint8Array(await file.arrayBuffer());
+    let ifcText=""; { const CH=0x8000; for(let i=0;i<buf.length;i+=CH) ifcText+=String.fromCharCode.apply(null,buf.subarray(i,i+CH)); }
+    if(!FRAGS.IfcImporter){ logEl.classList.remove("hide"); log("✗ IfcImporter no disponible en el bundle de fragments.","err"); return null; }
+    if(!FRAGS.SingleThreadedFragmentsModel){ logEl.classList.remove("hide"); log("✗ SingleThreadedFragmentsModel no disponible en el bundle.","err"); return null; }
+    const imp = new FRAGS.IfcImporter();
+    imp.wasm = { path: WASM_CDN, absolute:true };
+    const t0=Date.now();
+    const fragBytes = await imp.process({ bytes: buf });
+    log("✓ IFC→fragments en "+(Date.now()-t0)+" ms","dim");
+    let id = file.name.replace(/\.ifc$/i,"");
+    while(LOADED.has(id)){ INGEST_N++; id = file.name.replace(/\.ifc$/i,"")+"-"+INGEST_N; }
+    const index = buildIndexFromFrag(id, fragBytes, ifcText, file.name);
+    if(!DISC.arrastrado) DISC.arrastrado={ label:"Arrastrado", color:"#b07aa1" };
+    const entry = { id, label:file.name, disciplina:"arrastrado", frag:null, props:null, load:true, _ifcBytes:buf, _ingested:true };
+    const color = PALETTE[LOADED.size % PALETTE.length];
+    const M = await addModelData(entry, index, fragBytes, color);
+    if(fragments) await fragments.update(true);
+    buildClassifIndex();
+    buildModelsPanel(); buildTree(); buildClasses(); buildSearchPane(); buildPlantasPane(); buildClassifPane();
+    refreshCounts();
+    fitModel(M);
+    log("✓ ingerido "+id+": "+index.stats.items+" ítems, "+index.stats.classified+" clasificados, "+M.geomIds.length+" con geometría","ok");
+    return M;
+  }catch(e){ logEl.classList.remove("hide"); log("✗ ingesta: "+(e&&(e.message||e)),"err"); console.error(e); return null; }
+}
+
+async function downloadCache(id){
+  const M=LOADED.get(id); if(!M){ log("Sin modelo "+id,"dim"); return; }
+  const propsStr=JSON.stringify(M.index);
+  if(window.showDirectoryPicker){
+    try{
+      const dir=await window.showDirectoryPicker();
+      if(M.fragBytes){ const fh=await dir.getFileHandle(id+".frag",{create:true}); const w=await fh.createWritable(); await w.write(M.fragBytes); await w.close(); }
+      const ph=await dir.getFileHandle(id+".props.json",{create:true}); const w2=await ph.createWritable(); await w2.write(propsStr); await w2.close();
+      log("✓ caché de "+id+" guardada en la carpeta elegida (.frag + .props.json)","ok"); return;
+    }catch(e){ if(e&&e.name==="AbortError") return; log("FSA no disponible; descargando…","dim"); }
+  }
+  const dl=(name,blob)=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); };
+  if(M.fragBytes) dl(id+".frag", new Blob([M.fragBytes]));
+  dl(id+".props.json", new Blob([propsStr],{type:"application/json"}));
+  log("⬇ caché de "+id+" descargada (.frag + .props.json)","ok");
+}
+
+function setupIngest(){
+  const host = $("#canvas-host");
+  let ov = document.getElementById("dropOverlay");
+  if(!ov){ ov=document.createElement("div"); ov.id="dropOverlay"; ov.innerHTML='<div class="dropmsg">Suelta un archivo .ifc para abrirlo</div>'; host.appendChild(ov); }
+  const show=()=>ov.classList.add("on"), hide=()=>ov.classList.remove("on");
+  const hasFiles=e=>!!(e.dataTransfer && Array.from(e.dataTransfer.types||[]).includes("Files"));
+  let dragDepth=0;
+  window.addEventListener("dragenter",e=>{ if(!hasFiles(e)) return; e.preventDefault(); dragDepth++; show(); });
+  window.addEventListener("dragover", e=>{ if(!hasFiles(e)) return; e.preventDefault(); if(e.dataTransfer) e.dataTransfer.dropEffect="copy"; show(); });
+  window.addEventListener("dragleave",e=>{ if(!hasFiles(e)) return; dragDepth=Math.max(0,dragDepth-1); if(dragDepth===0) hide(); });
+  window.addEventListener("drop",async e=>{
+    if(!(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length)) return;
+    e.preventDefault(); dragDepth=0; hide();
+    const files=Array.from(e.dataTransfer.files).filter(f=>/\.ifc$/i.test(f.name));
+    if(!files.length){ log("Arrastra un archivo .ifc","warn"); return; }
+    for(const f of files) await ingestIfcFile(f);
+  });
+  const inp=document.createElement("input"); inp.type="file"; inp.accept=".ifc"; inp.multiple=true; inp.style.display="none";
+  inp.onchange=async()=>{ for(const f of Array.from(inp.files).filter(f=>/\.ifc$/i.test(f.name))) await ingestIfcFile(f); inp.value=""; };
+  document.body.appendChild(inp);
+  const btn=$("#openIfcBtn"); if(btn) btn.onclick=()=>inp.click();
+  const ib=document.getElementById("installBtn");
+  if(ib){ if(window.__bip) ib.style.display=""; ib.onclick=async()=>{ if(!window.__bip){ log("Si no se instala, usa el icono ⊕ de la barra de direcciones del navegador.","dim"); return; } window.__bip.prompt(); try{ await window.__bip.userChoice; }catch(_){} window.__bip=null; ib.style.display="none"; log("Instalación de la app lanzada.","ok"); }; }
+  console.info("Visor IFC v1.0 build b6 — arranque vacío + quitar modelos");
+  log("✓ listo — arrastra un .ifc a la ventana o usa «Abrir IFC…» (build b6)","ok");
+}
+
+
+/* ===================== v1.0 — Fase B: edición de DATOS + exportación IFC (web-ifc IfcAPI) ===================== */
+let WI=null, IFCAPI=null;
+async function getIfcApi(){
+  if(IFCAPI) return IFCAPI;
+  log("→ inicializando web-ifc (IfcAPI) para edición…","dim");
+  WI = await import("web-ifc");
+  IFCAPI = new WI.IfcAPI();
+  IFCAPI.SetWasmPath(WASM_CDN, true);
+  await IFCAPI.Init();
+  log("✓ web-ifc IfcAPI lista","ok");
+  return IFCAPI;
+}
+async function openWifcModel(M){
+  if(M._wifcId!=null) return M._wifcId;
+  const api=await getIfcApi();
+  M._wifcId = api.OpenModel(new Uint8Array(M.ifcBytes));
+  M._guid2exp = {};
+  return M._wifcId;
+}
+function findExpress(api, mid, M, guid, category){
+  if(M._guid2exp && M._guid2exp[guid]!=null) return M._guid2exp[guid];
+  const code = WI[category];
+  if(code==null) return null;
+  const ids=api.GetLineIDsWithType(mid, code);
+  for(let i=0;i<ids.size();i++){ const id=ids.get(i); const l=api.GetLine(mid,id);
+    if(l && l.GlobalId && l.GlobalId.value===guid){ (M._guid2exp||(M._guid2exp={}))[guid]=id; return id; } }
+  return null;
+}
+function gatherElementPsets(api, mid, exp){
+  const rels=api.GetLineIDsWithType(mid, WI.IFCRELDEFINESBYPROPERTIES);
+  const res={};
+  for(let i=0;i<rels.size();i++){ const r=api.GetLine(mid,rels.get(i));
+    if(!r || !r.RelatingPropertyDefinition) continue;
+    const ro=Array.isArray(r.RelatedObjects)?r.RelatedObjects:[r.RelatedObjects];
+    if(!ro.some(handle=>handle && handle.value===exp)) continue;
+    const pd=api.GetLine(mid, r.RelatingPropertyDefinition.value);
+    if(!pd || pd.type!==WI.IFCPROPERTYSET) continue;
+    const props={};
+    const hp=pd.HasProperties?(Array.isArray(pd.HasProperties)?pd.HasProperties:[pd.HasProperties]):[];
+    for(const ph of hp){ if(!ph) continue; const p=api.GetLine(mid,ph.value);
+      if(p && p.type===WI.IFCPROPERTYSINGLEVALUE && p.Name && p.NominalValue!=null){
+        const nv=p.NominalValue;
+        props[p.Name.value]={ eid:p.expressID, value:(nv.value!==undefined?nv.value:nv._representationValue), nvName:nv.name };
+      } }
+    res[(pd.Name?pd.Name.value:("Pset#"+pd.expressID))]={ eid:pd.expressID, props };
+  }
+  return res;
+}
+const NUMERIC_NV=/REAL|INTEGER|NUMBER|MEASURE|MASS|AREA|VOLUME|RATIO|COUNT|LENGTH|FORCE|PRESSURE|TIME|ANGLE/;
+function writePropValue(api, mid, eid, nvName, newVal){
+  const p=api.GetLine(mid, eid);
+  let v=newVal;
+  if(NUMERIC_NV.test(nvName)){ const num=Number(String(newVal).replace(",",".")); if(!Number.isFinite(num)) throw new Error("valor no numérico"); v=num; }
+  else if(/BOOLEAN|LOGICAL/.test(nvName)){ v=/^(true|1|si|sí|yes|t|verdadero)$/i.test(String(newVal)); }
+  p.NominalValue.value=v;
+  api.WriteLine(mid,p);
+  return v;
+}
+function writeName(api, mid, exp, newName){
+  const el=api.GetLine(mid,exp);
+  if(el.Name && typeof el.Name==="object") el.Name.value=newName;
+  else el.Name={ name:"IFCLABEL", type:1, value:newName };
+  api.WriteLine(mid,el);
+}
+function addProperty(api, mid, psetEid, propName, propVal){
+  const pset=api.GetLine(mid, psetEid);
+  let hp=pset.HasProperties?(Array.isArray(pset.HasProperties)?pset.HasProperties:[pset.HasProperties]):[];
+  let tmplId = hp.length?hp[0].value:null;
+  if(tmplId==null){ const all=api.GetLineIDsWithType(mid, WI.IFCPROPERTYSINGLEVALUE); if(all.size()) tmplId=all.get(0); }
+  if(tmplId==null) throw new Error("no hay plantilla de propiedad en el modelo");
+  const tmpl=api.GetLine(mid, tmplId);
+  const newId=api.GetMaxExpressID(mid)+1;
+  const clone=JSON.parse(JSON.stringify(tmpl,(k,v)=>typeof v==="bigint"?Number(v):v));
+  clone.expressID=newId; clone.Description=null;
+  clone.Name={ name:(tmpl.Name?tmpl.Name.name:"IFCIDENTIFIER"), type:1, value:propName };
+  const num=Number(String(propVal).replace(",","."));
+  if(String(propVal).trim()!=="" && Number.isFinite(num)) clone.NominalValue={ name:"IFCREAL", type:4, value:num };
+  else clone.NominalValue={ name:"IFCTEXT", type:1, value:String(propVal) };
+  api.WriteLine(mid, clone);
+  hp=hp.concat([{ type:5, value:newId }]);
+  pset.HasProperties=hp; api.WriteLine(mid, pset);
+  return newId;
+}
+function qaCheck(M, guid){
+  const it=M.index.items[guid]; const out=[];
+  if(!it.name || !String(it.name).trim()) out.push(["warn","El elemento no tiene Name."]);
+  const psk=Object.keys(it.psets||{});
+  if(!psk.some(p=>/^Pset_|Estructurando/.test(p))) out.push(["warn","No se encontró un Property Set de proyecto (Pset_*)."]);
+  if(!it.classifications || !it.classifications.length) out.push(["info","Sin clasificación (Uniclass / GuBIMClass)."]);
+  for(const [pn,pp] of Object.entries(it.psets||{})) for(const [k,v] of Object.entries(pp)) if(v==null||v==="") out.push(["warn","Propiedad vacía: "+pn+" ▸ "+k]);
+  if(!out.length) out.push(["ok","Sin avisos en las comprobaciones ligeras."]);
+  return out;
+}
+function renderQA(M, guid){
+  const rep=$("#edReport"); if(!rep) return;
+  const issues=qaCheck(M, guid);
+  let h="<h3>QA ligera (pre-export)</h3>";
+  for(const [lvl,msg] of issues) h+='<div class="qi lvl-'+lvl+'">'+(lvl==="ok"?"✓ ":lvl==="info"?"ℹ ":"⚠ ")+esc(msg)+"</div>";
+  h+='<div class="qi" style="margin-top:6px;color:#9fb0c8">Validación completa: usa la skill <b>ifc-validate</b> (IfcOpenShell) sobre el IFC exportado.</div>';
+  rep.innerHTML=h;
+}
+async function openEditor(M, guid){
+  const cont=$("#props");
+  cont.innerHTML='<div class="empty">Abriendo editor…</div>';
+  let api, mid;
+  try{ api=await getIfcApi(); mid=await openWifcModel(M); }
+  catch(e){ cont.innerHTML='<div class="empty">No se pudo iniciar web-ifc: '+esc(String(e.message||e))+'</div>'; return; }
+  const it=M.index.items[guid];
+  const exp=findExpress(api, mid, M, guid, it.category);
+  if(exp==null){ cont.innerHTML='<div class="empty">No se localizó el elemento en web-ifc (GUID/clase '+esc(it.category)+').</div>'; return; }
+  const el=api.GetLine(mid,exp);
+  const curName = el.Name ? (el.Name.value||"") : "";
+  const psets=gatherElementPsets(api, mid, exp);
+  let h='<div class="edit-head"><button id="edBack">← Volver</button><span>Editar datos</span></div>';
+  h+='<div class="kv"><div class="k">Clase</div><div class="val"><span class="pill">'+esc(it.category)+'</span></div>';
+  h+='<div class="k">GlobalId</div><div class="val" style="font-family:ui-monospace,Consolas,monospace;font-size:11px">'+esc(guid)+'</div></div>';
+  h+='<h3>Atributo</h3><div class="kv"><div class="k">Name</div><div class="val"><input class="ed-in" id="ed-name" value="'+esc(curName)+'"></div></div>';
+  const pnames=Object.keys(psets);
+  for(const pn of pnames){
+    const pinfo=psets[pn];
+    h+='<div class="pset"><div class="pname">'+esc(pn)+' <button class="ed-addp" data-pset="'+pinfo.eid+'" data-psn="'+esc(pn)+'">＋ propiedad</button></div><div class="kv">';
+    for(const prn of Object.keys(pinfo.props)){
+      const pr=pinfo.props[prn];
+      h+='<div class="k">'+esc(prn)+'</div><div class="val"><input class="ed-in" data-eid="'+pr.eid+'" data-nv="'+esc(pr.nvName)+'" data-orig="'+esc(String(pr.value==null?"":pr.value))+'" data-psn="'+esc(pn)+'" data-pn="'+esc(prn)+'" value="'+esc(String(pr.value==null?"":pr.value))+'"></div>';
+    }
+    h+='</div></div>';
+  }
+  if(!pnames.length) h+='<div class="empty" style="padding-top:6px">Este elemento no tiene Property Sets editables.</div>';
+  h+='<div class="edit-foot"><button id="edQA">Validar (QA)</button><button id="edApply" class="primary">Aplicar cambios</button><button id="edExport">Exportar IFC…</button></div>';
+  h+='<div id="edReport" class="ed-report"></div>';
+  cont.innerHTML=h;
+
+  $("#edBack").onclick=()=>selectItem(M.entry.id, it.localId);
+  $("#edQA").onclick=()=>renderQA(M, guid);
+  for(const b of cont.querySelectorAll(".ed-addp")){
+    b.onclick=()=>{
+      const pn=b.dataset.psn, psetEid=+b.dataset.pset;
+      const name=prompt("Nombre de la nueva propiedad en «"+pn+"»:"); if(!name) return;
+      const val=prompt("Valor de «"+name+"»:",""); if(val==null) return;
+      try{ addProperty(api, mid, psetEid, name, val);
+        (it.psets[pn]||(it.psets[pn]={}))[name]= (String(val).trim()!=="" && Number.isFinite(Number(String(val).replace(",","."))))?Number(String(val).replace(",",".")):val;
+        log("✓ propiedad añadida: "+pn+" ▸ "+name,"ok"); openEditor(M, guid);
+      }catch(e){ log("✗ añadir propiedad: "+(e.message||e),"err"); }
+    };
+  }
+  $("#edApply").onclick=()=>{
+    let changed=0; const warn=[];
+    const nm=$("#ed-name").value;
+    if(nm!==curName){ try{ writeName(api, mid, exp, nm); it.name=nm; if(it.attributes) it.attributes.Name=nm; changed++; }catch(e){ warn.push("Name: "+(e.message||e)); } }
+    for(const inp of cont.querySelectorAll("input.ed-in[data-eid]")){
+      const now=inp.value, orig=inp.dataset.orig;
+      if(now===orig) continue;
+      try{
+        const v=writePropValue(api, mid, +inp.dataset.eid, inp.dataset.nv, now);
+        inp.dataset.orig=String(v);
+        const psn=inp.dataset.psn, pn=inp.dataset.pn;
+        if(it.psets[psn]) it.psets[psn][pn]=v;
+        changed++;
+      }catch(e){ warn.push((inp.dataset.pn||"prop")+": "+(e.message||e)); inp.style.borderColor="#ff8080"; }
+    }
+    log("✓ "+changed+" cambio(s) escritos en web-ifc"+(warn.length?(" · "+warn.length+" omitido(s)"):""), changed?"ok":"warn");
+    const rep=$("#edReport"); if(rep){ rep.innerHTML='<div class="qi lvl-ok">✓ '+changed+' cambio(s) aplicados al modelo en memoria. Pulsa «Exportar IFC» para guardar el archivo.</div>'+(warn.length?('<div class="qi lvl-warn">⚠ '+esc(warn.join(" · "))+'</div>'):''); }
+  };
+  $("#edExport").onclick=()=>{
+    try{
+      const saved=IFCAPI.SaveModel(mid);
+      M.ifcBytes=new Uint8Array(saved);
+      const fname=(M.entry.id)+"-editado.ifc";
+      const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([saved],{type:"application/x-step"})); a.download=fname; a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+      log("⬇ IFC exportado: "+fname+" ("+(saved.length/1024|0)+" KB). Reábrelo en otra herramienta o arrástralo aquí para verificar.","ok");
+      const rep=$("#edReport"); if(rep) rep.innerHTML='<div class="qi lvl-ok">✓ Exportado '+esc(fname)+'. Arrástralo de nuevo al visor o ábrelo en BIMvision/Revit para verificar el cambio.</div>';
+    }catch(e){ log("✗ exportar IFC: "+(e.message||e),"err"); }
+  };
+}
+
+main();
+</script>
+</body>
+</html>
+<!-- fin v0.9 -->

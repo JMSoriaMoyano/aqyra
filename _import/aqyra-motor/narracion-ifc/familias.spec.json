@@ -1,0 +1,11 @@
+{ "proyecto":"Familias realistas (viga I, pilar, zapata, puerta, ventana)", "esquema":"IFC4X3",
+  "niveles":[{"nombre":"Planta Baja","cota":0.0}],
+  "elementos":[
+    {"clase":"IfcBeam","nombre":"Viga_IPE400","nivel":"Planta Baja","pos":[0,0],"perfil":"IPE400","longitud":6.0,"material":"S275"},
+    {"clase":"IfcBeam","nombre":"Viga_HEB300","nivel":"Planta Baja","pos":[0,3],"perfil":"HEB300","longitud":6.0,"material":"S355"},
+    {"clase":"IfcColumn","nombre":"Pilar_rect","nivel":"Planta Baja","pos":[8,0],"forma":"rect","seccion":[0.4,0.6],"altura":3.5,"material":"HA-30"},
+    {"clase":"IfcColumn","nombre":"Pilar_circ","nivel":"Planta Baja","pos":[10,0],"forma":"circular","d":0.5,"altura":3.5,"material":"HA-30"},
+    {"clase":"IfcFooting","nombre":"Zapata_2x2","nivel":"Planta Baja","pos":[12,0],"predefined":"PAD_FOOTING","dims":[2.0,2.0,0.5],"material":"HA-30"},
+    {"clase":"IfcDoor","nombre":"Puerta_090","nivel":"Planta Baja","pos":[15,0],"ancho":0.9,"alto":2.1,"predefined":"DOOR"},
+    {"clase":"IfcWindow","nombre":"Ventana_120","nivel":"Planta Baja","pos":[17,0],"ancho":1.2,"alto":1.2}
+  ] }

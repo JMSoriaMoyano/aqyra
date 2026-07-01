@@ -1,0 +1,16 @@
+{
+  "veredicto": "CUMPLE",
+  "balance_global_pct": 0.0,
+  "residuo_nudo_max_pct": 0.0,
+  "presion_fuente_requerida_kPa": 352.919,
+  "presion_fuente_disponible_kPa": 600.0,
+  "velocidad_pico_m_s": 0.9945,
+  "errores": [],
+  "avisos": [],
+  "info": [
+    "Balance global de caudales: cabecera 6.6000 l/s vs demanda 6.6000 l/s (residuo 0.0000 %)",
+    "Residuo maximo en nudos de union: 0.0000 %",
+    "Presiones y velocidades dentro de limites (segun solver).",
+    "Presion fuente: disponible 600.0 / requerida 352.919 kPa (margen 247.081)"
+  ]
+}

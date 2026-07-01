@@ -1,0 +1,186 @@
+{
+  "nombre_tablero": "PILA_PUE05",
+  "tipologia": "pila",
+  "pila": {
+    "H": 8.0,
+    "np": 10,
+    "e_long": 0.0,
+    "material": {
+      "E": 33000000000.0,
+      "G": 13750000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fck": 30000000.0
+    },
+    "pila_sec": {
+      "A": 2.25,
+      "Iy": 0.4219,
+      "Iz": 0.4219,
+      "J": 0.71,
+      "b": 1.5,
+      "h": 1.5,
+      "d": 1.4
+    },
+    "suelo": {
+      "kx": 800000000.0,
+      "kz": 1500000000.0,
+      "kry": 900000000.0
+    },
+    "apoyo": {
+      "tipo": "elastomerico",
+      "a": 0.45,
+      "b": 0.6,
+      "Te": 0.063,
+      "t_capa": 0.012,
+      "n_capas": 5
+    },
+    "q_viento_pila_N_m": 3000.0,
+    "As_pila_m2": 0.025,
+    "beta_pila": 2.0,
+    "cimentacion": {
+      "tipo": "zapata",
+      "B": 6.0,
+      "Lf": 6.0,
+      "q_adm": 550000.0,
+      "mu": 0.5,
+      "canto": 1.4,
+      "rho": 2500.0
+    }
+  },
+  "aparato_apoyo": {
+    "tipo": "elastomerico",
+    "vector": [
+      3857142.8571428577,
+      3857142.8571428577,
+      2656705539.358601,
+      79701166.18075803,
+      44831905.9766764,
+      180803.57142857142
+    ],
+    "Kh_N_m": 3857142.8571428577,
+    "Kv_N_m": 2656705539.358601,
+    "Ec_Pa": 619897959.1836736,
+    "S": 10.714285714285715,
+    "a": 0.45,
+    "b": 0.6,
+    "Te": 0.063
+  },
+  "reacciones": {
+    "modo": "caso",
+    "N_G_N": 4200000.0,
+    "N_LM1_N": 1500000.0,
+    "H_frenado_N": 360000.0,
+    "H_viento_N": 120000.0,
+    "H_termica_N": 150000.0,
+    "M_G_Nm": 0.0,
+    "M_LM1_Nm": 0.0
+  },
+  "cargas_cabeza": {
+    "head": "P_10",
+    "N_G_N": 4200000.0,
+    "N_LM1_N": 1500000.0,
+    "H_frenado_N": 360000.0,
+    "H_viento_N": 120000.0,
+    "H_termica_N": 150000.0,
+    "e_long_m": 0.0
+  },
+  "f1_Hz": 4.510022087392348,
+  "esfuerzos_base": {
+    "N_base": 8290957.5000000205,
+    "M_base": 5918400.000049782,
+    "V_base": 750600.0000102192
+  },
+  "dx_cabeza_m": 0.0625817388065681,
+  "checks": [
+    {
+      "nombre": "fuste_flexocompresion",
+      "N_Ed_kN": 8290.95750000002,
+      "M_Ed_kNm": 6011.250939355216,
+      "M_Rd_kNm": 12137.769245190919,
+      "N_Rd_max_kN": 49119.565217391304,
+      "aprov": 0.4952517071237717,
+      "delta_2orden": 1.0156885204286046,
+      "N_cr_kN": 536763.8327931516,
+      "cumple": true
+    },
+    {
+      "nombre": "fuste_cortante_biela",
+      "V_Ed_kN": 750.6000000102192,
+      "V_Rd_max_kN": 6882.206896551726,
+      "aprov": 0.10906385281533766,
+      "Asw_s_cm2_m": 5.480571428646043,
+      "cumple": true
+    }
+  ],
+  "cimentacion": {
+    "tipo": "zapata",
+    "B_m": 6.0,
+    "Lf_m": 6.0,
+    "e_m": 0.6309688146741835,
+    "e_lim_m": 1.0,
+    "sigma_max_kPa": 431.6185677598677,
+    "q_adm_kPa": 550.0,
+    "aprov_hundimiento": 0.7847610322906685,
+    "ok_hundimiento": true,
+    "H_d_kN": 750.6000000102192,
+    "H_Rd_kN": 4763.50875000001,
+    "aprov_deslizamiento": 0.1575729235325153,
+    "ok_deslizamiento": true,
+    "ok_despegue": true,
+    "ok": true,
+    "aprov": 0.7847610322906685,
+    "veredicto": "CUMPLE"
+  },
+  "elementos_chk": [
+    {
+      "nombre": "PILA_fuste",
+      "N_Ed_kN": 8290.95750000002,
+      "M_Ed_kNm": 6011.250939355216,
+      "M_Rd_kNm": 12137.769245190919,
+      "aprov_max": 0.4952517071237717,
+      "veredicto": "CUMPLE",
+      "delta_2orden": 1.0156885204286046
+    },
+    {
+      "nombre": "CIMENTACION_zapata",
+      "aprov_max": 0.7847610322906685,
+      "veredicto": "CUMPLE"
+    }
+  ],
+  "delta_2orden": 1.0156885204286046,
+  "aprovechamiento_max": 0.7847610322906685,
+  "veredicto_global": "CUMPLE",
+  "mapping_writeback": {
+    "elementos": {
+      "PILA_fuste": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "pila",
+          "Aprovechamiento_max": 0.495,
+          "Veredicto": "CUMPLE",
+          "M_Ed_ELU_kNm": 6011.3,
+          "M_Rd_kNm": 12137.8,
+          "N_Ed_ELU_kN": 8291.0
+        }
+      },
+      "CIMENTACION_zapata": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "pila",
+          "Aprovechamiento_max": 0.785,
+          "Veredicto": "CUMPLE"
+        }
+      },
+      "PILA_PUE05": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "pila",
+          "Cimentacion": "zapata",
+          "Aprov_cimentacion": 0.785,
+          "Delta_2orden": 1.016,
+          "Desplazamiento_cabeza_mm": 62.6,
+          "Frecuencia_fundamental_Hz": 4.51,
+          "Aprovechamiento_max": 0.785,
+          "Veredicto_global": "CUMPLE"
+        }
+      }
+    }
+  }
+}

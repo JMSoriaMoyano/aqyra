@@ -1,0 +1,96 @@
+{
+  "elementos": {
+    "LGA": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Seccion_mm2": 4.0,
+        "Intensidad_A": 18.513,
+        "I_admisible_A": 24.0,
+        "Caida_tension_pct": 0.6304,
+        "Potencia_W": 11296.0,
+        "Fases": "tri",
+        "Material_conductor": "Cu"
+      }
+    },
+    "L-LUM-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Seccion_mm2": 1.5,
+        "Intensidad_A": 0.28,
+        "I_admisible_A": 15.0,
+        "Caida_tension_pct": 0.0408,
+        "Potencia_W": 58.0,
+        "Fases": "mono",
+        "Material_conductor": "Cu"
+      }
+    },
+    "L-LUM-2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Seccion_mm2": 1.5,
+        "Intensidad_A": 0.28,
+        "I_admisible_A": 15.0,
+        "Caida_tension_pct": 0.0408,
+        "Potencia_W": 58.0,
+        "Fases": "mono",
+        "Material_conductor": "Cu"
+      }
+    },
+    "L-TOMA-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Seccion_mm2": 2.5,
+        "Intensidad_A": 16.842,
+        "I_admisible_A": 21.0,
+        "Caida_tension_pct": 2.2222,
+        "Potencia_W": 3680.0,
+        "Fases": "mono",
+        "Material_conductor": "Cu"
+      }
+    },
+    "L-MOTOR-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Seccion_mm2": 1.5,
+        "Intensidad_A": 12.736,
+        "I_admisible_A": 13.0,
+        "Caida_tension_pct": 1.3075,
+        "Potencia_W": 7500.0,
+        "Fases": "tri",
+        "Material_conductor": "Cu"
+      }
+    },
+    "LUM-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 58.0,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 1.1371,
+        "Cumple": true
+      }
+    },
+    "LUM-2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 58.0,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 1.1371,
+        "Cumple": true
+      }
+    },
+    "TOMA-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 3680.0,
+        "Tension_V": 230.0,
+        "Caida_tension_acum_pct": 3.3185,
+        "Cumple": true
+      }
+    },
+    "MOTOR-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Potencia_W": 7500.0,
+        "Tension_V": 400.0,
+        "Caida_tension_acum_pct": 1.9379,
+        "Cumple": true
+      }
+    }
+  },
+  "_meta": {
+    "pset": "Pset_Estructurando_ResultadoRed",
+    "fuente": "instalaciones/electrico (solver de red electrica REBT)",
+    "nota": "Predimensionado; revisar y firmar por tecnico competente."
+  }
+}

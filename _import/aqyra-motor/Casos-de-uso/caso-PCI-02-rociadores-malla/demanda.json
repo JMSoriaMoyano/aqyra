@@ -1,0 +1,403 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "caudal": "l/s",
+    "presion": "kPa",
+    "potencia": "W"
+  },
+  "sistema": {
+    "tipo": "FIREPROTECTION",
+    "fluido": null,
+    "nombre": "Red rociadores PCI",
+    "clase_riesgo": "OH1",
+    "demanda": {
+      "disciplina": "PCI-rociadores",
+      "clase_riesgo": "OH1",
+      "densidad_mm_min": 5.0,
+      "area_operacion_m2": 72.0,
+      "cobertura_rociador_m2": 12.0,
+      "n_simultaneas": 6,
+      "caudal_diseno_l_s": 6.0,
+      "K_factor_lmin_bar": 80.0,
+      "presion_din_min_kPa": 56.25,
+      "presion_max_kPa": 500.0,
+      "autonomia_min": 60,
+      "criterio": "UNE-EN 12845 (rociadores automaticos): densidad x area de operacion por clase de riesgo; RIPCI RD 513/2017; DB-SI SI4 [confirmar AN]"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "x": 8.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N3": {
+      "x": 16.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N4": {
+      "x": 24.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N5": {
+      "x": 0.0,
+      "y": -8.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N6": {
+      "x": 8.0,
+      "y": -8.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N7": {
+      "x": 16.0,
+      "y": -8.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N8": {
+      "x": 24.0,
+      "y": -8.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N9": {
+      "x": 8.0,
+      "y": 3.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N10": {
+      "x": 16.0,
+      "y": 3.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N11": {
+      "x": 24.0,
+      "y": 3.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N12": {
+      "x": 8.0,
+      "y": -11.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N13": {
+      "x": 16.0,
+      "y": -11.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N14": {
+      "x": 24.0,
+      "y": -11.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    }
+  },
+  "tramos": {
+    "T1": {
+      "ni": "N1",
+      "nj": "N2",
+      "dn": 100.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "M-T1",
+      "clase": "IfcFlowSegment"
+    },
+    "T2": {
+      "ni": "N2",
+      "nj": "N3",
+      "dn": 100.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "M-T2",
+      "clase": "IfcFlowSegment"
+    },
+    "T3": {
+      "ni": "N3",
+      "nj": "N4",
+      "dn": 100.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "M-T3",
+      "clase": "IfcFlowSegment"
+    },
+    "T4": {
+      "ni": "N5",
+      "nj": "N6",
+      "dn": 100.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "M-B1",
+      "clase": "IfcFlowSegment"
+    },
+    "T5": {
+      "ni": "N6",
+      "nj": "N7",
+      "dn": 100.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "M-B2",
+      "clase": "IfcFlowSegment"
+    },
+    "T6": {
+      "ni": "N7",
+      "nj": "N8",
+      "dn": 100.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "M-B3",
+      "clase": "IfcFlowSegment"
+    },
+    "T7": {
+      "ni": "N1",
+      "nj": "N5",
+      "dn": 80.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "R-1",
+      "clase": "IfcFlowSegment"
+    },
+    "T8": {
+      "ni": "N2",
+      "nj": "N6",
+      "dn": 80.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "R-2",
+      "clase": "IfcFlowSegment"
+    },
+    "T9": {
+      "ni": "N3",
+      "nj": "N7",
+      "dn": 80.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "R-3",
+      "clase": "IfcFlowSegment"
+    },
+    "T10": {
+      "ni": "N4",
+      "nj": "N8",
+      "dn": 80.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 8.0,
+      "elemento": "R-4",
+      "clase": "IfcFlowSegment"
+    },
+    "T11": {
+      "ni": "N2",
+      "nj": "N9",
+      "dn": 32.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 3.0,
+      "elemento": "D-ROC-1",
+      "clase": "IfcFlowSegment"
+    },
+    "T12": {
+      "ni": "N3",
+      "nj": "N10",
+      "dn": 32.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 3.0,
+      "elemento": "D-ROC-2",
+      "clase": "IfcFlowSegment"
+    },
+    "T13": {
+      "ni": "N4",
+      "nj": "N11",
+      "dn": 32.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 3.0,
+      "elemento": "D-ROC-3",
+      "clase": "IfcFlowSegment"
+    },
+    "T14": {
+      "ni": "N6",
+      "nj": "N12",
+      "dn": 32.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 3.0,
+      "elemento": "D-ROC-4",
+      "clase": "IfcFlowSegment"
+    },
+    "T15": {
+      "ni": "N7",
+      "nj": "N13",
+      "dn": 32.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 3.0,
+      "elemento": "D-ROC-5",
+      "clase": "IfcFlowSegment"
+    },
+    "T16": {
+      "ni": "N8",
+      "nj": "N14",
+      "dn": 32.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 3.0,
+      "elemento": "D-ROC-6",
+      "clase": "IfcFlowSegment"
+    }
+  },
+  "terminales": [
+    {
+      "id": "ROC-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N9",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_terminal": "Rociador OH1",
+        "caudal_l_s": 1.0,
+        "presion_din_min_kPa": 56.25,
+        "presion_max_kPa": 500.0,
+        "K_factor_lmin_bar": 80.0,
+        "densidad_mm_min": 5.0,
+        "cobertura_m2": 12.0,
+        "fuente_dato": "normativa",
+        "criterio": "UNE-EN 12845 (rociadores automaticos): densidad x area de operacion por clase de riesgo; RIPCI RD 513/2017; DB-SI SI4 [confirmar AN]"
+      }
+    },
+    {
+      "id": "ROC-2",
+      "tipo": "USERDEFINED",
+      "nodo": "N10",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_terminal": "Rociador OH1",
+        "caudal_l_s": 1.0,
+        "presion_din_min_kPa": 56.25,
+        "presion_max_kPa": 500.0,
+        "K_factor_lmin_bar": 80.0,
+        "densidad_mm_min": 5.0,
+        "cobertura_m2": 12.0,
+        "fuente_dato": "normativa",
+        "criterio": "UNE-EN 12845 (rociadores automaticos): densidad x area de operacion por clase de riesgo; RIPCI RD 513/2017; DB-SI SI4 [confirmar AN]"
+      }
+    },
+    {
+      "id": "ROC-3",
+      "tipo": "USERDEFINED",
+      "nodo": "N11",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_terminal": "Rociador OH1",
+        "caudal_l_s": 1.0,
+        "presion_din_min_kPa": 56.25,
+        "presion_max_kPa": 500.0,
+        "K_factor_lmin_bar": 80.0,
+        "densidad_mm_min": 5.0,
+        "cobertura_m2": 12.0,
+        "fuente_dato": "normativa",
+        "criterio": "UNE-EN 12845 (rociadores automaticos): densidad x area de operacion por clase de riesgo; RIPCI RD 513/2017; DB-SI SI4 [confirmar AN]"
+      }
+    },
+    {
+      "id": "ROC-4",
+      "tipo": "USERDEFINED",
+      "nodo": "N12",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_terminal": "Rociador OH1",
+        "caudal_l_s": 1.0,
+        "presion_din_min_kPa": 56.25,
+        "presion_max_kPa": 500.0,
+        "K_factor_lmin_bar": 80.0,
+        "densidad_mm_min": 5.0,
+        "cobertura_m2": 12.0,
+        "fuente_dato": "normativa",
+        "criterio": "UNE-EN 12845 (rociadores automaticos): densidad x area de operacion por clase de riesgo; RIPCI RD 513/2017; DB-SI SI4 [confirmar AN]"
+      }
+    },
+    {
+      "id": "ROC-5",
+      "tipo": "USERDEFINED",
+      "nodo": "N13",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_terminal": "Rociador OH1",
+        "caudal_l_s": 1.0,
+        "presion_din_min_kPa": 56.25,
+        "presion_max_kPa": 500.0,
+        "K_factor_lmin_bar": 80.0,
+        "densidad_mm_min": 5.0,
+        "cobertura_m2": 12.0,
+        "fuente_dato": "normativa",
+        "criterio": "UNE-EN 12845 (rociadores automaticos): densidad x area de operacion por clase de riesgo; RIPCI RD 513/2017; DB-SI SI4 [confirmar AN]"
+      }
+    },
+    {
+      "id": "ROC-6",
+      "tipo": "USERDEFINED",
+      "nodo": "N14",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_terminal": "Rociador OH1",
+        "caudal_l_s": 1.0,
+        "presion_din_min_kPa": 56.25,
+        "presion_max_kPa": 500.0,
+        "K_factor_lmin_bar": 80.0,
+        "densidad_mm_min": 5.0,
+        "cobertura_m2": 12.0,
+        "fuente_dato": "normativa",
+        "criterio": "UNE-EN 12845 (rociadores automaticos): densidad x area de operacion por clase de riesgo; RIPCI RD 513/2017; DB-SI SI4 [confirmar AN]"
+      }
+    }
+  ],
+  "fuentes": [
+    {
+      "id": "Grupo de presion PCI",
+      "nodo": "N1",
+      "presion": 300.0,
+      "caudal": 12.0,
+      "tipo": "equipo"
+    }
+  ],
+  "metricas": {
+    "nudos_fusionados": 18,
+    "huecos_puenteados": [],
+    "cruces_troceados": [],
+    "segmentos_sin_puerto": [],
+    "factor_escala_ifc": 1.0,
+    "tol_snap_m": 0.001
+  }
+}

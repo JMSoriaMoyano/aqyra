@@ -1,0 +1,227 @@
+{
+  "caso": "Caso 14 - Viga postesada continua hiperestatica (EC2 §5.10)",
+  "geometria": {
+    "L_vano_m": 20.0,
+    "n_vanos": 2,
+    "apoyos_x_m": [
+      0.0,
+      20.0,
+      40.0
+    ],
+    "L_h": 30.769230769230766
+  },
+  "seccion": {
+    "b_m": 0.5,
+    "h_m": 1.3,
+    "A_m2": 0.65,
+    "I_m4": 0.09154166666666667,
+    "W_m3": 0.14083333333333334,
+    "cdg_m": 0.65,
+    "c_sup_m": 0.65,
+    "c_inf_m": 0.65
+  },
+  "material": {
+    "nombre": "C40/50",
+    "fck_Pa": 40000000.0,
+    "fctm_Pa": 3500000.0,
+    "fck_t_Pa": 32000000.0,
+    "E_Pa": 35000000000.0
+  },
+  "pretensado": {
+    "Ap_mm2": 2100.0,
+    "n_cordones": 14,
+    "P0_kN": 2811.0,
+    "Pm_inf_kN": 2343.6,
+    "sigma_p0_MPa": 1339.0,
+    "sigma_pm_inf_MPa": 1116.0,
+    "e_centro_vano_m": 0.3,
+    "e_apoyo_central_m": -0.3,
+    "drape_m": 0.45,
+    "w_p_kN_m": 21.0924
+  },
+  "momentos_pretensado": {
+    "apoyo_central": {
+      "M1_kNm": 703.08,
+      "M_p_tot_kNm": 1054.6200000020704,
+      "M_sec_kNm": 351.5400000020703,
+      "linea_presiones_m": 0.4500000000008834,
+      "e_tendon_m": -0.3
+    },
+    "centro_vano": {
+      "M1_kNm": -725.05125,
+      "M_p_tot_kNm": -593.2237500012291,
+      "M_sec_kNm": 131.8274999987709,
+      "linea_presiones_m": -0.25312500000052446,
+      "e_tendon_m": 0.309375
+    },
+    "concordancia": {
+      "tendon_concordante": false,
+      "desviacion_linea_presiones_apoyo_m": 0.1500000000008834,
+      "nota": "M_sec != 0 -> tendon NO concordante; la linea de presiones se separa del tendon e_p - e = M_sec/P."
+    }
+  },
+  "esfuerzos_externos": {
+    "apoyo_central": {
+      "M_perm_kNm": -1062.5000000020955,
+      "M_qp_kNm": -1242.500000002451,
+      "M_rara_kNm": -1662.5000000032805,
+      "M_ELU_kNm": -2334.375000004606
+    },
+    "centro_vano": {
+      "x_m": 7.5,
+      "M_perm_kNm": 597.6562500012377,
+      "M_qp_kNm": 698.9062500014534,
+      "M_rara_kNm": 935.1562500019564,
+      "M_ELU_kNm": 1313.0859375027492,
+      "M_ELU_patron_kNm": 1481.835937504324
+    }
+  },
+  "tensiones_apoyo_central": {
+    "transferencia": {
+      "sigma_sup_MPa": -7.537278106515134,
+      "sigma_inf_MPa": -1.1119526627156344,
+      "lim_compresion_MPa": -19.2,
+      "lim_traccion_MPa": 3.5,
+      "u_compresion": 0.3925665680476632,
+      "traccion_max_MPa": 0.0,
+      "ok": true
+    },
+    "servicio_cuasiperm": {
+      "sigma_sup_MPa": -2.2714792899381258,
+      "sigma_inf_MPa": -4.939597633138797,
+      "lim_compresion_MPa": -18.0,
+      "u_compresion": 0.2744220907299332,
+      "traccion_max_MPa": 0.0,
+      "ok": true
+    },
+    "servicio_rara": {
+      "sigma_sup_MPa": 0.7107692307778238,
+      "sigma_inf_MPa": -7.921846153854746,
+      "lim_compresion_MPa": -24.0,
+      "lim_traccion_fctm_MPa": 3.5,
+      "u_compresion": 0.3300769230772811,
+      "traccion_max_MPa": 0.7107692307778238,
+      "u_traccion_fctm": 0.20307692307937825,
+      "ok": true
+    }
+  },
+  "tensiones_centro_vano": {
+    "transferencia": {
+      "sigma_sup_MPa": -2.517492603546578,
+      "sigma_inf_MPa": -6.131738165684189,
+      "lim_compresion_MPa": -19.2,
+      "lim_traccion_MPa": 3.5,
+      "u_compresion": 0.31936136279605154,
+      "traccion_max_MPa": 0.0,
+      "ok": true
+    },
+    "servicio_cuasiperm": {
+      "sigma_sup_MPa": -4.355946745563722,
+      "sigma_inf_MPa": -2.855130177513201,
+      "lim_compresion_MPa": -18.0,
+      "u_compresion": 0.24199704142020678,
+      "traccion_max_MPa": 0.0,
+      "ok": true
+    },
+    "servicio_rara": {
+      "sigma_sup_MPa": -6.033461538466703,
+      "sigma_inf_MPa": -1.1776153846102198,
+      "lim_compresion_MPa": -24.0,
+      "lim_traccion_fctm_MPa": 3.5,
+      "u_compresion": 0.25139423076944595,
+      "traccion_max_MPa": 0.0,
+      "u_traccion_fctm": 0.0,
+      "ok": true
+    }
+  },
+  "ELU_apoyo_central": {
+    "sentido": "hogging",
+    "M_ELU_ext_kNm": -2334.375000004606,
+    "M_sec_kNm": 351.5400000020703,
+    "M_Ed_con_secundario_kNm": -1982.835000002536,
+    "M_Rd_kNm": 2508.716370510397,
+    "x_d_ratio": 0.29553775743707095,
+    "u": 0.7903783079308919,
+    "ok": true,
+    "nota": "el secundario (+sagging) ALIVIA el hogging de calculo en el apoyo.",
+    "detalle": {
+      "sense": "hogging",
+      "fcd_MPa": 26.666666666666668,
+      "fpd_MPa": 1426.0869565217392,
+      "Ap_mm2": 2100.0,
+      "As_pasiva_cm2": 0.0,
+      "d_p_m": 0.95,
+      "x_m": 0.2807608695652174,
+      "x_d_ratio": 0.29553775743707095,
+      "Fp_kN": 2994.7826086956525,
+      "Fs_kN": 0.0,
+      "M_Rd_kNm": 2508.716370510397
+    }
+  },
+  "ELU_centro_vano": {
+    "sentido": "sagging",
+    "M_ELU_ext_kNm": 1313.0859375027492,
+    "M_ELU_patron_kNm": 1481.835937504324,
+    "M_sec_kNm": 131.8274999987709,
+    "M_Ed_con_secundario_kNm": 1613.6634375030949,
+    "M_Rd_kNm": 2536.792457466919,
+    "x_d_ratio": 0.2926497663220507,
+    "u": 0.6361038455287735,
+    "ok": true,
+    "detalle": {
+      "sense": "sagging",
+      "fcd_MPa": 26.666666666666668,
+      "fpd_MPa": 1426.0869565217392,
+      "Ap_mm2": 2100.0,
+      "As_pasiva_cm2": 0.0,
+      "d_p_m": 0.9593750000000001,
+      "x_m": 0.2807608695652174,
+      "x_d_ratio": 0.2926497663220507,
+      "Fp_kN": 2994.7826086956525,
+      "Fs_kN": 0.0,
+      "M_Rd_kNm": 2536.792457466919
+    }
+  },
+  "redistribucion_apoyo_central": {
+    "delta_min": 0.8094221967963386,
+    "reduccion_max_pct": 19.057780320366135,
+    "x_d": 0.29553775743707095,
+    "nota": "redistribucion admisible si la capacidad de rotacion (x/d) lo permite (§5.5)."
+  },
+  "flecha": {
+    "residual_neto_kN_m": 3.7575999999999987,
+    "flecha_max_mm": 1.0162458397837388,
+    "limite_L250_mm": 80.0,
+    "u": 0.012703072997296736,
+    "nota": "el balance del pretensado deja un residual permanente pequeno -> flecha reducida."
+  },
+  "validaciones": {
+    "balance_residual_pct": -0.7416470588235226,
+    "w_p_kN_m": 21.0924,
+    "permanente_kN_m": 21.25,
+    "M_sec_extremo0_kNm": 7.003546897976776e-11,
+    "M_sec_extremo2_kNm": 1.0430824204377132e-11,
+    "M_sec_linealidad_R2": 1.0,
+    "M_sec_apoyo_central_kNm": 351.5400000020703,
+    "identidad_Mptot_M1_Msec_max_Nm": 5.820766091346741e-11,
+    "FEM_vs_metodo_fuerzas": {
+      "M_sec_FEM_kNm": 351.5400000020703,
+      "M_sec_fuerzas_kNm": 351.54,
+      "delta_pct": 5.889315820021075e-10
+    },
+    "sigma_p0_sobre_fpk": 0.7198924731182795,
+    "sigma_pinf_sobre_fpk": 0.6,
+    "perdidas_diferidas_pct": 16.654219566840926,
+    "equilibrio_ELU_pct": 0.0
+  },
+  "aprovechamientos": {
+    "compresion_transferencia": 0.3925665680476632,
+    "compresion_rara": 0.3300769230772811,
+    "traccion_rara_fctm": 0.20307692307937825,
+    "ELU_apoyo_central": 0.7903783079308919,
+    "ELU_centro_vano": 0.6361038455287735,
+    "flecha": 0.012703072997296736
+  },
+  "aprov_max": 0.7903783079308919,
+  "veredicto": "CUMPLE"
+}

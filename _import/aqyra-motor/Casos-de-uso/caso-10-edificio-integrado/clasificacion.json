@@ -1,0 +1,148 @@
+{
+  "ifc": "/sessions/serene-optimistic-pasteur/mnt/Estrucutrando/Casos-de-uso/caso-10-edificio-integrado/caso-10.ifc",
+  "n_barras": 5,
+  "n_superficies": 3,
+  "asociaciones": {
+    "mixta": {
+      "MIX_viga": "MIX_losa"
+    },
+    "pilar_zapata": {
+      "ZAP_pilar": "ZAPATA_aislada"
+    }
+  },
+  "elementos": [
+    {
+      "elemento": "PORT_pilar_1",
+      "tipo": "barra",
+      "clase": "pilar EC3",
+      "modulo": "barras",
+      "run_all": "barras/run_all.py",
+      "subsistema": "portico"
+    },
+    {
+      "elemento": "PORT_dintel",
+      "tipo": "barra",
+      "clase": "viga/dintel EC3",
+      "modulo": "barras",
+      "run_all": "barras/run_all.py",
+      "subsistema": "portico"
+    },
+    {
+      "elemento": "PORT_pilar_2",
+      "tipo": "barra",
+      "clase": "pilar EC3",
+      "modulo": "barras",
+      "run_all": "barras/run_all.py",
+      "subsistema": "portico"
+    },
+    {
+      "elemento": "MIX_viga",
+      "tipo": "barra",
+      "clase": "viga mixta EC4",
+      "modulo": "mixtas",
+      "run_all": "mixtas/run_all_mixta.py",
+      "subsistema": "mixta_MIX_viga",
+      "asociado_a": "MIX_losa"
+    },
+    {
+      "elemento": "MIX_losa",
+      "tipo": "superficie",
+      "clase": "losa colaborante EC4",
+      "modulo": "mixtas",
+      "run_all": "mixtas/run_all_mixta.py",
+      "subsistema": "mixta_MIX_viga",
+      "asociado_a": "MIX_viga"
+    },
+    {
+      "elemento": "MURO_carga",
+      "tipo": "superficie",
+      "clase": "muro de carga EC2",
+      "modulo": "laminas",
+      "run_all": "laminas/run_all_muro.py",
+      "subsistema": "muro_MURO_carga"
+    },
+    {
+      "elemento": "ZAP_pilar",
+      "tipo": "barra",
+      "clase": "pilar->cimiento (EC2)",
+      "modulo": "cimentaciones",
+      "run_all": "cimentaciones/run_all_zapata.py",
+      "subsistema": "cimentacion_ZAPATA_aislada",
+      "asociado_a": "ZAPATA_aislada"
+    },
+    {
+      "elemento": "ZAPATA_aislada",
+      "tipo": "superficie",
+      "clase": "zapata EC2+EC7",
+      "modulo": "cimentaciones",
+      "run_all": "cimentaciones/run_all_zapata.py",
+      "subsistema": "cimentacion_ZAPATA_aislada"
+    }
+  ],
+  "subsistemas": [
+    {
+      "id": "portico",
+      "modulo": "barras",
+      "run_all": "barras/run_all.py",
+      "curves": [
+        "PORT_pilar_1",
+        "PORT_dintel",
+        "PORT_pilar_2"
+      ],
+      "surfaces": [],
+      "actions": [
+        "PORT_G",
+        "PORT_Q"
+      ],
+      "descripcion": "Portico de acero (EC3)"
+    },
+    {
+      "id": "mixta_MIX_viga",
+      "modulo": "mixtas",
+      "run_all": "mixtas/run_all_mixta.py",
+      "curves": [
+        "MIX_viga"
+      ],
+      "surfaces": [
+        "MIX_losa"
+      ],
+      "actions": [
+        "MIX_Ghormigon_construccion",
+        "MIX_Qejecucion_construccion",
+        "MIX_G2_mixta",
+        "MIX_Quso_mixta"
+      ],
+      "descripcion": "Forjado mixto / viga mixta (EC4)"
+    },
+    {
+      "id": "muro_MURO_carga",
+      "modulo": "laminas",
+      "run_all": "laminas/run_all_muro.py",
+      "curves": [],
+      "surfaces": [
+        "MURO_carga"
+      ],
+      "actions": [
+        "MURO_N_G",
+        "MURO_N_Q"
+      ],
+      "descripcion": "Muro de carga / nucleo (EC2 esbeltez)"
+    },
+    {
+      "id": "cimentacion_ZAPATA_aislada",
+      "modulo": "cimentaciones",
+      "run_all": "cimentaciones/run_all_zapata.py",
+      "curves": [
+        "ZAP_pilar"
+      ],
+      "surfaces": [
+        "ZAPATA_aislada"
+      ],
+      "actions": [
+        "ZAP_N_G",
+        "ZAP_N_Q"
+      ],
+      "descripcion": "Cimentacion superficial: pilar->zapata (EC2+EC7)"
+    }
+  ]
+}

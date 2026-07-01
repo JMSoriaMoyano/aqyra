@@ -1,0 +1,6 @@
+{"nombre":"LOSA_PUE02",
+ "tablero":{"L":14.0,"B":9.0,"t":0.70,"nx":14,"ny":9,"g2_N_m2":3000.0,"posiciones":15,"n_carriles":2,
+   "material":{"E":34e9,"nu":0.2,"rho":2500.0,"G":14.2e9,"fck":40e6},"fck_transferencia":28e6,
+   "viga_borde":{"A":0.42,"Iy":0.038,"Iz":0.012,"J":0.02}},
+ "postesado":{"P0_x_N_m":1.10e6,"P0_y_N_m":0.25e6,"a_x":0.45,"a_y":0.18,
+   "Ap_x_m2_m":8.0e-4,"fpk":1860e6,"perdidas_pct":18.0,"d_p":0.60,"d_s":0.62,"As_pas_x_m2_m":1.3e-3}}

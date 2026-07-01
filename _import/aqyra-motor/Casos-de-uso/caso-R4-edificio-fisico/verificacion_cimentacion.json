@@ -1,0 +1,164 @@
+{
+  "info": {
+    "B": 2.5500000000000003,
+    "L": 2.5500000000000003,
+    "espesor": 0.6,
+    "material": "C30/37",
+    "c_pilar": 0.4,
+    "ks": 40000000.0,
+    "Rd": 250000.0,
+    "xp": 40.0,
+    "yp": 0.0,
+    "x0": 38.725,
+    "y0": -1.2750000000000001,
+    "area": 6.502500000000001,
+    "rho": 2500.0,
+    "W_pp_kN": 95.68428750000004,
+    "incluye_pp": true,
+    "N_cabeza_kN": {
+      "ELU": 1320.0,
+      "ELU_G": 945.0000000000001,
+      "ELS_car": 950.0,
+      "ELS_cp": 775.0
+    },
+    "ks_reconstruido_N_m3": 40000000.0,
+    "ks_dato_N_m3": 40000000.0
+  },
+  "equilibrio": {
+    "aplicada_ELU_kN": 1449.1737881249999,
+    "reaccion_suelo_ELU_kN": 1449.1737881251008,
+    "N_cabeza_ELU_kN": 1320.0,
+    "pp_ELU_kN": 129.17378812500004,
+    "error_pct": 6.9567687138866186e-12
+  },
+  "via": "ortodoxo",
+  "autodiagnostico_placa": {
+    "valido": true,
+    "checks": {
+      "flecha (mm)": [
+        1.1831120156861759,
+        1.1545624999999997,
+        0.024727561900006426
+      ],
+      "M_max (kN·m/m)": [
+        12.030681878889032,
+        11.975,
+        0.0046498437485621965
+      ]
+    }
+  },
+  "geotecnia": {
+    "N_resultante_kN": 1449.1737881251008,
+    "e_x_m": 4.405364961712621e-13,
+    "e_y_m": 0.11592812496081846,
+    "e_m": 0.11592812496081846,
+    "e_lim_B6_m": 0.42500000000000004,
+    "ok_sin_despegue": true,
+    "p_med_kPa": 222.86409659747798,
+    "sigma_max_lineal_kPa": 283.6551950439027,
+    "sigma_min_lineal_kPa": 162.0729981510532,
+    "p_max_FE_kPa": 282.0418201847587,
+    "p_min_FE_kPa": 158.41484977176486,
+    "Bef_m": 2.549999999999119,
+    "Lef_m": 2.3181437500783635,
+    "sigma_ef_kPa": 245.15453207099605,
+    "Rd_kPa": 250.0,
+    "u_Rd": 0.9806181282839843,
+    "ok_Rd": true,
+    "p_max_kPa": 245.15453207099605
+  },
+  "flexion": {
+    "x": {
+      "m_Ed_kNm_m": 116.85726583076611,
+      "mu": 0.021118070564625436,
+      "mu_ok": true,
+      "As_req_cm2_m": 5.6774759486852995,
+      "As_min_cm2_m": 7.932079999999999,
+      "As_max_cm2_m": 240.0,
+      "As_dim_cm2_m": 7.932079999999999,
+      "armado": "φ12/125",
+      "As_prov_cm2_m": 9.047786842338605,
+      "ok": true
+    },
+    "y": {
+      "m_Ed_kNm_m": 142.1184755680829,
+      "mu": 0.024189225971882694,
+      "mu_ok": true,
+      "As_req_cm2_m": 6.700953132566435,
+      "As_min_cm2_m": 8.173359999999999,
+      "As_max_cm2_m": 240.0,
+      "As_dim_cm2_m": 8.173359999999999,
+      "armado": "φ12/125",
+      "As_prov_cm2_m": 9.047786842338605,
+      "ok": true
+    },
+    "d_out_mm": 541.9999999999999,
+    "d_in_mm": 525.9999999999999,
+    "gobierna": "y"
+  },
+  "punzonamiento": {
+    "V_Ed_kN": 213.21456483524386,
+    "V_Ed_red_kN": 213.21456483524386,
+    "V_Ed_bruta_kN": 213.21456483524386,
+    "V_p_kN": 0.0,
+    "sigma_cp_MPa": 0.0,
+    "vRdc_base_MPa": 0.3923486941566036,
+    "k1": 0.1,
+    "posicion": "interior",
+    "beta": 1.15,
+    "u0_m": 1.6,
+    "u1_m": 8.310441908067798,
+    "d_mm": 533.9999999999999,
+    "k": 1.6119900613621048,
+    "rho_l": 0.0016943421053068552,
+    "vEd_u1_MPa": 0.05525216926809688,
+    "vRdc_MPa": 0.3923486941566036,
+    "u_vRdc": 0.1408241446728081,
+    "vEd_u0_MPa": 0.28698121437328,
+    "vRdmax_MPa": 5.28,
+    "u_vRdmax": 0.05435250272221212,
+    "ok_vRdc": true,
+    "ok_vRdmax": true,
+    "requiere_armadura": false,
+    "ok": true,
+    "V_Ed_neto_kN": 213.21456483524386,
+    "N_pilar_ELU_kN": 1320.0
+  },
+  "cortante": {
+    "V_Ed_kN_m": 110.1412923992598,
+    "vRdc_MPa": 0.3906947832769207,
+    "VRdc_kN_m": 211.75657253609097,
+    "u": 0.5201316354914449,
+    "ok": true,
+    "d_mm": 541.9999999999999
+  },
+  "fisuracion": {
+    "M_qp_kNm_m": 82.44289917777849,
+    "sigma_s_MPa": 186.79665685746377,
+    "rho_p_eff": 0.0062398529947162735,
+    "hc_ef_mm": 145.00000000000014,
+    "eps_sm_cm": 0.0005603899705723913,
+    "sr_max_mm": 496.930778934602,
+    "wk_mm": 0.2784750245836771,
+    "wmax_mm": 0.3,
+    "u": 0.9282500819455906,
+    "ok": true,
+    "direccion": "y",
+    "phi_disp_mm": 12
+  },
+  "asiento": {
+    "s_max_mm": 5.076880443123537,
+    "combinacion": "ELS_car"
+  },
+  "veredicto": "CUMPLE",
+  "predimensionado_zapata": {
+    "B_modelo_m": 2.5,
+    "L_modelo_m": 2.5,
+    "ampliada": true,
+    "sigma_ef_modelo_analitico_kPa": 255.2,
+    "u_Rd_modelo_analitico": 1.021,
+    "B_adoptado_m": 2.5500000000000003,
+    "L_adoptado_m": 2.5500000000000003,
+    "motivo": "hundimiento area eficaz > R_d con 2.50 m (u=1.02)"
+  }
+}

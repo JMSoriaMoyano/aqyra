@@ -1,0 +1,18 @@
+{
+  "veredicto": "CUMPLE",
+  "balance_global_pct": 0.0,
+  "residuo_nudo_max_pct": 0.0,
+  "cierre_lazo_max_kPa": 0.0,
+  "presion_fuente_requerida_kPa": -40.45,
+  "presion_fuente_disponible_kPa": 0.0,
+  "velocidad_pico_m_s": 1.0298,
+  "errores": [],
+  "avisos": [],
+  "info": [
+    "Residuo maximo de continuidad por nudo: 0.0000 % (con caudal con signo)",
+    "Balance global de caudales: cabecera 24.8018 l/s vs demanda 24.8018 l/s (residuo 0.0000 %)",
+    "Cierre de perdida por lazo: 1 lazo(s), residuo max 0.000000 kPa (Hardy-Cross, converge)",
+    "Presiones y velocidades dentro de limites (segun solver).",
+    "Presion fuente: disponible 0.0 / requerida -40.45 kPa (margen 40.45)"
+  ]
+}

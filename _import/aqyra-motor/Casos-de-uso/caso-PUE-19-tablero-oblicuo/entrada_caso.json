@@ -1,0 +1,3 @@
+{"nombre":"PUE19_OBLICUO","oblicuo":{"L":18.0,"B":10.0,"esviaje_deg":30.0,"t":0.80,
+"nx":16,"ny":12,"n_carriles":2,"g2_N_m2":3000.0,"recubrimiento":0.04,
+"material":{"E":3.3e10,"nu":0.2,"rho":2500.0,"fck":35e6,"fyk":500e6}}}

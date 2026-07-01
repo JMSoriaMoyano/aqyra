@@ -1,0 +1,123 @@
+{
+  "caudales": [
+    {
+      "cuenca": "C-plataforma",
+      "tipo_elemento": "plataforma",
+      "periodo_retorno_anos": 25.0,
+      "area_km2": 0.0096,
+      "longitud_km": 0.4,
+      "pendiente_m_m": 0.02,
+      "pd_mm": 80.0,
+      "i1_id": 9.0,
+      "po_mm": 1.0,
+      "tc_h": 0.3144,
+      "intensidad_mm_h": 55.05,
+      "coef_escorrentia": 0.9826,
+      "factor_reductor_KA": 1.0,
+      "coef_uniformidad_Kt": 1.0165,
+      "caudal_m3_s": 0.1466,
+      "metodo": "Racional modificado 5.2-IC (Temez)",
+      "nota": "Predimensionado 5.2-IC. Pd/I1Id/Po regionales; cuenca del GIS/Pset si existe. NDP [confirmar AN]."
+    },
+    {
+      "cuenca": "C-vertiente",
+      "tipo_elemento": "odt",
+      "periodo_retorno_anos": 100.0,
+      "area_km2": 0.85,
+      "longitud_km": 1.6,
+      "pendiente_m_m": 0.035,
+      "pd_mm": 95.0,
+      "i1_id": 10.0,
+      "po_mm": 18.0,
+      "tc_h": 0.8107,
+      "intensidad_mm_h": 44.67,
+      "coef_escorrentia": 0.4565,
+      "factor_reductor_KA": 1.0,
+      "coef_uniformidad_Kt": 1.0521,
+      "caudal_m3_s": 5.0659,
+      "metodo": "Racional modificado 5.2-IC (Temez)",
+      "nota": "Predimensionado 5.2-IC. Pd/I1Id/Po regionales; cuenca del GIS/Pset si existe. NDP [confirmar AN]."
+    }
+  ],
+  "cunetas": [
+    {
+      "id": "CUN-MD",
+      "tipo": "triangular",
+      "seccion": {
+        "b_m": 0.0,
+        "z1": 3.0,
+        "z2": 3.0,
+        "profundidad_m": 0.3
+      },
+      "n_manning": 0.015,
+      "pendiente_long_m_m": 0.02,
+      "revestimiento": "hormigon",
+      "Q_calculo_m3_s": 0.1466,
+      "capacidad_total_m3_s": 0.6938,
+      "capacidad_util_m3_s": 0.4267,
+      "calado_normal_m": 0.1675,
+      "resguardo_min_m": 0.05,
+      "resguardo_real_m": 0.1325,
+      "velocidad_m_s": 1.742,
+      "velocidad_adm_m_s": [
+        0.5,
+        6.0
+      ],
+      "veredicto": "CUMPLE",
+      "errores": [],
+      "info": [
+        "Capacidad util (con resguardo 0.05 m) 0.427 m3/s >= Q 0.147 m3/s",
+        "Calado normal 0.167 m (profundidad 0.30 m, resguardo real 0.133 m)",
+        "Velocidad 1.74 m/s en rango [0.50, 6.00] m/s."
+      ],
+      "norma": "5.2-IC"
+    }
+  ],
+  "odt": [
+    {
+      "id": "ODT-1",
+      "seccion": {
+        "tipo": "circular",
+        "D_m": 1.8
+      },
+      "material": "hormigon",
+      "n_manning": 0.013,
+      "pendiente_long_m_m": 0.015,
+      "Q_cuenca_m3_s": 5.0659,
+      "capacidad_m3_s": 7.5914,
+      "control_gobernante": "entrada (embocadura/orificio)",
+      "capacidad_salida_m3_s": 12.8375,
+      "capacidad_entrada_m3_s": 7.5914,
+      "dimension_libre_m": 1.8,
+      "dimension_min_m": 1.8,
+      "velocidad_m_s": 5.08,
+      "velocidad_adm_m_s": [
+        0.5,
+        6.0
+      ],
+      "veredicto": "CUMPLE",
+      "errores": [],
+      "info": [
+        "Capacidad 7.591 m3/s (control de entrada (embocadura/orificio)) >= Q cuenca 5.066 m3/s",
+        "Control de salida 12.838 m3/s vs control de entrada 7.591 m3/s (gobierna el menor).",
+        "Dimension libre 1.80 m >= minima 1.80 m.",
+        "Velocidad 5.08 m/s en rango [0.50, 6.00] m/s."
+      ],
+      "norma": "5.2-IC"
+    }
+  ],
+  "verificacion": {
+    "veredicto": "CUMPLE",
+    "n_cunetas": 1,
+    "n_cunetas_no_cumple": 0,
+    "n_odt": 1,
+    "n_odt_no_cumple": 0,
+    "errores": [],
+    "info": [
+      "Cuneta CUN-MD CUMPLE (Q 0.147 / cap. util 0.427 m3/s).",
+      "ODT ODT-1 CUMPLE (Q 5.066 / cap. 7.591 m3/s, control de entrada (embocadura/orificio)).",
+      "Gancho 'drenaje' relleno: 2 cuenca(s), 1 cuneta(s), 1 ODT."
+    ],
+    "norma": "5.2-IC"
+  }
+}

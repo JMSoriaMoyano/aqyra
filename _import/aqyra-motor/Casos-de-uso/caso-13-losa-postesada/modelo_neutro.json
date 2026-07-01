@@ -1,0 +1,125 @@
+{
+  "materiales": {
+    "C40/50": {
+      "E": 35000000000.0,
+      "G": 14583333333.333334,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 40000000.0,
+      "fctm": 3500000.0
+    }
+  },
+  "pilares": [
+    {
+      "nombre": "P1",
+      "x": 0.0,
+      "y": 0.0,
+      "lado": 0.45,
+      "posicion": "corner"
+    },
+    {
+      "nombre": "P2",
+      "x": 8.0,
+      "y": 0.0,
+      "lado": 0.45,
+      "posicion": "edge"
+    },
+    {
+      "nombre": "P3",
+      "x": 16.0,
+      "y": 0.0,
+      "lado": 0.45,
+      "posicion": "corner"
+    },
+    {
+      "nombre": "P4",
+      "x": 0.0,
+      "y": 8.0,
+      "lado": 0.45,
+      "posicion": "edge"
+    },
+    {
+      "nombre": "P5",
+      "x": 8.0,
+      "y": 8.0,
+      "lado": 0.45,
+      "posicion": "interior"
+    },
+    {
+      "nombre": "P6",
+      "x": 16.0,
+      "y": 8.0,
+      "lado": 0.45,
+      "posicion": "edge"
+    },
+    {
+      "nombre": "P7",
+      "x": 0.0,
+      "y": 16.0,
+      "lado": 0.45,
+      "posicion": "corner"
+    },
+    {
+      "nombre": "P8",
+      "x": 8.0,
+      "y": 16.0,
+      "lado": 0.45,
+      "posicion": "edge"
+    },
+    {
+      "nombre": "P9",
+      "x": 16.0,
+      "y": 16.0,
+      "lado": 0.45,
+      "posicion": "corner"
+    }
+  ],
+  "superficie": {
+    "espesor": 0.25,
+    "malla": 1.0,
+    "material": "C40/50",
+    "cargas": [
+      {
+        "caso": "G",
+        "qz": -2750.0
+      },
+      {
+        "caso": "Q",
+        "qz": -5000.0
+      }
+    ],
+    "incluye_pp": false
+  },
+  "pretensado": {
+    "Norma": "EC2 (EN 1992-1-1) 5.10 + 6.4.4",
+    "Sistema": "postesado_no_adherente_monotoron",
+    "tipo_cordon": "Y1860S7 0.6\"",
+    "Ap_cordon_mm2": 150.0,
+    "fpk_MPa": 1860.0,
+    "fp01k_MPa": 1640.0,
+    "Ep_GPa": 195.0,
+    "trazado": "parabolico",
+    "drape_m": 0.17,
+    "recubrimiento_eje_m": 0.04,
+    "layout": "banded_X + distribuido_Y",
+    "P_m_X_kN": 212.0,
+    "n_cordones_m_X": 1.27,
+    "ancho_banda_X_m": 1.2,
+    "P_m_Y_kN": 212.0,
+    "n_cordones_m_Y": 1.27,
+    "sep_distribuido_Y_m": 0.8,
+    "P0_m_kN": 255.0,
+    "sigma_p0_MPa": 1339.0,
+    "Pm_inf_m_kN": 212.0,
+    "sigma_pm_inf_MPa": 1116.0,
+    "sigma_cp_MPa": 0.85,
+    "w_balance_kN_m2": 9.0,
+    "mu_rozamiento": 0.06,
+    "k_desviacion": 0.005,
+    "penetracion_cuna_mm": 6.0,
+    "relajacion_clase": 2,
+    "rho1000_pct": 2.5,
+    "tesado": "un_extremo"
+  }
+}

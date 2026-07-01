@@ -1,0 +1,73 @@
+{
+  "veredicto": "CUMPLE",
+  "bases": {
+    "imdp_veh_pesados_dia": 480.0,
+    "categoria_trafico": "T2",
+    "ev2_mpa": 150.0,
+    "categoria_explanada": "E2",
+    "fuente_explanada": "Ev2",
+    "nota": "Predimensionado 6.1-IC; categoria de explanada definitiva segun la FORMACION (fig.1). NDP [confirmar AN]."
+  },
+  "seccion": {
+    "codigo": "221",
+    "paquete": [
+      {
+        "capa": "Mezcla bituminosa",
+        "material": "MB",
+        "espesor_cm": 18
+      },
+      {
+        "capa": "Zahorra artificial",
+        "material": "ZA",
+        "espesor_cm": 30
+      }
+    ],
+    "espesor_total_cm": 48,
+    "tipo_firme": "flexible (MB sobre zahorra artificial)"
+  },
+  "firme": {
+    "categoria_trafico": "T2",
+    "explanada": "E2",
+    "codigo_seccion": "221",
+    "tipo_firme": "flexible (MB sobre zahorra artificial)",
+    "paquete": [
+      {
+        "capa": "Mezcla bituminosa",
+        "material": "MB",
+        "espesor_cm": 18
+      },
+      {
+        "capa": "Zahorra artificial",
+        "material": "ZA",
+        "espesor_cm": 30
+      }
+    ],
+    "espesor_total_cm": 48,
+    "imdp_veh_pesados_dia": 480.0,
+    "ev2_mpa": 150.0,
+    "norma": "6.1-IC",
+    "nota": "Predimensionado 6.1-IC (catalogo). NDP [confirmar AN]."
+  },
+  "secciones_tipo": {
+    "plataforma": {
+      "calzada_m": 7.0,
+      "arcen_ext_m": 1.5,
+      "arcen_int_m": 0.5,
+      "n_carriles": 2
+    },
+    "peralte_max_pct": 7.0,
+    "nota": "Seccion tipo basica (anchos por defecto). NDP [confirmar AN]."
+  },
+  "verificacion": {
+    "veredicto": "CUMPLE",
+    "categoria_trafico": "T2",
+    "categoria_explanada": "E2",
+    "errores": [],
+    "info": [
+      "Combinacion T2 x E2 permitida; permitidas=['E1', 'E2', 'E3']",
+      "Gancho 'firme' relleno: codigo 221, espesor total 48 cm",
+      "Espesor MB 18 cm >= minimo 18 cm (T2).",
+      "Gancho 'secciones_tipo' relleno (plataforma basica)."
+    ]
+  }
+}

@@ -1,0 +1,459 @@
+{
+  "nombre_tablero": "TABLERO_PUE01",
+  "tablero": {
+    "L": 25.0,
+    "n_vigas": 4,
+    "sep": 2.5,
+    "voladizo": 1.25,
+    "ne": 20,
+    "n_riostras": 3,
+    "g2_N_m2": 3000.0,
+    "alpha_termico": 1e-05,
+    "dT_uniforme": 15.0,
+    "dT_gradiente": 10.0,
+    "q_viento_N_m": 3000.0,
+    "posiciones": 41,
+    "material": {
+      "E": 34000000000.0,
+      "G": 14200000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fck": 45000000.0,
+      "fctm": 3800000.0
+    },
+    "fck_transferencia": 32000000.0,
+    "viga_sec": {
+      "A": 0.7,
+      "Iy": 0.22,
+      "Iz": 0.03,
+      "J": 0.01,
+      "h": 1.5,
+      "c_sup": 0.7,
+      "c_inf": 0.8,
+      "bw": 0.24
+    },
+    "riostra_sec": {
+      "A": 0.2,
+      "Iy": 0.01,
+      "Iz": 0.005,
+      "J": 0.002
+    }
+  },
+  "tendon": {
+    "P0": 5200000.0,
+    "Ap": 0.0042,
+    "e_centro": 0.55,
+    "e_apoyo": 0.0,
+    "A": 0.7,
+    "Ic": 0.22,
+    "zcp": 0.55,
+    "M_g_qp": 1500000.0,
+    "fpk": 1860000000.0,
+    "Ep": 195000000000.0,
+    "Ecm": 34000000000.0,
+    "mu": 0.19,
+    "k": 0.0075,
+    "slip": 0.006,
+    "phi": 2.0,
+    "eps_cs": 0.0003,
+    "rho1000": 0.025,
+    "n_tendones": 1,
+    "rho_l": 0.012
+  },
+  "permanentes": {
+    "g1_N_m_viga": 17167.5,
+    "g2_N_m_viga": 6562.5,
+    "ancho_total_m": 8.75
+  },
+  "perdidas": {
+    "sigma_p0_Pa": 1238095238.0952382,
+    "P0_N": 5200000.0,
+    "dfric_Pa": 42024738.07299036,
+    "dwedge_Pa": 46800000.0,
+    "delastico_Pa": 28053216.57152329,
+    "Pmi_N": 4709112.590493043,
+    "drelaj_Pa": 284132.0396577137,
+    "ddiferida_Pa": 145408475.1273828,
+    "sigma_pinf_Pa": 975808808.3233418,
+    "P_inf_N": 4098396.9949580356,
+    "perdidas_totales_pct": 21.18467317388393,
+    "w_p_N_m": 28852.71484450457,
+    "cargas_equivalentes": {
+      "w_p_N_m": 28852.71484450457,
+      "N_axil_N": 4098396.9949580356,
+      "M_anclaje_Nm": 0.0,
+      "flecha_f_m": 0.55,
+      "formula": "w_p = 8*P*f/L^2 (hacia arriba)"
+    }
+  },
+  "termica": {
+    "dT_uniforme": 15.0,
+    "dT_gradiente": 10.0,
+    "alpha": 1e-05
+  },
+  "carriles": [
+    {
+      "id": "carril1",
+      "viga": 2
+    },
+    {
+      "id": "carril2",
+      "viga": 1
+    }
+  ],
+  "f1_Hz": 2.2399746397405575,
+  "modal": {
+    "frecuencias_Hz": [
+      2.2399746397405575,
+      3.336506612531295,
+      3.533584290252993,
+      4.147596433098372
+    ]
+  },
+  "vigas": [
+    {
+      "viga": 0,
+      "nombre": "VIGA_0",
+      "M_perm": 1853906.249998629,
+      "M_lm1_max": 1363023.2648144886,
+      "M_Ed_ELU": 4342854.84499771,
+      "V_Ed_ELU": 546143.9943611189,
+      "M_Rd_Nm": 8253547.826086958,
+      "V_Rdc_N": 1773791.4982044552,
+      "aprov_flexion": 0.5261803695219727,
+      "aprov_max": 0.674554205560065,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -12951440.746753247,
+          "limite": -19200000.0,
+          "aprov": 0.674554205560065,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 0.0,
+          "limite": 3800000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -8918342.928623408,
+          "limite": -27000000.0,
+          "aprov": 0.3303089973564225,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 0.0,
+          "limite": 3800000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU",
+          "valor": 4342854.84499771,
+          "limite": 8253547.826086958,
+          "aprov": 0.5261803695219727,
+          "cumple": true
+        },
+        {
+          "nombre": "cortante_biela_ELU",
+          "valor": 546143.9943611189,
+          "limite": 1773791.4982044552,
+          "aprov": 0.3078963874355924,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup": -2596060.7751623383,
+        "transfer_inf": -12951440.746753247,
+        "servicio_sup": -8918342.928623408,
+        "servicio_inf": -2353721.3314447855
+      }
+    },
+    {
+      "viga": 1,
+      "nombre": "VIGA_1",
+      "M_perm": 1853906.249998808,
+      "M_lm1_max": 2558111.523124101,
+      "M_Ed_ELU": 5956223.993715927,
+      "V_Ed_ELU": 1106474.768658998,
+      "M_Rd_Nm": 8253547.826086958,
+      "V_Rdc_N": 1773791.4982044552,
+      "aprov_flexion": 0.7216562040011584,
+      "aprov_max": 0.7216562040011584,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -12951440.746753247,
+          "limite": -19200000.0,
+          "aprov": 0.674554205560065,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 0.0,
+          "limite": 3800000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -12720896.477790926,
+          "limite": -27000000.0,
+          "aprov": 0.4711443139922565,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 1992054.1533180913,
+          "limite": 3800000.0,
+          "aprov": 0.5242247771889714,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU",
+          "valor": 5956223.993715927,
+          "limite": 8253547.826086958,
+          "aprov": 0.7216562040011584,
+          "cumple": true
+        },
+        {
+          "nombre": "cortante_biela_ELU",
+          "valor": 1106474.768658998,
+          "limite": 1773791.4982044552,
+          "aprov": 0.6237907723534825,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup": -2596060.7751623383,
+        "transfer_inf": -12951440.746753247,
+        "servicio_sup": -12720896.477790926,
+        "servicio_inf": 1992054.1533180913
+      }
+    },
+    {
+      "viga": 2,
+      "nombre": "VIGA_2",
+      "M_perm": 1853906.249999106,
+      "M_lm1_max": 2558308.227543327,
+      "M_Ed_ELU": 5956489.544682285,
+      "V_Ed_ELU": 1441361.9638246496,
+      "M_Rd_Nm": 8253547.826086958,
+      "V_Rdc_N": 1773791.4982044552,
+      "aprov_flexion": 0.7216883781609201,
+      "aprov_max": 0.8125881566597246,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -12951440.746753247,
+          "limite": -19200000.0,
+          "aprov": 0.674554205560065,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 0.0,
+          "limite": 3800000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -12721522.35548941,
+          "limite": -27000000.0,
+          "aprov": 0.4711674946477559,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 1992769.442116362,
+          "limite": 3800000.0,
+          "aprov": 0.5244130110832532,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU",
+          "valor": 5956489.544682285,
+          "limite": 8253547.826086958,
+          "aprov": 0.7216883781609201,
+          "cumple": true
+        },
+        {
+          "nombre": "cortante_biela_ELU",
+          "valor": 1441361.9638246496,
+          "limite": 1773791.4982044552,
+          "aprov": 0.8125881566597246,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup": -2596060.7751623383,
+        "transfer_inf": -12951440.746753247,
+        "servicio_sup": -12721522.35548941,
+        "servicio_inf": 1992769.442116362
+      }
+    },
+    {
+      "viga": 3,
+      "nombre": "VIGA_3",
+      "M_perm": 1853906.249999702,
+      "M_lm1_max": 2167535.411812991,
+      "M_Ed_ELU": 5428946.243447136,
+      "V_Ed_ELU": 633292.8458667991,
+      "M_Rd_Nm": 8253547.826086958,
+      "V_Rdc_N": 1773791.4982044552,
+      "aprov_flexion": 0.6577712224902709,
+      "aprov_max": 0.674554205560065,
+      "veredicto": "CUMPLE",
+      "checks": [
+        {
+          "nombre": "transfer_comp_inf",
+          "valor": -12951440.746753247,
+          "limite": -19200000.0,
+          "aprov": 0.674554205560065,
+          "cumple": true
+        },
+        {
+          "nombre": "transfer_tracc_sup",
+          "valor": 0.0,
+          "limite": 3800000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -11478154.30544024,
+          "limite": -27000000.0,
+          "aprov": 0.4251168261274163,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 571777.3849173058,
+          "limite": 3800000.0,
+          "aprov": 0.1504677328729752,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU",
+          "valor": 5428946.243447136,
+          "limite": 8253547.826086958,
+          "aprov": 0.6577712224902709,
+          "cumple": true
+        },
+        {
+          "nombre": "cortante_biela_ELU",
+          "valor": 633292.8458667991,
+          "limite": 1773791.4982044552,
+          "aprov": 0.35702778286391523,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "transfer_sup": -2596060.7751623383,
+        "transfer_inf": -12951440.746753247,
+        "servicio_sup": -11478154.30544024,
+        "servicio_inf": 571777.3849173058
+      }
+    }
+  ],
+  "viga_critica": 2,
+  "aprovechamiento_max": 0.8125881566597246,
+  "veredicto_global": "CUMPLE",
+  "mapping_writeback": {
+    "elementos": {
+      "VIGA_0": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "M_perm_kNm": 1853.9,
+          "M_LM1_max_kNm": 1363.0,
+          "M_Ed_ELU_kNm": 4342.9,
+          "V_Ed_ELU_kN": 546.1,
+          "M_Rd_kNm": 8253.5,
+          "Aprovechamiento_flexion": 0.526,
+          "Aprovechamiento_max": 0.675,
+          "Veredicto": "CUMPLE"
+        }
+      },
+      "VIGA_1": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "M_perm_kNm": 1853.9,
+          "M_LM1_max_kNm": 2558.1,
+          "M_Ed_ELU_kNm": 5956.2,
+          "V_Ed_ELU_kN": 1106.5,
+          "M_Rd_kNm": 8253.5,
+          "Aprovechamiento_flexion": 0.722,
+          "Aprovechamiento_max": 0.722,
+          "Veredicto": "CUMPLE"
+        }
+      },
+      "VIGA_2": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "M_perm_kNm": 1853.9,
+          "M_LM1_max_kNm": 2558.3,
+          "M_Ed_ELU_kNm": 5956.5,
+          "V_Ed_ELU_kN": 1441.4,
+          "M_Rd_kNm": 8253.5,
+          "Aprovechamiento_flexion": 0.722,
+          "Aprovechamiento_max": 0.813,
+          "Veredicto": "CUMPLE"
+        }
+      },
+      "VIGA_3": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "M_perm_kNm": 1853.9,
+          "M_LM1_max_kNm": 2167.5,
+          "M_Ed_ELU_kNm": 5428.9,
+          "V_Ed_ELU_kN": 633.3,
+          "M_Rd_kNm": 8253.5,
+          "Aprovechamiento_flexion": 0.658,
+          "Aprovechamiento_max": 0.675,
+          "Veredicto": "CUMPLE"
+        }
+      },
+      "TABLERO_PUE01": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Perdidas_pretensado_pct": 21.2,
+          "P0_kN": 5200.0,
+          "P_inf_kN": 4098.0,
+          "Frecuencia_fundamental_Hz": 2.24,
+          "Veredicto_global": "CUMPLE"
+        }
+      }
+    }
+  }
+}

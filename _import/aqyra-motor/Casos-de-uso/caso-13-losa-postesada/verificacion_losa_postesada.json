@@ -1,0 +1,571 @@
+{
+  "caso": "13-losa-postesada",
+  "modelo_resumen": {
+    "t_m": 0.25,
+    "Lx_m": 8.0,
+    "Ly_m": 8.0,
+    "n_pilares": 9,
+    "material": "C40/50",
+    "fck_MPa": 40.0,
+    "fctm_MPa": 3.5,
+    "g0_kN_m2": 6.25,
+    "g2_kN_m2": 2.75,
+    "q_kN_m2": 5.0,
+    "permanente_kN_m2": 9.0
+  },
+  "pretensado": {
+    "Ap_cordon_mm2": 150.0,
+    "fpk_MPa": 1860.0,
+    "fp01k_MPa": 1640.0,
+    "Ep_GPa": 195.0,
+    "drape_m": 0.17,
+    "recubrimiento_eje_m": 0.04,
+    "Lx_m": 8.0,
+    "Ly_m": 8.0,
+    "P_m_X_N_m": 212000.0,
+    "P_m_Y_N_m": 212000.0,
+    "P0_m_X_N_m": 255000.0,
+    "P0_m_Y_N_m": 255000.0,
+    "sigma_p0_MPa": 1339.0,
+    "sigma_p0_frac_fpk": 0.7198924731182795,
+    "sigma_pm_inf_MPa": 1116.0,
+    "sigma_pm_inf_frac_fpk": 0.6,
+    "sigma_pmax_MPa": 1488.0,
+    "perdidas_totales_pct": 25.0,
+    "perdidas_transferencia_pct": 10.013440860215054,
+    "perdidas_diferidas_pct": 16.654219566840926,
+    "relajacion_MPa": 57.0608677160512,
+    "fck_t_Pa": 32000000.0,
+    "w_p0_N_m2": 10837.5,
+    "n_cordones_m_X": 1.27,
+    "layout": "banded_X + distribuido_Y"
+  },
+  "balance_2d": {
+    "w_px_N_m2": 4505.0,
+    "w_py_N_m2": 4505.0,
+    "w_p_N_m2": 9010.0,
+    "w_equilibrar_N_m2": 9000.0,
+    "residual_N_m2": -10.0,
+    "residual_pct": 0.1111111111111111,
+    "sigma_cp_x_Pa": 848000.0,
+    "sigma_cp_y_Pa": 848000.0,
+    "sigma_cp_Pa": 848000.0,
+    "P_x_para_equilibrar_N_m": 211764.70588235292,
+    "P_y_para_equilibrar_N_m": 211764.70588235292,
+    "w_p0_N_m2": 10837.5
+  },
+  "verificacion": {
+    "materiales": {
+      "fck_MPa": 40.0,
+      "fck_t_MPa": 32.0,
+      "fctm_MPa": 3.5,
+      "Ecm_GPa": 35.0,
+      "t_m": 0.25,
+      "I_m4_m": 0.0013020833333333333,
+      "W_m3_m": 0.010416666666666666
+    },
+    "tensiones_franja": {
+      "X_pilares": {
+        "transferencia": {
+          "sigma_sup_MPa": -4.296589203580926,
+          "sigma_inf_MPa": 2.2565892035809263,
+          "M_net_kNm_m": 34.13113753730131,
+          "u_compresion": 0.22378068768650658,
+          "lim_comp_MPa": 19.2,
+          "traccion_max_MPa": 2.2565892035809263,
+          "u_traccion_fctm": 0.6447397724516932,
+          "lim_tracc_MPa": 3.5,
+          "ok": true
+        },
+        "servicio_cuasiperm": {
+          "sigma_sup_MPa": -1.590340572108619,
+          "sigma_inf_MPa": -0.10565942789138108,
+          "M_net_kNm_m": 7.732714292798113,
+          "u_compresion": 0.08835225400603439,
+          "lim_comp_MPa": 18.0,
+          "traccion_max_MPa": 0.0,
+          "u_traccion_fctm": 0.0,
+          "lim_tracc_MPa": 3.5,
+          "ok": true
+        },
+        "servicio_rara": {
+          "sigma_sup_MPa": -3.334093593840282,
+          "sigma_inf_MPa": 1.6380935938402819,
+          "M_net_kNm_m": 25.896808269169604,
+          "u_compresion": 0.13892056641001174,
+          "lim_comp_MPa": 24.0,
+          "traccion_max_MPa": 1.6380935938402819,
+          "u_traccion_fctm": 0.4680267410972234,
+          "lim_tracc_MPa": 3.5,
+          "ok": true
+        }
+      },
+      "Y_central": {
+        "transferencia": {
+          "sigma_sup_MPa": -4.296589203580873,
+          "sigma_inf_MPa": 2.2565892035808726,
+          "M_net_kNm_m": 34.13113753730075,
+          "u_compresion": 0.2237806876865038,
+          "lim_comp_MPa": 19.2,
+          "traccion_max_MPa": 2.2565892035808726,
+          "u_traccion_fctm": 0.6447397724516779,
+          "lim_tracc_MPa": 3.5,
+          "ok": true
+        },
+        "servicio_cuasiperm": {
+          "sigma_sup_MPa": -1.5903405721086135,
+          "sigma_inf_MPa": -0.10565942789138644,
+          "M_net_kNm_m": 7.732714292798057,
+          "u_compresion": 0.08835225400603408,
+          "lim_comp_MPa": 18.0,
+          "traccion_max_MPa": 0.0,
+          "u_traccion_fctm": 0.0,
+          "lim_tracc_MPa": 3.5,
+          "ok": true
+        },
+        "servicio_rara": {
+          "sigma_sup_MPa": -3.334093593840241,
+          "sigma_inf_MPa": 1.638093593840241,
+          "M_net_kNm_m": 25.896808269169174,
+          "u_compresion": 0.13892056641001005,
+          "lim_comp_MPa": 24.0,
+          "traccion_max_MPa": 1.638093593840241,
+          "u_traccion_fctm": 0.4680267410972117,
+          "lim_tracc_MPa": 3.5,
+          "ok": true
+        }
+      }
+    },
+    "punzonamiento": {
+      "interior": {
+        "lado_mm": 450.0,
+        "V_Ed_sin_kN": 1257.6,
+        "A_trib_m2": 64.0,
+        "V_Ed_elastico_kN": 1937.1535341418848,
+        "V_p_kN": 14.440831560000001,
+        "area_control_m2": 1.602756,
+        "sin_pretensado": {
+          "V_Ed_kN": 1257.6,
+          "V_Ed_red_kN": 1257.6,
+          "V_Ed_bruta_kN": 1257.6,
+          "V_p_kN": 0.0,
+          "sigma_cp_MPa": 0.0,
+          "vRdc_base_MPa": 0.62147827577051,
+          "k1": 0.1,
+          "posicion": "interior",
+          "beta": 1.15,
+          "u0_m": 1.8,
+          "u1_m": 4.363539605329271,
+          "d_mm": 204.00000000000003,
+          "k": 1.9901475429766742,
+          "rho_l": 0.002769432145618104,
+          "vEd_u1_MPa": 1.6246928883256733,
+          "vRdc_MPa": 0.62147827577051,
+          "u_vRdc": 2.6142392287347067,
+          "vEd_u0_MPa": 3.9385620915032677,
+          "vRdmax_MPa": 6.72,
+          "u_vRdmax": 0.5860955493308434,
+          "ok_vRdc": false,
+          "ok_vRdmax": true,
+          "requiere_armadura": true,
+          "ok": false
+        },
+        "con_pretensado": {
+          "V_Ed_kN": 1243.15916844,
+          "V_Ed_red_kN": 1243.15916844,
+          "V_Ed_bruta_kN": 1257.6,
+          "V_p_kN": 14.440831560000001,
+          "sigma_cp_MPa": 0.848,
+          "vRdc_base_MPa": 0.62147827577051,
+          "k1": 0.1,
+          "posicion": "interior",
+          "beta": 1.15,
+          "u0_m": 1.8,
+          "u1_m": 4.363539605329271,
+          "d_mm": 204.00000000000003,
+          "k": 1.9901475429766742,
+          "rho_l": 0.002769432145618104,
+          "vEd_u1_MPa": 1.6060367843681023,
+          "vRdc_MPa": 0.70627827577051,
+          "u_vRdc": 2.2739433442378023,
+          "vEd_u0_MPa": 3.8933361756699343,
+          "vRdmax_MPa": 6.72,
+          "u_vRdmax": 0.5793655023318355,
+          "ok_vRdc": false,
+          "ok_vRdmax": true,
+          "requiere_armadura": true,
+          "ok": false
+        },
+        "dimensionado": {
+          "V_Ed_kN": 1243.15916844,
+          "posicion": "interior",
+          "beta": 1.15,
+          "h_actual_mm": 250,
+          "d_actual_mm": 204,
+          "u_actual_vRdc": 2.5842203130542813,
+          "canto_minimo": {
+            "h_min_mm": 470,
+            "incremento_mm": 220
+          },
+          "armadura": {
+            "asw_sr_mm2_m": 11.016879985766566,
+            "asw_sr_cm2_m": 110.16879985766568,
+            "u_out_m": 11.276347684908766,
+            "fywd_ef_MPa": 301.0,
+            "viable": true,
+            "nota": "armadura viable solo si vEd(u0) <= vRd,max"
+          },
+          "capitel": {
+            "lado_capitel_mm": 2178,
+            "ampliacion_mm": 1728
+          }
+        },
+        "requiere_refuerzo": true,
+        "resuelto_con_solucion": true,
+        "relajacion_pretensado_pct": 13.017013927283458
+      },
+      "edge": {
+        "lado_mm": 450.0,
+        "V_Ed_sin_kN": 628.8,
+        "A_trib_m2": 32.0,
+        "V_Ed_elastico_kN": 574.3226395807569,
+        "V_p_kN": 9.786914280000001,
+        "area_control_m2": 1.0862280000000002,
+        "sin_pretensado": {
+          "V_Ed_kN": 628.8,
+          "V_Ed_red_kN": 628.8,
+          "V_Ed_bruta_kN": 628.8,
+          "V_p_kN": 0.0,
+          "sigma_cp_MPa": 0.0,
+          "vRdc_base_MPa": 0.62147827577051,
+          "k1": 0.1,
+          "posicion": "edge",
+          "beta": 1.4,
+          "u0_m": 1.35,
+          "u1_m": 2.6317698026646354,
+          "d_mm": 204.00000000000003,
+          "k": 1.9901475429766742,
+          "rho_l": 0.002769432145618104,
+          "vEd_u1_MPa": 1.6396928459616318,
+          "vRdc_MPa": 0.62147827577051,
+          "u_vRdc": 2.6383751611087893,
+          "vEd_u0_MPa": 3.196514161220043,
+          "vRdmax_MPa": 6.72,
+          "u_vRdmax": 0.475671750181554,
+          "ok_vRdc": false,
+          "ok_vRdmax": true,
+          "requiere_armadura": true,
+          "ok": false
+        },
+        "con_pretensado": {
+          "V_Ed_kN": 619.0130857199999,
+          "V_Ed_red_kN": 619.0130857199999,
+          "V_Ed_bruta_kN": 628.8,
+          "V_p_kN": 9.786914280000001,
+          "sigma_cp_MPa": 0.848,
+          "vRdc_base_MPa": 0.62147827577051,
+          "k1": 0.1,
+          "posicion": "edge",
+          "beta": 1.4,
+          "u0_m": 1.35,
+          "u1_m": 2.6317698026646354,
+          "d_mm": 204.00000000000003,
+          "k": 1.9901475429766742,
+          "rho_l": 0.002769432145618104,
+          "vEd_u1_MPa": 1.6141719596242339,
+          "vRdc_MPa": 0.70627827577051,
+          "u_vRdc": 2.2854617153037347,
+          "vEd_u0_MPa": 3.1467622367755985,
+          "vRdmax_MPa": 6.72,
+          "u_vRdmax": 0.4682681899963688,
+          "ok_vRdc": false,
+          "ok_vRdmax": true,
+          "requiere_armadura": true,
+          "ok": false
+        },
+        "dimensionado": {
+          "V_Ed_kN": 619.0130857199999,
+          "posicion": "edge",
+          "beta": 1.4,
+          "h_actual_mm": 250,
+          "d_actual_mm": 204,
+          "u_actual_vRdc": 2.5973103526796337,
+          "canto_minimo": {
+            "h_min_mm": 490,
+            "incremento_mm": 240
+          },
+          "armadura": {
+            "asw_sr_mm2_m": 6.692000443540141,
+            "asw_sr_cm2_m": 66.92000443540141,
+            "u_out_m": 6.835522954330494,
+            "fywd_ef_MPa": 301.0,
+            "viable": true,
+            "nota": "armadura viable solo si vEd(u0) <= vRd,max"
+          },
+          "capitel": {
+            "lado_capitel_mm": 2552,
+            "ampliacion_mm": 2102
+          }
+        },
+        "requiere_refuerzo": true,
+        "resuelto_con_solucion": true,
+        "relajacion_pretensado_pct": 13.376166172544664
+      },
+      "corner": {
+        "lado_mm": 450.0,
+        "V_Ed_sin_kN": 314.4,
+        "A_trib_m2": 16.0,
+        "V_Ed_elastico_kN": 198.98897688368243,
+        "V_p_kN": 6.632837640000002,
+        "area_control_m2": 0.7361640000000002,
+        "sin_pretensado": {
+          "V_Ed_kN": 314.4,
+          "V_Ed_red_kN": 314.4,
+          "V_Ed_bruta_kN": 314.4,
+          "V_p_kN": 0.0,
+          "sigma_cp_MPa": 0.0,
+          "vRdc_base_MPa": 0.62147827577051,
+          "k1": 0.1,
+          "posicion": "corner",
+          "beta": 1.5,
+          "u0_m": 0.9,
+          "u1_m": 1.5408849013323178,
+          "d_mm": 204.00000000000003,
+          "k": 1.9901475429766742,
+          "rho_l": 0.002769432145618104,
+          "vEd_u1_MPa": 1.500283832934892,
+          "vRdc_MPa": 0.62147827577051,
+          "u_vRdc": 2.4140567601897867,
+          "vEd_u0_MPa": 2.568627450980392,
+          "vRdmax_MPa": 6.72,
+          "u_vRdmax": 0.3822362278244631,
+          "ok_vRdc": false,
+          "ok_vRdmax": true,
+          "requiere_armadura": true,
+          "ok": false
+        },
+        "con_pretensado": {
+          "V_Ed_kN": 307.76716236000004,
+          "V_Ed_red_kN": 307.76716236000004,
+          "V_Ed_bruta_kN": 314.4,
+          "V_p_kN": 6.632837640000002,
+          "sigma_cp_MPa": 0.848,
+          "vRdc_base_MPa": 0.62147827577051,
+          "k1": 0.1,
+          "posicion": "corner",
+          "beta": 1.5,
+          "u0_m": 0.9,
+          "u1_m": 1.5408849013323178,
+          "d_mm": 204.00000000000003,
+          "k": 1.9901475429766742,
+          "rho_l": 0.002769432145618104,
+          "vEd_u1_MPa": 1.4686326272167816,
+          "vRdc_MPa": 0.70627827577051,
+          "u_vRdc": 2.0793965744091247,
+          "vEd_u0_MPa": 2.514437600980392,
+          "vRdmax_MPa": 6.72,
+          "u_vRdmax": 0.3741722620506536,
+          "ok_vRdc": false,
+          "ok_vRdmax": true,
+          "requiere_armadura": true,
+          "ok": false
+        },
+        "dimensionado": {
+          "V_Ed_kN": 307.76716236000004,
+          "posicion": "corner",
+          "beta": 1.5,
+          "h_actual_mm": 250,
+          "d_actual_mm": 204,
+          "u_actual_vRdc": 2.363127858968148,
+          "canto_minimo": {
+            "h_min_mm": 480,
+            "incremento_mm": 230
+          },
+          "armadura": {
+            "asw_sr_mm2_m": 3.421426294909717,
+            "asw_sr_cm2_m": 34.21426294909717,
+            "u_out_m": 3.641308037801786,
+            "fywd_ef_MPa": 301.0,
+            "viable": true,
+            "nota": "armadura viable solo si vEd(u0) <= vRd,max"
+          },
+          "capitel": {
+            "lado_capitel_mm": 1500,
+            "ampliacion_mm": 1050
+          }
+        },
+        "requiere_refuerzo": true,
+        "resuelto_con_solucion": true,
+        "relajacion_pretensado_pct": 13.862979168491126
+      }
+    },
+    "ELU_flexion": {
+      "X_pilares": {
+        "Ap_cm2_m": 1.8996415770609318,
+        "As_min_cm2_m": 3.75,
+        "fpd_MPa": 1426.0869565217392,
+        "fyd_MPa": 434.7826086956522,
+        "d_p_m": 0.21,
+        "campo": {
+          "M_Rd_kNm_m": 87.92450980374748,
+          "x_m": 0.02034135402057036,
+          "x_d_ratio": 0.09686359057414458,
+          "Fp_kN_m": 270.90540751129816,
+          "Fs_kN_m": 163.04347826086956,
+          "T_kN_m": 433.9488857721677,
+          "M_Ed_kNm_m": 59.96415422296962,
+          "As_pasiva_cm2_m": 3.75,
+          "u": 0.6819958889371466,
+          "ok": true
+        },
+        "apoyo": {
+          "M_Rd_kNm_m": 135.68436399963332,
+          "x_m": 0.03206010402057034,
+          "x_d_ratio": 0.15266716200271593,
+          "Fp_kN_m": 270.90540751129816,
+          "Fs_kN_m": 413.0434782608692,
+          "T_kN_m": 683.9488857721674,
+          "M_Ed_kNm_m": 134.41242994383566,
+          "As_pasiva_cm2_m": 9.499999999999993,
+          "u": 0.9906257875387829,
+          "ok": true
+        }
+      },
+      "Y_central": {
+        "Ap_cm2_m": 1.8996415770609318,
+        "As_min_cm2_m": 3.75,
+        "fpd_MPa": 1426.0869565217392,
+        "fyd_MPa": 434.7826086956522,
+        "d_p_m": 0.21,
+        "campo": {
+          "M_Rd_kNm_m": 87.92450980374748,
+          "x_m": 0.02034135402057036,
+          "x_d_ratio": 0.09686359057414458,
+          "Fp_kN_m": 270.90540751129816,
+          "Fs_kN_m": 163.04347826086956,
+          "T_kN_m": 433.9488857721677,
+          "M_Ed_kNm_m": 59.96415422296982,
+          "As_pasiva_cm2_m": 3.75,
+          "u": 0.6819958889371488,
+          "ok": true
+        },
+        "apoyo": {
+          "M_Rd_kNm_m": 135.68436399963332,
+          "x_m": 0.03206010402057034,
+          "x_d_ratio": 0.15266716200271593,
+          "Fp_kN_m": 270.90540751129816,
+          "Fs_kN_m": 413.0434782608692,
+          "T_kN_m": 683.9488857721674,
+          "M_Ed_kNm_m": 134.41242994383563,
+          "As_pasiva_cm2_m": 9.499999999999993,
+          "u": 0.9906257875387827,
+          "ok": true
+        }
+      }
+    },
+    "fisuracion": {
+      "sigma_inf_rara_MPa": 1.6380935938402819,
+      "fctm_MPa": 3.5,
+      "supera_fctm": false,
+      "u": 0.46802674109722336,
+      "ok": true,
+      "nota": "traccion de fondo en rara < fctm -> sin fisuracion significativa (clase XC). [confirmar AN] limite de descompresion segun exposicion."
+    },
+    "flecha": {
+      "L_m": 8.0,
+      "f_total_mm": 5.220941970037963,
+      "f_cuasiperm_mm": 1.5589586243199514,
+      "lim_total_mm": 32.0,
+      "u_total": 0.16315443656368633,
+      "ok_total": true,
+      "f_activa_mm": 5.231404779597152,
+      "lim_activa_mm": 16.0,
+      "u_activa": 0.326962798724822,
+      "ok_activa": true,
+      "nota": "residual de permanente ~0 -> contraflecha de balance; flecha reducida frente a losa armada equivalente."
+    },
+    "equilibrio": {
+      "aplicada_neta_ELU_kN": 2723.84,
+      "reaccion_ELU_kN": 2723.8399999997646,
+      "error_pct": 8.65045712588537e-12
+    },
+    "contraste_metodos": {
+      "X_pilares": {
+        "M_ext_kNm_m": 42.0,
+        "M_net_kNm_m": 5.96,
+        "M_p_kNm_m": -36.04,
+        "cargas_equiv": {
+          "sup_MPa": -1.42016,
+          "inf_MPa": -0.27584
+        },
+        "fuerza_excentricidad": {
+          "sup_MPa": -1.42016,
+          "inf_MPa": -0.27584
+        },
+        "dif_sup_MPa": 0.0,
+        "dif_inf_MPa": 0.0,
+        "coincide": true
+      },
+      "Y_central": {
+        "M_ext_kNm_m": 42.0,
+        "M_net_kNm_m": 5.96,
+        "M_p_kNm_m": -36.04,
+        "cargas_equiv": {
+          "sup_MPa": -1.42016,
+          "inf_MPa": -0.27584
+        },
+        "fuerza_excentricidad": {
+          "sup_MPa": -1.42016,
+          "inf_MPa": -0.27584
+        },
+        "dif_sup_MPa": 0.0,
+        "dif_inf_MPa": 0.0,
+        "coincide": true
+      }
+    },
+    "aprovechamientos": {
+      "compr_qp_X_pilares": 0.08835225400603439,
+      "tracc_rara_X_pilares": 0.4680267410972234,
+      "compr_qp_Y_central": 0.08835225400603408,
+      "tracc_rara_Y_central": 0.4680267410972117,
+      "ELU_campo_X_pilares": 0.6819958889371466,
+      "ELU_apoyo_X_pilares": 0.9906257875387829,
+      "ELU_campo_Y_central": 0.6819958889371488,
+      "ELU_apoyo_Y_central": 0.9906257875387827,
+      "punz_interior_sin_refuerzo": 2.2739433442378023,
+      "punz_edge_sin_refuerzo": 2.2854617153037347,
+      "punz_corner_sin_refuerzo": 2.0793965744091247,
+      "fisuracion": 0.46802674109722336,
+      "flecha_total": 0.16315443656368633
+    },
+    "aprov_max": 0.9906257875387829,
+    "aprov_punz_sin_refuerzo_max": 2.2854617153037347,
+    "requiere_solucion_punzonamiento": true,
+    "veredicto": "CUMPLE con solucion de punzonamiento (abaco/capitel/armadura)"
+  },
+  "criterios_aceptacion": {
+    "w_p_kN_m2": 9.01,
+    "residual_pct": 0.1111111111111111,
+    "residual_ok": true,
+    "P_m_X_kN": 212.0,
+    "P_m_X_ok": true,
+    "sigma_cp_MPa": 0.848,
+    "sigma_cp_ok": true,
+    "sigma_pm_inf_frac_fpk": 0.6,
+    "sigma_pm_inf_ok": true,
+    "sigma_p0_frac_fpk": 0.7198924731182795,
+    "sigma_p0_ok": true,
+    "perdidas_totales_pct": 25.0,
+    "perdidas_diferidas_pct": 16.654219566840926,
+    "perdidas_diferidas_ok": true,
+    "aprov_max": 0.9906257875387829,
+    "aprov_ok": true,
+    "veredicto": "CUMPLE con solucion de punzonamiento (abaco/capitel/armadura)"
+  },
+  "avisos": [
+    "Resultado de PREDIMENSIONADO. Debe ser revisado y FIRMADO por tecnico competente.",
+    "[confirmar AN] EC2 §5.10/§6.4.4 (Anejo Nacional Espana): k1 del termino de pretensado en punzonamiento (0.10), coeficientes mu/k de rozamiento, penetracion de cuna, limites de tension del acero activo, retraccion y fluencia.",
+    "Picos locales sobre pilares tratados como envolvente (percentil 97); valor de diseno en seccion critica (cara de pilar).",
+    "Reparto de la carga a equilibrar 1/2 por direccion (banded X + distribuido Y); teoria de franjas col/middle 0.65/0.35."
+  ]
+}

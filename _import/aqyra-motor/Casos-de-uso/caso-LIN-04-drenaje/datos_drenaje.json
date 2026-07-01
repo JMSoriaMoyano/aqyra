@@ -1,0 +1,53 @@
+{
+  "_nota": "Datos hidrologicos del caso LIN-04 (eje de caso-LIN-01). La cuenca y la lluvia de proyecto provienen del GIS/estudio pluviometrico si existen (PREVALECEN); aqui se inyectan como datos de proyecto. Todos NDP [confirmar AN].",
+  "cuencas": [
+    {
+      "id": "C-plataforma",
+      "descripcion": "Cuenca de plataforma + margenes que vierte a la cuneta de la margen derecha (PK 0+000 a 0+400).",
+      "area_m2": 9600.0,
+      "longitud_m": 400.0,
+      "pendiente": 0.02,
+      "pd_mm": 80.0,
+      "i1_id": 9.0,
+      "po_mm": 1.0,
+      "tipo_elemento": "plataforma"
+    },
+    {
+      "id": "C-vertiente",
+      "descripcion": "Cuenca natural vertiente que cruza el eje en el PK 1+? y desagua por la ODT.",
+      "area_km2": 0.85,
+      "longitud_km": 1.6,
+      "pendiente": 0.035,
+      "pd_mm": 95.0,
+      "i1_id": 10.0,
+      "po_mm": 18.0,
+      "tipo_elemento": "odt"
+    }
+  ],
+  "cunetas": [
+    {
+      "id": "CUN-MD",
+      "descripcion": "Cuneta triangular revestida de hormigon, margen derecha.",
+      "cuenca": "C-plataforma",
+      "tipo": "triangular",
+      "b_m": 0.0,
+      "z1": 3.0,
+      "z2": 3.0,
+      "profundidad_m": 0.30,
+      "pendiente_long": 0.02,
+      "revestimiento": "hormigon",
+      "resguardo_m": 0.05
+    }
+  ],
+  "odt": [
+    {
+      "id": "ODT-1",
+      "descripcion": "Obra de drenaje transversal: tubo circular de hormigon que desagua la cuenca vertiente.",
+      "cuenca": "C-vertiente",
+      "tipo": "circular",
+      "D_m": 1.80,
+      "pendiente_long": 0.015,
+      "material": "hormigon"
+    }
+  ]
+}

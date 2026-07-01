@@ -1,0 +1,18 @@
+{
+  "elementos": {
+    "OBLICUO": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "tablero_oblicuo",
+        "Esviaje_deg": 30.0,
+        "Concentracion_esquina_obtusa": 6.23,
+        "R_obtusa_kN": 1724.0,
+        "Factor_reparto_transversal": 1.058,
+        "As_long_cm2_m": 41.7,
+        "As_transv_cm2_m": 12.5,
+        "Frecuencia_fundamental_Hz": 5.07,
+        "Aprovechamiento_max": 0.949,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

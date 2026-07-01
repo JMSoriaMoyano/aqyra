@@ -1,0 +1,21 @@
+{
+  "veredicto": "CUMPLE",
+  "sistema": "FIREPROTECTION",
+  "resumen": {
+    "nodos": 5,
+    "tramos": 4,
+    "terminales": 3,
+    "fuentes": 1,
+    "cobertura_pct": 100.0,
+    "huerfanas_tramos": 0
+  },
+  "errores": [],
+  "avisos": [],
+  "info": [
+    "Unidades SI declaradas: {'longitud': 'm', 'caudal': 'l/s', 'presion': 'kPa', 'potencia': 'W'}",
+    "Fuentes: 1 (nodos ['N1'])",
+    "Sin componentes huerfanas (todos los tramos cuelgan de una fuente).",
+    "Cobertura desde fuente: 5/5 nodos (100.0 %)",
+    "Terminales conectados: 3/3."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "elementos": {
+    "Eje C-001": {
+      "Pset_Estructurando_ResultadoLineal": {
+        "Trazado_norma": "3.1-IC",
+        "Vp_kmh": 60.0,
+        "Trazado_veredicto": "CUMPLE",
+        "Trazado_n_no_cumple": 0,
+        "Firme_norma": "6.1-IC",
+        "Firme_codigo_seccion": "221",
+        "Firme_categoria_trafico": "T2",
+        "Firme_explanada": "E2",
+        "Firme_espesor_total_cm": 48
+      }
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N"
+  },
+  "materiales": {
+    "S275": {
+      "E": 210000000000.0,
+      "G": 80770000000.0,
+      "nu": 0.3,
+      "rho": 7850.0,
+      "fy": 275000000.0,
+      "fck": null,
+      "fctm": null
+    },
+    "C30/37": {
+      "E": 33000000000.0,
+      "G": 13750000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "secciones": {
+    "IPE 400": {
+      "A": 0.008446,
+      "Iy": 0.0002313,
+      "Iz": 1.318e-05,
+      "Wely": 0.001156,
+      "Wply": 0.001307,
+      "Welz": 0.0001464,
+      "Wplz": 0.000229,
+      "J": 5.108e-07,
+      "Avz": 0.004269,
+      "h": 0.4,
+      "clase": 1,
+      "fuente": "catalogo"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N2": {
+      "x": 6.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N3": {
+      "x": 6.0,
+      "y": 4.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N4": {
+      "x": 0.0,
+      "y": 4.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    }
+  },
+  "barras": {
+    "V1": {
+      "ni": "N1",
+      "nj": "N2",
+      "seccion": "IPE 400",
+      "material": "S275",
+      "tipo": "viga"
+    },
+    "V2": {
+      "ni": "N4",
+      "nj": "N3",
+      "seccion": "IPE 400",
+      "material": "S275",
+      "tipo": "viga"
+    }
+  },
+  "superficies": [
+    {
+      "nombre": "Losa",
+      "esquinas": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "esquinas_coords": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          0.0,
+          0.0
+        ],
+        [
+          6.0,
+          4.0,
+          0.0
+        ],
+        [
+          0.0,
+          4.0,
+          0.0
+        ]
+      ],
+      "espesor": 0.12,
+      "malla": 0.5,
+      "material": "C30/37",
+      "apoyo": "",
+      "cargas": [
+        {
+          "caso": "G",
+          "qz": -4500.0
+        },
+        {
+          "caso": "Q",
+          "qz": -3000.0
+        }
+      ]
+    }
+  ]
+}

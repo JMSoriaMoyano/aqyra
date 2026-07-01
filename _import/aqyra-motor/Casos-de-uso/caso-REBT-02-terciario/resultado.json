@@ -1,0 +1,193 @@
+{
+  "veredicto": "CUMPLE",
+  "metodo": "Intensidades (I*R con cosphi, mono/tri); seccion propuesta por momentos + intensidad admisible (ITC-BT-19) [confirmar AN]",
+  "topologia": {
+    "n_nodos": 6,
+    "n_tramos": 5,
+    "n_lazos": 0,
+    "tipo": "radial"
+  },
+  "hipotesis": {
+    "aislamiento": "PVC",
+    "material": "Cu",
+    "gamma_m_ohm_mm2": 56.0,
+    "U_mono_V": 230.0,
+    "U_tri_V": 400.0
+  },
+  "activos": [
+    "LUM-1",
+    "LUM-2",
+    "MOTOR-1",
+    "TOMA-1"
+  ],
+  "potencia_cabecera_W": 11296.0,
+  "caida_max_pct": 3.3185,
+  "terminal_gobernante": "TOMA-1",
+  "tramos": {
+    "T1": {
+      "potencia_W": 11296.0,
+      "intensidad_A": 18.513,
+      "fases": "tri",
+      "cosphi": 0.8807,
+      "tension_V": 400.0,
+      "seccion_mm2": 4.0,
+      "I_admisible_A": 24.0,
+      "longitud_m": 20.0,
+      "caida_tension_V": 2.5214,
+      "caida_tension_pct": 0.6304,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N2"
+    },
+    "T2": {
+      "potencia_W": 58.0,
+      "intensidad_A": 0.28,
+      "fases": "mono",
+      "cosphi": 0.9,
+      "tension_V": 230.0,
+      "seccion_mm2": 1.5,
+      "I_admisible_A": 15.0,
+      "longitud_m": 15.6205,
+      "caida_tension_V": 0.0938,
+      "caida_tension_pct": 0.0408,
+      "material": "Cu",
+      "ni": "N2",
+      "nj": "N3"
+    },
+    "T3": {
+      "potencia_W": 58.0,
+      "intensidad_A": 0.28,
+      "fases": "mono",
+      "cosphi": 0.9,
+      "tension_V": 230.0,
+      "seccion_mm2": 1.5,
+      "I_admisible_A": 15.0,
+      "longitud_m": 15.6205,
+      "caida_tension_V": 0.0938,
+      "caida_tension_pct": 0.0408,
+      "material": "Cu",
+      "ni": "N2",
+      "nj": "N4"
+    },
+    "T4": {
+      "potencia_W": 3680.0,
+      "intensidad_A": 16.842,
+      "fases": "mono",
+      "cosphi": 0.95,
+      "tension_V": 230.0,
+      "seccion_mm2": 2.5,
+      "I_admisible_A": 21.0,
+      "longitud_m": 22.3607,
+      "caida_tension_V": 5.111,
+      "caida_tension_pct": 2.2222,
+      "material": "Cu",
+      "ni": "N2",
+      "nj": "N5"
+    },
+    "T5": {
+      "potencia_W": 7500.0,
+      "intensidad_A": 12.736,
+      "fases": "tri",
+      "cosphi": 0.85,
+      "tension_V": 400.0,
+      "seccion_mm2": 1.5,
+      "I_admisible_A": 13.0,
+      "longitud_m": 23.4307,
+      "caida_tension_V": 5.2301,
+      "caida_tension_pct": 1.3075,
+      "material": "Cu",
+      "ni": "N2",
+      "nj": "N6"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "caida_acum_V": 0.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "caida_acum_V": 2.5214,
+      "tipo": "union"
+    },
+    "N3": {
+      "caida_acum_V": 2.6152,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "caida_acum_V": 2.6152,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "caida_acum_V": 7.6324,
+      "tipo": "terminal"
+    },
+    "N6": {
+      "caida_acum_V": 7.7515,
+      "tipo": "terminal"
+    }
+  },
+  "terminales": [
+    {
+      "id": "LUM-1",
+      "nodo": "N3",
+      "activo": true,
+      "potencia_W": 58.0,
+      "cosphi": 0.9,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "alumbrado",
+      "circuito": null,
+      "caida_acum_pct": 1.1371,
+      "du_max_pct": 3.0,
+      "margen_pct": 1.8629,
+      "cumple": true
+    },
+    {
+      "id": "LUM-2",
+      "nodo": "N4",
+      "activo": true,
+      "potencia_W": 58.0,
+      "cosphi": 0.9,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "alumbrado",
+      "circuito": null,
+      "caida_acum_pct": 1.1371,
+      "du_max_pct": 3.0,
+      "margen_pct": 1.8629,
+      "cumple": true
+    },
+    {
+      "id": "TOMA-1",
+      "nodo": "N5",
+      "activo": true,
+      "potencia_W": 3680.0,
+      "cosphi": 0.95,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "fuerza",
+      "circuito": null,
+      "caida_acum_pct": 3.3185,
+      "du_max_pct": 5.0,
+      "margen_pct": 1.6815,
+      "cumple": true
+    },
+    {
+      "id": "MOTOR-1",
+      "nodo": "N6",
+      "activo": true,
+      "potencia_W": 7500.0,
+      "cosphi": 0.85,
+      "fases": "tri",
+      "tension_V": 400.0,
+      "uso": "fuerza",
+      "circuito": null,
+      "caida_acum_pct": 1.9379,
+      "du_max_pct": 5.0,
+      "margen_pct": 3.0621,
+      "cumple": true
+    }
+  ],
+  "errores": [],
+  "avisos": []
+}

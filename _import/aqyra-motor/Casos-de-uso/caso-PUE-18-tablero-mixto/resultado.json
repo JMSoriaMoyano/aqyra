@@ -1,0 +1,200 @@
+{
+  "nombre_tablero": "MIXTO",
+  "tipologia": "mixto",
+  "mixto": {
+    "L": 30.0,
+    "n_vanos": 1,
+    "B": 10.0,
+    "n_vigas": 4,
+    "t_losa": 0.25,
+    "nx": 16,
+    "ny": 10,
+    "n_carriles": 2,
+    "g2_N_m2": 3000.0,
+    "perfil": {
+      "h": 1.2,
+      "b": 0.4,
+      "tw": 0.018,
+      "tf": 0.03
+    },
+    "material_h": {
+      "E": 33000000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fck": 35000000.0,
+      "fctm": 3200000.0,
+      "G": 13750000000.0
+    },
+    "material_s": {
+      "E": 210000000000.0,
+      "nu": 0.3,
+      "rho": 7850.0,
+      "fy": 355000000.0,
+      "G": 80769230769.23077,
+      "fu": 490000000.0
+    },
+    "conector": {
+      "d": 0.022,
+      "hsc": 0.15,
+      "fu": 450000000.0,
+      "sep_long": 0.2,
+      "n_fila": 2
+    },
+    "fatiga": {
+      "detalle_MPa": 90.0,
+      "lambda": 1.0,
+      "phi": 1.0
+    }
+  },
+  "lm1": {
+    "vano": 0,
+    "ix_centro": 8,
+    "carriles": [
+      {
+        "carril": 1,
+        "Q_tandem_N": 300000.0,
+        "udl_N_m": 27000.0
+      },
+      {
+        "carril": 2,
+        "Q_tandem_N": 200000.0,
+        "udl_N_m": 7500.0
+      }
+    ]
+  },
+  "flm3": {
+    "vano": 0,
+    "carril": 1,
+    "Q_total_N": 480000.0
+  },
+  "seccion_props": {
+    "A_acero_m2": 0.04452,
+    "Iy_acero_m4": 0.010437516000000008,
+    "I_comp_m4": 0.027050963572352708,
+    "b_eff_losa_m": 2.5,
+    "z_na_desde_losa_m": 0.22613347478831794,
+    "n0": 6.363636363636363
+  },
+  "n_nodos": 255,
+  "n_elementos": 288,
+  "carriles": [
+    "carril1",
+    "carril2"
+  ],
+  "f1_Hz": 2.9941644407919696,
+  "modal": {
+    "frecuencias_Hz": [
+      2.9941644407919696,
+      3.377754680561375,
+      9.656765752827832,
+      11.769276781314751,
+      11.935195826033306,
+      15.518396786829106,
+      15.711075319389373,
+      21.21677945751593
+    ]
+  },
+  "secciones": [
+    {
+      "vano": 0,
+      "x": 15.0,
+      "esfuerzos": {
+        "M_Ed_Nm": 25342994.490631968,
+        "V_Ed_N": 425029.2468930211,
+        "M_fat_Nm": 947001.4261136415
+      },
+      "veredicto": "CUMPLE",
+      "aprov_max": 0.7548431851634855,
+      "checks": [
+        {
+          "nombre": "Flexion mixta M_pl,Rd (EC4)",
+          "valor": 25342994.490631968,
+          "limite": 43872302.81054998,
+          "aprov": 0.5776536189602004,
+          "cumple": true
+        },
+        {
+          "nombre": "Cortante alma Vpl,Rd (EC3)",
+          "valor": 425029.2468930211,
+          "limite": 17265775.270169593,
+          "aprov": 0.024616864301909,
+          "cumple": true
+        },
+        {
+          "nombre": "Conexion grado eta (EC4 6.6)",
+          "valor": 1.3247784700916627,
+          "limite": 1.0,
+          "aprov": 0.7548431851634855,
+          "cumple": true
+        },
+        {
+          "nombre": "Fatiga ala inferior (EC3-1-9)",
+          "valor": 38.46917185410627,
+          "limite": 66.66666666666666,
+          "aprov": 0.577037577811594,
+          "cumple": true
+        }
+      ],
+      "clasificacion": {
+        "clase": 2,
+        "clase_ala": 1,
+        "clase_alma": 2,
+        "c_ala_tf": 6.366666666666667,
+        "c_alma_tw": 63.333333333333336,
+        "eps": 0.8136165134668271
+      },
+      "M_Rd_total_Nm": 43872302.81054998,
+      "PNA_zona": "ala superior",
+      "conexion": {
+        "PRd1_kN": 109.47822079229711,
+        "PRd2_kN": 120.67695372489311,
+        "PRd_kN": 109.47822079229711,
+        "Na_kN": 15804.599999999999,
+        "Fcf_kN": 12395.833333333332,
+        "Nc_kN": 12395.833333333332,
+        "Nf_media_luz": 113.22647777452283,
+        "n_disp_media_luz": 150.0,
+        "grado_eta": 1.3247784700916627,
+        "eta_min": 1.0,
+        "ok": true
+      },
+      "fatiga": {
+        "delta_sigma_MPa": 38.46917185410627,
+        "delta_sigma_E2_MPa": 38.46917185410627,
+        "delta_sigma_C_MPa": 90.0,
+        "delta_sigma_Rd_MPa": 66.66666666666666,
+        "u_fatiga": 0.577037577811594,
+        "lambda": 1.0,
+        "phi": 1.0,
+        "nota": "check basico FLM3; sin Palmgren-Miner (gancho diferido)"
+      },
+      "abolladura": null
+    }
+  ],
+  "seccion_critica": 0,
+  "clasificacion_seccion": 2,
+  "aprovechamiento_max": 0.7548431851634855,
+  "veredicto_global": "CUMPLE",
+  "mapping_writeback": {
+    "elementos": {
+      "MIXTO": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "mixto_acero_hormigon",
+          "Clase_seccion": 2,
+          "A_acero_m2": 0.0445,
+          "I_comp_m4": 0.02705,
+          "b_eff_losa_m": 2.5,
+          "M_Ed_ELU_kNm": 25343.0,
+          "M_Rd_total_kNm": 43872.3,
+          "PNA_zona": "ala superior",
+          "Conexion_eta": 1.325,
+          "Fatiga_Dsigma_E2_MPa": 38.5,
+          "Fatiga_Dsigma_Rd_MPa": 66.7,
+          "Frecuencia_fundamental_Hz": 2.99,
+          "Aprovechamiento_max": 0.755,
+          "Veredicto_global": "CUMPLE"
+        }
+      }
+    }
+  }
+}

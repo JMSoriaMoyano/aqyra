@@ -1,0 +1,84 @@
+{
+  "info": {
+    "B": 2.5,
+    "L": 2.5,
+    "espesor": 0.5,
+    "material": "C30/37",
+    "c_pilar": 0.4,
+    "ks": 40000000.0,
+    "Rd": 250000.0,
+    "xp": 1.25,
+    "yp": 1.25,
+    "area": 6.25
+  },
+  "equilibrio": {
+    "aplicada_ELU_kN": 1110.0,
+    "reaccion_suelo_ELU_kN": 1110.0000000000268,
+    "error_pct": 2.4122093711887394e-12
+  },
+  "geotecnia": {
+    "p_max_kPa": 206.751540048513,
+    "p_min_kPa": 140.97693821094774,
+    "p_med_kPa": 177.27729210061761,
+    "Rd_kPa": 250.0,
+    "u_Rd": 0.8270061601940519,
+    "ok_Rd": true,
+    "ok_sin_despegue": true
+  },
+  "flexion": {
+    "x": {
+      "m_Ed_kNm_m": 114.21197484994435,
+      "mu": 0.030318114328703186,
+      "mu_ok": true,
+      "As_req_cm2_m": 6.725231493980338,
+      "As_min_cm2_m": 6.54472,
+      "As_max_cm2_m": 200.0,
+      "As_dim_cm2_m": 6.725231493980338,
+      "armado": "φ10/100",
+      "As_prov_cm2_m": 7.853981633974484,
+      "ok": true
+    },
+    "y": {
+      "m_Ed_kNm_m": 99.12714662887637,
+      "mu": 0.02631377461532321,
+      "mu_ok": true,
+      "As_req_cm2_m": 5.836979960225696,
+      "As_min_cm2_m": 6.54472,
+      "As_max_cm2_m": 200.0,
+      "As_dim_cm2_m": 6.54472,
+      "armado": "φ10/100",
+      "As_prov_cm2_m": 7.853981633974484,
+      "ok": true
+    },
+    "d_mm": 434.0
+  },
+  "punzonamiento": {
+    "V_Ed_kN": 415.8262123870057,
+    "posicion": "interior",
+    "beta": 1.15,
+    "u0_m": 1.6,
+    "u1_m": 7.053804846631881,
+    "d_mm": 434.0,
+    "k": 1.6788442333021307,
+    "rho_l": 0.0018096731875517245,
+    "vEd_u1_MPa": 0.15620557618068362,
+    "vRdc_MPa": 0.417007894287927,
+    "u_vRdc": 0.37458661651337954,
+    "vEd_u0_MPa": 0.6886522814588947,
+    "vRdmax_MPa": 5.28,
+    "u_vRdmax": 0.130426568458124,
+    "ok_vRdc": true,
+    "ok_vRdmax": true,
+    "requiere_armadura": false,
+    "ok": true,
+    "V_Ed_neto_kN": 415.8262123870057
+  },
+  "cortante": {
+    "V_Ed_kN_m": 115.14266548703154,
+    "vRdc_MPa": 0.417007894287927,
+    "VRdc_kN_m": 180.98142612096032,
+    "u": 0.6362126100723455,
+    "ok": true
+  },
+  "veredicto": "CUMPLE"
+}

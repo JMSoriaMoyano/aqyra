@@ -1,0 +1,128 @@
+{
+  "proyecto": "Parking 4 plantas 25x150 — narración→IFC (rampas óptimas)",
+  "esquema": "IFC4",
+  "niveles": {
+    "plantas": 4,
+    "altura": 3.0,
+    "base": 0.0
+  },
+  "edificios": [
+    {
+      "nombre": "Pk",
+      "origen": [
+        0.0,
+        0.0
+      ],
+      "ancho": 25.0,
+      "largo": 150.0,
+      "luz_max_x": 8.5,
+      "luz_max_y": 7.5,
+      "seccion_pilar": [
+        0.45,
+        0.45
+      ],
+      "material": "HA-30",
+      "muros_perimetrales": false,
+      "forjados": true,
+      "espesor_forjado": 0.3
+    }
+  ],
+  "rampas": [
+    {
+      "nombre": "Rampa_T1_C1",
+      "inicio": [
+        2.75,
+        150.0,
+        0.0
+      ],
+      "fin": [
+        2.75,
+        127.5,
+        3.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T1_C2",
+      "inicio": [
+        6.25,
+        150.0,
+        0.0
+      ],
+      "fin": [
+        6.25,
+        127.5,
+        3.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T2_C1",
+      "inicio": [
+        2.75,
+        127.5,
+        3.0
+      ],
+      "fin": [
+        2.75,
+        150.0,
+        6.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T2_C2",
+      "inicio": [
+        6.25,
+        127.5,
+        3.0
+      ],
+      "fin": [
+        6.25,
+        150.0,
+        6.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T3_C1",
+      "inicio": [
+        2.75,
+        150.0,
+        6.0
+      ],
+      "fin": [
+        2.75,
+        127.5,
+        9.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T3_C2",
+      "inicio": [
+        6.25,
+        150.0,
+        6.0
+      ],
+      "fin": [
+        6.25,
+        127.5,
+        9.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    }
+  ]
+}

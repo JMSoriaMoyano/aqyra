@@ -1,0 +1,31 @@
+{
+  "sistema": "portico_plano_acero",
+  "modulo": "barras",
+  "run_all": "barras/run_all.py",
+  "barras": [
+    {
+      "barra": "C1",
+      "material": "S275",
+      "seccion": "HEB 200",
+      "orientacion": "vertical",
+      "rol": "pilar",
+      "acero_I": true
+    },
+    {
+      "barra": "C2",
+      "material": "S275",
+      "seccion": "HEB 200",
+      "orientacion": "vertical",
+      "rol": "pilar",
+      "acero_I": true
+    },
+    {
+      "barra": "B1",
+      "material": "S275",
+      "seccion": "IPE 330",
+      "orientacion": "horizontal",
+      "rol": "viga/dintel",
+      "acero_I": true
+    }
+  ]
+}

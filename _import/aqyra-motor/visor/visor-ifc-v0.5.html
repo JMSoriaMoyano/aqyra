@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Visor IFC v0.5 — motor ThatOpen (fragments)</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#1e2330;font-family:system-ui,Segoe UI,sans-serif;color:#e8ecf4;overflow:hidden}
+  #grid{position:fixed;inset:0;display:grid;grid-template-columns:300px 1fr 320px;grid-template-rows:46px 1fr}
+  header{grid-column:1/4;display:flex;align-items:center;gap:12px;padding:0 14px;background:#161b27;border-bottom:1px solid #2a3142;z-index:20}
+  header b{color:#7fd1ff}
+  header .v{font-size:11px;opacity:.6}
+  select,button{background:#222a3a;color:#e8ecf4;border:1px solid #38415a;border-radius:7px;padding:5px 9px;font-size:12px;cursor:pointer}
+  select:hover,button:hover{border-color:#5a6a8c}
+  #left,#right{background:#171c28;overflow:auto;border-right:1px solid #2a3142}
+  #right{border-right:none;border-left:1px solid #2a3142}
+  #viewport{position:relative;background:#1e2330}
+  #canvas-host{position:absolute;inset:0}
+  .tabs{display:flex;border-bottom:1px solid #2a3142;position:sticky;top:0;background:#171c28;z-index:5}
+  .tab{flex:1;text-align:center;padding:9px 4px;font-size:12px;cursor:pointer;color:#9fb0c8;border-bottom:2px solid transparent}
+  .tab.active{color:#7fd1ff;border-bottom-color:#7fd1ff}
+  .pane{display:none;padding:8px 10px}
+  .pane.active{display:block}
+  /* árbol */
+  .node{user-select:none}
+  .node-row{display:flex;align-items:center;gap:5px;padding:2px 4px;border-radius:5px;cursor:pointer;font-size:12.5px;line-height:1.45;white-space:nowrap}
+  .node-row:hover{background:#222a3a}
+  .node-row.sel{background:#1d4666;color:#bfe6ff}
+  .twisty{width:12px;display:inline-block;text-align:center;opacity:.6;flex:none}
+  .cat{color:#8aa0c0;font-size:10.5px;flex:none}
+  .nm{overflow:hidden;text-overflow:ellipsis}
+  .kids{margin-left:13px;border-left:1px solid #232b3b;padding-left:3px}
+  .hidden{display:none}
+  /* clases */
+  .cls-row{display:flex;align-items:center;gap:8px;padding:4px 4px;font-size:12.5px}
+  .sw{width:14px;height:14px;border-radius:3px;border:1px solid #00000040;flex:none;cursor:pointer}
+  .cls-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cls-n{opacity:.55;font-size:11px;flex:none}
+  /* propiedades */
+  #right h3{margin:10px 10px 4px;font-size:12px;color:#7fd1ff;text-transform:uppercase;letter-spacing:.04em}
+  .kv{display:grid;grid-template-columns:42% 58%;gap:1px 8px;padding:0 10px;font-size:12.5px}
+  .kv .k{color:#9fb0c8;overflow:hidden;text-overflow:ellipsis}
+  .kv .val{color:#e8ecf4;word-break:break-word}
+  .pset{margin:6px 10px;background:#1b2230;border:1px solid #28304300;border-left:2px solid #3a7bd5;border-radius:6px;padding:6px 8px}
+  .pset .pname{font-size:11.5px;color:#9ad0ff;margin-bottom:3px;font-weight:600}
+  .empty{padding:14px 12px;color:#7d8aa3;font-size:12.5px;line-height:1.5}
+  .pill{display:inline-block;background:#243049;color:#9ad0ff;border-radius:10px;padding:1px 8px;font-size:11px;margin:2px 2px 0 0}
+  /* log */
+  #status{grid-column:1/4;display:none}
+  #log{position:fixed;bottom:10px;left:312px;right:332px;max-height:30vh;overflow:auto;background:rgba(10,12,18,.93);padding:8px 12px;border-radius:9px;font:11.5px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;z-index:30;border:1px solid #2a3142}
+  #log.hide{display:none}
+  .ok{color:#8fe388}.err{color:#ff8a8a}.warn{color:#ffd479}.dim{opacity:.65}
+  #toggleLog{position:fixed;bottom:10px;right:336px;z-index:31}
+  .badge{font-size:10.5px;background:#2a3450;color:#9ad0ff;border-radius:6px;padding:2px 7px}
+</style>
+</head>
+<body>
+<div id="grid">
+  <header>
+    <b>Visor IFC</b><span class="v">v0.5 · ThatOpen/fragments</span>
+    <span style="flex:1"></span>
+    <span id="modelInfo" class="badge dim">cargando…</span>
+    <label class="dim" style="font-size:12px">Modelo</label>
+    <select id="modelSel"></select>
+    <button id="fitBtn" title="Encuadrar (F)">Encuadrar</button>
+  </header>
+
+  <div id="left">
+    <div class="tabs">
+      <div class="tab active" data-pane="tree">Árbol</div>
+      <div class="tab" data-pane="classes">Clases</div>
+    </div>
+    <div id="pane-tree" class="pane active"></div>
+    <div id="pane-classes" class="pane"></div>
+  </div>
+
+  <div id="viewport">
+    <div id="canvas-host"></div>
+  </div>
+
+  <div id="right">
+    <div id="props"><div class="empty">Selecciona un elemento (clic en el modelo o en el árbol) para ver sus propiedades y Property Sets.</div></div>
+  </div>
+</div>
+
+<button id="toggleLog">Consola</button>
+<div id="log" class="hide"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://esm.sh/three@0.184.0",
+    "three/": "https://esm.sh/three@0.184.0/",
+    "@thatopen/fragments": "https://esm.sh/@thatopen/fragments@3.4.5?external=three"
+  }
+}
+</script>
+
+<script type="module">
+const $ = s => document.querySelector(s);
+const logEl = $("#log");
+const log = (m,c)=>{ const d=document.createElement("div"); if(c)d.className=c; d.textContent=m; logEl.appendChild(d); logEl.scrollTop=1e9; };
+$("#toggleLog").onclick = ()=> logEl.classList.toggle("hide");
+window.addEventListener("error", e=>{ logEl.classList.remove("hide"); log("ERROR JS: "+(e.message||e.error||e),"err"); });
+window.addEventListener("unhandledrejection", e=>{ logEl.classList.remove("hide"); log("PROMESA RECHAZADA: "+(e.reason&&(e.reason.message||e.reason)),"err"); });
+
+// ---- estado global ----
+let THREE, OrbitControls, FRAGS;
+let scene, camera, renderer, controls, host;
+let fragments, model;          // FragmentsModels + modelo activo
+let index = null;              // props.json del modelo activo
+let classToLocalIds = {};      // categoria -> [localId]
+let localIdToGuid = {};        // copia desde index
+let selLocalId = null;         // selección actual
+const SEL_COLOR = 0x00b3ff;
+const PALETTE = [0x4e79a7,0xf28e2b,0xe15759,0x76b7b2,0x59a14f,0xedc948,0xb07aa1,0xff9da7,0x9c755f,0xbab0ac,0x86bcb6,0xd37295];
+
+// ---- carga de librerías ----
+async function loadLibs(){
+  if(location.protocol==="file:"){ logEl.classList.remove("hide"); log("⚠ Abierto como file:// — el worker de fragments NO arranca aquí. Usa servir_visor.bat (http).","warn"); }
+  log("→ cargando three / OrbitControls / fragments…","dim");
+  THREE = await import("three");
+  ({ OrbitControls } = await import("three/examples/jsm/controls/OrbitControls.js"));
+  FRAGS = await import("@thatopen/fragments");
+  log("✓ librerías cargadas (three "+THREE.REVISION+")","ok");
+}
+
+// ---- escena ----
+function initScene(){
+  host = $("#canvas-host");
+  scene = new THREE.Scene(); scene.background = new THREE.Color(0x1e2330);
+  camera = new THREE.PerspectiveCamera(60, host.clientWidth/host.clientHeight, 0.01, 5000);
+  camera.position.set(8,8,8);
+  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(host.clientWidth, host.clientHeight); renderer.setPixelRatio(devicePixelRatio);
+  host.appendChild(renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true;
+  scene.add(new THREE.GridHelper(40,40,0x44506a,0x2a3142));
+  scene.add(new THREE.AxesHelper(3));
+  scene.add(new THREE.HemisphereLight(0xffffff,0x444466,1.1));
+  const dir = new THREE.DirectionalLight(0xffffff,1.0); dir.position.set(10,20,10); scene.add(dir);
+  new ResizeObserver(()=>{ if(!host.clientWidth) return; camera.aspect=host.clientWidth/host.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(host.clientWidth,host.clientHeight); }).observe(host);
+  renderer.domElement.addEventListener("click", onPick);
+  addEventListener("keydown", e=>{ if(e.key==="f"||e.key==="F") fitView(); if(e.key==="Escape") clearSelection(); });
+  (function animate(){ requestAnimationFrame(animate); controls.update(); if(fragments) fragments.update(); renderer.render(scene,camera); })();
+  log("✓ escena 3D lista","ok");
+}
+
+// ---- worker de fragments (blob desde CDN, igual que la PoC) ----
+let workerUrl = null;
+async function getWorker(){
+  if(workerUrl) return workerUrl;
+  const url = "https://cdn.jsdelivr.net/npm/@thatopen/fragments@3.4.5/dist/Worker/worker.mjs";
+  const resp = await fetch(url); if(!resp.ok) throw new Error("worker HTTP "+resp.status);
+  const blob = await resp.blob();
+  workerUrl = URL.createObjectURL(new File([blob],"worker.mjs",{type:"text/javascript"}));
+  log("✓ worker de fragments descargado ("+(blob.size/1024|0)+" KB)","ok");
+  return workerUrl;
+}
+
+// ---- carga de un modelo (frag + props.json) ----
+async function loadModel(entry){
+  $("#modelInfo").textContent = "cargando "+entry.label+"…";
+  clearSelection();
+  // limpiar modelo previo
+  if(model){ try{ scene.remove(model.object); }catch(_){} }
+  if(fragments){ try{ await fragments.dispose(); }catch(_){} fragments=null; }
+
+  log("→ "+entry.props,"dim");
+  index = await (await fetch(entry.props)).json();
+  localIdToGuid = index.localIdToGuid || {};
+  // mapa clase -> localIds
+  classToLocalIds = {};
+  for(const it of Object.values(index.items)){
+    if(it.localId==null) continue;
+    (classToLocalIds[it.category] ||= []).push(it.localId);
+  }
+
+  buildTree();
+  buildClasses();
+  $("#props").innerHTML = '<div class="empty">Selecciona un elemento (clic en el modelo o en el árbol) para ver sus propiedades y Property Sets.</div>';
+
+  // geometría
+  const worker = await getWorker();
+  fragments = new FRAGS.FragmentsModels(worker);
+  log("→ cargando geometría ("+entry.frag+")…","dim");
+  const bytes = new Uint8Array(await (await fetch(entry.frag)).arrayBuffer());
+  let done=false; const p = fragments.load(bytes,{modelId:entry.id}); p.then(()=>done=true);
+  setTimeout(()=>{ if(!done){ logEl.classList.remove("hide"); log("✗ load() no resolvió en 8 s: el worker no arrancó (¿file://?). Sirve por http.","err"); } },8000);
+  model = await p;
+  if(model.useCamera) model.useCamera(camera);
+  scene.add(model.object);
+  await fragments.update(true);
+
+  const ng = (index.geometryLocalIds||[]).length;
+  $("#modelInfo").textContent = index.model+" · "+index.stats.items+" ítems · "+ng+" con geometría";
+  if(ng>0){ fitView(); log("✓ modelo cargado y encuadrado ("+ng+" elementos con geometría)","ok"); }
+  else { log("⚠ modelo sin geometría teselada: árbol y datos disponibles, vista 3D vacía.","warn"); }
+}
+
+function fitView(){
+  if(!model) return;
+  const box = new THREE.Box3().setFromObject(model.object);
+  if(box.isEmpty()) return;
+  const size = box.getSize(new THREE.Vector3()).length()||10;
+  const c = box.getCenter(new THREE.Vector3());
+  controls.target.copy(c);
+  camera.position.copy(c).add(new THREE.Vector3(1,0.8,1).multiplyScalar(size*0.7));
+  camera.near = Math.max(size/100,0.001); camera.far = size*100; camera.updateProjectionMatrix(); controls.update();
+}
+
+// ---- selección ----
+async function onPick(ev){
+  if(!model) return;
+  // screenToCast() de fragments espera coordenadas clientX/clientY crudas (resta el rect internamente)
+  const mouse = new THREE.Vector2(ev.clientX, ev.clientY);
+  let res=null;
+  try{ res = await model.raycast({ camera, mouse, dom: renderer.domElement }); }
+  catch(e){ log("raycast: "+e.message,"dim"); }
+  if(res && res.localId!=null) selectLocalId(res.localId, {focus:false});
+  else clearSelection();
+}
+
+async function selectLocalId(localId, opts={}){
+  if(selLocalId!=null && selLocalId!==localId){ try{ await model.resetHighlight([selLocalId]); }catch(_){} }
+  selLocalId = localId;
+  try{
+    await model.highlight([localId], { color:new THREE.Color(SEL_COLOR), renderedFaces:FRAGS.RenderedFaces.TWO, opacity:1, transparent:false });
+  }catch(e){ log("highlight: "+e.message,"dim"); }
+  showProps(localId);
+  markTreeSelection(localId);
+  if(opts.focus) focusLocalId(localId);
+}
+
+async function clearSelection(){
+  if(selLocalId!=null && model){ try{ await model.resetHighlight([selLocalId]); }catch(_){} }
+  selLocalId = null;
+  markTreeSelection(null);
+}
+
+async function focusLocalId(localId){
+  if(!model) return;
+  try{
+    const boxes = await model.getBoxes([localId]);
+    if(boxes && boxes[0] && !boxes[0].isEmpty()){
+      const b=boxes[0], c=b.getCenter(new THREE.Vector3()), s=b.getSize(new THREE.Vector3()).length()||2;
+      controls.target.copy(c);
+      camera.position.copy(c).add(new THREE.Vector3(1,0.8,1).multiplyScalar(Math.max(s*1.6,2)));
+      controls.update();
+    }
+  }catch(_){}
+}
+
+// ---- panel de propiedades ----
+function showProps(localId){
+  const guid = localIdToGuid[localId];
+  const it = guid ? index.items[guid] : Object.values(index.items).find(x=>x.localId===localId);
+  const el = $("#props");
+  if(!it){ el.innerHTML = '<div class="empty">Sin datos para el elemento #'+localId+'.</div>'; return; }
+  const esc = s => String(s==null?"":s).replace(/[<>&]/g,m=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[m]));
+  let h = "";
+  h += '<h3>Elemento</h3>';
+  h += '<div class="kv">';
+  h += '<div class="k">Clase</div><div class="val"><span class="pill">'+esc(it.category)+'</span></div>';
+  h += '<div class="k">Nombre</div><div class="val">'+esc(it.name||"—")+'</div>';
+  h += '<div class="k">GlobalId</div><div class="val" style="font-family:ui-monospace,Consolas,monospace;font-size:11.5px">'+esc(guid||"—")+'</div>';
+  h += '</div>';
+  const attrs = it.attributes||{};
+  const shown = Object.entries(attrs).filter(([k])=>!/^_/.test(k) && k!=="Name");
+  if(shown.length){
+    h += '<h3>Atributos</h3><div class="kv">';
+    for(const [k,v] of shown) h += '<div class="k">'+esc(k)+'</div><div class="val">'+esc(v)+'</div>';
+    h += '</div>';
+  }
+  const psets = it.psets||{};
+  const pk = Object.keys(psets);
+  if(pk.length){
+    h += '<h3>Property Sets</h3>';
+    for(const pn of pk){
+      h += '<div class="pset"><div class="pname">'+esc(pn)+'</div><div class="kv">';
+      for(const [k,v] of Object.entries(psets[pn])) h += '<div class="k">'+esc(k)+'</div><div class="val">'+esc(v)+'</div>';
+      h += '</div></div>';
+    }
+  } else {
+    h += '<div class="empty" style="padding-top:6px">Sin Property Sets.</div>';
+  }
+  el.innerHTML = h;
+}
+
+// ---- árbol ----
+const treeRowByLocal = new Map();
+function buildTree(){
+  treeRowByLocal.clear();
+  const root = index.tree;
+  const host = $("#pane-tree");
+  host.innerHTML = "";
+  if(!root){ host.innerHTML = '<div class="empty">Sin estructura espacial.</div>'; return; }
+  host.appendChild(renderNode(root, true));
+}
+function renderNode(node, open){
+  const wrap = document.createElement("div"); wrap.className="node";
+  const row = document.createElement("div"); row.className="node-row";
+  const hasKids = node.children && node.children.length;
+  const tw = document.createElement("span"); tw.className="twisty"; tw.textContent = hasKids ? (open?"▾":"▸") : "·";
+  const cat = document.createElement("span"); cat.className="cat"; cat.textContent = (node.category||"").replace(/^IFC/,"");
+  const nm = document.createElement("span"); nm.className="nm"; nm.textContent = node.name || (node.localId!=null?("#"+node.localId):"");
+  row.append(tw,cat,nm);
+  let kids=null;
+  if(hasKids){
+    kids = document.createElement("div"); kids.className="kids"+(open?"":" hidden");
+    for(const c of node.children) kids.appendChild(renderNode(c,false));
+    tw.onclick = e=>{ e.stopPropagation(); const h=kids.classList.toggle("hidden"); tw.textContent = h?"▸":"▾"; };
+  }
+  if(node.localId!=null){
+    treeRowByLocal.set(node.localId, row);
+    row.onclick = ()=> selectLocalId(node.localId, {focus:true});
+  }
+  wrap.appendChild(row); if(kids) wrap.appendChild(kids);
+  return wrap;
+}
+function markTreeSelection(localId){
+  for(const r of treeRowByLocal.values()) r.classList.remove("sel");
+  const r = localId!=null && treeRowByLocal.get(localId);
+  if(r){ r.classList.add("sel"); r.scrollIntoView({block:"nearest"}); }
+}
+
+// ---- clases (color + visibilidad) ----
+function buildClasses(){
+  const host = $("#pane-classes");
+  host.innerHTML = "";
+  const geom = index.geometryClasses || {};
+  const geomCats = Object.keys(geom).sort();
+  if(geomCats.length){
+    const hd = document.createElement("h3"); hd.textContent="Clases con geometría"; hd.style.margin="6px 0 2px"; host.appendChild(hd);
+    geomCats.forEach((cat,i)=>{
+      const color = PALETTE[i%PALETTE.length];
+      const row = document.createElement("div"); row.className="cls-row";
+      const sw = document.createElement("div"); sw.className="sw"; sw.style.background = "#"+color.toString(16).padStart(6,"0");
+      sw.title = "Colorear / restaurar"; let colored=false;
+      sw.onclick = async ()=>{ if(!model) return; const ids=classToLocalIds[cat]||[];
+        try{ if(colored){ await model.resetColor(ids); sw.style.outline="none"; } else { await model.setColor(ids, new THREE.Color(color)); sw.style.outline="2px solid #fff6"; } colored=!colored; }catch(e){ log("color: "+e.message,"dim"); } };
+      const chk = document.createElement("input"); chk.type="checkbox"; chk.checked=true; chk.title="Visibilidad";
+      chk.onchange = async ()=>{ if(!model) return; try{ await model.setVisible(classToLocalIds[cat]||[], chk.checked); }catch(e){ log("visible: "+e.message,"dim"); } };
+      const nm = document.createElement("span"); nm.className="cls-name"; nm.textContent = cat.replace(/^IFC/,"");
+      const n = document.createElement("span"); n.className="cls-n"; n.textContent = geom[cat];
+      row.append(chk,sw,nm,n); host.appendChild(row);
+    });
+  } else {
+    const e=document.createElement("div"); e.className="empty"; e.textContent="Este modelo no tiene clases con geometría teselada."; host.appendChild(e);
+  }
+  // resto de clases (datos) — informativo
+  const all = index.countByClass||{};
+  const dataCats = Object.keys(all).filter(c=>!geom[c]).sort();
+  if(dataCats.length){
+    const hd=document.createElement("h3"); hd.textContent="Otras clases (datos)"; hd.style.margin="12px 0 2px"; host.appendChild(hd);
+    const box=document.createElement("div"); box.style.padding="2px 4px";
+    for(const c of dataCats){ const s=document.createElement("span"); s.className="pill"; s.textContent=c.replace(/^IFC/,"")+" ("+all[c]+")"; box.appendChild(s); }
+    host.appendChild(box);
+  }
+}
+
+// ---- tabs ----
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".pane").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    $("#pane-"+t.dataset.pane).classList.add("active");
+  };
+});
+
+// ---- arranque ----
+async function main(){
+  try{ await loadLibs(); }catch(e){ logEl.classList.remove("hide"); log("✗ No se pudieron cargar las librerías (¿sin internet / CDN bloqueado?): "+e.message,"err"); return; }
+  initScene();
+
+  // manifest de modelos
+  let models=[];
+  try{ models = await (await fetch("models/manifest.json")).json(); }
+  catch(_){ const m = new URLSearchParams(location.search).get("m")||"model"; models=[{id:m,label:m,frag:"models/"+m+".frag",props:"models/"+m+".props.json"}]; }
+
+  const sel = $("#modelSel");
+  models.forEach(m=>{ const o=document.createElement("option"); o.value=m.id; o.textContent=m.label; sel.appendChild(o); });
+  const want = new URLSearchParams(location.search).get("m");
+  const start = models.find(m=>m.id===want) || models[0];
+  sel.value = start.id;
+  sel.onchange = ()=>{ const e=models.find(m=>m.id===sel.value); loadModel(e).catch(err=>log("✗ "+err.message,"err")); };
+
+  $("#fitBtn").onclick = fitView;
+  await loadModel(start);
+}
+$("#fitBtn") && main();
+</script>
+</body>
+</html>
+<!-- fin -->

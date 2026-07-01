@@ -1,0 +1,419 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N"
+  },
+  "materiales": {
+    "S275": {
+      "E": 210000000000.0,
+      "G": 80770000000.0,
+      "nu": 0.3,
+      "rho": 7850.0,
+      "fy": 275000000.0,
+      "fck": null,
+      "fctm": null
+    },
+    "C30/37": {
+      "E": 32840000000.0,
+      "G": 13683333333.333334,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    },
+    "C25/30": {
+      "E": 31000000000.0,
+      "G": 12916666666.666668,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 25000000.0,
+      "fctm": 2600000.0
+    }
+  },
+  "secciones": {
+    "HEB 240": {
+      "A": 0.0106,
+      "Iy": 0.0001126,
+      "Iz": 3.923e-05,
+      "Wely": 0.0009383,
+      "Wply": 0.001053,
+      "Welz": 0.0003269,
+      "Wplz": 0.0004984,
+      "J": 1.027e-06,
+      "Avz": 0.003323,
+      "h": 0.24,
+      "clase": 1,
+      "fuente": "catalogo"
+    },
+    "IPE 360": {
+      "A": 0.007273,
+      "Iy": 0.0001627,
+      "Iz": 1.043e-05,
+      "Wely": 0.0009036,
+      "Wply": 0.001019,
+      "Welz": 0.0001228,
+      "Wplz": 0.0001911,
+      "J": 3.732e-07,
+      "Avz": 0.003514,
+      "h": 0.36,
+      "clase": 1,
+      "fuente": "catalogo"
+    },
+    "IPE 400": {
+      "A": 0.008446,
+      "Iy": 0.0002313,
+      "Iz": 1.318e-05,
+      "Wely": 0.001156,
+      "Wply": 0.001307,
+      "Welz": 0.0001464,
+      "Wplz": 0.000229,
+      "J": 5.108e-07,
+      "Avz": 0.004269,
+      "h": 0.4,
+      "clase": 1,
+      "fuente": "catalogo"
+    },
+    "Pilar 400x400": {
+      "A": 0.16000000000000003,
+      "Iy": 0.002133333333333334,
+      "Iz": 0.002133333333333334,
+      "J": 0.0036053333333333345,
+      "Wely": 0.010666666666666668,
+      "Wply": 0.016000000000000004,
+      "Welz": 0.010666666666666668,
+      "Wplz": 0.016000000000000004,
+      "Avz": 0.13333333333333336,
+      "h": 0.4,
+      "b": 0.4,
+      "clase": 1,
+      "fuente": "geometria_rect"
+    }
+  },
+  "nodos": {
+    "PORT_base_1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "PORT_base_2": {
+      "x": 6.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "PORT_top_1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 4.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "PORT_top_2": {
+      "x": 6.0,
+      "y": 0.0,
+      "z": 4.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "MIX_ap_1": {
+      "x": 0.0,
+      "y": 20.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "MIX_ap_2": {
+      "x": 8.0,
+      "y": 20.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "MURO_cabeza": {
+      "x": 30.5,
+      "y": 0.0,
+      "z": 3.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "ZAP_esq_-1_-1": {
+      "x": 38.75,
+      "y": -1.25,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "ZAP_esq_-1_1": {
+      "x": 38.75,
+      "y": 1.25,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "ZAP_esq_1_-1": {
+      "x": 41.25,
+      "y": -1.25,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "ZAP_esq_1_1": {
+      "x": 41.25,
+      "y": 1.25,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "ZAP_pilar_cabeza": {
+      "x": 40.0,
+      "y": 0.0,
+      "z": 1.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "ZAP_pilar_pie": {
+      "x": 40.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "barras": {
+    "PORT_pilar_1": {
+      "ni": "PORT_base_1",
+      "nj": "PORT_top_1",
+      "seccion": "HEB 240",
+      "material": "S275",
+      "tipo": "pilar"
+    },
+    "PORT_pilar_2": {
+      "ni": "PORT_base_2",
+      "nj": "PORT_top_2",
+      "seccion": "HEB 240",
+      "material": "S275",
+      "tipo": "pilar"
+    },
+    "PORT_dintel": {
+      "ni": "PORT_top_1",
+      "nj": "PORT_top_2",
+      "seccion": "IPE 360",
+      "material": "S275",
+      "tipo": "viga"
+    },
+    "MIX_viga": {
+      "ni": "MIX_ap_1",
+      "nj": "MIX_ap_2",
+      "seccion": "IPE 400",
+      "material": "S275",
+      "tipo": "viga"
+    },
+    "ZAP_pilar": {
+      "ni": "ZAP_pilar_pie",
+      "nj": "ZAP_pilar_cabeza",
+      "seccion": "Pilar 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    }
+  },
+  "superficies": [
+    {
+      "nombre": "MIX_losa",
+      "esquinas": [],
+      "esquinas_coords": [
+        [
+          0.0,
+          18.5,
+          0.0
+        ],
+        [
+          8.0,
+          18.5,
+          0.0
+        ],
+        [
+          8.0,
+          21.5,
+          0.0
+        ],
+        [
+          0.0,
+          21.5,
+          0.0
+        ]
+      ],
+      "espesor": 0.12,
+      "malla": 0.5,
+      "material": "C25/30",
+      "apoyo": "",
+      "cargas": [
+        {
+          "caso": "G_construccion",
+          "qz": -2500.0
+        },
+        {
+          "caso": "Q_construccion",
+          "qz": -750.0
+        },
+        {
+          "caso": "G_mixta",
+          "qz": -2000.0
+        },
+        {
+          "caso": "Q_mixta",
+          "qz": -5000.0
+        }
+      ]
+    },
+    {
+      "nombre": "MURO_carga",
+      "esquinas": [],
+      "esquinas_coords": [
+        [
+          30.0,
+          0.0,
+          0.0
+        ],
+        [
+          31.0,
+          0.0,
+          0.0
+        ],
+        [
+          31.0,
+          0.0,
+          3.0
+        ],
+        [
+          30.0,
+          0.0,
+          3.0
+        ]
+      ],
+      "espesor": 0.2,
+      "malla": 0.5,
+      "material": "C30/37",
+      "apoyo": "",
+      "cargas": []
+    },
+    {
+      "nombre": "ZAPATA_aislada",
+      "esquinas": [
+        "ZAP_esq_-1_-1",
+        "ZAP_esq_1_-1",
+        "ZAP_esq_1_1",
+        "ZAP_esq_-1_1"
+      ],
+      "esquinas_coords": [
+        [
+          38.75,
+          -1.25,
+          0.0
+        ],
+        [
+          41.25,
+          -1.25,
+          0.0
+        ],
+        [
+          41.25,
+          1.25,
+          0.0
+        ],
+        [
+          38.75,
+          1.25,
+          0.0
+        ]
+      ],
+      "espesor": 0.6,
+      "malla": 0.5,
+      "material": "C30/37",
+      "apoyo": "",
+      "cargas": []
+    }
+  ]
+}

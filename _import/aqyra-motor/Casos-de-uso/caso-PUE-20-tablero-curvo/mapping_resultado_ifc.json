@@ -1,0 +1,21 @@
+{
+  "elementos": {
+    "CURVO": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "tablero_curvo",
+        "R_m": 200.0,
+        "A_m2": 5.177,
+        "Iy_m4": 4.812,
+        "J_Bredt_m4": 8.8476,
+        "M_Ed_kNm": 60176.1,
+        "T_apoyo_kNm": 8489.8,
+        "Acoplamiento_T_M": 0.141,
+        "Tau_total_MPa": 4.91,
+        "Tau_Rd_MPa": 7.38,
+        "Frecuencia_fundamental_Hz": 2.7,
+        "Aprovechamiento_max": 0.666,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

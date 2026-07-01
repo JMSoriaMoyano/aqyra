@@ -1,0 +1,19 @@
+VALIDACION IFC caso-01.ifc  (schema IFC4)
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralPointConnection       4
+  IfcStructuralCurveMember           3
+  IfcBoundaryNodeCondition           2
+  IfcIShapeProfileDef                2
+  IfcMaterialProfileSet              2
+  IfcStructuralLoadGroup             2
+  IfcStructuralCurveAction           2
+  IfcStructuralLoadLinearForce       2
+  IfcRelConnectsStructuralActivity   2
+  IfcRelAssociatesMaterial           3
+  IfcMaterialProperties              1
+LoadedBy: ['G', 'Q']
+Nodos: N1(0,0,0), N2(0,0,4), N3(6,0,4), N4(6,0,0)
+  C1 -> perfil HEB 200 (h=200 b=200 tw=9.0 tf=15.0 mm)
+  B1 -> perfil IPE 330 (h=330 b=160 tw=7.5 tf=11.5 mm)
+  C2 -> perfil HEB 200 (h=200 b=200 tw=9.0 tf=15.0 mm)

@@ -1,0 +1,62 @@
+{
+  "elementos": {
+    "COL-1": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_mm": 315.0,
+        "Caudal_l_s": 12.037,
+        "Velocidad_m_s": 0.8201,
+        "Calado_m": 0.0767,
+        "Llenado_pct": 24.35,
+        "Pendiente_J": 0.007071,
+        "Regimen": "supercritico",
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "COL-2": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_mm": 315.0,
+        "Caudal_l_s": 12.037,
+        "Velocidad_m_s": 0.8201,
+        "Calado_m": 0.0767,
+        "Llenado_pct": 24.35,
+        "Pendiente_J": 0.007071,
+        "Regimen": "supercritico",
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "COL-3": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_mm": 400.0,
+        "Caudal_l_s": 24.074,
+        "Velocidad_m_s": 1.1054,
+        "Calado_m": 0.0918,
+        "Llenado_pct": 22.96,
+        "Pendiente_J": 0.01,
+        "Regimen": "supercritico",
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "COL-4": {
+      "Pset_Estructurando_ResultadoRed": {
+        "DN_mm": 315.0,
+        "Caudal_l_s": 7.8704,
+        "Velocidad_m_s": 0.8979,
+        "Calado_m": 0.0535,
+        "Llenado_pct": 16.97,
+        "Pendiente_J": 0.012998,
+        "Regimen": "supercritico",
+        "Sentido_flujo": "ni->nj"
+      }
+    },
+    "VERTIDO": {
+      "Pset_Estructurando_ResultadoRed": {
+        "Caudal_total_l_s": 31.9444
+      }
+    }
+  },
+  "_meta": {
+    "pset": "Pset_Estructurando_ResultadoRed",
+    "fuente": "obras-lineales/red (solver Manning lamina libre)",
+    "nota": "Predimensionado; revisar y firmar por tecnico competente."
+  }
+}

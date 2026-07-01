@@ -1,0 +1,61 @@
+VALIDACION IFC caso-09.ifc  (schema IFC4)
+
+Cimentacion profunda: PILOTE + ENCEPADO + PANTALLA ANCLADA (3 subestructuras que
+el agente debe CLASIFICAR y ENRUTAR a 3 modulos encadenados).
+
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralSurfaceMember         1   (ENCEPADO_2pilotes, horizontal z=0, Thickness=0,90)
+  IfcStructuralCurveMember           3   (2 pilotes + 1 pantalla, verticales)
+  IfcStructuralPointConnection       7   (2 cabezas + 2 puntas de pilote, 1 pilar, coronacion+pie de pantalla)
+  IfcBoundaryNodeCondition           2   (cabezas de pilote = apoyos del encepado)
+  IfcCircleProfileDef                1   (pilote Ø0,60)
+  IfcRectangleProfileDef             1   (pantalla 0,60 x 1,00)
+  IfcMaterialProfileSet              3   (2 pilotes + pantalla)
+  IfcStructuralPointAction           6   (cabeza de cada pilote G/Q + pilar G/Q)
+  IfcStructuralLoadSingleForce       6
+  IfcStructuralLoadGroup             2   (G permanente, Q variable)
+  IfcRelConnectsStructuralActivity   6
+  IfcRelAssociatesMaterial           4   (encepado + 2 pilotes + pantalla)
+Materiales: ['C30/37']
+
+Lectura con el parser generico ortodoxo (laminas/ifc_to_model_3d):
+  nodos=7  barras=3 (las 3 verticales -> tipo 'pilar' por geometria)  superficies=1
+  Superficie 'ENCEPADO_2pilotes' horizontal (z=0) t=0,90 mat=C30/37
+  Barras: Pilote_PIL-1, Pilote_PIL-2 (seccion IfcCircleProfileDef Ø0,60), PANTALLA
+          (seccion IfcRectangleProfileDef 0,60x1,00)
+
+Modelo (sintetico, realista) -- cimentacion profunda de un edificio con sotano:
+  A) PILOTES (modulo `pilotes`, EC7): 2 pilotes C30/37 Ø600 mm, L=12 m, separacion
+     a=1,80 m. Geotecnia kh=15 MN/m3, qs=60 kPa, qb=2500 kPa. Carga de cabeza por
+     pilote N_G=650 / N_Q=225 kN (+ H_Q=60 kN lateral). [bajada del pilar / 2]
+  B) ENCEPADO (modulo `bielas-tirantes`, region D, EC2 §6.5): bajo pilar 0,45x0,45,
+     canto 0,90, ancho 0,90, separacion 1,80. Carga del pilar N_G=1300 / N_Q=450 kN.
+  C) PANTALLA ANCLADA (modulo `muros-contencion`, EC7): e=0,60 m, excavacion 7,0 m,
+     empotramiento 4,5 m (L=11,5 m), 1 fila de anclas a z=1,5 m (incl 25, sep 2,0,
+     bulbo Ø0,20 tau=200 kPa). Terreno gamma=19 phi=30, q=10 kPa, Rd=350 kPa.
+
+Datos SIN entidad de analisis estandar (Pset, igual que kh/qs/qb del caso 5,
+conectores del caso 6 y Rd/ks del caso 8):
+  Pilote   -> Pset_Estructurando_Pilote (Diametro, Longitud, kh, qs, qb, ...) + Carga_Pilote_G/Q [respaldo]
+  Encepado -> Pset_Estructurando_Encepado (a, canto, ancho, lado pilar, Ø pilote) + Carga_Pilar_G/Q [respaldo]
+  Pantalla -> Pset_Estructurando_Pantalla/_Ancla/_Terreno/_Carga_q
+
+OK: el IFC abre con ifcopenshell y el parser generico lee las 3 barras verticales
+(2 pilotes + pantalla) con su seccion del profile y la superficie del encepado, mas
+las 6 cargas de cabeza (IfcStructuralPointAction) y los apoyos de cabeza de pilote
+(IfcBoundaryNodeCondition).
+
+BRECHA del caso 9 (lo que hay que corregir en el proximo hilo):
+  1. CLASIFICAR/ENRUTAR cada elemento: la barra vertical es 'pilar' por geometria; hay
+     que distinguir PILOTE (Pset_Estructurando_Pilote) de PANTALLA (Pset_Estructurando_
+     Pantalla), y la superficie como ENCEPADO (Pset_Estructurando_Encepado). Es el paso
+     previo al caso 10 (IFC multi-elemento).
+  2. Via ORTODOXA en cada modulo (`solver_pilote.py`, `run_all_encepado.py`,
+     `solver_pantalla.py`): `parse_ortodoxo()` + `parse_auto()` que lean la geometria de
+     las entidades estandar (barra vertical + IfcCircleProfileDef / IfcRectangleProfileDef;
+     superficie del encepado + pilotes en IfcStructuralPointConnection) y las cargas de
+     cabeza de los IfcStructuralPointAction; manteniendo en Pset SOLO la geotecnia (kh, qs,
+     qb, terreno, ancla) y la geometria de region D, igual que casos 5/6/8.
+  3. Ampliar `perfiles_db.props_from_profile_def` a IfcCircleProfileDef (A=pi D^2/4,
+     I=pi D^4/64) para la seccion ortodoxa del pilote (hoy devuelve None para el circulo).

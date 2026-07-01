@@ -1,0 +1,155 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "caudal": "l/s",
+    "presion": "kPa",
+    "potencia": "W"
+  },
+  "sistema": {
+    "tipo": "ELECTRICAL",
+    "fluido": null,
+    "nombre": "Instalacion electrica terciaria",
+    "demanda": null
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "x": 20.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N3": {
+      "x": 32.0,
+      "y": 10.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "x": 32.0,
+      "y": -10.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "x": 30.0,
+      "y": 20.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N6": {
+      "x": 35.0,
+      "y": -18.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    }
+  },
+  "tramos": {
+    "T1": {
+      "ni": "N1",
+      "nj": "N2",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 20.0,
+      "elemento": "LGA",
+      "clase": "IfcFlowSegment"
+    },
+    "T2": {
+      "ni": "N2",
+      "nj": "N3",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 15.6205,
+      "elemento": "L-LUM-1",
+      "clase": "IfcFlowSegment"
+    },
+    "T3": {
+      "ni": "N2",
+      "nj": "N4",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 15.6205,
+      "elemento": "L-LUM-2",
+      "clase": "IfcFlowSegment"
+    },
+    "T4": {
+      "ni": "N2",
+      "nj": "N5",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 22.3607,
+      "elemento": "L-TOMA-1",
+      "clase": "IfcFlowSegment"
+    },
+    "T5": {
+      "ni": "N2",
+      "nj": "N6",
+      "dn": null,
+      "material": "Cu",
+      "rugosidad": null,
+      "longitud": 23.4307,
+      "elemento": "L-MOTOR-1",
+      "clase": "IfcFlowSegment"
+    }
+  },
+  "terminales": [
+    {
+      "id": "LUM-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N3",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "LUM-2",
+      "tipo": "USERDEFINED",
+      "nodo": "N4",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "TOMA-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N5",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    },
+    {
+      "id": "MOTOR-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N6",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null
+    }
+  ],
+  "fuentes": [
+    {
+      "id": "Cuadro general",
+      "nodo": "N1",
+      "presion": null,
+      "caudal": null,
+      "tipo": "controlador"
+    }
+  ],
+  "metricas": {
+    "nudos_fusionados": 4,
+    "huecos_puenteados": [],
+    "cruces_troceados": [],
+    "segmentos_sin_puerto": [],
+    "factor_escala_ifc": 1.0,
+    "tol_snap_m": 0.001
+  }
+}

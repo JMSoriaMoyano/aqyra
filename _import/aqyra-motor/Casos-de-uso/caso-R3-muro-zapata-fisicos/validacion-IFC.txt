@@ -1,0 +1,39 @@
+VALIDACION IFC - caso-R3.ifc (IFC FISICO: muro IfcWall + zapata IfcFooting)
+schema=IFC4  archivo=/sessions/clever-blissful-hawking/mnt/Estrucutrando/Casos-de-uso/caso-R3-muro-zapata-fisicos/caso-R3.ifc
+
+Recuento de entidades:
+  IfcProject                       1
+  IfcSite                          1
+  IfcBuilding                      1
+  IfcBuildingStorey                1
+  IfcWall                          1
+  IfcFooting                       1
+  IfcSlab                          0
+  IfcExtrudedAreaSolid             2
+  IfcRectangleProfileDef           2
+  IfcMaterial                      2
+  IfcMaterialProperties            2
+  IfcMaterialLayerSet              2
+  IfcMaterialLayerSetUsage         2
+  IfcRelAssociatesMaterial         2
+  IfcPropertySet                   6
+  IfcRelDefinesByProperties        6
+  IfcStructuralSurfaceMember       0
+  IfcStructuralPointAction         0
+  IfcStructuralCurveMember         0
+  IfcBoundaryNodeCondition         0
+
+Elementos fisicos (con geometria Body, SIN entidades de analisis):
+  IfcWall 'Muro_carga'  PredefinedType=SOLIDWALL  Depth(extrusion)=3.000 m  ExtrudedDirection=(0.0, 0.0, 1.0)
+  IfcFooting 'Zapata_aislada'  PredefinedType=PAD_FOOTING  Depth(canto)=0.600 m  ExtrudedDirection=(0.0, 0.0, 1.0)
+
+Material/espesor por IfcMaterialLayerSet (Sigma LayerThickness):
+  Zapata_aislada_capas  t=0.600 m  material=C30/37
+  Muro_carga_capas  t=0.200 m  material=C25/30
+
+Comprobacion: entidades de ANALISIS (deben ser 0 en un IFC fisico):
+  IfcStructuralSurfaceMember       0
+  IfcStructuralPointAction         0
+  IfcStructuralCurveMember         0
+  IfcBoundaryNodeCondition         0
+  IfcStructuralAnalysisModel       0

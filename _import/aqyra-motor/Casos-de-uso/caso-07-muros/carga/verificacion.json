@@ -1,0 +1,79 @@
+{
+  "info": {
+    "H": 3.0,
+    "L": 1.0,
+    "espesor": 0.2,
+    "beta": 1.0,
+    "material": "C25/30",
+    "peso_N_m2": 4905.0
+  },
+  "equilibrio": {
+    "aplicada_vert_ELU_kN": 537.36525,
+    "reaccion_vert_ELU_kN": 537.3652500000003,
+    "error_pct": 4.3328191328685586e-14
+  },
+  "compresion": {
+    "N_Ed_kN_m": 537.36525,
+    "M_Ed_kNm_m": 0.0,
+    "lo_m": 3.0,
+    "lambda": 51.96152422706631,
+    "lambda_lim": 26.848705075361536,
+    "esbelto": true,
+    "e0_mm": 0.0,
+    "ei_mm": 7.5,
+    "etot_mm": 7.5,
+    "Phi": 0.7545,
+    "N_Rd_kN_m": 2515.0,
+    "u": 0.2136641153081511,
+    "ok": true
+  },
+  "esbeltez": {
+    "N_Ed_kN_m": 537.36525,
+    "M1_Ed_kNm_m": 12.9375,
+    "lo_m": 3.0,
+    "lambda": 51.96152422706631,
+    "lambda_lim": 26.737529835598092,
+    "esbelto": true,
+    "n": 0.161209575,
+    "e0_mm": 24.075803189729893,
+    "ei_mm": 7.5,
+    "e2_mm": 26.69859911524052,
+    "Kr": 1.0,
+    "Kphi": 1.0,
+    "M0Ed_kNm_m": 16.967739375,
+    "M2_kNm_m": 14.346899388211002,
+    "M_Ed_kNm_m": 31.314638763211,
+    "As_tot_cm2_m": 7.853981624999999,
+    "x_mm": 47.63826100949832,
+    "M_Rd_kNm_m": 67.25247721755798,
+    "u": 0.4656280342196155,
+    "ok": true,
+    "armado": "phi10/200 c/cara",
+    "As_prov_cm2_m": 7.853981624999999,
+    "recubrimiento_mm": 30.0
+  },
+  "flexion_fuera_plano": {
+    "m_Ed_kNm_m": 0.0,
+    "mu": 0.0,
+    "mu_ok": true,
+    "As_req_cm2_m": 0.0,
+    "As_min_cm2_m": 2.21728,
+    "As_max_cm2_m": 80.0,
+    "As_dim_cm2_m": 2.21728,
+    "armado": "φ10/300",
+    "As_prov_cm2_m": 2.6179938779914944,
+    "ok": true
+  },
+  "armadura_minima": {
+    "As_v_min_cm2_m": 4.0,
+    "As_h_min_cm2_m": 2.0
+  },
+  "flecha": {
+    "L_m": 3.0,
+    "f_mm": 0.0,
+    "lim_mm": 12.0,
+    "u": 0.0,
+    "ok": true
+  },
+  "veredicto": "CUMPLE"
+}
