@@ -32,6 +32,11 @@ jobs:
         run: |
           TAG="${GITHUB_REF_NAME}"
           echo "Verificando firma del tag $TAG"
+          # actions/checkout@v4, al dispararse por un push de tag, deja el ref del tag PELADO
+          # (refs/tags/$TAG apunta al commit, no al objeto de tag). Traemos el objeto de tag real
+          # para poder distinguir anotado/firmado de ligero.
+          git tag -d "$TAG" 2>/dev/null || true
+          git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
           # el objeto de tag debe ser 'tag' (anotado) y llevar firma PGP
           TYPE=$(git cat-file -t "$TAG")
           if [ "$TYPE" != "tag" ]; then
