@@ -1,0 +1,40 @@
+{
+  "nombre": "LOSA",
+  "tablero": {
+    "L": 16.0,
+    "B": 14.0,
+    "t": 0.9,
+    "nx": 16,
+    "ny": 14,
+    "g2_N_m2": 3000.0,
+    "posiciones": 15,
+    "n_carriles": 2,
+    "fck_transferencia": 28000000.0,
+    "material": {
+      "E": 34000000000.0,
+      "nu": 0.2,
+      "G": 14200000000.0,
+      "rho": 2500.0,
+      "fck": 40000000.0
+    },
+    "viga_borde": {
+      "A": 0.42,
+      "Iy": 0.038,
+      "Iz": 0.012,
+      "J": 0.02
+    }
+  },
+  "postesado": {
+    "P0_x_N_m": 1700000.0,
+    "P0_y_N_m": 250000.0,
+    "a_x": 0.45,
+    "a_y": 0.18,
+    "Ap_x_m2_m": 0.0008,
+    "fpk": 1860000000.0,
+    "perdidas_pct": 18.0,
+    "d_p": 0.6,
+    "d_s": 0.62,
+    "As_pas_x_m2_m": 0.0013
+  },
+  "_tipologia": "losa_postesada"
+}

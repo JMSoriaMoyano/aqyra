@@ -1,0 +1,36 @@
+{
+  "sistema": "forjado_losa_sobre_vigas",
+  "modulo": "laminas+barras (run_forjado)",
+  "run_all": "laminas/run_forjado.py",
+  "superficies": [
+    {
+      "superficie": "Losa_forjado",
+      "material": "C30/37",
+      "espesor_m": 0.12,
+      "horizontal": true,
+      "hormigon": true,
+      "vigas_asociadas": [
+        "B1",
+        "B2"
+      ]
+    }
+  ],
+  "barras": [
+    {
+      "barra": "B1",
+      "material": "S275",
+      "seccion": "IPE 400",
+      "orientacion": "horizontal",
+      "rol": "viga",
+      "acero_I": true
+    },
+    {
+      "barra": "B2",
+      "material": "S275",
+      "seccion": "IPE 400",
+      "orientacion": "horizontal",
+      "rol": "viga",
+      "acero_I": true
+    }
+  ]
+}

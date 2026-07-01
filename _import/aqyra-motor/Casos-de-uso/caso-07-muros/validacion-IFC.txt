@@ -1,0 +1,40 @@
+VALIDACION IFC caso-07.ifc  (schema IFC4)
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralSurfaceMember         2   (Muro_carga, Muro_contencion)
+  IfcStructuralPointConnection       3
+  IfcBoundaryNodeCondition           3
+  IfcFaceSurface                     2
+  IfcPolyLoop                        2
+  IfcStructuralPointAction           2   (axil de cabeza del muro de carga: G y Q)
+  IfcStructuralLoadSingleForce       2
+  IfcStructuralLoadGroup             2
+  IfcRelConnectsStructuralActivity   2
+  IfcRelAssociatesMaterial           2
+  IfcMaterialProperties              2
+Materiales: ['C25/30', 'C30/37']
+
+Lectura con el parser generico ortodoxo (laminas/ifc_to_model_3d):
+  nodos=3  barras=0  superficies=2
+  Superficie 'Muro_carga'      vertical (plano Y=0) esquinas z={0;3,0} t=0,20 mat=C25/30
+  Superficie 'Muro_contencion' vertical (plano X=11,0) esquinas z={0,5;5,5} t=0,40 mat=C30/37
+
+Carga de cabeza del muro de carga (IfcStructuralPointAction, como el pilar del caso 5):
+  Ncab_G  nodo=MC_cabeza  Fz=-250 kN  My=+6,2 kN.m  (= N*e, e=25 mm)
+  Ncab_Q  nodo=MC_cabeza  Fz=-120 kN  My=+3,0 kN.m
+
+Datos sin entidad de analisis estandar (Pset, igual que R_d/k_s del caso 5 y
+conectores/chapa del caso 6):
+  Muro_carga      -> Pset_Estructurando_MuroCarga (H, t, ancho, arriostrado, e_cabeza)
+  Muro_contencion -> Pset_Estructurando_Muro      (geometria T-invertida)
+                     Pset_Estructurando_Terreno    (gamma, phi, c, beta, delta,
+                                                     pasivo, base, R_d, freatico)
+                     Pset_Estructurando_Carga_Muro_q (sobrecarga 10 kPa)
+
+OK: el IFC abre correctamente con ifcopenshell y el parser ortodoxo lee las dos
+superficies (muros verticales) y los materiales. El muro de contencion en mensula
+sigue leyendo su geometria en T y el terreno del Pset (sin entidad de analisis
+estandar). Brecha del caso 7: dar al modulo 'muros-contencion' (y al de muro de
+carga de 'laminas') una via ortodoxa que tome el alzado/espesor/material de la
+superficie y la carga de cabeza de los IfcStructuralPointAction, manteniendo
+terreno y geometria T en Pset.

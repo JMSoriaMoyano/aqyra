@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Visor IFC — PoC ThatOpen (fragments) v0.5-alpha</title>
+<style>
+  :root{color-scheme:dark}
+  html,body{margin:0;height:100%;background:#1e2330;font-family:system-ui,Segoe UI,sans-serif;color:#e8ecf4}
+  #app{position:fixed;inset:0}
+  #hud{position:fixed;top:12px;left:12px;background:rgba(20,24,34,.9);padding:10px 14px;border-radius:10px;font-size:13px;max-width:360px;line-height:1.5;z-index:10}
+  #hud b{color:#7fd1ff}
+  #log{position:fixed;bottom:12px;left:12px;right:12px;max-height:38vh;overflow:auto;background:rgba(10,12,18,.92);padding:10px 14px;border-radius:10px;font:12px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;z-index:10}
+  .ok{color:#8fe388}.err{color:#ff8a8a}.warn{color:#ffd479}.dim{opacity:.7}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="hud">
+  <div><b>PoC Visor — motor ThatOpen / fragments</b></div>
+  <div id="info" class="dim">Arrancando diagnóstico…</div>
+  <div class="dim" style="margin-top:6px">Órbita: arrastrar · Zoom: rueda · Mover: clic derecho</div>
+</div>
+<div id="log"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://esm.sh/three@0.184.0",
+    "three/": "https://esm.sh/three@0.184.0/",
+    "@thatopen/fragments": "https://esm.sh/@thatopen/fragments@3.4.5?external=three"
+  }
+}
+</script>
+
+<script>
+// Captura de errores globales -> a pantalla (sin necesidad de DevTools)
+const logEl = document.getElementById("log");
+function line(msg, cls){ const d=document.createElement("div"); if(cls)d.className=cls; d.textContent=msg; logEl.appendChild(d); logEl.scrollTop=logEl.scrollHeight; }
+function info(msg, cls){ const i=document.getElementById("info"); i.textContent=msg; i.className=cls||""; }
+line("· Diagnóstico iniciado. Si algo falla, el motivo aparecerá aquí.", "dim");
+window.addEventListener("error", e=>{ line("ERROR JS: "+(e.message||e.error||e), "err"); if(e.filename) line("   en "+e.filename+":"+e.lineno, "dim"); });
+window.addEventListener("unhandledrejection", e=>{ line("PROMESA RECHAZADA: "+(e.reason && (e.reason.message||e.reason)), "err"); });
+</script>
+
+<script type="module">
+const FRAG_B64 = "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";
+const log = (m,c)=>{ const d=document.createElement("div"); if(c)d.className=c; d.textContent=m; document.getElementById("log").appendChild(d); document.getElementById("log").scrollTop=1e9; };
+const info = (m,c)=>{ const i=document.getElementById("info"); i.textContent=m; i.className=c||""; };
+function b64ToBytes(b64){ const bin=atob(b64); const a=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i); return a; }
+
+(async ()=>{
+  if(location.protocol === "file:"){
+    log("⚠ Abierto como archivo local (file://). Chrome suele BLOQUEAR el worker de fragments aquí,", "warn");
+    log("  así que el modelo puede quedarse en 'Cargando…'. Solución: servir por http (ver instrucciones).", "warn");
+  }
+  let THREE, OrbitControls, FRAGS;
+  try{
+    info("Cargando three.js…");
+    log("→ import three…");
+    THREE = await import("three");
+    log("✓ three "+(THREE.REVISION||"?")+" cargado","ok");
+
+    log("→ import OrbitControls…");
+    ({ OrbitControls } = await import("three/examples/jsm/controls/OrbitControls.js"));
+    log("✓ OrbitControls cargado","ok");
+
+    log("→ import @thatopen/fragments (puede tardar varios segundos la 1ª vez)…");
+    FRAGS = await import("@thatopen/fragments");
+    log("✓ @thatopen/fragments cargado","ok");
+  }catch(e){
+    info("Fallo al cargar librerías del CDN", "err");
+    log("✗ No se pudieron cargar los módulos: "+e.message, "err");
+    log("  Causa habitual: sin conexión a internet, o un CDN bloqueado por red/proxy.", "warn");
+    return;
+  }
+
+  try{
+    info("Inicializando escena 3D…");
+    const app=document.getElementById("app");
+    const scene=new THREE.Scene(); scene.background=new THREE.Color(0x1e2330);
+    const camera=new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.01, 5000); camera.position.set(8,8,8);
+    const renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setSize(innerWidth,innerHeight); renderer.setPixelRatio(devicePixelRatio); app.appendChild(renderer.domElement);
+    const controls=new OrbitControls(camera, renderer.domElement); controls.enableDamping=true;
+    scene.add(new THREE.GridHelper(40,40,0x44506a,0x2a3142)); scene.add(new THREE.AxesHelper(3));
+    scene.add(new THREE.HemisphereLight(0xffffff,0x444466,1.1));
+    const dir=new THREE.DirectionalLight(0xffffff,1.0); dir.position.set(10,20,10); scene.add(dir);
+    addEventListener("resize", ()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
+    log("✓ WebGL inicializado","ok");
+
+    let fragments;
+    (function animate(){ requestAnimationFrame(animate); controls.update(); if(fragments) fragments.update(); renderer.render(scene,camera); })();
+
+    info("Descargando worker de fragments…");
+    log("→ fetch worker.mjs…");
+    const workerUrl="https://cdn.jsdelivr.net/npm/@thatopen/fragments@3.4.5/dist/Worker/worker.mjs";
+    const resp=await fetch(workerUrl); if(!resp.ok) throw new Error("worker HTTP "+resp.status);
+    const blob=await resp.blob();
+    const worker=URL.createObjectURL(new File([blob],"worker.mjs",{type:"text/javascript"}));
+    log("✓ worker descargado ("+(blob.size/1024|0)+" KB)","ok");
+
+    info("Cargando modelo…");
+    fragments=new FRAGS.FragmentsModels(worker);
+    log("→ creando worker y cargando geometría…");
+    const loadP = fragments.load(b64ToBytes(FRAG_B64), { modelId:"poc" });
+    let resolved=false; loadP.then(()=>resolved=true);
+    setTimeout(()=>{ if(!resolved){
+      info("El worker no responde", "err");
+      log("✗ load() no resolvió en 8 s: el worker de fragments no arrancó.", "err");
+      log("  Causa casi segura: la página está como file://. Sírvela por http (ver más abajo).", "warn");
+      log("  En la carpeta del proyecto:  python -m http.server 8000", "warn");
+      log("  Y abre:  http://localhost:8000/visor-poc-thatopen.html", "warn");
+    }}, 8000);
+    const model=await loadP;
+    if(model.useCamera) model.useCamera(camera);
+    scene.add(model.object);
+    await fragments.update(true);
+    log("✓ modelo cargado en escena","ok");
+
+    const box=new THREE.Box3().setFromObject(model.object);
+    const size=box.getSize(new THREE.Vector3()).length()||10;
+    const c=box.getCenter(new THREE.Vector3());
+    controls.target.copy(c);
+    camera.position.copy(c).add(new THREE.Vector3(1,0.8,1).multiplyScalar(size*0.7));
+    camera.near=Math.max(size/100,0.001); camera.far=size*100; camera.updateProjectionMatrix(); controls.update();
+
+    info("Modelo cargado ✓ — caso-R4","ok");
+    log("✓ render OK","ok");
+    if(size<=0.001) log("⚠ bbox vacío: geometría no visible (revisar).","warn");
+    // Listado de clases (cosmético): getCategories/getItemsWithGeometry pueden ser asíncronos en modo multihilo
+    try{
+      let cats = model.getCategories?.();
+      if(cats && typeof cats.then==="function") cats = await cats;
+      cats = Array.isArray(cats) ? cats.filter(x=>/^IFC/.test(x)) : [];
+      let geom = model.getItemsWithGeometry?.();
+      if(geom && typeof geom.then==="function") geom = await geom;
+      const n = Array.isArray(geom) ? geom.length : (geom?.size ?? "?");
+      info("Modelo cargado ✓ — caso-R4 ("+n+" elementos)","ok");
+      if(cats.length) log("Clases: "+cats.slice(0,8).join(", "),"ok");
+    }catch(e){ log("(info de clases no disponible: "+e.message+")","dim"); }
+  }catch(e){
+    info("Error durante el render", "err");
+    log("✗ "+e.message, "err");
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+{
+  "materiales": {
+    "C30/37": {
+      "E": 33000000000.0,
+      "G": 13750000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "superficie": {
+    "Lu": 6.0,
+    "Lv": 8.0,
+    "espesor": 0.2,
+    "malla": 0.5,
+    "angulo": 29.999999999999996,
+    "material": "C30/37",
+    "cargas": [
+      {
+        "caso": "G",
+        "qz": -6000.0
+      },
+      {
+        "caso": "Q",
+        "qz": -1000.0
+      }
+    ],
+    "incluye_pp": true,
+    "esquinas_coords": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        8.0,
+        0.0,
+        0.0
+      ],
+      [
+        8.0,
+        5.196152422706632,
+        2.9999999999999996
+      ],
+      [
+        0.0,
+        5.196152422706632,
+        2.9999999999999996
+      ]
+    ],
+    "bordes_apoyo": {
+      "alero": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "cumbrera": [
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "apoyos": {
+    "alero": [
+      {
+        "nodo": "A1",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "apoyo": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "nodo": "A2",
+        "x": 8.0,
+        "y": 0.0,
+        "z": 0.0,
+        "apoyo": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false
+        ]
+      }
+    ],
+    "cumbrera": [
+      {
+        "nodo": "C2",
+        "x": 8.0,
+        "y": 5.196152422706632,
+        "z": 2.9999999999999996,
+        "apoyo": [
+          false,
+          true,
+          true,
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "nodo": "C1",
+        "x": 0.0,
+        "y": 5.196152422706632,
+        "z": 2.9999999999999996,
+        "apoyo": [
+          false,
+          true,
+          true,
+          false,
+          false,
+          false
+        ]
+      }
+    ]
+  },
+  "nodos": {
+    "A1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "A2": {
+      "x": 8.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "C2": {
+      "x": 8.0,
+      "y": 5.196152422706632,
+      "z": 2.9999999999999996,
+      "apoyo": [
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    "C1": {
+      "x": 0.0,
+      "y": 5.196152422706632,
+      "z": 2.9999999999999996,
+      "apoyo": [
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ]
+    }
+  }
+}

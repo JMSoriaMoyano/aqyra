@@ -1,0 +1,147 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "caudal": "l/s",
+    "presion": "kPa",
+    "potencia": "W"
+  },
+  "sistema": {
+    "tipo": "WATERSUPPLY",
+    "fluido": null,
+    "nombre": "Red de abastecimiento",
+    "clase_riesgo": null,
+    "demanda": null
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 130.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 100.0,
+      "tipo": "union"
+    },
+    "N3": {
+      "x": 120.0,
+      "y": 0.0,
+      "z": 98.0,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "x": 120.0,
+      "y": 120.0,
+      "z": 96.0,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "x": 0.0,
+      "y": 120.0,
+      "z": 99.0,
+      "tipo": "terminal"
+    }
+  },
+  "tramos": {
+    "T1": {
+      "ni": "N1",
+      "nj": "N2",
+      "dn": 200.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 30.0,
+      "elemento": "COND-0",
+      "clase": "IfcFlowSegment"
+    },
+    "T2": {
+      "ni": "N2",
+      "nj": "N3",
+      "dn": 125.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 120.0167,
+      "elemento": "COND-1",
+      "clase": "IfcFlowSegment"
+    },
+    "T3": {
+      "ni": "N3",
+      "nj": "N4",
+      "dn": 125.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 120.0167,
+      "elemento": "COND-2",
+      "clase": "IfcFlowSegment"
+    },
+    "T4": {
+      "ni": "N4",
+      "nj": "N5",
+      "dn": 125.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 120.0375,
+      "elemento": "COND-3",
+      "clase": "IfcFlowSegment"
+    },
+    "T5": {
+      "ni": "N5",
+      "nj": "N2",
+      "dn": 125.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 120.0042,
+      "elemento": "COND-4",
+      "clase": "IfcFlowSegment"
+    }
+  },
+  "terminales": [
+    {
+      "id": "ACO-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N3",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null,
+      "habitantes_eq": 800.0
+    },
+    {
+      "id": "ACO-2",
+      "tipo": "USERDEFINED",
+      "nodo": "N5",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null,
+      "habitantes_eq": 600.0
+    },
+    {
+      "id": "HIDRANTE-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N4",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": null,
+      "habitantes_eq": null
+    }
+  ],
+  "fuentes": [
+    {
+      "id": "DEPOSITO",
+      "nodo": "N1",
+      "presion": null,
+      "caudal": null,
+      "tipo": "deposito",
+      "cota_lamina": 130.0
+    }
+  ],
+  "vertidos": [],
+  "metricas": {
+    "nudos_fusionados": 5,
+    "huecos_puenteados": [],
+    "cruces_troceados": [],
+    "segmentos_sin_puerto": [],
+    "factor_escala_ifc": 1.0,
+    "tol_snap_m": 0.001
+  }
+}

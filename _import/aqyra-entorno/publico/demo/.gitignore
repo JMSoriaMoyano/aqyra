@@ -1,0 +1,5 @@
+# Ficheros de runtime del puente Aqyra (buzón visor↔Claude). No se versionan.
+.aqyra/
+# Claves del operador IA (Claude API). NUNCA versionar.
+.env
+.env.local

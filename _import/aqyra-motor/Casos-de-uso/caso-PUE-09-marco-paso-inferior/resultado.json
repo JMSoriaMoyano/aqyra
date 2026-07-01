@@ -1,0 +1,186 @@
+{
+  "nombre_tablero": "PORTICO",
+  "tipologia": "portico",
+  "portico": {
+    "L": 12.0,
+    "H": 7.0,
+    "ne": 10,
+    "np": 6,
+    "n_carriles": 2,
+    "g2_N_m": 60000.0,
+    "beta_pila": 2.0,
+    "material": {
+      "E": 33000000000.0,
+      "nu": 0.2,
+      "G": 13750000000.0,
+      "rho": 2500.0,
+      "fck": 30000000.0
+    },
+    "dintel_sec": {
+      "A": 9.0,
+      "Iy": 0.6075,
+      "Iz": 75.0,
+      "J": 2.2922197533176174,
+      "h": 0.9,
+      "b": 10.0,
+      "d": 0.82
+    },
+    "pila_sec": {
+      "A": 8.0,
+      "Iy": 0.42666666666666675,
+      "Iz": 66.66666666666667,
+      "J": 1.6206509602679469,
+      "h": 0.8,
+      "b": 10.0,
+      "d": 0.72
+    },
+    "suelo": {
+      "kx": 600000000.0,
+      "kz": 1250000000.0,
+      "kry": 650000000.0
+    },
+    "empuje": {
+      "phi": 28.0,
+      "gamma": 20000.0,
+      "b": 10.0,
+      "K": 0.5305284372141092
+    },
+    "cimentacion": {
+      "B": 2.5,
+      "Lf": 10.0,
+      "q_adm": 300000.0,
+      "mu": 0.5
+    },
+    "As_dintel_m2": 0.014,
+    "As_pila_m2": 0.009
+  },
+  "permanentes": {
+    "g1_N_m": 220725.0,
+    "g2_N_m": 60000.0
+  },
+  "empuje": {
+    "K": 0.5305284372141092,
+    "gamma": 20000.0,
+    "b": 10.0,
+    "resultante_N_pila": 2599589.342349136
+  },
+  "K_empuje": 0.5305284372141092,
+  "f1_Hz": 3.1644750566863324,
+  "modal": {
+    "frecuencias_Hz": [
+      3.1644750566863324,
+      9.248743188032822,
+      13.02766157780389,
+      16.291352136260976
+    ]
+  },
+  "esfuerzos": {
+    "M_dintel_Ed": 7047404.754426716,
+    "V_dintel_Ed": 3903322.5,
+    "N_pila_Ed": 5082412.500000001,
+    "M_pila_Ed": 189911.37377376144,
+    "N_base": 5082412.500000001,
+    "M_base": 189911.37377376144,
+    "H_base": 1619400.483138806
+  },
+  "elementos_chk": [
+    {
+      "nombre": "DINTEL",
+      "M_Ed_Nm": 7047404.754426716,
+      "M_Rd_Nm": 59387887.40485613,
+      "aprov_max": 0.14524866615853657,
+      "veredicto": "CUMPLE",
+      "As_req_cm2_m": 203.14119725040024
+    },
+    {
+      "nombre": "PILA",
+      "M_Ed_Nm": 191282.5679979884,
+      "M_Rd_Nm": 2779111.5311909257,
+      "aprov_max": 0.06882867630577552,
+      "veredicto": "CUMPLE",
+      "delta_2orden": 1.0072201795868236,
+      "N_cr_N": 709000152.8945825,
+      "As_req_cm2_m": 0.0
+    }
+  ],
+  "checks": [
+    {
+      "nombre": "dintel_flexion_ELU",
+      "M_Ed_Nm": 7047404.754426716,
+      "M_Rd_Nm": 59387887.40485613,
+      "aprov": 0.11866737583008302,
+      "cumple": true
+    },
+    {
+      "nombre": "dintel_cortante_biela",
+      "valor": 3903322.5,
+      "limite": 26873379.31034483,
+      "aprov": 0.14524866615853657,
+      "cumple": true
+    },
+    {
+      "nombre": "pila_flexion_2orden",
+      "M_Ed_Nm": 191282.5679979884,
+      "M_Rd_Nm": 2779111.5311909257,
+      "aprov": 0.06882867630577552,
+      "cumple": true
+    },
+    {
+      "nombre": "EC7_hundimiento",
+      "valor": 221527.99188228115,
+      "limite": 300000.0,
+      "aprov": 0.7384266396076038,
+      "cumple": true
+    },
+    {
+      "nombre": "EC7_deslizamiento",
+      "valor": 1619400.483138806,
+      "limite": 2541206.2500000005,
+      "aprov": 0.6372566111620439,
+      "cumple": true
+    }
+  ],
+  "ec7": {
+    "sigma_max_kPa": 221.52799188228116,
+    "q_adm_kPa": 300.0,
+    "e_m": 0.03736638334132883,
+    "aprov_hundimiento": 0.7384266396076038,
+    "aprov_deslizamiento": 0.6372566111620439
+  },
+  "delta_2orden": 1.0072201795868236,
+  "aprovechamiento_max": 0.7384266396076038,
+  "veredicto_global": "CUMPLE",
+  "mapping_writeback": {
+    "elementos": {
+      "DINTEL": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "portico",
+          "M_Ed_ELU_kNm": 7047.4,
+          "M_Rd_kNm": 59387.9,
+          "Aprovechamiento_max": 0.145,
+          "Veredicto": "CUMPLE"
+        }
+      },
+      "PILA": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "portico",
+          "M_Ed_ELU_kNm": 191.3,
+          "M_Rd_kNm": 2779.1,
+          "Aprovechamiento_max": 0.069,
+          "Veredicto": "CUMPLE"
+        }
+      },
+      "PORTICO": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "portico",
+          "Empuje_K": 0.531,
+          "Tension_max_terreno_kPa": 221.5,
+          "Aprov_hundimiento": 0.738,
+          "Frecuencia_fundamental_Hz": 3.16,
+          "Aprovechamiento_max": 0.738,
+          "Veredicto_global": "CUMPLE"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "portico": {
+    "modulo": "barras",
+    "descripcion": "Portico de acero (EC3)",
+    "veredicto": "CUMPLE",
+    "detalle": {
+      "C1": {
+        "veredicto": "CUMPLE",
+        "seccion": "HEB 240",
+        "aprov_max_pct": 22.9
+      },
+      "C2": {
+        "veredicto": "CUMPLE",
+        "seccion": "HEB 240",
+        "aprov_max_pct": 22.9
+      },
+      "B1": {
+        "veredicto": "CUMPLE",
+        "seccion": "IPE 360",
+        "aprov_max_pct": 30.5
+      }
+    }
+  },
+  "mixta": {
+    "modulo": "mixtas",
+    "descripcion": "Forjado mixto / viga mixta (EC4)",
+    "veredicto": "CUMPLE",
+    "detalle": {
+      "M_Ed_kNm": 332.8,
+      "M_Rd_kNm": 522.3,
+      "u_flexion_pct": 63.7,
+      "grado_conexion_eta": 0.66,
+      "u_flecha_pct": 53.2
+    }
+  },
+  "muro": {
+    "modulo": "laminas",
+    "descripcion": "Muro de carga (EC2 esbeltez 5.8.8)",
+    "veredicto": "CUMPLE",
+    "detalle": {
+      "lambda": 52.0,
+      "esbelto": true,
+      "M_Ed_kNm_m": 31.3,
+      "M_Rd_kNm_m": 69.3,
+      "u_NM_pct": 45.2,
+      "armado": "phi10/200 c/cara"
+    }
+  },
+  "cimentacion": {
+    "modulo": "cimentaciones",
+    "descripcion": "Cimentacion superficial: pilar->zapata (EC7+EC2)",
+    "veredicto": "CUMPLE",
+    "detalle": {
+      "sigma_ef_kPa": 245.0,
+      "Rd_kPa": 250.0,
+      "u_Rd_pct": 98.1,
+      "u_punz_pct": 14.1,
+      "u_cortante_pct": 52.0,
+      "u_fisuracion_pct": 92.8,
+      "zapata": {
+        "B_modelo_m": 2.5,
+        "L_modelo_m": 2.5,
+        "ampliada": true,
+        "sigma_ef_modelo_analitico_kPa": 255.2,
+        "u_Rd_modelo_analitico": 1.021,
+        "B_adoptado_m": 2.5500000000000003,
+        "L_adoptado_m": 2.5500000000000003,
+        "motivo": "hundimiento area eficaz > R_d con 2.50 m (u=1.02)"
+      }
+    }
+  }
+}

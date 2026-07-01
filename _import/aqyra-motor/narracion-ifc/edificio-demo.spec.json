@@ -1,0 +1,28 @@
+{
+  "$schema": "estructurando/spec-parametrico/v0.1",
+  "proyecto": "Edificio demo — flujo narración→IFC",
+  "esquema": "IFC4",
+  "unidades": "m",
+  "georef": { "crs": "EPSG:25830", "eastings": 440000.0, "northings": 4474000.0, "height": 650.0 },
+
+  "niveles": [
+    { "nombre": "Planta Baja", "cota": 0.0 },
+    { "nombre": "Planta Primera", "cota": 3.5 }
+  ],
+
+  "pilares": [
+    { "nombre": "P1", "nivel": "Planta Baja", "pos": [0.0, 0.0], "seccion": [0.40, 0.40], "altura": 3.5, "material": "HA-30" },
+    { "nombre": "P2", "nivel": "Planta Baja", "pos": [8.0, 0.0], "seccion": [0.40, 0.40], "altura": 3.5, "material": "HA-30" },
+    { "nombre": "P3", "nivel": "Planta Baja", "pos": [8.0, 5.0], "seccion": [0.40, 0.40], "altura": 3.5, "material": "HA-30" },
+    { "nombre": "P4", "nivel": "Planta Baja", "pos": [0.0, 5.0], "seccion": [0.40, 0.40], "altura": 3.5, "material": "HA-30" }
+  ],
+
+  "muros": [
+    { "nombre": "M1", "nivel": "Planta Baja", "inicio": [0.0, 0.0], "fin": [8.0, 0.0], "espesor": 0.25, "altura": 3.5, "material": "HA-30", "exterior": true },
+    { "nombre": "M2", "nivel": "Planta Baja", "inicio": [0.0, 0.0], "fin": [0.0, 5.0], "espesor": 0.25, "altura": 3.5, "material": "HA-30", "exterior": true }
+  ],
+
+  "losas": [
+    { "nombre": "Forjado P1", "nivel": "Planta Primera", "contorno": [[0.0,0.0],[8.0,0.0],[8.0,5.0],[0.0,5.0]], "espesor": 0.30, "material": "HA-30" }
+  ]
+}

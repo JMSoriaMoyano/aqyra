@@ -1,0 +1,2856 @@
+{
+  "_esquema": "IFC4X3",
+  "_bsdd_diccionario": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3",
+  "_total": 150,
+  "_por_grupo": {
+    "IfcDistributionElement": 83,
+    "IfcBuiltElement": 36,
+    "IfcGeotechnicalElement": 4,
+    "IfcElementComponent": 13,
+    "IfcCivilElement": 1,
+    "IfcFeatureElement": 5,
+    "IfcElementAssembly": 1,
+    "IfcFurnishingElement": 3,
+    "IfcGeographicElement": 1,
+    "IfcTransportElement": 1,
+    "IfcVehicle": 1,
+    "IfcVirtualElement": 1
+  },
+  "clases": {
+    "IfcActuator": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcActuator",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ELECTRICACTUATOR",
+        "HANDOPERATEDACTUATOR",
+        "HYDRAULICACTUATOR",
+        "PNEUMATICACTUATOR",
+        "THERMOSTATICACTUATOR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ActuatorTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcAirTerminal": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcAirTerminal",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DIFFUSER",
+        "GRILLE",
+        "LOUVRE",
+        "REGISTER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_AirTerminalTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcAirTerminalBox": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcAirTerminalBox",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CONSTANTFLOW",
+        "VARIABLEFLOWPRESSUREDEPENDANT",
+        "VARIABLEFLOWPRESSUREINDEPENDANT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_AirTerminalBoxTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcAirToAirHeatRecovery": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcAirToAirHeatRecovery",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "FIXEDPLATECOUNTERFLOWEXCHANGER",
+        "FIXEDPLATECROSSFLOWEXCHANGER",
+        "FIXEDPLATEPARALLELFLOWEXCHANGER",
+        "HEATPIPE",
+        "ROTARYWHEEL",
+        "RUNAROUNDCOILLOOP",
+        "THERMOSIPHONCOILTYPEHEATEXCHANGERS",
+        "THERMOSIPHONSEALEDTUBEHEATEXCHANGERS",
+        "TWINTOWERENTHALPYRECOVERYLOOPS",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_AirToAirHeatRecoveryTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcAlarm": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcAlarm",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BELL",
+        "BREAKGLASSBUTTON",
+        "LIGHT",
+        "MANUALPULLBOX",
+        "RAILWAYCROCODILE",
+        "RAILWAYDETONATOR",
+        "SIREN",
+        "WHISTLE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_AlarmTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcAudioVisualAppliance": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcAudioVisualAppliance",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AMPLIFIER",
+        "CAMERA",
+        "COMMUNICATIONTERMINAL",
+        "DISPLAY",
+        "MICROPHONE",
+        "PLAYER",
+        "PROJECTOR",
+        "RECEIVER",
+        "RECORDINGEQUIPMENT",
+        "SPEAKER",
+        "SWITCHER",
+        "TELEPHONE",
+        "TUNER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_AudioVisualApplianceTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcBeam": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcBeam",
+      "arquetipo": "realista",
+      "geometria": "realista",
+      "predefined_types": [
+        "BEAM",
+        "CORNICE",
+        "DIAPHRAGM",
+        "EDGEBEAM",
+        "GIRDER_SEGMENT",
+        "HATSTONE",
+        "HOLLOWCORE",
+        "JOIST",
+        "LINTEL",
+        "PIERCAP",
+        "SPANDREL",
+        "T_BEAM",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_BeamCommon"
+      ]
+    },
+    "IfcBearing": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcBearing",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CYLINDRICAL",
+        "DISK",
+        "ELASTOMERIC",
+        "GUIDE",
+        "POT",
+        "ROCKER",
+        "ROLLER",
+        "SPHERICAL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": []
+    },
+    "IfcBoiler": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcBoiler",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "STEAM",
+        "WATER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_BoilerTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcBorehole": {
+      "grupo": "IfcGeotechnicalElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcBorehole",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_BoreholeCommon",
+        "Pset_GeotechnicalAssemblyCommon"
+      ]
+    },
+    "IfcBuildingElementPart": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcBuildingElementPart",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "APRON",
+        "ARMOURUNIT",
+        "INSULATION",
+        "PRECASTPANEL",
+        "SAFETYCAGE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcBuildingElementProxy": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcBuildingElementProxy",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "COMPLEX",
+        "ELEMENT",
+        "PARTIAL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_BuildingElementProxyCommon"
+      ]
+    },
+    "IfcBuiltElement": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcBuiltElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcBurner": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcBurner",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_BurnerTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCableCarrierFitting": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCableCarrierFitting",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BEND",
+        "CONNECTOR",
+        "CROSS",
+        "JUNCTION",
+        "TEE",
+        "TRANSITION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CableCarrierFittingTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCableCarrierSegment": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCableCarrierSegment",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CABLEBRACKET",
+        "CABLELADDERSEGMENT",
+        "CABLETRAYSEGMENT",
+        "CABLETRUNKINGSEGMENT",
+        "CATENARYWIRE",
+        "CONDUITSEGMENT",
+        "DROPPER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CableCarrierSegmentTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCableFitting": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCableFitting",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CONNECTOR",
+        "ENTRY",
+        "EXIT",
+        "FANOUT",
+        "JUNCTION",
+        "TRANSITION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CableFittingTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCableSegment": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCableSegment",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BUSBARSEGMENT",
+        "CABLESEGMENT",
+        "CONDUCTORSEGMENT",
+        "CONTACTWIRESEGMENT",
+        "CORESEGMENT",
+        "FIBERSEGMENT",
+        "FIBERTUBE",
+        "OPTICALCABLESEGMENT",
+        "STITCHWIRE",
+        "WIREPAIRSEGMENT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CableSegmentTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCaissonFoundation": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCaissonFoundation",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CAISSON",
+        "WELL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcChiller": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcChiller",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AIRCOOLED",
+        "HEATRECOVERY",
+        "WATERCOOLED",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ChillerTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcChimney": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcChimney",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ChimneyCommon"
+      ]
+    },
+    "IfcCivilElement": {
+      "grupo": "IfcCivilElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCivilElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_CivilElementCommon"
+      ]
+    },
+    "IfcCoil": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCoil",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DXCOOLINGCOIL",
+        "ELECTRICHEATINGCOIL",
+        "GASHEATINGCOIL",
+        "HYDRONICCOIL",
+        "STEAMHEATINGCOIL",
+        "WATERCOOLINGCOIL",
+        "WATERHEATINGCOIL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CoilTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcColumn": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcColumn",
+      "arquetipo": "realista",
+      "geometria": "realista",
+      "predefined_types": [
+        "COLUMN",
+        "PIERSTEM",
+        "PIERSTEM_SEGMENT",
+        "PILASTER",
+        "STANDCOLUMN",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ColumnCommon"
+      ]
+    },
+    "IfcCommunicationsAppliance": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCommunicationsAppliance",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ANTENNA",
+        "AUTOMATON",
+        "COMPUTER",
+        "FAX",
+        "GATEWAY",
+        "INTELLIGENTPERIPHERAL",
+        "IPNETWORKEQUIPMENT",
+        "LINESIDEELECTRONICUNIT",
+        "MODEM",
+        "NETWORKAPPLIANCE",
+        "NETWORKBRIDGE",
+        "NETWORKHUB",
+        "OPTICALLINETERMINAL",
+        "OPTICALNETWORKUNIT",
+        "PRINTER",
+        "RADIOBLOCKCENTER",
+        "REPEATER",
+        "ROUTER",
+        "SCANNER",
+        "TELECOMMAND",
+        "TELEPHONYEXCHANGE",
+        "TRANSITIONCOMPONENT",
+        "TRANSPONDER",
+        "TRANSPORTEQUIPMENT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CommunicationsApplianceTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCompressor": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCompressor",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BOOSTER",
+        "DYNAMIC",
+        "HERMETIC",
+        "OPENTYPE",
+        "RECIPROCATING",
+        "ROLLINGPISTON",
+        "ROTARY",
+        "ROTARYVANE",
+        "SCROLL",
+        "SEMIHERMETIC",
+        "SINGLESCREW",
+        "SINGLESTAGE",
+        "TROCHOIDAL",
+        "TWINSCREW",
+        "WELDEDSHELLHERMETIC",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CompressorTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCondenser": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCondenser",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AIRCOOLED",
+        "EVAPORATIVECOOLED",
+        "WATERCOOLED",
+        "WATERCOOLEDBRAZEDPLATE",
+        "WATERCOOLEDSHELLCOIL",
+        "WATERCOOLEDSHELLTUBE",
+        "WATERCOOLEDTUBEINTUBE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CondenserTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcController": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcController",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "FLOATING",
+        "MULTIPOSITION",
+        "PROGRAMMABLE",
+        "PROPORTIONAL",
+        "TWOPOSITION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ControllerTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcConveyorSegment": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcConveyorSegment",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BELTCONVEYOR",
+        "BUCKETCONVEYOR",
+        "CHUTECONVEYOR",
+        "SCREWCONVEYOR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCooledBeam": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCooledBeam",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ACTIVE",
+        "PASSIVE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CooledBeamTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCoolingTower": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCoolingTower",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "MECHANICALFORCEDDRAFT",
+        "MECHANICALINDUCEDDRAFT",
+        "NATURALDRAFT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CoolingTowerTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcCourse": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCourse",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ARMOUR",
+        "BALLASTBED",
+        "CORE",
+        "FILTER",
+        "PAVEMENT",
+        "PROTECTION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_BoundedCourseCommon",
+        "Pset_CourseCommon"
+      ]
+    },
+    "IfcCovering": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCovering",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CEILING",
+        "CLADDING",
+        "COPING",
+        "FLOORING",
+        "INSULATION",
+        "MEMBRANE",
+        "MOLDING",
+        "ROOFING",
+        "SKIRTINGBOARD",
+        "SLEEVING",
+        "TOPPING",
+        "WRAPPING",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CoveringCommon"
+      ]
+    },
+    "IfcCurtainWall": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcCurtainWall",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_CurtainWallCommon"
+      ]
+    },
+    "IfcDamper": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDamper",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BACKDRAFTDAMPER",
+        "BALANCINGDAMPER",
+        "BLASTDAMPER",
+        "CONTROLDAMPER",
+        "FIREDAMPER",
+        "FIRESMOKEDAMPER",
+        "FUMEHOODEXHAUST",
+        "GRAVITYDAMPER",
+        "GRAVITYRELIEFDAMPER",
+        "RELIEFDAMPER",
+        "SMOKEDAMPER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_DamperTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcDeepFoundation": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDeepFoundation",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcDiscreteAccessory": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDiscreteAccessory",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ANCHORPLATE",
+        "BIRDPROTECTION",
+        "BRACKET",
+        "CABLEARRANGER",
+        "ELASTIC_CUSHION",
+        "EXPANSION_JOINT_DEVICE",
+        "FILLER",
+        "FLASHING",
+        "INSULATOR",
+        "LOCK",
+        "PANEL_STRENGTHENING",
+        "POINTMACHINEMOUNTINGDEVICE",
+        "POINT_MACHINE_LOCKING_DEVICE",
+        "RAILBRACE",
+        "RAILPAD",
+        "RAIL_LUBRICATION",
+        "RAIL_MECHANICAL_EQUIPMENT",
+        "SHOE",
+        "SLIDINGCHAIR",
+        "SOUNDABSORPTION",
+        "TENSIONINGEQUIPMENT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcDistributionBoard": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDistributionBoard",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CONSUMERUNIT",
+        "DISPATCHINGBOARD",
+        "DISTRIBUTIONBOARD",
+        "DISTRIBUTIONFRAME",
+        "MOTORCONTROLCENTRE",
+        "SWITCHBOARD",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcDistributionChamberElement": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDistributionChamberElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "FORMEDDUCT",
+        "INSPECTIONCHAMBER",
+        "INSPECTIONPIT",
+        "MANHOLE",
+        "METERCHAMBER",
+        "SUMP",
+        "TRENCH",
+        "VALVECHAMBER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_DistributionChamberElementCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcDistributionControlElement": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDistributionControlElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcDistributionElement": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDistributionElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcDistributionFlowElement": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDistributionFlowElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcDoor": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDoor",
+      "arquetipo": "realista",
+      "geometria": "realista",
+      "predefined_types": [
+        "BOOM_BARRIER",
+        "DOOR",
+        "GATE",
+        "TRAPDOOR",
+        "TURNSTILE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_DoorCommon"
+      ]
+    },
+    "IfcDuctFitting": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDuctFitting",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BEND",
+        "CONNECTOR",
+        "ENTRY",
+        "EXIT",
+        "JUNCTION",
+        "OBSTRUCTION",
+        "TRANSITION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_DuctFittingTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcDuctSegment": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDuctSegment",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "FLEXIBLESEGMENT",
+        "RIGIDSEGMENT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_DuctSegmentTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcDuctSilencer": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcDuctSilencer",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "FLATOVAL",
+        "RECTANGULAR",
+        "ROUND",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_DuctSilencerTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcEarthworksCut": {
+      "grupo": "IfcFeatureElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcEarthworksCut",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BASE_EXCAVATION",
+        "CUT",
+        "DREDGING",
+        "EXCAVATION",
+        "OVEREXCAVATION",
+        "PAVEMENTMILLING",
+        "STEPEXCAVATION",
+        "TOPSOILREMOVAL",
+        "TRENCH",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcEarthworksElement": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcEarthworksElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcEarthworksFill": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcEarthworksFill",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BACKFILL",
+        "COUNTERWEIGHT",
+        "EMBANKMENT",
+        "SLOPEFILL",
+        "SUBGRADE",
+        "SUBGRADEBED",
+        "TRANSITIONSECTION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcElectricAppliance": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcElectricAppliance",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DISHWASHER",
+        "ELECTRICCOOKER",
+        "FREESTANDINGELECTRICHEATER",
+        "FREESTANDINGFAN",
+        "FREESTANDINGWATERCOOLER",
+        "FREESTANDINGWATERHEATER",
+        "FREEZER",
+        "FRIDGE_FREEZER",
+        "HANDDRYER",
+        "KITCHENMACHINE",
+        "MICROWAVE",
+        "PHOTOCOPIER",
+        "REFRIGERATOR",
+        "TUMBLEDRYER",
+        "VENDINGMACHINE",
+        "WASHINGMACHINE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_ElectricApplianceTypeCommon"
+      ]
+    },
+    "IfcElectricDistributionBoard": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcElectricDistributionBoard",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CONSUMERUNIT",
+        "DISTRIBUTIONBOARD",
+        "MOTORCONTROLCENTRE",
+        "SWITCHBOARD",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_DistributionBoardTypeCommon",
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcElectricFlowStorageDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcElectricFlowStorageDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BATTERY",
+        "CAPACITOR",
+        "CAPACITORBANK",
+        "COMPENSATOR",
+        "HARMONICFILTER",
+        "INDUCTOR",
+        "INDUCTORBANK",
+        "RECHARGER",
+        "UPS",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_ElectricFlowStorageDeviceTypeCommon"
+      ]
+    },
+    "IfcElectricFlowTreatmentDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcElectricFlowTreatmentDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ELECTRONICFILTER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcElectricGenerator": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcElectricGenerator",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CHP",
+        "ENGINEGENERATOR",
+        "STANDALONE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_ElectricGeneratorTypeCommon"
+      ]
+    },
+    "IfcElectricMotor": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcElectricMotor",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DC",
+        "INDUCTION",
+        "POLYPHASE",
+        "RELUCTANCESYNCHRONOUS",
+        "SYNCHRONOUS",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_ElectricMotorTypeCommon"
+      ]
+    },
+    "IfcElectricTimeControl": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcElectricTimeControl",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "RELAY",
+        "TIMECLOCK",
+        "TIMEDELAY",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_ElectricTimeControlTypeCommon"
+      ]
+    },
+    "IfcElementAssembly": {
+      "grupo": "IfcElementAssembly",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcElementAssembly",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ABUTMENT",
+        "ACCESSORY_ASSEMBLY",
+        "ARCH",
+        "BEAM_GRID",
+        "BRACED_FRAME",
+        "CROSS_BRACING",
+        "DECK",
+        "DILATATIONPANEL",
+        "ENTRANCEWORKS",
+        "GIRDER",
+        "GRID",
+        "MAST",
+        "PIER",
+        "PYLON",
+        "RAIL_MECHANICAL_EQUIPMENT_ASSEMBLY",
+        "REINFORCEMENT_UNIT",
+        "RIGID_FRAME",
+        "SHELTER",
+        "SIGNALASSEMBLY",
+        "SLAB_FIELD",
+        "SUMPBUSTER",
+        "SUPPORTINGASSEMBLY",
+        "SUSPENSIONASSEMBLY",
+        "TRACKPANEL",
+        "TRACTION_SWITCHING_ASSEMBLY",
+        "TRAFFIC_CALMING_DEVICE",
+        "TRUSS",
+        "TURNOUTPANEL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementAssemblyCommon"
+      ]
+    },
+    "IfcEnergyConversionDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcEnergyConversionDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcEngine": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcEngine",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "EXTERNALCOMBUSTION",
+        "INTERNALCOMBUSTION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_EngineTypeCommon"
+      ]
+    },
+    "IfcEvaporativeCooler": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcEvaporativeCooler",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DIRECTEVAPORATIVEAIRWASHER",
+        "DIRECTEVAPORATIVEPACKAGEDROTARYAIRCOOLER",
+        "DIRECTEVAPORATIVERANDOMMEDIAAIRCOOLER",
+        "DIRECTEVAPORATIVERIGIDMEDIAAIRCOOLER",
+        "DIRECTEVAPORATIVESLINGERSPACKAGEDAIRCOOLER",
+        "INDIRECTDIRECTCOMBINATION",
+        "INDIRECTEVAPORATIVECOOLINGTOWERORCOILCOOLER",
+        "INDIRECTEVAPORATIVEPACKAGEAIRCOOLER",
+        "INDIRECTEVAPORATIVEWETCOIL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_EvaporativeCoolerTypeCommon"
+      ]
+    },
+    "IfcEvaporator": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcEvaporator",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DIRECTEXPANSION",
+        "DIRECTEXPANSIONBRAZEDPLATE",
+        "DIRECTEXPANSIONSHELLANDTUBE",
+        "DIRECTEXPANSIONTUBEINTUBE",
+        "FLOODEDSHELLANDTUBE",
+        "SHELLANDCOIL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_EvaporatorTypeCommon"
+      ]
+    },
+    "IfcFan": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFan",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CENTRIFUGALAIRFOIL",
+        "CENTRIFUGALBACKWARDINCLINEDCURVED",
+        "CENTRIFUGALFORWARDCURVED",
+        "CENTRIFUGALRADIAL",
+        "PROPELLORAXIAL",
+        "TUBEAXIAL",
+        "VANEAXIAL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_FanTypeCommon"
+      ]
+    },
+    "IfcFastener": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFastener",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "GLUE",
+        "MORTAR",
+        "WELD",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcFilter": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFilter",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AIRPARTICLEFILTER",
+        "COMPRESSEDAIRFILTER",
+        "ODORFILTER",
+        "OILFILTER",
+        "STRAINER",
+        "WATERFILTER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_FilterTypeCommon"
+      ]
+    },
+    "IfcFireSuppressionTerminal": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFireSuppressionTerminal",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BREECHINGINLET",
+        "FIREHYDRANT",
+        "FIREMONITOR",
+        "HOSEREEL",
+        "SPRINKLER",
+        "SPRINKLERDEFLECTOR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_FireSuppressionTerminalTypeCommon"
+      ]
+    },
+    "IfcFlowController": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowController",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcFlowFitting": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowFitting",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcFlowInstrument": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowInstrument",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AMMETER",
+        "COMBINED",
+        "FREQUENCYMETER",
+        "PHASEANGLEMETER",
+        "POWERFACTORMETER",
+        "PRESSUREGAUGE",
+        "THERMOMETER",
+        "VOLTMETER",
+        "VOLTMETER_PEAK",
+        "VOLTMETER_RMS",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_FlowInstrumentTypeCommon"
+      ]
+    },
+    "IfcFlowMeter": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowMeter",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ENERGYMETER",
+        "GASMETER",
+        "OILMETER",
+        "WATERMETER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_FlowMeterTypeCommon"
+      ]
+    },
+    "IfcFlowMovingDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowMovingDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcFlowSegment": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowSegment",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcFlowStorageDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowStorageDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcFlowTerminal": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowTerminal",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcFlowTreatmentDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFlowTreatmentDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcFooting": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFooting",
+      "arquetipo": "realista",
+      "geometria": "realista",
+      "predefined_types": [
+        "CAISSON_FOUNDATION",
+        "FOOTING_BEAM",
+        "PAD_FOOTING",
+        "PILE_CAP",
+        "STRIP_FOOTING",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_FootingCommon"
+      ]
+    },
+    "IfcFurnishingElement": {
+      "grupo": "IfcFurnishingElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFurnishingElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcFurniture": {
+      "grupo": "IfcFurnishingElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcFurniture",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BED",
+        "CHAIR",
+        "DESK",
+        "FILECABINET",
+        "SHELF",
+        "SOFA",
+        "TABLE",
+        "TECHNICALCABINET",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_FurnitureTypeCommon"
+      ]
+    },
+    "IfcGeographicElement": {
+      "grupo": "IfcGeographicElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcGeographicElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "SOIL_BORING_POINT",
+        "TERRAIN",
+        "VEGETATION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcGeomodel": {
+      "grupo": "IfcGeotechnicalElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcGeomodel",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_GeotechnicalAssemblyCommon"
+      ]
+    },
+    "IfcGeoslice": {
+      "grupo": "IfcGeotechnicalElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcGeoslice",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_GeotechnicalAssemblyCommon"
+      ]
+    },
+    "IfcGeotechnicalStratum": {
+      "grupo": "IfcGeotechnicalElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcGeotechnicalStratum",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "SOLID",
+        "VOID",
+        "WATER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_GeotechnicalStratumCommon"
+      ]
+    },
+    "IfcHeatExchanger": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcHeatExchanger",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "PLATE",
+        "SHELLANDTUBE",
+        "TURNOUTHEATING",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_HeatExchangerTypeCommon"
+      ]
+    },
+    "IfcHumidifier": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcHumidifier",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ADIABATICAIRWASHER",
+        "ADIABATICATOMIZING",
+        "ADIABATICCOMPRESSEDAIRNOZZLE",
+        "ADIABATICPAN",
+        "ADIABATICRIGIDMEDIA",
+        "ADIABATICULTRASONIC",
+        "ADIABATICWETTEDELEMENT",
+        "ASSISTEDBUTANE",
+        "ASSISTEDELECTRIC",
+        "ASSISTEDNATURALGAS",
+        "ASSISTEDPROPANE",
+        "ASSISTEDSTEAM",
+        "STEAMINJECTION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_HumidifierTypeCommon"
+      ]
+    },
+    "IfcImpactProtectionDevice": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcImpactProtectionDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BUMPER",
+        "CRASHCUSHION",
+        "DAMPINGSYSTEM",
+        "FENDER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcInterceptor": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcInterceptor",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CYCLONIC",
+        "GREASE",
+        "OIL",
+        "PETROL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_InterceptorTypeCommon"
+      ]
+    },
+    "IfcJunctionBox": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcJunctionBox",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DATA",
+        "POWER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_JunctionBoxTypeCommon"
+      ]
+    },
+    "IfcKerb": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcKerb",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [],
+      "psets_estandar": [
+        "Pset_KerbCommon"
+      ]
+    },
+    "IfcLamp": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcLamp",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "COMPACTFLUORESCENT",
+        "FLUORESCENT",
+        "HALOGEN",
+        "HIGHPRESSUREMERCURY",
+        "HIGHPRESSURESODIUM",
+        "LED",
+        "METALHALIDE",
+        "OLED",
+        "TUNGSTENFILAMENT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_LampTypeCommon"
+      ]
+    },
+    "IfcLightFixture": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcLightFixture",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DIRECTIONSOURCE",
+        "POINTSOURCE",
+        "SECURITYLIGHTING",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_LightFixtureTypeCommon"
+      ]
+    },
+    "IfcLiquidTerminal": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcLiquidTerminal",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "HOSEREEL",
+        "LOADINGARM",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcMechanicalFastener": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcMechanicalFastener",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ANCHORBOLT",
+        "BOLT",
+        "CHAIN",
+        "COUPLER",
+        "DOWEL",
+        "NAIL",
+        "NAILPLATE",
+        "RAILFASTENING",
+        "RAILJOINT",
+        "RIVET",
+        "ROPE",
+        "SCREW",
+        "SHEARCONNECTOR",
+        "STAPLE",
+        "STUDSHEARCONNECTOR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcMedicalDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcMedicalDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AIRSTATION",
+        "FEEDAIRUNIT",
+        "OXYGENGENERATOR",
+        "OXYGENPLANT",
+        "VACUUMSTATION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_MedicalDeviceTypeCommon"
+      ]
+    },
+    "IfcMember": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcMember",
+      "arquetipo": "realista",
+      "geometria": "realista",
+      "predefined_types": [
+        "ARCH_SEGMENT",
+        "BRACE",
+        "CHORD",
+        "COLLAR",
+        "MEMBER",
+        "MULLION",
+        "PLATE",
+        "POST",
+        "PURLIN",
+        "RAFTER",
+        "STAY_CABLE",
+        "STIFFENING_RIB",
+        "STRINGER",
+        "STRUCTURALCABLE",
+        "STRUT",
+        "STUD",
+        "SUSPENDER",
+        "SUSPENSION_CABLE",
+        "TIEBAR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_MemberCommon"
+      ]
+    },
+    "IfcMobileTelecommunicationsAppliance": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcMobileTelecommunicationsAppliance",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ACCESSPOINT",
+        "BASEBANDUNIT",
+        "BASETRANSCEIVERSTATION",
+        "E_UTRAN_NODE_B",
+        "GATEWAY_GPRS_SUPPORT_NODE",
+        "MASTERUNIT",
+        "MOBILESWITCHINGCENTER",
+        "MSCSERVER",
+        "PACKETCONTROLUNIT",
+        "REMOTERADIOUNIT",
+        "REMOTEUNIT",
+        "SERVICE_GPRS_SUPPORT_NODE",
+        "SUBSCRIBERSERVER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_MobileTelecommunicationsApplianceTypeCommon"
+      ]
+    },
+    "IfcMooringDevice": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcMooringDevice",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BOLLARD",
+        "LINETENSIONER",
+        "MAGNETICDEVICE",
+        "MOORINGHOOKS",
+        "VACUUMDEVICE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_MooringDeviceCommon"
+      ]
+    },
+    "IfcMotorConnection": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcMotorConnection",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BELTDRIVE",
+        "COUPLING",
+        "DIRECTDRIVE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_MotorConnectionTypeCommon"
+      ]
+    },
+    "IfcNavigationElement": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcNavigationElement",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BEACON",
+        "BUOY",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcOpeningElement": {
+      "grupo": "IfcFeatureElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcOpeningElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "OPENING",
+        "RECESS",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_OpeningElementCommon"
+      ]
+    },
+    "IfcOutlet": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcOutlet",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AUDIOVISUALOUTLET",
+        "COMMUNICATIONSOUTLET",
+        "DATAOUTLET",
+        "POWEROUTLET",
+        "TELEPHONEOUTLET",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_OutletTypeCommon"
+      ]
+    },
+    "IfcPavement": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcPavement",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "FLEXIBLE",
+        "RIGID",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_PavementCommon",
+        "Pset_PavementSurfaceCommon"
+      ]
+    },
+    "IfcPile": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcPile",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BORED",
+        "COHESION",
+        "DRIVEN",
+        "FRICTION",
+        "JETGROUTING",
+        "SUPPORT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_PileCommon"
+      ]
+    },
+    "IfcPipeFitting": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcPipeFitting",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BEND",
+        "CONNECTOR",
+        "ENTRY",
+        "EXIT",
+        "JUNCTION",
+        "OBSTRUCTION",
+        "TRANSITION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_PipeFittingTypeCommon"
+      ]
+    },
+    "IfcPipeSegment": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcPipeSegment",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CULVERT",
+        "FLEXIBLESEGMENT",
+        "GUTTER",
+        "RIGIDSEGMENT",
+        "SPOOL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_PipeSegmentTypeCommon"
+      ]
+    },
+    "IfcPlate": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcPlate",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BASE_PLATE",
+        "COVER_PLATE",
+        "CURTAIN_PANEL",
+        "FLANGE_PLATE",
+        "GUSSET_PLATE",
+        "SHEET",
+        "SPLICE_PLATE",
+        "STIFFENER_PLATE",
+        "WEB_PLATE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_PlateCommon"
+      ]
+    },
+    "IfcProjectionElement": {
+      "grupo": "IfcFeatureElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcProjectionElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BLISTER",
+        "DEVIATOR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcProtectiveDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcProtectiveDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ANTI_ARCING_DEVICE",
+        "CIRCUITBREAKER",
+        "EARTHINGSWITCH",
+        "EARTHLEAKAGECIRCUITBREAKER",
+        "FUSEDISCONNECTOR",
+        "RESIDUALCURRENTCIRCUITBREAKER",
+        "RESIDUALCURRENTSWITCH",
+        "SPARKGAP",
+        "VARISTOR",
+        "VOLTAGELIMITER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_ProtectiveDeviceTypeCommon"
+      ]
+    },
+    "IfcProtectiveDeviceTrippingUnit": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcProtectiveDeviceTrippingUnit",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ELECTROMAGNETIC",
+        "ELECTRONIC",
+        "RESIDUALCURRENT",
+        "THERMAL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_ProtectiveDeviceTrippingUnitTypeCommon"
+      ]
+    },
+    "IfcPump": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcPump",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CIRCULATOR",
+        "ENDSUCTION",
+        "SPLITCASE",
+        "SUBMERSIBLEPUMP",
+        "SUMPPUMP",
+        "VERTICALINLINE",
+        "VERTICALTURBINE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_PumpTypeCommon"
+      ]
+    },
+    "IfcRail": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcRail",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BLADE",
+        "CHECKRAIL",
+        "GUARDRAIL",
+        "RACKRAIL",
+        "RAIL",
+        "STOCKRAIL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcRailing": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcRailing",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BALUSTRADE",
+        "FENCE",
+        "GUARDRAIL",
+        "HANDRAIL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_RailingCommon"
+      ]
+    },
+    "IfcRamp": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcRamp",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "HALF_TURN_RAMP",
+        "QUARTER_TURN_RAMP",
+        "SPIRAL_RAMP",
+        "STRAIGHT_RUN_RAMP",
+        "TWO_QUARTER_TURN_RAMP",
+        "TWO_STRAIGHT_RUN_RAMP",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_RampCommon"
+      ]
+    },
+    "IfcRampFlight": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcRampFlight",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "SPIRAL",
+        "STRAIGHT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_RampFlightCommon"
+      ]
+    },
+    "IfcReinforcedSoil": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcReinforcedSoil",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DYNAMICALLYCOMPACTED",
+        "GROUTED",
+        "REPLACED",
+        "ROLLERCOMPACTED",
+        "SURCHARGEPRELOADED",
+        "VERTICALLYDRAINED",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcReinforcingBar": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcReinforcingBar",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ANCHORING",
+        "EDGE",
+        "LIGATURE",
+        "MAIN",
+        "PUNCHING",
+        "RING",
+        "SHEAR",
+        "SPACEBAR",
+        "STUD",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcReinforcingMesh": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcReinforcingMesh",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcRoof": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcRoof",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BARREL_ROOF",
+        "BUTTERFLY_ROOF",
+        "DOME_ROOF",
+        "FLAT_ROOF",
+        "FREEFORM",
+        "GABLE_ROOF",
+        "GAMBREL_ROOF",
+        "HIPPED_GABLE_ROOF",
+        "HIP_ROOF",
+        "MANSARD_ROOF",
+        "PAVILION_ROOF",
+        "RAINBOW_ROOF",
+        "SHED_ROOF",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_RoofCommon"
+      ]
+    },
+    "IfcSanitaryTerminal": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSanitaryTerminal",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BATH",
+        "BIDET",
+        "CISTERN",
+        "SANITARYFOUNTAIN",
+        "SHOWER",
+        "SINK",
+        "TOILETPAN",
+        "URINAL",
+        "WASHHANDBASIN",
+        "WCSEAT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_SanitaryTerminalTypeCommon"
+      ]
+    },
+    "IfcSensor": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSensor",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CO2SENSOR",
+        "CONDUCTANCESENSOR",
+        "CONTACTSENSOR",
+        "COSENSOR",
+        "EARTHQUAKESENSOR",
+        "FIRESENSOR",
+        "FLOWSENSOR",
+        "FOREIGNOBJECTDETECTIONSENSOR",
+        "FROSTSENSOR",
+        "GASSENSOR",
+        "HEATSENSOR",
+        "HUMIDITYSENSOR",
+        "IDENTIFIERSENSOR",
+        "IONCONCENTRATIONSENSOR",
+        "LEVELSENSOR",
+        "LIGHTSENSOR",
+        "MOISTURESENSOR",
+        "MOVEMENTSENSOR",
+        "OBSTACLESENSOR",
+        "PHSENSOR",
+        "PRESSURESENSOR",
+        "RADIATIONSENSOR",
+        "RADIOACTIVITYSENSOR",
+        "RAINSENSOR",
+        "SMOKESENSOR",
+        "SNOWDEPTHSENSOR",
+        "SOUNDSENSOR",
+        "TEMPERATURESENSOR",
+        "TRAINSENSOR",
+        "TURNOUTCLOSURESENSOR",
+        "WHEELSENSOR",
+        "WINDSENSOR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_SensorTypeCommon"
+      ]
+    },
+    "IfcShadingDevice": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcShadingDevice",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AWNING",
+        "JALOUSIE",
+        "SHUTTER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ShadingDeviceCommon"
+      ]
+    },
+    "IfcSign": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSign",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "MARKER",
+        "MIRROR",
+        "PICTORAL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon",
+        "Pset_SignCommon"
+      ]
+    },
+    "IfcSignal": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSignal",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AUDIO",
+        "MIXED",
+        "VISUAL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon"
+      ]
+    },
+    "IfcSlab": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSlab",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "APPROACH_SLAB",
+        "BASESLAB",
+        "FLOOR",
+        "LANDING",
+        "PAVING",
+        "ROOF",
+        "SIDEWALK",
+        "TRACKSLAB",
+        "WEARING",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_SlabCommon"
+      ]
+    },
+    "IfcSolarDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSolarDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "SOLARCOLLECTOR",
+        "SOLARPANEL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_SolarDeviceTypeCommon"
+      ]
+    },
+    "IfcSpaceHeater": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSpaceHeater",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CONVECTOR",
+        "RADIATOR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_SpaceHeaterTypeCommon"
+      ]
+    },
+    "IfcStackTerminal": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcStackTerminal",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BIRDCAGE",
+        "COWL",
+        "RAINWATERHOPPER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_StackTerminalTypeCommon"
+      ]
+    },
+    "IfcStair": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcStair",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CURVED_RUN_STAIR",
+        "DOUBLE_RETURN_STAIR",
+        "HALF_TURN_STAIR",
+        "HALF_WINDING_STAIR",
+        "LADDER",
+        "QUARTER_TURN_STAIR",
+        "QUARTER_WINDING_STAIR",
+        "SPIRAL_STAIR",
+        "STRAIGHT_RUN_STAIR",
+        "THREE_QUARTER_TURN_STAIR",
+        "THREE_QUARTER_WINDING_STAIR",
+        "TWO_CURVED_RUN_STAIR",
+        "TWO_QUARTER_TURN_STAIR",
+        "TWO_QUARTER_WINDING_STAIR",
+        "TWO_STRAIGHT_RUN_STAIR",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_StairCommon"
+      ]
+    },
+    "IfcStairFlight": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcStairFlight",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CURVED",
+        "FREEFORM",
+        "SPIRAL",
+        "STRAIGHT",
+        "WINDER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_StairFlightCommon"
+      ]
+    },
+    "IfcSurfaceFeature": {
+      "grupo": "IfcFeatureElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSurfaceFeature",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "DEFECT",
+        "HATCHMARKING",
+        "LINEMARKING",
+        "MARK",
+        "NONSKIDSURFACING",
+        "PAVEMENTSURFACEMARKING",
+        "RUMBLESTRIP",
+        "SYMBOLMARKING",
+        "TAG",
+        "TRANSVERSERUMBLESTRIP",
+        "TREATMENT",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcSwitchingDevice": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSwitchingDevice",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CONTACTOR",
+        "DIMMERSWITCH",
+        "EMERGENCYSTOP",
+        "KEYPAD",
+        "MOMENTARYSWITCH",
+        "RELAY",
+        "SELECTORSWITCH",
+        "STARTER",
+        "START_AND_STOP_EQUIPMENT",
+        "SWITCHDISCONNECTOR",
+        "TOGGLESWITCH",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_SwitchingDeviceTypeCommon"
+      ]
+    },
+    "IfcSystemFurnitureElement": {
+      "grupo": "IfcFurnishingElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcSystemFurnitureElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "PANEL",
+        "SUBRACK",
+        "WORKSURFACE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_SystemFurnitureElementTypeCommon"
+      ]
+    },
+    "IfcTank": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcTank",
+      "arquetipo": "cilindro",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BASIN",
+        "BREAKPRESSURE",
+        "EXPANSION",
+        "FEEDANDEXPANSION",
+        "OILRETENTIONTRAY",
+        "PRESSUREVESSEL",
+        "STORAGE",
+        "VESSEL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_TankTypeCommon"
+      ]
+    },
+    "IfcTendon": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcTendon",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BAR",
+        "COATED",
+        "STRAND",
+        "WIRE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcTendonAnchor": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcTendonAnchor",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "COUPLER",
+        "FIXED_END",
+        "TENSIONING_END",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcTendonConduit": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcTendonConduit",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "COUPLER",
+        "DIABOLO",
+        "DUCT",
+        "GROUTING_DUCT",
+        "TRUMPET",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcTrackElement": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcTrackElement",
+      "arquetipo": "viga",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BLOCKINGDEVICE",
+        "DERAILER",
+        "FROG",
+        "HALF_SET_OF_BLADES",
+        "SLEEPER",
+        "SPEEDREGULATOR",
+        "TRACKENDOFALIGNMENT",
+        "VEHICLESTOP",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcTransformer": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcTransformer",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CHOPPER",
+        "COMBINED",
+        "CURRENT",
+        "FREQUENCY",
+        "INVERTER",
+        "RECTIFIER",
+        "VOLTAGE",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_TransformerTypeCommon"
+      ]
+    },
+    "IfcTransportElement": {
+      "grupo": "IfcTransportElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcTransportElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CRANEWAY",
+        "ELEVATOR",
+        "ESCALATOR",
+        "HAULINGGEAR",
+        "LIFTINGGEAR",
+        "MOVINGWALKWAY",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_TransportElementCommon"
+      ]
+    },
+    "IfcTubeBundle": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcTubeBundle",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "FINNED",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_TubeBundleTypeCommon"
+      ]
+    },
+    "IfcUnitaryControlElement": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcUnitaryControlElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ALARMPANEL",
+        "BASESTATIONCONTROLLER",
+        "COMBINED",
+        "CONTROLPANEL",
+        "GASDETECTIONPANEL",
+        "HUMIDISTAT",
+        "INDICATORPANEL",
+        "MIMICPANEL",
+        "THERMOSTAT",
+        "WEATHERSTATION",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_UnitaryControlElementTypeCommon"
+      ]
+    },
+    "IfcUnitaryEquipment": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcUnitaryEquipment",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AIRCONDITIONINGUNIT",
+        "AIRHANDLER",
+        "DEHUMIDIFIER",
+        "ROOFTOPUNIT",
+        "SPLITSYSTEM",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_UnitaryEquipmentTypeCommon"
+      ]
+    },
+    "IfcValve": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcValve",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "AIRRELEASE",
+        "ANTIVACUUM",
+        "CHANGEOVER",
+        "CHECK",
+        "COMMISSIONING",
+        "DIVERTING",
+        "DOUBLECHECK",
+        "DOUBLEREGULATING",
+        "DRAWOFFCOCK",
+        "FAUCET",
+        "FLUSHING",
+        "GASCOCK",
+        "GASTAP",
+        "ISOLATING",
+        "MIXING",
+        "PRESSUREREDUCING",
+        "PRESSURERELIEF",
+        "REGULATING",
+        "SAFETYCUTOFF",
+        "STEAMTRAP",
+        "STOPCOCK",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_ValveTypeCommon"
+      ]
+    },
+    "IfcVehicle": {
+      "grupo": "IfcVehicle",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcVehicle",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CARGO",
+        "ROLLINGSTOCK",
+        "VEHICLE",
+        "VEHICLEAIR",
+        "VEHICLEMARINE",
+        "VEHICLETRACKED",
+        "VEHICLEWHEELED",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_TransportElementCommon"
+      ]
+    },
+    "IfcVibrationDamper": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcVibrationDamper",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BACKDRAFTDAMPER",
+        "BALANCINGDAMPER",
+        "BLASTDAMPER",
+        "CONTROLDAMPER",
+        "FIREDAMPER",
+        "FIRESMOKEDAMPER",
+        "FUMEHOODEXHAUST",
+        "GRAVITYDAMPER",
+        "GRAVITYRELIEFDAMPER",
+        "RELIEFDAMPER",
+        "SMOKEDAMPER",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon"
+      ]
+    },
+    "IfcVibrationIsolator": {
+      "grupo": "IfcElementComponent",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcVibrationIsolator",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BASE",
+        "COMPRESSION",
+        "SPRING",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElementComponentCommon",
+        "Pset_VibrationIsolatorTypeCommon"
+      ]
+    },
+    "IfcVirtualElement": {
+      "grupo": "IfcVirtualElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcVirtualElement",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "BOUNDARY",
+        "CLEARANCE",
+        "PROVISIONFORVOID",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcVoidingFeature": {
+      "grupo": "IfcFeatureElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcVoidingFeature",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "CHAMFER",
+        "CUTOUT",
+        "EDGE",
+        "HOLE",
+        "MITER",
+        "NOTCH",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_Condition"
+      ]
+    },
+    "IfcWall": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcWall",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ELEMENTEDWALL",
+        "MOVABLE",
+        "PARAPET",
+        "PARTITIONING",
+        "PLUMBINGWALL",
+        "POLYGONAL",
+        "RETAININGWALL",
+        "SHEAR",
+        "SOLIDWALL",
+        "STANDARD",
+        "WAVEWALL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_WallCommon"
+      ]
+    },
+    "IfcWallStandardCase": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcWallStandardCase",
+      "arquetipo": "losa",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "ELEMENTEDWALL",
+        "MOVABLE",
+        "PARAPET",
+        "PARTITIONING",
+        "PLUMBINGWALL",
+        "POLYGONAL",
+        "RETAININGWALL",
+        "SHEAR",
+        "SOLIDWALL",
+        "STANDARD",
+        "WAVEWALL",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_WallCommon"
+      ]
+    },
+    "IfcWasteTerminal": {
+      "grupo": "IfcDistributionElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcWasteTerminal",
+      "arquetipo": "caja",
+      "geometria": "arquetipo",
+      "predefined_types": [
+        "FLOORTRAP",
+        "FLOORWASTE",
+        "GULLYSUMP",
+        "GULLYTRAP",
+        "ROOFDRAIN",
+        "WASTEDISPOSALUNIT",
+        "WASTETRAP",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_ElectricalDeviceCommon",
+        "Pset_WasteTerminalTypeCommon"
+      ]
+    },
+    "IfcWindow": {
+      "grupo": "IfcBuiltElement",
+      "bsdd_uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcWindow",
+      "arquetipo": "realista",
+      "geometria": "realista",
+      "predefined_types": [
+        "LIGHTDOME",
+        "SKYLIGHT",
+        "WINDOW",
+        "USERDEFINED",
+        "NOTDEFINED"
+      ],
+      "psets_estandar": [
+        "Pset_WindowCommon"
+      ]
+    }
+  }
+}

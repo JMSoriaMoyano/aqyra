@@ -1,0 +1,393 @@
+{
+  "caso": "R2 - Forjado FISICO (IfcSlab + vigas) -> puente -> losa sobre vigas",
+  "origen": "IFC fisico (puente_analitico, superficies + barras)",
+  "puente": {
+    "superficies": [
+      {
+        "nombre": "Losa_forjado",
+        "clase_ifc": "IfcSlab",
+        "esquinas_coords": [
+          [
+            0.0,
+            0.0,
+            -0.06
+          ],
+          [
+            6.0,
+            0.0,
+            -0.06
+          ],
+          [
+            6.0,
+            4.0,
+            -0.06
+          ],
+          [
+            0.0,
+            4.0,
+            -0.06
+          ]
+        ],
+        "z_medio": -0.06,
+        "espesor": 0.12,
+        "espesor_origen": "IfcMaterialLayerSet",
+        "material": "C30/37",
+        "malla": 0.5,
+        "apoyo": "",
+        "cargas": [
+          {
+            "caso": "G",
+            "qz": -4500.0
+          },
+          {
+            "caso": "Q",
+            "qz": -3000.0
+          }
+        ],
+        "vigas_asociadas": [
+          "B1",
+          "B2"
+        ]
+      }
+    ],
+    "hipotesis": {
+      "apoyos": [
+        {
+          "nodo": "N1",
+          "cota_z": 0.0,
+          "tipo": "biarticulado"
+        },
+        {
+          "nodo": "N2",
+          "cota_z": 0.0,
+          "tipo": "biarticulado"
+        },
+        {
+          "nodo": "N3",
+          "cota_z": 0.0,
+          "tipo": "biarticulado"
+        },
+        {
+          "nodo": "N4",
+          "cota_z": 0.0,
+          "tipo": "biarticulado"
+        }
+      ],
+      "cargas": [
+        {
+          "superficie": "Losa_forjado",
+          "caso": "G",
+          "q_kN_m2": 4.5,
+          "direccion": "-Z",
+          "tipo": "superficie",
+          "descripcion": "carga gravitatoria de superficie sobre el forjado (servicio)"
+        },
+        {
+          "superficie": "Losa_forjado",
+          "caso": "Q",
+          "q_kN_m2": 3.0,
+          "direccion": "-Z",
+          "tipo": "superficie",
+          "descripcion": "carga gravitatoria de superficie sobre el forjado (servicio)"
+        }
+      ]
+    }
+  },
+  "clasificacion": {
+    "sistema": "forjado_losa_sobre_vigas",
+    "modulo": "laminas+barras (run_forjado)",
+    "run_all": "laminas/run_forjado.py",
+    "superficies": [
+      {
+        "superficie": "Losa_forjado",
+        "material": "C30/37",
+        "espesor_m": 0.12,
+        "horizontal": true,
+        "hormigon": true,
+        "vigas_asociadas": [
+          "B1",
+          "B2"
+        ]
+      }
+    ],
+    "barras": [
+      {
+        "barra": "B1",
+        "material": "S275",
+        "seccion": "IPE 400",
+        "orientacion": "horizontal",
+        "rol": "viga",
+        "acero_I": true
+      },
+      {
+        "barra": "B2",
+        "material": "S275",
+        "seccion": "IPE 400",
+        "orientacion": "horizontal",
+        "rol": "viga",
+        "acero_I": true
+      }
+    ]
+  },
+  "geometria_forjado": {
+    "area": 24.0,
+    "Lx": 6.0,
+    "Ly": 4.0,
+    "luz_viga": 6.0,
+    "luz_losa": 4.0,
+    "n_vigas": 2,
+    "trib": 2.0
+  },
+  "losa": {
+    "geometria": {
+      "luz_losa_m": 4.0,
+      "espesor_mm": 120.0,
+      "tipo": "unidireccional"
+    },
+    "materiales": {
+      "hormigon": "C30/37",
+      "fck_MPa": 30.0,
+      "fcd_MPa": 20.0,
+      "fctm_MPa": 2.896468153816889,
+      "acero": "B500S",
+      "fyd_MPa": 434.7826086956522,
+      "recubrimiento_mm": 25.0,
+      "phi_mm": 12.0
+    },
+    "cargas_kN_m2": {
+      "G": 4.5,
+      "Q": 3.0,
+      "q_ELU": 10.575,
+      "q_cp": 5.4,
+      "q_car": 7.5
+    },
+    "d_main_mm": 89.0,
+    "flexion": {
+      "m_Ed_kNm_m": 21.15,
+      "mu": 0.13350587047090015,
+      "mu_ok": true,
+      "As_req_cm2_m": 6.073033707865169,
+      "As_min_cm2_m": 1.3404854615864563,
+      "As_max_cm2_m": 47.99999999999999,
+      "As_dim_cm2_m": 6.073033707865169,
+      "armado": "φ10/125",
+      "As_prov_cm2_m": 6.283185307179586,
+      "ok": true
+    },
+    "reparto_transversal": {
+      "As_req_cm2_m": 1.3404854615864563,
+      "armado": "phi10/300",
+      "As_prov_cm2_m": 2.6179938779914944
+    },
+    "fisuracion": {
+      "M_qp_kNm_m": 10.8,
+      "sigma_s_MPa": 214.59093450592627,
+      "rho_p_eff": 0.010471975511965978,
+      "hc_ef_mm": 60.0,
+      "eps_sm_cm": 0.0006437728035177788,
+      "sr_max_mm": 279.8056503444799,
+      "wk_mm": 0.1801312679623812,
+      "wmax_mm": 0.3,
+      "u": 0.600437559874604,
+      "ok": true
+    },
+    "flecha": {
+      "L_m": 4.0,
+      "f_total_mm": 5.260298640551177,
+      "lim_total_mm": 13.333333333333334,
+      "u_total": 0.39452239804133826,
+      "ok_total": true,
+      "f_activa_mm": 2.104119456220472,
+      "lim_activa_mm": 8.0,
+      "u_activa": 0.263014932027559,
+      "ok_activa": true,
+      "nota": "flecha de seccion bruta (predimensionado)"
+    },
+    "validacion_placa": {
+      "m_strip_fem_kNm_m": 21.15,
+      "m_analitico_kNm_m": 21.15,
+      "error_pct": 0.0,
+      "autodiagnostico_placa_MITC4": true
+    },
+    "veredicto": "CUMPLE"
+  },
+  "reparto": {
+    "criterio": "ancho tributario (losa unidireccional)",
+    "ancho_tributario_m": 2.0,
+    "qG_superficie_kN_m2": 4.5,
+    "qQ_superficie_kN_m2": 3.0,
+    "G_linea_kN_m": 9.0,
+    "Q_linea_kN_m": 6.0,
+    "nota": "cada viga recibe (q_superficie * ancho_tributario)"
+  },
+  "vigas": {
+    "autodiagnostico": {
+      "valido": true,
+      "checks": {
+        "M (kN·m)": [
+          90.0,
+          90.0,
+          0.0
+        ],
+        "V (kN)": [
+          60.0,
+          60.0,
+          0.0
+        ],
+        "flecha (mm)": [
+          13.652897940228957,
+          13.654569729336085,
+          0.00012243440403215944
+        ]
+      }
+    },
+    "barras": {
+      "B1": {
+        "seccion": "IPE 400",
+        "material": "S275",
+        "tipo": "viga",
+        "L": 6.0,
+        "fy": 275000000.0,
+        "compresion": false,
+        "comprobaciones": {
+          "Flexion Mc,Rd": {
+            "Ed": 95175.0,
+            "Rd": 359425.0,
+            "u": 0.2647979411560131,
+            "ok": true,
+            "art": "EC3 6.2.5"
+          },
+          "Cortante Vpl,Rd": {
+            "Ed": 63450.0,
+            "Rd": 677794.7822718909,
+            "u": 0.0936124054943634,
+            "ok": true,
+            "art": "EC3 6.2.6"
+          },
+          "Axil Nc,Rd": {
+            "Ed": 0.0,
+            "Rd": 2322650.0,
+            "u": 0.0,
+            "ok": true,
+            "art": "EC3 6.2.4"
+          },
+          "Interaccion N+M": {
+            "Ed": null,
+            "Rd": null,
+            "u": 0.2647979411560131,
+            "ok": true,
+            "art": "EC3 6.2.1 (lineal, conservadora)"
+          },
+          "Flecha total L/300": {
+            "Ed": 0.005211228460255696,
+            "Rd": 0.02,
+            "u": 0.2605614230127848,
+            "ok": true,
+            "art": "EC0 7.4 / criterio despacho"
+          },
+          "Flecha activa L/500": {
+            "Ed": 0.002084491384102279,
+            "Rd": 0.012,
+            "u": 0.17370761534185658,
+            "ok": true,
+            "art": "criterio despacho"
+          }
+        },
+        "aprovechamiento_max": 0.2647979411560131,
+        "veredicto": "CUMPLE"
+      },
+      "B2": {
+        "seccion": "IPE 400",
+        "material": "S275",
+        "tipo": "viga",
+        "L": 6.0,
+        "fy": 275000000.0,
+        "compresion": false,
+        "comprobaciones": {
+          "Flexion Mc,Rd": {
+            "Ed": 95175.0,
+            "Rd": 359425.0,
+            "u": 0.2647979411560131,
+            "ok": true,
+            "art": "EC3 6.2.5"
+          },
+          "Cortante Vpl,Rd": {
+            "Ed": 63450.0,
+            "Rd": 677794.7822718909,
+            "u": 0.0936124054943634,
+            "ok": true,
+            "art": "EC3 6.2.6"
+          },
+          "Axil Nc,Rd": {
+            "Ed": 0.0,
+            "Rd": 2322650.0,
+            "u": 0.0,
+            "ok": true,
+            "art": "EC3 6.2.4"
+          },
+          "Interaccion N+M": {
+            "Ed": null,
+            "Rd": null,
+            "u": 0.2647979411560131,
+            "ok": true,
+            "art": "EC3 6.2.1 (lineal, conservadora)"
+          },
+          "Flecha total L/300": {
+            "Ed": 0.005211228460255696,
+            "Rd": 0.02,
+            "u": 0.2605614230127848,
+            "ok": true,
+            "art": "EC0 7.4 / criterio despacho"
+          },
+          "Flecha activa L/500": {
+            "Ed": 0.002084491384102279,
+            "Rd": 0.012,
+            "u": 0.17370761534185658,
+            "ok": true,
+            "art": "criterio despacho"
+          }
+        },
+        "aprovechamiento_max": 0.2647979411560131,
+        "veredicto": "CUMPLE"
+      }
+    }
+  },
+  "validacion_cruzada_viga": {
+    "viga_ref": "B1",
+    "M_anaStruct_kNm": 95.13536026655561,
+    "M_teorico_kNm": 95.175,
+    "error_pct": 0.041649312786330446,
+    "R_ext_kN": 63.45
+  },
+  "equilibrio_global": {
+    "carga_superficie_ELU_kN": 253.8,
+    "suma_reacciones_ELU_kN": 253.8,
+    "error_pct": 0.0,
+    "reacciones_kN": {
+      "N1": 63.45,
+      "N2": 63.45,
+      "N3": 63.45,
+      "N4": 63.45
+    }
+  },
+  "autodiagnostico_solver_barras": {
+    "valido": true,
+    "checks": {
+      "M (kN·m)": [
+        90.0,
+        90.0,
+        0.0
+      ],
+      "V (kN)": [
+        60.0,
+        60.0,
+        0.0
+      ],
+      "flecha (mm)": [
+        13.652897940228957,
+        13.654569729336085,
+        0.00012243440403215944
+      ]
+    }
+  }
+}

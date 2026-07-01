@@ -1,0 +1,132 @@
+{
+  "nombre_tablero": "OBLICUO",
+  "tipologia": "oblicuo",
+  "oblicuo": {
+    "L": 18.0,
+    "B": 10.0,
+    "esviaje_deg": 30.0,
+    "t": 0.8,
+    "nx": 16,
+    "ny": 12,
+    "n_carriles": 2,
+    "g2_N_m2": 3000.0,
+    "recubrimiento": 0.04,
+    "material": {
+      "E": 33000000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fck": 35000000.0,
+      "G": 13750000000.0,
+      "fyk": 500000000.0
+    }
+  },
+  "lm1": [
+    {
+      "carril": 1,
+      "Q_tandem_N": 300000.0,
+      "udl_N_m": 27000.0
+    },
+    {
+      "carril": 2,
+      "Q_tandem_N": 200000.0,
+      "udl_N_m": 7500.0
+    }
+  ],
+  "n_nodos": 221,
+  "n_elementos": 192,
+  "f1_Hz": 5.0712364836641335,
+  "modal": {
+    "frecuencias_Hz": [
+      5.0712364836641335,
+      9.626270356944978,
+      21.567997593501815,
+      21.9794829575748,
+      27.554710304982983,
+      33.269080558132046,
+      37.555869750273054,
+      37.59614349107185
+    ]
+  },
+  "esfuerzos": {
+    "Mx_max_Nm_m": 1222702.1657098671,
+    "My_max_Nm_m": 261994.41871026566,
+    "factor_reparto": 1.0581760699733904
+  },
+  "reacciones_esquinas": {
+    "R_esquinas_N": {
+      "obtusa_1": 1545978.5902693737,
+      "obtusa_2": 1723956.6500272567,
+      "aguda_1": 41055.97121390398,
+      "aguda_2": 31868.514656043604
+    },
+    "R_media_apoyo_N": 276544.677765589,
+    "concentracion_obtusa": 6.233917296678389,
+    "R_obtusa_N": 1723956.6500272567,
+    "R_aguda_N": 41055.97121390398,
+    "ratio_obtusa_aguda": 41.99039991150966
+  },
+  "concentracion_obtusa": 6.233917296678389,
+  "checks": [
+    {
+      "nombre": "Flexion losa long. M_Rd (EC2)",
+      "valor": 1222702.1657098671,
+      "limite": 1288246.352915415,
+      "aprov": 0.949121387336191,
+      "cumple": true
+    },
+    {
+      "nombre": "Flexion losa transv. M_Rd (EC2)",
+      "valor": 261994.41871026566,
+      "limite": 401875.0496427869,
+      "aprov": 0.651930043786355,
+      "cumple": true
+    }
+  ],
+  "detalle": {
+    "armado_long": {
+      "d_m": 0.75,
+      "As_req_cm2_m": 41.66244416492881,
+      "As_min_cm2_m": 12.518853522611426,
+      "As_prov_cm2_m": 41.66244416492881,
+      "x_m": 0.09703985442141802,
+      "z_m": 0.7111840582314328,
+      "M_Rd_Nm_m": 1288246.352915415,
+      "M_Ed_Nm_m": 1222702.1657098671,
+      "u": 0.949121387336191
+    },
+    "armado_transv": {
+      "d_m": 0.75,
+      "As_req_cm2_m": 8.92721723012757,
+      "As_min_cm2_m": 12.518853522611426,
+      "As_prov_cm2_m": 12.518853522611426,
+      "x_m": 0.029158820316641524,
+      "z_m": 0.7383364718733434,
+      "M_Rd_Nm_m": 401875.0496427869,
+      "M_Ed_Nm_m": 261994.41871026566,
+      "u": 0.651930043786355
+    },
+    "concentracion_obtusa": 6.233917296678389,
+    "factor_reparto_transversal": 1.0581760699733904,
+    "aviso_esquina_obtusa": true
+  },
+  "aprovechamiento_max": 0.949121387336191,
+  "veredicto_global": "CUMPLE",
+  "mapping_writeback": {
+    "elementos": {
+      "OBLICUO": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "tablero_oblicuo",
+          "Esviaje_deg": 30.0,
+          "Concentracion_esquina_obtusa": 6.23,
+          "R_obtusa_kN": 1724.0,
+          "Factor_reparto_transversal": 1.058,
+          "As_long_cm2_m": 41.7,
+          "As_transv_cm2_m": 12.5,
+          "Frecuencia_fundamental_Hz": 5.07,
+          "Aprovechamiento_max": 0.949,
+          "Veredicto_global": "CUMPLE"
+        }
+      }
+    }
+  }
+}

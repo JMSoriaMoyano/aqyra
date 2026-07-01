@@ -1,0 +1,167 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N",
+    "momento": "N*m",
+    "factor_escala_ifc": 1.0,
+    "snap_tol_m": 0.06
+  },
+  "origen": "puente_fisico_analitico",
+  "materiales": {
+    "S275": {
+      "E": 210000000000.0,
+      "G": 80770000000.0,
+      "nu": 0.3,
+      "rho": 7850.0,
+      "fy": 275000000.0
+    }
+  },
+  "secciones": {
+    "IPE 330": {
+      "A": 0.006261,
+      "Iy": 0.0001177,
+      "Iz": 7.881e-06,
+      "Wely": 0.0007131,
+      "Wply": 0.0008043,
+      "Welz": 9.852e-05,
+      "Wplz": 0.0001537,
+      "J": 2.815e-07,
+      "Avz": 0.003081,
+      "h": 0.33,
+      "clase": 1,
+      "fuente": "catalogo"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N2": {
+      "x": 3.0,
+      "y": 0.0,
+      "z": 3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N3": {
+      "x": 6.0,
+      "y": 0.0,
+      "z": 3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N4": {
+      "x": 3.0,
+      "y": 3.0,
+      "z": 3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    }
+  },
+  "barras": {
+    "B1": {
+      "ni": "N1",
+      "nj": "N2",
+      "seccion": "IPE 330",
+      "material": "S275",
+      "tipo": "viga",
+      "elemento_fisico": "PASANTE",
+      "clase_ifc": "IfcBeam"
+    },
+    "B2": {
+      "ni": "N2",
+      "nj": "N3",
+      "seccion": "IPE 330",
+      "material": "S275",
+      "tipo": "viga",
+      "elemento_fisico": "PASANTE",
+      "clase_ifc": "IfcBeam"
+    },
+    "B3": {
+      "ni": "N2",
+      "nj": "N4",
+      "seccion": "IPE 330",
+      "material": "S275",
+      "tipo": "viga",
+      "elemento_fisico": "STUB",
+      "clase_ifc": "IfcBeam"
+    }
+  },
+  "superficies": [],
+  "cargas": [],
+  "hipotesis": {
+    "apoyos": [],
+    "cargas": []
+  },
+  "limpieza": {
+    "snap_tol_m": 0.06,
+    "factor_escala_ifc": 1.0,
+    "excentricidades": [
+      {
+        "barra": "B1",
+        "elemento": "PASANTE",
+        "cardinal": 5,
+        "ecc_eje_fisico_analitico_m": 0.0
+      },
+      {
+        "barra": "B2",
+        "elemento": "PASANTE",
+        "cardinal": 5,
+        "ecc_eje_fisico_analitico_m": 0.0
+      },
+      {
+        "barra": "B3",
+        "elemento": "STUB",
+        "cardinal": 5,
+        "ecc_eje_fisico_analitico_m": 0.0
+      }
+    ],
+    "nudos_fusionados": 2,
+    "huecos_puenteados": [
+      {
+        "nodo": "N2",
+        "salto_m": 0.05
+      }
+    ],
+    "cruces_troceados": [
+      {
+        "elemento": "PASANTE",
+        "punto": [
+          3.0,
+          0.0,
+          3.0
+        ],
+        "offset_m": 0.05
+      }
+    ],
+    "elementos_filtrados": []
+  }
+}

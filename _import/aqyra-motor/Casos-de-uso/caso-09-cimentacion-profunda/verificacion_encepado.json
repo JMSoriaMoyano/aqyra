@@ -1,0 +1,51 @@
+{
+  "geom": {
+    "d_mm": 830.0,
+    "z_mm": 747.0,
+    "theta_deg": 39.69267315066882
+  },
+  "celosia": {
+    "T_kN": 1463.8554216867478,
+    "C_kN": 1902.3926239348395,
+    "R_pilote_kN": 1215.0,
+    "T_cerrado_kN": 1463.8554216867471,
+    "C_cerrado_kN": 1902.3926239348398,
+    "err_pct": 4.771590968708933e-14
+  },
+  "tirante": {
+    "T_kN": 1463.8554216867478,
+    "As_req_cm2": 33.6686746987952,
+    "fyd_MPa": 434.7826086956522
+  },
+  "biela": {
+    "sigma_MPa": 4.444993566499006,
+    "sRd_MPa": 10.56,
+    "w_mm": 475.5394019196933,
+    "u": 0.42092742106998166,
+    "ok": true
+  },
+  "nudo_CCC": {
+    "sigma_MPa": 12.0,
+    "sRd_MPa": 17.6,
+    "u": 0.6818181818181818,
+    "ok": true
+  },
+  "nudo_CCT": {
+    "sigma_MPa": 4.297183463481174,
+    "sRd_MPa": 14.96,
+    "u": 0.2872448839225384,
+    "ok": true
+  },
+  "N_Ed_kN": 2430.0,
+  "geom_in": {
+    "SeparacionPilotes": 1.8,
+    "Canto": 0.9,
+    "Ancho": 0.9,
+    "LadoPilar": 0.45,
+    "DiametroPilote": 0.6,
+    "Material": "C30/37",
+    "TipoRegionD": "encepado_2_pilotes"
+  },
+  "via": "ortodoxo",
+  "veredicto": "CUMPLE"
+}

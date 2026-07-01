@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aqyra — entorno (P1·A)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.11.0/proj4.js"></script>
+    <style>
+      :root { color-scheme: dark; }
+      html, body { margin: 0; min-height: 100%; background: #0e1116; color: #e6e6e6; font-family: system-ui, sans-serif; }
+      .wrap { max-width: 980px; margin: 0 auto; padding: 24px 18px 48px; }
+      h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+      .sub { opacity: .6; font-size: 13px; margin-bottom: 16px; }
+      .ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 12px; }
+      .ctrl label { font-size: 13px; opacity: .7; }
+      input { background: #161b22; border: 1px solid #2a313c; color: #e6e6e6; border-radius: 8px; padding: 7px 10px; font-size: 13px; }
+      input[type=number] { width: 64px; }
+      button { border: 1px solid #2a313c; background: #1b2230; color: #e6e6e6; border-radius: 8px; padding: 8px 14px; font-size: 13px; cursor: pointer; }
+      button:hover { background: #243049; } button:disabled { opacity: .5; cursor: default; }
+      #map { width: 100%; height: 520px; border-radius: 12px; border: 1px solid #2a313c; overflow: hidden; }
+      .basemaps { display: flex; gap: 6px; margin: 10px 0 0; flex-wrap: wrap; }
+      .basemaps button.active { background: #2b6cb0; border-color: #2b6cb0; }
+      .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 12px; margin-top: 14px; }
+      .card { background: rgba(20,24,31,.6); border: 1px solid #2a313c; border-radius: 10px; padding: 12px 14px; }
+      .card .k { font-size: 12px; opacity: .6; } .card .v { font-size: 22px; font-weight: 600; margin-top: 2px; }
+      .status { font-size: 12px; opacity: .7; margin-top: 12px; min-height: 16px; }
+      .foot { opacity: .5; font-size: 12px; margin-top: 16px; line-height: 1.6; }
+      a { color: #7fb2e6; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Entorno — base topográfica + parcela</h1>
+      <div class="sub">P1·A · base topográfica del ICGC (viales, edificios, relieve) + parcela y vecinos del Catastro · contexto visual, no IFC.</div>
+
+      <div class="ctrl">
+        <label>Ref. catastral</label>
+        <input id="refcat" value="0419901DF2901H" size="16" />
+        <label>Altura/planta (m)</label>
+        <input id="floorH" type="number" value="3" step="0.1" min="2" />
+        <button id="load">Cargar entorno</button>
+        <button id="freeze" disabled>Congelar snapshot</button>
+        <button id="terreno" disabled>Modelo de Estado → IFC</button>
+      </div>
+
+      <div id="map"></div>
+      <div class="basemaps">
+        <button data-bm="topografic" class="active">Topográfico</button>
+        <button data-bm="orto">Ortofoto</button>
+        <button data-bm="orto-hibrida">Ortofoto híbrida</button>
+        <button data-bm="simplificat">Simplificado</button>
+        <span style="flex:1"></span>
+        <button id="toggle3d" class="active">Relieve 3D</button>
+      </div>
+
+      <div class="cards">
+        <div class="card"><div class="k">Parcelas</div><div class="v" id="mParc">—</div></div>
+        <div class="card"><div class="k">Edificios</div><div class="v" id="mBld">—</div></div>
+        <div class="card"><div class="k">Sup. parcela activo</div><div class="v" id="mArea">—</div></div>
+        <div class="card"><div class="k">Base</div><div class="v" style="font-size:15px" id="mBase">ICGC topo</div></div>
+      </div>
+      <div class="status" id="status"></div>
+
+      <div class="foot">
+        Base topográfica © ICGC (CC-BY). Parcelas y edificios © Dirección General del Catastro. Viales y relieve provienen de la base del ICGC.
+        Snapshot del vector (parcelas+edificios) en EPSG:25831 → <code>entorno.snapshot.geojson</code>. Núcleo de parseo: <code>visor/src/environment.ts</code>. Pendiente de firma de JM.
+      </div>
+    </div>
+
+    <script type="module">
+      import { parseParcels, parseBuildings, toCollection, toSnapshot, gridToMesh, elevationRange, IfcAuthor } from "@aqyra/visor";
+      import Pbf from "https://cdn.jsdelivr.net/npm/pbf@3/+esm";
+      import { VectorTile } from "https://cdn.jsdelivr.net/npm/@mapbox/vector-tile@1/+esm";
+
+      const $ = (id) => document.getElementById(id);
+      proj4.defs("EPSG:25831", "+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+      const to4326 = (E, N) => proj4("EPSG:25831", "EPSG:4326", [E, N]); // → [lon,lat]
+      const to25831 = (lon, lat) => proj4("EPSG:4326", "EPSG:25831", [lon, lat]); // → [E,N]
+
+      const ICGC = (bm) => `https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/${bm}/MON3857NW/{z}/{x}/{y}.png`;
+      // DEM global (AWS/Mapzen terrarium) para el relieve 3D del mapa — fiable y con CORS.
+      // (El terreny-RGB del ICGC usa un tile-grid propio; se integrará aparte.)
+      const DEM = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
+      const styleFor = (bm) => ({
+        version: 8,
+        sources: {
+          base: { type: "raster", tiles: [ICGC(bm)], tileSize: 256, attribution: "© ICGC" },
+          dem: { type: "raster-dem", tiles: [DEM], tileSize: 256, encoding: "terrarium", maxzoom: 15 },
+        },
+        layers: [{ id: "base", type: "raster", source: "base" }],
+        terrain: { source: "dem", exaggeration: 1.6 },
+      });
+      let relief3D = true;
+
+      const map = new maplibregl.Map({ container: "map", style: styleFor("topografic"), center: [2.045, 41.473], zoom: 16, pitch: 55, maxPitch: 80, hash: false });
+      map.addControl(new maplibregl.NavigationControl({ showCompass: true }), "top-right");
+      map.addControl(new maplibregl.ScaleControl({ unit: "metric" }));
+
+      let lastVector = null; // FeatureCollection en 25831 (para snapshot)
+      let lastGeo = null;    // { parcels, buildings } reproyectado a 4326 (para el mapa)
+
+      const geo = async (src) => {
+        const refcat = encodeURIComponent($("refcat").value.trim());
+        const r = await fetch(`/__aqyra/geo?src=${src}&refcat=${refcat}&srs=EPSG::25831`);
+        return r.text();
+      };
+      const reGeom = (g) => {
+        const m = (ring) => ring.map(([E, N]) => to4326(E, N));
+        if (g.type === "Polygon") return { type: "Polygon", coordinates: g.coordinates.map(m) };
+        if (g.type === "MultiPolygon") return { type: "MultiPolygon", coordinates: g.coordinates.map((p) => p.map(m)) };
+        return g;
+      };
+      const toGJ = (feats) => ({ type: "FeatureCollection", features: feats.map((f) => ({ type: "Feature", properties: f.properties, geometry: reGeom(f.geometry) })) });
+
+      function setData() {
+        if (!lastGeo) return;
+        const add = (id, data) => { if (map.getSource(id)) map.getSource(id).setData(data); };
+        add("parcels", lastGeo.parcels);
+        add("buildings", lastGeo.buildings);
+      }
+      function addLayers() {
+        const own = $("refcat").value.trim();
+        if (!map.getSource("parcels")) map.addSource("parcels", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+        if (!map.getSource("buildings")) map.addSource("buildings", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+        if (!map.getLayer("parcels-fill")) map.addLayer({
+          id: "parcels-fill", type: "fill", source: "parcels",
+          paint: { "fill-color": ["case", ["==", ["get", "refcat"], own], "#2b6cb0", "#888888"], "fill-opacity": ["case", ["==", ["get", "refcat"], own], 0.28, 0.12] },
+        });
+        if (!map.getLayer("parcels-line")) map.addLayer({
+          id: "parcels-line", type: "line", source: "parcels",
+          paint: { "line-color": ["case", ["==", ["get", "refcat"], own], "#2b6cb0", "#777"], "line-width": ["case", ["==", ["get", "refcat"], own], 3, 1.4] },
+        });
+        if (!map.getLayer("buildings-fill")) map.addLayer({
+          id: "buildings-fill", type: "fill-extrusion", source: "buildings",
+          paint: {
+            "fill-extrusion-color": "#ef9f27",
+            "fill-extrusion-opacity": 0.85,
+            "fill-extrusion-height": ["coalesce", ["get", "height"], 3],
+            "fill-extrusion-base": 0,
+          },
+        });
+      }
+
+      async function load() {
+        $("load").disabled = true; $("status").textContent = "Consultando Catastro…";
+        try {
+          const own = $("refcat").value.trim();
+          const floorH = parseFloat($("floorH").value) || 3.0;
+          const parcels = parseParcels(await geo("cp-neighbour"));
+          // Edificios de TODAS las parcelas (la del activo + vecinas), por su refcat.
+          const refcats = [...new Set(parcels.map((p) => p.properties.refcat).filter(Boolean))];
+          const buildings = [];
+          for (const rc of refcats) {
+            const gml = await (await fetch(`/__aqyra/geo?src=bu-part&refcat=${encodeURIComponent(rc)}&srs=EPSG::25831`)).text();
+            buildings.push(...parseBuildings(gml, floorH));
+          }
+          buildings.forEach((b) => {
+            const f = b.properties.floorsAbove;
+            b.properties.height = b.properties.heightEstimate || (f ? f * floorH : 3);
+            b.properties.label = f ? `${f}P · ${b.properties.height.toFixed(0)}m` : "";
+          });
+          lastVector = toCollection([...parcels, ...buildings]);
+          lastGeo = { parcels: toGJ(parcels), buildings: toGJ(buildings) };
+          if (!map.isStyleLoaded()) await new Promise((r) => map.once("idle", r));
+          addLayers(); setData();
+          // encuadre a la parcela del activo
+          const ownF = lastGeo.parcels.features.find((f) => f.properties.refcat === own) || lastGeo.parcels.features[0];
+          if (ownF) {
+            const b = new maplibregl.LngLatBounds();
+            const walk = (c) => Array.isArray(c[0]) ? c.forEach(walk) : b.extend(c);
+            walk(ownF.geometry.coordinates);
+            map.fitBounds(b, { padding: 80, maxZoom: 18, pitch: relief3D ? 55 : 0 });
+          }
+          $("mParc").textContent = parcels.length;
+          $("mBld").textContent = buildings.length;
+          const op = parcels.find((f) => f.properties.refcat === own);
+          $("mArea").textContent = op && op.properties.areaValue ? `${op.properties.areaValue.toLocaleString("es")} m²` : "—";
+          $("freeze").disabled = false;
+          $("terreno").disabled = false;
+          $("status").textContent = `Listo: ${parcels.length} parcelas, ${buildings.length} edificios sobre la base del ICGC.`;
+        } catch (e) {
+          $("status").textContent = "Error: " + String(e);
+        } finally { $("load").disabled = false; }
+      }
+      function freeze() {
+        if (!lastVector) return;
+        const blob = new Blob([toSnapshot(lastVector)], { type: "application/geo+json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = "entorno.snapshot.geojson"; a.click();
+        URL.revokeObjectURL(a.href);
+      }
+
+      // cambio de base: re-set style y re-añade capas/datos
+      document.querySelectorAll(".basemaps button").forEach((btn) => btn.onclick = () => {
+        document.querySelectorAll(".basemaps button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const bm = btn.dataset.bm;
+        $("mBase").textContent = btn.textContent;
+        map.setStyle(styleFor(bm));
+        map.once("idle", () => { addLayers(); setData(); map.setTerrain(relief3D ? { source: "dem", exaggeration: 1.6 } : null); });
+      });
+
+      // Toggle relieve 3D (terreny-RGB del ICGC) + inclinación de cámara.
+      $("toggle3d").onclick = () => {
+        relief3D = !relief3D;
+        $("toggle3d").classList.toggle("active", relief3D);
+        map.setTerrain(relief3D ? { source: "dem", exaggeration: 1.6 } : null);
+        map.easeTo({ pitch: relief3D ? 55 : 0, duration: 600 });
+      };
+
+      // ── VIARIO: teselas vectoriales (MVT) del ICGC → calzada (opción B) ─────────
+      // Trae la capa 'transportation' del MVT del ICGC sobre el bbox, convierte los
+      // ejes a EPSG:25831 y los ENSANCHA a calzada (un cuadrilátero por tramo) según
+      // la clase de vía. Devuelve SiteVolume[] (kind:"road").
+      const ROAD_W = { motorway: 14, trunk: 12, primary: 10, secondary: 8, tertiary: 7, minor: 6, residential: 6, living_street: 5, service: 4.5, unclassified: 5, track: 3, path: 2 };
+      const lon2tile = (lon, z) => Math.floor((lon + 180) / 360 * 2 ** z);
+      const lat2tile = (lat, z) => Math.floor((1 - Math.asinh(Math.tan(lat * Math.PI / 180)) / Math.PI) / 2 * 2 ** z);
+      const tile2lon = (x, z) => x / 2 ** z * 360 - 180;
+      const tile2lat = (y, z) => { const n = Math.PI - 2 * Math.PI * y / 2 ** z; return 180 / Math.PI * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n))); };
+
+      async function roadVolumes(minE, minN, maxE, maxN, margin = 80) {
+        const z = 14;
+        const a = to4326(minE - margin, minN - margin), b = to4326(maxE + margin, maxN + margin);
+        const x0 = lon2tile(Math.min(a[0], b[0]), z), x1 = lon2tile(Math.max(a[0], b[0]), z);
+        const y0 = lat2tile(Math.max(a[1], b[1]), z), y1 = lat2tile(Math.min(a[1], b[1]), z);
+        const inBox = (E, N) => E >= minE - margin && E <= maxE + margin && N >= minN - margin && N <= maxN + margin;
+        const out = [];
+        for (let tx = x0; tx <= x1; tx++) {
+          for (let ty = y0; ty <= y1; ty++) {
+            const r = await fetch(`/__aqyra/geo?src=vt&z=${z}&x=${tx}&y=${ty}`);
+            const buf = await r.arrayBuffer();
+            let layer;
+            try { layer = new VectorTile(new Pbf(buf)).layers.transportation; } catch { layer = null; }
+            if (!layer) continue;
+            for (let i = 0; i < layer.length; i++) {
+              const f = layer.feature(i);
+              if (f.type !== 2) continue; // 2 = LineString
+              const w = (ROAD_W[f.properties.class] || 6) / 2;
+              const ext = f.extent || 4096;
+              for (const line of f.loadGeometry()) {
+                const pts = line.map((p) => to25831(tile2lon(tx + p.x / ext, z), tile2lat(ty + p.y / ext, z)));
+                for (let s = 0; s + 1 < pts.length; s++) {
+                  const A = pts[s], B = pts[s + 1];
+                  const dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy) || 1;
+                  if (!inBox((A[0] + B[0]) / 2, (A[1] + B[1]) / 2)) continue;
+                  const nx = -dy / L * w, ny = dx / L * w;
+                  out.push({ kind: "road", name: f.properties.class || "vial", height: 0.15, ring: [[A[0] + nx, A[1] + ny], [B[0] + nx, B[1] + ny], [B[0] - nx, B[1] - ny], [A[0] - nx, A[1] - ny], [A[0] + nx, A[1] + ny]] });
+                }
+              }
+            }
+          }
+        }
+        return out;
+      }
+
+      // ── MODELO DE ESTADO: cota → TIN + parcelas + vecinos + viales → IFC ─────────
+      async function terrenoToIFC() {
+        if (!lastVector) return;
+        $("terreno").disabled = true; $("status").textContent = "Muestreando cota del ICGC…";
+        try {
+          const own = $("refcat").value.trim();
+          const parcel = lastVector.features.find((f) => f.properties.kind === "parcel" && f.properties.refcat === own) || lastVector.features.find((f) => f.properties.kind === "parcel");
+          // bbox de la parcela (EPSG:25831)
+          const coords = (parcel.geometry.type === "Polygon" ? parcel.geometry.coordinates : parcel.geometry.coordinates.flat()).flat();
+          let minE = Infinity, minN = Infinity, maxE = -Infinity, maxN = -Infinity;
+          for (const [E, N] of coords) { minE = Math.min(minE, E); minN = Math.min(minN, N); maxE = Math.max(maxE, E); maxN = Math.max(maxN, N); }
+          const nx = 16, ny = 16;
+          const dx = (maxE - minE) / (nx - 1), dy = (maxN - minN) / (ny - 1);
+          const lats = [], lons = [];
+          for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const [lon, lat] = to4326(minE + i * dx, minN + j * dy); lons.push(lon); lats.push(lat); }
+          const heights = new Array(nx * ny);
+          for (let s = 0; s < lats.length; s += 100) {
+            const La = lats.slice(s, s + 100), Lo = lons.slice(s, s + 100);
+            const rr = await fetch(`/__aqyra/geo?src=elev&lats=${La.join(",")}&lons=${Lo.join(",")}`);
+            const jj = await rr.json();
+            if (!jj.elevation) throw new Error("sin cota del servicio de elevación");
+            for (let k = 0; k < jj.elevation.length; k++) heights[s + k] = jj.elevation[k];
+          }
+          const mesh = gridToMesh({ nx, ny, originE: minE, originN: minN, dx, dy, heights });
+          const rng = elevationRange(mesh);
+          $("status").textContent = `Cota muestreada (${mesh.triangles.length} triángulos, ${rng.min.toFixed(1)}–${rng.max.toFixed(1)} m). Montando Modelo de Estado…`;
+
+          // --- volúmenes del Estado: parcelas + vecinos a <30 m del activo ---
+          const ringsOf = (f) => f.geometry.type === "Polygon" ? [f.geometry.coordinates[0]] : f.geometry.coordinates.map((p) => p[0]);
+          const ringMinDist = (a, b) => { let m = Infinity; for (const p of a) for (const q of b) { const d = Math.hypot(p[0] - q[0], p[1] - q[1]); if (d < m) m = d; } return m; };
+          const ownRings = ringsOf(parcel);
+          const near = (ring) => ownRings.some((o) => ringMinDist(ring, o) < 30);
+          const volumes = [];
+          for (const f of lastVector.features) {
+            if (f.properties.kind === "parcel") {
+              for (const r of ringsOf(f)) volumes.push({ kind: "parcel", name: f.properties.refcat, height: 0.2, ring: r });
+            } else if (f.properties.kind === "building") {
+              for (const r of ringsOf(f)) if (near(r)) volumes.push({ kind: "building", name: f.properties.refcat || "vecino", height: f.properties.height || 3, ring: r });
+            }
+          }
+          $("status").textContent = "Trayendo viario del ICGC (MVT)…";
+          let roads = [];
+          try { roads = await roadVolumes(minE, minN, maxE, maxN); } catch (e) { roads = []; }
+          volumes.push(...roads);
+
+          // Autoría del IFC de ESTADO (web-ifc en el navegador; wasm en /web-ifc.wasm)
+          const author = new IfcAuthor({ wasmPath: "/", wasmAbsolute: true });
+          const r = await author.createSpatial({
+            project: { name: "Can_Cabassa_ESTADO" },
+            site: { name: own, longName: "Can Cabassa — Modelo de Estado" },
+            building: { name: "Estado", longName: "Entorno existente" },
+            storey: { name: "AQ-NIV-RAS", longName: "Rasante", elevation: 0 },
+            georef: { epsg: "EPSG:25831", geodeticDatum: "ETRS89", mapProjection: "UTM", mapZone: "31N", eastings: minE, northings: minN, orthogonalHeight: rng.min },
+            terrain: mesh,
+            volumes,
+          });
+          author.close(r.modelID);
+          const blob = new Blob([r.ifc], { type: "application/x-step" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob); a.download = "estado.ifc"; a.click();
+          URL.revokeObjectURL(a.href);
+          const nP = volumes.filter((v) => v.kind === "parcel").length, nB = volumes.filter((v) => v.kind === "building").length, nR = volumes.filter((v) => v.kind === "road").length;
+          $("status").textContent = `Modelo de Estado descargado (estado.ifc): terreno ${mesh.triangles.length} triáng. (cota ${rng.min.toFixed(1)}–${rng.max.toFixed(1)} m) + ${nP} parcelas + ${nB} vecinos <30 m + ${nR} tramos de calzada (ICGC). Ábrelo en BIMvision.`;
+        } catch (e) {
+          $("status").textContent = "Error generando el terreno: " + String(e);
+        } finally { $("terreno").disabled = false; }
+      }
+      $("terreno").onclick = terrenoToIFC;
+
+      $("load").onclick = load;
+      $("freeze").onclick = freeze;
+      map.on("load", () => { if (relief3D) map.setTerrain({ source: "dem", exaggeration: 1.6 }); load(); });
+    </script>
+  </body>
+</html>

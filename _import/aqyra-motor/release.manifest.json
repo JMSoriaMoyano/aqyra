@@ -1,0 +1,38 @@
+{
+  "release": "N1.1",
+  "descripcion": "Primer corte del nucleo Aqyra (piloto del gobierno). Golden C5 v0 en VERDE con PyNite.",
+  "fecha": "2026-06-26",
+  "politica": "0.x pre-estable; espacios separados build<->release (M1); firma S1 (GPG sobre manifiesto)",
+  "golden": {
+    "suite": "C5 v0 (7 fichas)",
+    "estado": "verde",
+    "oraculo": "PyNiteFEA 2.0.2 (barra/celosia/modal) + analitico (DA-2 EC7) + folded-plate/Navier (lamina)",
+    "run_id": "N1.1-decopak-2026-06-26",
+    "evidencia": ["qa/run_golden.py", "qa/informes/golden_run_report.json", "qa/informes/golden_run_consola.txt"]
+  },
+  "componentes": [
+    {"nombre": "motor-fem", "tag": "0.1.0", "built_from": "0.1.0",
+     "artefacto": "_releases-historico/motor-fem-v0.1.0.plugin",
+     "sha256": "9239c267bcc8cf2dd3024011a95812cd17ddbd2d0776c540a6573fc6dcb866ae",
+     "contrato": "C5 v0", "golden": "verde"},
+    {"nombre": "motor-calculo", "tag": "0.1.0", "built_from": "0.23.0",
+     "artefacto": "motor-calculo-estructural-v0.23.0.plugin",
+     "sha256": "f1434c7ccf15e27642418390da86923b5e29c416fff74e8872636b312857d82e",
+     "contrato": "C5 v0", "golden": "verde",
+     "nota": "tag 0.1.0 cortado en P4 del build 0.23.0 que pasa la golden corregida (DEC-A1 Opcion A + P3 PyNite)"},
+    {"nombre": "iso19650-openbim", "tag": "0.8.2", "built_from": "0.8.2",
+     "artefacto": "_releases-historico/iso19650-openbim-v0.8.2.plugin",
+     "sha256": "42da38ee0126a05a5eb11465f114dbb2b42c8c2106ff618d6f15e04216c4b383",
+     "contrato": "C1 v0", "golden": "verde"},
+    {"nombre": "estructuras-eurocodigos", "tag": "0.1.0", "built_from": "en uso",
+     "artefacto": "(skills EC)", "contrato": "C5 v0 (apoyo)", "golden": "verde"},
+    {"nombre": "visor-ifc", "tag": "0.1.0", "built_from": "V1",
+     "artefacto": "(visor)", "contrato": "-", "golden": "n/a"}
+  ],
+  "sello_dos_llaves": {
+    "llave_1_QA": "golden VERDE con PyNite (P3) + informe limpio  ->  CUMPLIDA por la IA (preparacion)",
+    "llave_2_release": "firma GPG de JM sobre este manifiesto (release.manifest.json.asc)  ->  PENDIENTE (solo JM, en su maquina)"
+  },
+  "firma": "release.manifest.json.asc (GPG JM) — PENDIENTE",
+  "nota_gobierno": "La IA prepara y propone; NO certifica. La certificacion exige la firma de JM (segunda llave)."
+}

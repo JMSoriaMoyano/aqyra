@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: aqyra-verificacion-ec
+Version: 0.1.0
+Summary: Aprovechamiento EC3 (acero) — criterio normativo (anzuelo, privado, D-022). Suelo de V3; armado EC2 y pandeo de barra como incrementos. Puerto a estructuras-eurocodigos anclado.
+Requires-Python: >=3.10

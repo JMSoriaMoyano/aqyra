@@ -1,0 +1,230 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N",
+    "momento": "N*m",
+    "factor_escala_ifc": 0.001,
+    "snap_tol_m": 0.06
+  },
+  "origen": "puente_fisico_analitico",
+  "materiales": {
+    "S275": {
+      "E": 210000000000.0,
+      "G": 80770000000.0,
+      "nu": 0.3,
+      "rho": 7850.0,
+      "fy": 275000000.0
+    }
+  },
+  "secciones": {
+    "HEB 200": {
+      "A": 0.007808,
+      "Iy": 5.696e-05,
+      "Iz": 2.003e-05,
+      "Wely": 0.0005696,
+      "Wply": 0.0006425,
+      "Welz": 0.0002003,
+      "Wplz": 0.0003058,
+      "J": 5.928e-07,
+      "Avz": 0.002483,
+      "h": 0.2,
+      "clase": 1,
+      "fuente": "catalogo"
+    },
+    "IPE 330": {
+      "A": 0.006261,
+      "Iy": 0.0001177,
+      "Iz": 7.881e-06,
+      "Wely": 0.0007131,
+      "Wply": 0.0008043,
+      "Welz": 9.852e-05,
+      "Wplz": 0.0001537,
+      "J": 2.815e-07,
+      "Avz": 0.003081,
+      "h": 0.33,
+      "clase": 1,
+      "fuente": "catalogo"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N2": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 4.04,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "N3": {
+      "x": 6.000000000000001,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N4": {
+      "x": 6.000000000000001,
+      "y": 0.0,
+      "z": 4.04,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "barras": {
+    "C1": {
+      "ni": "N1",
+      "nj": "N2",
+      "seccion": "HEB 200",
+      "material": "S275",
+      "tipo": "pilar",
+      "elemento_fisico": "0kZQ8aXf3:Structural Column:HE 200 B:418273",
+      "clase_ifc": "IfcColumn"
+    },
+    "C2": {
+      "ni": "N3",
+      "nj": "N4",
+      "seccion": "HEB 200",
+      "material": "S275",
+      "tipo": "pilar",
+      "elemento_fisico": "0kZQ8aXf3:Structural Column:HE 200 B:418274",
+      "clase_ifc": "IfcColumn"
+    },
+    "B1": {
+      "ni": "N2",
+      "nj": "N4",
+      "seccion": "IPE 330",
+      "material": "S275",
+      "tipo": "viga",
+      "elemento_fisico": "1mPLr92Kx:Framing:IPE330:55012",
+      "clase_ifc": "IfcBeam"
+    }
+  },
+  "superficies": [],
+  "cargas": [
+    {
+      "caso": "G",
+      "barra": "B1",
+      "direccion": "GZ",
+      "qz": -12000.0
+    },
+    {
+      "caso": "Q",
+      "barra": "B1",
+      "direccion": "GZ",
+      "qz": -10000.0
+    }
+  ],
+  "hipotesis": {
+    "apoyos": [],
+    "cargas": [
+      {
+        "barra": "B1",
+        "elemento_fisico": "1mPLr92Kx:Framing:IPE330:55012",
+        "caso": "G",
+        "q_kN_m": 12.0,
+        "direccion": "-Z",
+        "tipo": "linea",
+        "descripcion": "carga gravitatoria de servicio sobre el dintel"
+      },
+      {
+        "barra": "B1",
+        "elemento_fisico": "1mPLr92Kx:Framing:IPE330:55012",
+        "caso": "Q",
+        "q_kN_m": 10.0,
+        "direccion": "-Z",
+        "tipo": "linea",
+        "descripcion": "carga gravitatoria de servicio sobre el dintel"
+      }
+    ]
+  },
+  "limpieza": {
+    "snap_tol_m": 0.06,
+    "factor_escala_ifc": 0.001,
+    "excentricidades": [
+      {
+        "barra": "C1",
+        "elemento": "0kZQ8aXf3:Structural Column:HE 200 B:418273",
+        "cardinal": 1,
+        "ecc_eje_fisico_analitico_m": 0.1414
+      },
+      {
+        "barra": "C2",
+        "elemento": "0kZQ8aXf3:Structural Column:HE 200 B:418274",
+        "cardinal": 3,
+        "ecc_eje_fisico_analitico_m": 0.1414
+      },
+      {
+        "barra": "B1",
+        "elemento": "1mPLr92Kx:Framing:IPE330:55012",
+        "cardinal": 8,
+        "ecc_eje_fisico_analitico_m": 0.165
+      },
+      {
+        "barra": "B2",
+        "elemento": "9zStray:Framing:IPE330:99001",
+        "cardinal": 5,
+        "ecc_eje_fisico_analitico_m": 0.0
+      }
+    ],
+    "nudos_fusionados": 2,
+    "huecos_puenteados": [
+      {
+        "nodo": "N2",
+        "salto_m": 0.05
+      },
+      {
+        "nodo": "N4",
+        "salto_m": 0.05
+      }
+    ],
+    "cruces_troceados": [],
+    "elementos_filtrados": [
+      {
+        "nombre": "Elemento generico (mobiliario)",
+        "clase_ifc": "IfcBuildingElementProxy",
+        "motivo": "clase no estructural (descartada)"
+      },
+      {
+        "nombre": "Baranda decorativa",
+        "clase_ifc": "IfcRailing",
+        "motivo": "clase no estructural (descartada)"
+      },
+      {
+        "barra": "B2",
+        "elemento": "9zStray:Framing:IPE330:99001",
+        "clase_ifc": "IfcBeam",
+        "motivo": "componente no conectada (sin apoyo) -> descartada"
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "info": {
+    "L": 11.5,
+    "h": 7.0,
+    "d": 4.5,
+    "t": 0.6,
+    "n": 40,
+    "kh": 20000000.0,
+    "Ka": 0.3333333333333333,
+    "Kp": 2.9999999999999982,
+    "metodo": "rankine",
+    "material": "C30/37",
+    "z_ancla": 1.4375,
+    "dz": 0.2875
+  },
+  "equilibrio": {
+    "Ea_caract_kN": 457.125,
+    "T_h_ELU_kN": 138.06692594686152,
+    "Pp_mov_ELU_kN": 484.80182405631183,
+    "H_aplicado_ELU_kN": 622.86875,
+    "error_pct": 5.094718110875635e-10
+  },
+  "empotramiento": {
+    "Ea_caract_kN": 457.12499999999994,
+    "Pp_disp_caract_kN": 577.1249999999997,
+    "Pp_disp_calc_kN": 412.2321428571426,
+    "FoS_pasivo": 1.7813908973110153,
+    "FoS_objetivo": 1.5,
+    "Pp_movilizado_ELU_kN": 484.80182405631183,
+    "u_pasivo_informativo": 1.1760408120924184,
+    "ok": true
+  },
+  "ancla": {
+    "T_h_kN_m": 182.6073603090782,
+    "T_h_FE_kN_m": 138.06692594686152,
+    "T_h_freeearth_kN_m": 182.6073603090782,
+    "metodo_dimensionante": "free-earth",
+    "T_ancla_kN_m": 201.48492920506462,
+    "F_ancla_kN": 402.96985841012923,
+    "separacion_m": 2.0,
+    "inclinacion_grados": 25.0,
+    "L_bulbo_m": 6.413464488301323,
+    "L_libre_min_m": 6.91017010646702,
+    "L_total_min_m": 13.323634594768343,
+    "D_bulbo_m": 0.2,
+    "tau_kPa": 200.0,
+    "fs_bulbo": 2.0,
+    "ok": true
+  },
+  "fuste": {
+    "d_mm": 527.5000000000001,
+    "flexion": {
+      "M_Ed_kNm_m": 251.4085624541183,
+      "As_cm2_m": 11.221355881621998,
+      "As_min_cm2_m": 7.954700000000002,
+      "As_prov_cm2_m": 11.221355881621998,
+      "rho": 0.002127271257179525,
+      "ok": true
+    },
+    "cortante": {
+      "V_Ed_kN_m": 119.47167301712632,
+      "VRdc_kN_m": 207.6882889266209,
+      "u": 0.5752451119636182,
+      "ok": true
+    }
+  },
+  "veredicto": "CUMPLE"
+}

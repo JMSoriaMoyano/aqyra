@@ -1,0 +1,26 @@
+# Normalizar texto a LF en el repo y en el working tree.
+# Evita el "churn" de CRLF en Windows (core.autocrlf) sin .gitattributes.
+* text=auto eol=lf
+
+# === ZONA FIRMADA: NO normalizar NUNCA (1 byte cambiado invalida la firma GPG) ===
+release.manifest.json      -text
+release.manifest.json.asc  -text
+*.asc                      -text
+
+# Binarios explicitos (git NO debe normalizarlos)
+*.plugin binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.pdf  binary
+*.docx binary
+*.xlsx binary
+*.pptx binary
+*.zip  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary

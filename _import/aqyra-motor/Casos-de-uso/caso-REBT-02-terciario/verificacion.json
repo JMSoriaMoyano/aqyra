@@ -1,0 +1,15 @@
+{
+  "veredicto": "CUMPLE",
+  "balance_potencias_pct": 0.0,
+  "potencia_cabecera_W": 11296.0,
+  "potencia_demanda_W": 11296.0,
+  "caida_tension_max_pct": 3.3185,
+  "terminal_gobernante": "TOMA-1",
+  "errores": [],
+  "avisos": [],
+  "info": [
+    "Balance de potencias: cabecera 11296.0 W vs demanda 11296.0 W (residuo 0.0000 %)",
+    "Caida de tension maxima: 3.318 % (gobernante TOMA-1)",
+    "Intensidades dentro del admisible en todos los tramos."
+  ]
+}

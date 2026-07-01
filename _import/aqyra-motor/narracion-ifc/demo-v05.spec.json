@@ -1,0 +1,16 @@
+{ "proyecto":"Demo v0.5 — hueco real, forjado nervado, escalera", "esquema":"IFC4X3",
+  "niveles":[{"nombre":"Planta Baja","cota":0.0},{"nombre":"Planta Primera","cota":3.5}],
+  "muros":[
+    {"nombre":"Muro_huecos","nivel":"Planta Baja","inicio":[0,0],"fin":[8,0],"espesor":0.25,"altura":3.0,"exterior":true,
+     "huecos":[
+       {"tipo":"puerta","pos":2.0,"ancho":1.0,"alto":2.1,"alfeizar":0.0},
+       {"tipo":"ventana","pos":5.5,"ancho":1.5,"alto":1.2,"alfeizar":1.0}
+     ]}
+  ],
+  "losas":[
+    {"nombre":"Forjado_reticular","nivel":"Planta Primera","contorno":[[0,0],[8,0],[8,6],[0,6]],
+     "tipo":"reticular","capa":0.05,"canto":0.35,"sep":0.8,"b_nervio":0.12,"material":"HA-30"}
+  ],
+  "escaleras":[
+    {"nombre":"Escalera_1","nivel":"Planta Baja","pos":[10,0],"ancho":1.2,"n_escalones":20,"huella":0.28,"contrahuella":0.175}
+  ] }

@@ -1,0 +1,23 @@
+VALIDACION IFC caso-03.ifc  (schema IFC4)
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralPointConnection       18
+  IfcStructuralCurveMember           9
+  IfcStructuralSurfaceMember         1
+  IfcBoundaryNodeCondition           9
+  IfcRectangleProfileDef             1
+  IfcMaterialProfileSet              1
+  IfcFaceSurface                     1
+  IfcStructuralLoadGroup             2
+  IfcStructuralSurfaceAction         2
+  IfcStructuralLoadPlanarForce       2
+  IfcRelConnectsStructuralActivity   2
+  IfcRelAssociatesMaterial           10
+  IfcMaterialProperties              1
+LoadedBy: ['G', 'Q']
+Materiales: ['C30/37']
+  Losa 'Losa' espesor=0.280 m
+  Pilares: P1, P2, P3, P4, P5, P6, P7, P8, P9
+  Perfil pilar: C 400x400  0.40 x 0.40 m
+  Nodos (cabezas+bases): 18
+OK: el IFC abre correctamente con ifcopenshell.

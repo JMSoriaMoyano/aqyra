@@ -1,0 +1,58 @@
+{
+  "nombre": "PILA",
+  "pila": {
+    "H": 14.0,
+    "np": 10,
+    "e_long": 0.0,
+    "material": {
+      "E": 33000000000.0,
+      "nu": 0.2,
+      "G": 13750000000.0,
+      "rho": 2500.0,
+      "fck": 30000000.0
+    },
+    "pila_sec": {
+      "A": 2.25,
+      "Iy": 0.421875,
+      "Iz": 0.421875,
+      "J": 0.71296875,
+      "b": 1.5,
+      "h": 1.5,
+      "d": 1.4
+    },
+    "suelo": {
+      "kx": 800000000.0,
+      "kz": 1500000000.0,
+      "kry": 900000000.0
+    },
+    "q_viento_pila_N_m": 3000.0,
+    "As_pila_m2": 0.025,
+    "beta_pila": 2.0,
+    "apoyo": {
+      "tipo": "elastomerico",
+      "a": 0.45,
+      "b": 0.6,
+      "Te": 0.063,
+      "t_capa": 0.012,
+      "n_capas": 5
+    },
+    "cimentacion": {
+      "tipo": "pilotes",
+      "D": 1.0,
+      "L": 18.0,
+      "qs": 60000.0,
+      "qb": 2500000.0,
+      "n": 4,
+      "sep": 3.0,
+      "encepado_canto": 1.4
+    }
+  },
+  "reacciones": {
+    "N_G_N": 4200000.0,
+    "N_LM1_N": 1500000.0,
+    "H_frenado_N": 360000.0,
+    "H_viento_N": 120000.0,
+    "H_termica_N": 150000.0
+  },
+  "_tipologia": "pila"
+}

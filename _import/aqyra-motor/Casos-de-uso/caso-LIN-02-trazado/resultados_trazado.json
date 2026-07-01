@@ -1,0 +1,128 @@
+{
+  "veredicto": "CUMPLE",
+  "vp_kmh": 60.0,
+  "eje": "Eje C-001",
+  "umbrales_3_1_IC": {
+    "radio_min_m": 130,
+    "pendiente_max_pct": 6.0,
+    "distancia_parada_m": 69.7,
+    "kv_min_convexo_m": 1085.0,
+    "kv_min_concavo_m": 1414.0
+  },
+  "comprobaciones": [
+    {
+      "elemento": "Planta seg 1 (PK 100.0, CLOTHOID)",
+      "magnitud": "parametro A clotoide",
+      "valor": 134.1641,
+      "limite": "[100, 300]",
+      "unidad": "m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Planta seg 1 (PK 100.0, CLOTHOID)",
+      "magnitud": "longitud clotoide (confort)",
+      "valor": 60.0,
+      "limite": 30.8642,
+      "unidad": "m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Planta seg 2 (PK 160.0, CIRCULARARC)",
+      "magnitud": "radio R",
+      "valor": 300.0,
+      "limite": 130,
+      "unidad": "m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Planta seg 3 (PK 240.0, CLOTHOID)",
+      "magnitud": "parametro A clotoide",
+      "valor": 134.1641,
+      "limite": "[100, 300]",
+      "unidad": "m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Planta seg 3 (PK 240.0, CLOTHOID)",
+      "magnitud": "longitud clotoide (confort)",
+      "valor": 60.0,
+      "limite": 30.8642,
+      "unidad": "m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Alzado seg 0 (PK 0.0)",
+      "magnitud": "pendiente ini",
+      "valor": 0.02,
+      "limite": 0.06,
+      "unidad": "m/m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Alzado seg 0 (PK 0.0)",
+      "magnitud": "pendiente fin",
+      "valor": 0.02,
+      "limite": 0.06,
+      "unidad": "m/m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Alzado seg 1 (PK 150.0)",
+      "magnitud": "pendiente ini",
+      "valor": 0.02,
+      "limite": 0.06,
+      "unidad": "m/m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Alzado seg 1 (PK 150.0)",
+      "magnitud": "pendiente fin",
+      "valor": 0.03,
+      "limite": 0.06,
+      "unidad": "m/m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Alzado seg 1 (PK 150.0, acuerdo convexo)",
+      "magnitud": "Kv acuerdo convexo",
+      "valor": 2000.0,
+      "limite": 1084.5437,
+      "unidad": "m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Alzado seg 2 (PK 250.0)",
+      "magnitud": "pendiente ini",
+      "valor": 0.03,
+      "limite": 0.06,
+      "unidad": "m/m",
+      "cumple": true,
+      "propuesta": null
+    },
+    {
+      "elemento": "Alzado seg 2 (PK 250.0)",
+      "magnitud": "pendiente fin",
+      "valor": 0.03,
+      "limite": 0.06,
+      "unidad": "m/m",
+      "cumple": true,
+      "propuesta": null
+    }
+  ],
+  "no_cumplen": [],
+  "avisos": [
+    "[3.1-IC cap.7] Acuerdo vertical PK 150.0-250.0 proximo a transicion en planta PK 240.0 (revisar guiado optico)."
+  ],
+  "nota": "Predimensionado/asistencia (3.1-IC). NDP [confirmar AN]. Revisar y firmar por tecnico competente (ICCP).",
+  "vp_origen": "CLI"
+}

@@ -1,0 +1,74 @@
+VALIDACION IFC caso-11.ifc  (schema IFC4)
+
+PANTALLA DE CORTANTE + SISMICO EC8 -- primer caso de la SEGUNDA TANDA (abre la
+familia sismica). Sistema de estabilizacion lateral de un edificio de 5 plantas:
+una pantalla de hormigon armado empotrada en la base, con la MASA SISMICA de cada
+planta y los parametros del espectro EC8. El agente debe construir el voladizo
+equivalente con masas concentradas y resolver el EC8 (modal espectral / fuerzas
+laterales) -- es un TIPO DE ANALISIS NUEVO (no hay modulo sismico todavia).
+
+Entidades ortodoxas:
+  IfcStructuralAnalysisModel         1
+  IfcStructuralSurfaceMember         1   (pantalla vertical C30/37 Lw=4,0 H=15,0 t=0,30)
+  IfcStructuralPointConnection       6   (base empotrada + 5 nodos de planta)
+  IfcBoundaryNodeCondition           1   (base empotrada, 6 GDL)
+  IfcStructuralPointAction           5   (masa sismica por planta, ForceZ=-W_planta)
+  IfcStructuralLoadGroup             1   (Sismo_masas)
+  IfcRelConnectsStructuralActivity   5
+  IfcRelAssociatesMaterial           1
+Materiales: ['C30/37']
+
+Lectura con el parser generico ortodoxo (laminas/ifc_to_model_3d):
+  nodos=6  barras=0  superficies=1
+  superficie PANTALLA_cortante  t=0,30  mat=C30/37  vertical (plano XZ)
+  esquinas = [[0,0,0],[4,0,0],[4,0,15],[0,0,15]]
+  nodos de planta (x=2,0 centro): PISO_0_base (z=0, EMPOTRADO 6 GDL),
+    PISO_1 z=3, PISO_2 z=6, PISO_3 z=9, PISO_4 z=12, PISO_5 z=15
+  masas sismicas por planta (W = G + psi2*Q tributario, IfcStructuralPointAction):
+    PISO_1..4 = 1200 kN ; PISO_5 (cubierta) = 900 kN ; Sum W = 5700 kN (m = 581 t)
+
+Modelo (sintetico, realista) -- pantalla de cortante de un edificio de 5 plantas:
+  Pantalla C30/37, Lw=4,0 m, tw=0,30 m, H=15,0 m (5 plantas x 3,0 m), empotrada en
+  base. Trabaja a cortante en su plano (estabilizacion lateral). Inercia en el plano
+  I = tw*Lw^3/12 = 1,60 m4 ; area A = tw*Lw = 1,20 m2.
+
+Datos SIN entidad de analisis estandar (Pset, igual que casos 5/6/7/9):
+  Pantalla -> Pset_Estructurando_Pantalla (Lw, tw, H, n_plantas, h_planta, ClaseDuctilidad=DCM)
+  Sismo    -> Pset_Estructurando_Sismo:
+     ag=0,20 g ; TipoSuelo=C ; TipoEspectro=1 ; S=1,15 TB=0,20 TC=0,60 TD=2,0 ;
+     ClaseImportancia=II gammaI=1,0 ; q=3,0 (DCM, muros) ; amortiguamiento=0,05 ;
+     lambda=0,85   [confirmar AN: NCSE-02 / EC8 NDP Espana]
+
+CHEQUEO EC8 DE MANO (orden de magnitud esperado; el agente debe reproducirlo y
+afinarlo con el analisis modal):
+  T1 ~ 0,4-0,6 s  (Ct*H^0.75 = 0,38 s ; por rigidez de voladizo ~0,59 s) -> MESETA
+     del espectro (TB=0,20 <= T <= TC=0,60)
+  Sd(meseta) = ag*S*2,5/q = 0,20*1,15*2,5/3,0 = 0,192 g = 1,88 m/s2
+  Cortante basal  Fb = Sd*M*lambda ~ 929 kN
+  Momento de vuelco en base ~ 9.877 kN.m  (altura eficaz ~10,64 m)
+  Equilibrio esperado: Fb = suma de las fuerzas de planta F_i (~0 %).
+
+CLASIFICACION/ENRUTADO esperado del agente:
+  superficie vertical de hormigon + masas por planta + Pset_Estructurando_Sismo
+    -> NUEVO modulo sismico / pantallas (EC8 + EC2/EC8 de muro de cortante)
+
+OK: el IFC abre con ifcopenshell (IFC4) y el parser generico lee la pantalla y los
+6 nodos con la base empotrada; las 5 masas de planta y los parametros EC8 estan en
+el modelo (acciones + Pset). Listo para el caso 11.
+
+BRECHA del caso 11 (lo que hay que CREAR en el proximo hilo):
+  1. NUEVO modulo sismico (p. ej. scripts/sismico/ o scripts/pantallas/): parser de
+     la pantalla + masas + Pset sismo; construccion del VOLADIZO EQUIVALENTE (stick)
+     con masas concentradas por planta (flexion + cortante de la seccion de pared).
+  2. NUEVA biblioteca EC8 (EN 1998-1): ESPECTRO de respuesta de calculo Sd(T) a
+     partir de los parametros del Pset; analisis MODAL (PyNite tiene modal) ->
+     periodos y modos, masas modales efectivas, combinacion SRSS/CQC; y el metodo de
+     FUERZAS LATERALES equivalentes (4.3.3.2) como contraste; combinacion sismica
+     (EC0 6.4.3.4).
+  3. VERIFICACION de la pantalla: cortante del alma + armadura (EC2/EC8), ELEMENTOS
+     DE BORDE confinados (EC8 5.4.3.4), interaccion N-M en la base, y DERIVA entre
+     plantas (limitacion de dano, 4.4.3.2).
+  4. Salidas: modos, fuerzas por planta, ley de cortante/momento en altura, deriva,
+     diagrama N-M; memoria de calculo sismico. Subir el plugin a 0.13.0 (minor:
+     modulo sismico + biblioteca EC8). NUCLEO (pantallas acopladas) queda como
+     extension de la misma familia.

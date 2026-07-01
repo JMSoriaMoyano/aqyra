@@ -1,0 +1,3726 @@
+{
+  "proyecto": "Parking 4 plantas 25x150 — narración→IFC (rampas óptimas)",
+  "esquema": "IFC4",
+  "unidades": "m",
+  "niveles": [
+    {
+      "nombre": "Planta Baja",
+      "cota": 0.0
+    },
+    {
+      "nombre": "Planta 1",
+      "cota": 3.0
+    },
+    {
+      "nombre": "Planta 2",
+      "cota": 6.0
+    },
+    {
+      "nombre": "Planta 3",
+      "cota": 9.0
+    }
+  ],
+  "pilares": [
+    {
+      "nombre": "Pk_Pil1_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil2_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil3_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil4_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil5_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil6_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil7_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil8_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil9_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil10_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil11_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil12_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil13_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil14_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil15_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil16_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil17_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil18_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil19_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil20_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil21_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        0.0,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil22_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil23_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil24_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil25_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil26_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil27_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil28_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil29_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil30_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil31_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil32_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil33_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil34_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil35_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil36_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil37_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil38_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil39_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil40_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil41_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil42_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        8.3333,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil43_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil44_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil45_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil46_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil47_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil48_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil49_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil50_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil51_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil52_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil53_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil54_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil55_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil56_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil57_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil58_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil59_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil60_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil61_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil62_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil63_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        16.6667,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil64_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil65_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil66_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil67_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil68_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil69_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil70_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil71_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil72_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil73_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil74_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil75_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil76_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil77_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil78_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil79_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil80_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil81_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil82_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil83_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil84_N0",
+      "nivel": "Planta Baja",
+      "pos": [
+        25.0,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil1_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil2_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil3_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil4_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil5_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil6_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil7_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil8_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil9_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil10_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil11_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil12_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil13_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil14_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil15_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil16_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil17_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil18_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil19_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil20_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil21_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        0.0,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil22_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil23_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil24_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil25_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil26_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil27_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil28_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil29_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil30_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil31_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil32_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil33_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil34_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil35_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil36_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil37_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil38_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil39_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil40_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil41_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil42_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        8.3333,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil43_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil44_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil45_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil46_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil47_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil48_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil49_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil50_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil51_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil52_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil53_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil54_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil55_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil56_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil57_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil58_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil59_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil60_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil61_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil62_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil63_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        16.6667,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil64_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil65_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil66_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil67_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil68_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil69_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil70_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil71_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil72_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil73_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil74_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil75_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil76_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil77_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil78_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil79_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil80_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil81_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil82_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil83_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil84_N1",
+      "nivel": "Planta 1",
+      "pos": [
+        25.0,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil1_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil2_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil3_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil4_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil5_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil6_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil7_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil8_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil9_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil10_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil11_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil12_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil13_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil14_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil15_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil16_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil17_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil18_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil19_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil20_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil21_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        0.0,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil22_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil23_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil24_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil25_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil26_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil27_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil28_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil29_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil30_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil31_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil32_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil33_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil34_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil35_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil36_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil37_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil38_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil39_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil40_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil41_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil42_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        8.3333,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil43_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil44_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil45_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil46_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil47_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil48_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil49_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil50_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil51_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil52_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil53_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil54_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil55_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil56_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil57_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil58_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil59_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil60_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil61_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil62_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil63_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        16.6667,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil64_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        0.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil65_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        7.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil66_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        15.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil67_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        22.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil68_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        30.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil69_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        37.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil70_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        45.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil71_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        52.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil72_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        60.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil73_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        67.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil74_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        75.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil75_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        82.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil76_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        90.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil77_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        97.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil78_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        105.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil79_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        112.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil80_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        120.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil81_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        127.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil82_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        135.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil83_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        142.5
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Pil84_N2",
+      "nivel": "Planta 2",
+      "pos": [
+        25.0,
+        150.0
+      ],
+      "seccion": [
+        0.45,
+        0.45
+      ],
+      "altura": 3.0,
+      "material": "HA-30"
+    }
+  ],
+  "muros": [],
+  "losas": [
+    {
+      "nombre": "Pk_Forjado_N1",
+      "nivel": "Planta 1",
+      "contorno": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          25.0,
+          0.0
+        ],
+        [
+          25.0,
+          150.0
+        ],
+        [
+          0.0,
+          150.0
+        ]
+      ],
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Forjado_N2",
+      "nivel": "Planta 2",
+      "contorno": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          25.0,
+          0.0
+        ],
+        [
+          25.0,
+          150.0
+        ],
+        [
+          0.0,
+          150.0
+        ]
+      ],
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Pk_Forjado_N3",
+      "nivel": "Planta 3",
+      "contorno": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          25.0,
+          0.0
+        ],
+        [
+          25.0,
+          150.0
+        ],
+        [
+          0.0,
+          150.0
+        ]
+      ],
+      "espesor": 0.3,
+      "material": "HA-30"
+    }
+  ],
+  "rampas": [
+    {
+      "nombre": "Rampa_T1_C1",
+      "inicio": [
+        2.75,
+        150.0,
+        0.0
+      ],
+      "fin": [
+        2.75,
+        127.5,
+        3.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T1_C2",
+      "inicio": [
+        6.25,
+        150.0,
+        0.0
+      ],
+      "fin": [
+        6.25,
+        127.5,
+        3.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T2_C1",
+      "inicio": [
+        2.75,
+        127.5,
+        3.0
+      ],
+      "fin": [
+        2.75,
+        150.0,
+        6.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T2_C2",
+      "inicio": [
+        6.25,
+        127.5,
+        3.0
+      ],
+      "fin": [
+        6.25,
+        150.0,
+        6.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T3_C1",
+      "inicio": [
+        2.75,
+        150.0,
+        6.0
+      ],
+      "fin": [
+        2.75,
+        127.5,
+        9.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    },
+    {
+      "nombre": "Rampa_T3_C2",
+      "inicio": [
+        6.25,
+        150.0,
+        6.0
+      ],
+      "fin": [
+        6.25,
+        127.5,
+        9.0
+      ],
+      "ancho": 3.5,
+      "espesor": 0.3,
+      "material": "HA-30"
+    }
+  ]
+}

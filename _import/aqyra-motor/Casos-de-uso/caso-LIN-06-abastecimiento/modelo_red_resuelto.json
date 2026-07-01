@@ -1,0 +1,217 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "caudal": "l/s",
+    "presion": "kPa",
+    "potencia": "W"
+  },
+  "sistema": {
+    "tipo": "WATERSUPPLY",
+    "fluido": null,
+    "nombre": "Red de abastecimiento",
+    "clase_riesgo": null,
+    "demanda": {
+      "disciplina": "abastecimiento",
+      "norma": "EN 805",
+      "tipo_fuente": "deposito",
+      "dotacion_l_hab_dia": 200.0,
+      "coef_punta": 2.5,
+      "presion_din_min_kPa": 250.0,
+      "incluir_incendio": true,
+      "caudal_incendio_l_s": 16.7,
+      "n_hidrantes": 1,
+      "caudal_incendio_total_l_s": 16.7,
+      "caudal_total_l_s": 24.8019,
+      "presion_fuente_inyectada_kPa": 0.0,
+      "criterio": "EN 805 (abastecimiento de agua, red a presion); dotacion, coef. de punta y caudal de incendio segun criterio del despacho/ordenanza [confirmar AN]"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 130.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 100.0,
+      "tipo": "union"
+    },
+    "N3": {
+      "x": 120.0,
+      "y": 0.0,
+      "z": 98.0,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "x": 120.0,
+      "y": 120.0,
+      "z": 96.0,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "x": 0.0,
+      "y": 120.0,
+      "z": 99.0,
+      "tipo": "terminal"
+    }
+  },
+  "tramos": {
+    "T1": {
+      "ni": "N1",
+      "nj": "N2",
+      "dn": 200.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 30.0,
+      "elemento": "COND-0",
+      "clase": "IfcFlowSegment"
+    },
+    "T2": {
+      "ni": "N2",
+      "nj": "N3",
+      "dn": 125.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 120.0167,
+      "elemento": "COND-1",
+      "clase": "IfcFlowSegment"
+    },
+    "T3": {
+      "ni": "N3",
+      "nj": "N4",
+      "dn": 125.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 120.0167,
+      "elemento": "COND-2",
+      "clase": "IfcFlowSegment"
+    },
+    "T4": {
+      "ni": "N4",
+      "nj": "N5",
+      "dn": 125.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 120.0375,
+      "elemento": "COND-3",
+      "clase": "IfcFlowSegment"
+    },
+    "T5": {
+      "ni": "N5",
+      "nj": "N2",
+      "dn": 125.0,
+      "material": "fundicion ductil",
+      "rugosidad": 0.1,
+      "longitud": 120.0042,
+      "elemento": "COND-4",
+      "clase": "IfcFlowSegment"
+    }
+  },
+  "terminales": [
+    {
+      "id": "ACO-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N3",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "habitantes_eq": 800.0,
+        "dotacion_l_hab_dia": 200.0,
+        "coef_punta": 2.5,
+        "caudal_medio_l_s": 1.8519,
+        "caudal_consumo_l_s": 4.6296,
+        "tipo_terminal": "acometida",
+        "caudal_incendio_l_s": 0.0,
+        "caudal_l_s": 4.6296,
+        "presion_din_min_kPa": 250.0,
+        "fuente_dato": "normativa",
+        "criterio": "EN 805 (abastecimiento de agua, red a presion); dotacion, coef. de punta y caudal de incendio segun criterio del despacho/ordenanza [confirmar AN]"
+      },
+      "habitantes_eq": 800.0
+    },
+    {
+      "id": "ACO-2",
+      "tipo": "USERDEFINED",
+      "nodo": "N5",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "habitantes_eq": 600.0,
+        "dotacion_l_hab_dia": 200.0,
+        "coef_punta": 2.5,
+        "caudal_medio_l_s": 1.3889,
+        "caudal_consumo_l_s": 3.4722,
+        "tipo_terminal": "acometida",
+        "caudal_incendio_l_s": 0.0,
+        "caudal_l_s": 3.4722,
+        "presion_din_min_kPa": 250.0,
+        "fuente_dato": "normativa",
+        "criterio": "EN 805 (abastecimiento de agua, red a presion); dotacion, coef. de punta y caudal de incendio segun criterio del despacho/ordenanza [confirmar AN]"
+      },
+      "habitantes_eq": 600.0
+    },
+    {
+      "id": "HIDRANTE-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N4",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "caudal_consumo_l_s": 0.0,
+        "tipo_terminal": "hidrante",
+        "caudal_incendio_l_s": 16.7,
+        "caudal_l_s": 16.7,
+        "presion_din_min_kPa": 250.0,
+        "fuente_dato": "normativa",
+        "criterio": "EN 805 (abastecimiento de agua, red a presion); dotacion, coef. de punta y caudal de incendio segun criterio del despacho/ordenanza [confirmar AN]"
+      },
+      "habitantes_eq": null
+    }
+  ],
+  "fuentes": [
+    {
+      "id": "DEPOSITO",
+      "nodo": "N1",
+      "presion": 0.0,
+      "caudal": null,
+      "tipo": "deposito",
+      "cota_lamina": 130.0,
+      "modelo_fuente": "deposito",
+      "criterio": "EN 805 (abastecimiento de agua, red a presion); dotacion, coef. de punta y caudal de incendio segun criterio del despacho/ordenanza [confirmar AN]"
+    }
+  ],
+  "vertidos": [],
+  "metricas": {
+    "nudos_fusionados": 5,
+    "huecos_puenteados": [],
+    "cruces_troceados": [],
+    "segmentos_sin_puerto": [],
+    "factor_escala_ifc": 1.0,
+    "tol_snap_m": 0.001
+  },
+  "red": {
+    "norma": "EN 805",
+    "disciplina": "abastecimiento",
+    "metodo": "Darcy-Weisbach a presion (grafo de red)",
+    "tipo_fuente": "deposito",
+    "veredicto": "CUMPLE",
+    "presion_fuente_disponible_kPa": 0.0,
+    "presion_fuente_requerida_kPa": -40.45,
+    "margen_fuente_kPa": 40.45,
+    "velocidad_pico_m_s": 1.0298,
+    "banda_velocidad_m_s": [
+      0.5,
+      2.0
+    ],
+    "presion_min_kPa": 250.0,
+    "topologia": {
+      "n_nodos": 5,
+      "n_tramos": 5,
+      "n_lazos": 1,
+      "tipo": "malla"
+    }
+  }
+}

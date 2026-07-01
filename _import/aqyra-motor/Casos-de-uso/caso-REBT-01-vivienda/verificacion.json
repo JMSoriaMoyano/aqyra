@@ -1,0 +1,15 @@
+{
+  "veredicto": "CUMPLE",
+  "balance_potencias_pct": 0.0,
+  "potencia_cabecera_W": 18705.8,
+  "potencia_demanda_W": 18705.8,
+  "caida_tension_max_pct": 1.098,
+  "terminal_gobernante": "C8-Calefaccion",
+  "errores": [],
+  "avisos": [],
+  "info": [
+    "Balance de potencias: cabecera 18705.8 W vs demanda 18705.8 W (residuo 0.0000 %)",
+    "Caida de tension maxima: 1.098 % (gobernante C8-Calefaccion)",
+    "Intensidades dentro del admisible en todos los tramos."
+  ]
+}

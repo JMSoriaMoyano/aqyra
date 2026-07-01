@@ -1,0 +1,158 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "caudal": "l/s",
+    "presion": "kPa",
+    "potencia": "W"
+  },
+  "sistema": {
+    "tipo": "FIREPROTECTION",
+    "fluido": null,
+    "nombre": "Red BIE PCI",
+    "demanda": {
+      "disciplina": "PCI",
+      "n_simultaneas": 2,
+      "autonomia_min": 60,
+      "presion_max_kPa": 500.0,
+      "criterio": "RIPCI RD 513/2017 Anexo I; UNE-EN 671-1/-2; UNE 23500; DB-SI SI4 [confirmar AN]"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "x": 10.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "union"
+    },
+    "N3": {
+      "x": 10.0,
+      "y": 5.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "x": 20.0,
+      "y": 0.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "x": 10.0,
+      "y": -5.0,
+      "z": 0.0,
+      "tipo": "terminal"
+    }
+  },
+  "tramos": {
+    "T1": {
+      "ni": "N1",
+      "nj": "N2",
+      "dn": 100.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 10.0,
+      "elemento": "T1",
+      "clase": "IfcFlowSegment"
+    },
+    "T2": {
+      "ni": "N2",
+      "nj": "N3",
+      "dn": 65.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 5.0,
+      "elemento": "T2",
+      "clase": "IfcFlowSegment"
+    },
+    "T3": {
+      "ni": "N2",
+      "nj": "N4",
+      "dn": 65.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 10.0,
+      "elemento": "T3",
+      "clase": "IfcFlowSegment"
+    },
+    "T4": {
+      "ni": "N2",
+      "nj": "N5",
+      "dn": 65.0,
+      "material": "Acero galvanizado",
+      "rugosidad": 0.045,
+      "longitud": 5.0,
+      "elemento": "T4",
+      "clase": "IfcFlowSegment"
+    }
+  },
+  "terminales": [
+    {
+      "id": "BIE-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N3",
+      "caudal_min": 3.3,
+      "presion_min": 350.0,
+      "demanda": {
+        "tipo_terminal": "BIE25",
+        "caudal_l_s": 3.3,
+        "presion_din_min_kPa": 350.0,
+        "presion_max_kPa": 500.0,
+        "fuente_dato": "IFC",
+        "criterio": "RIPCI RD 513/2017 Anexo I; UNE-EN 671-1/-2; UNE 23500; DB-SI SI4 [confirmar AN]"
+      }
+    },
+    {
+      "id": "BIE-2",
+      "tipo": "USERDEFINED",
+      "nodo": "N4",
+      "caudal_min": 3.3,
+      "presion_min": 350.0,
+      "demanda": {
+        "tipo_terminal": "BIE25",
+        "caudal_l_s": 3.3,
+        "presion_din_min_kPa": 350.0,
+        "presion_max_kPa": 500.0,
+        "fuente_dato": "IFC",
+        "criterio": "RIPCI RD 513/2017 Anexo I; UNE-EN 671-1/-2; UNE 23500; DB-SI SI4 [confirmar AN]"
+      }
+    },
+    {
+      "id": "BIE-3",
+      "tipo": "USERDEFINED",
+      "nodo": "N5",
+      "caudal_min": 3.3,
+      "presion_min": 350.0,
+      "demanda": {
+        "tipo_terminal": "BIE25",
+        "caudal_l_s": 3.3,
+        "presion_din_min_kPa": 350.0,
+        "presion_max_kPa": 500.0,
+        "fuente_dato": "IFC",
+        "criterio": "RIPCI RD 513/2017 Anexo I; UNE-EN 671-1/-2; UNE 23500; DB-SI SI4 [confirmar AN]"
+      }
+    }
+  ],
+  "fuentes": [
+    {
+      "id": "Grupo de presion PCI",
+      "nodo": "N1",
+      "presion": 600.0,
+      "caudal": 25.0,
+      "tipo": "equipo"
+    }
+  ],
+  "metricas": {
+    "nudos_fusionados": 3,
+    "huecos_puenteados": [],
+    "cruces_troceados": [],
+    "segmentos_sin_puerto": [],
+    "factor_escala_ifc": 1.0,
+    "tol_snap_m": 0.001
+  }
+}

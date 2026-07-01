@@ -1,0 +1,20 @@
+[project]
+name = "aqyra-servicio-calculo"
+version = "0.1.0"
+description = "Servicio HTTP local (anzuelo, D-019.C.4): envuelve el pipeline produce->QA->EC3->firma en endpoints que el post-proceso del visor llama. Servidor stdlib (sin dependencias propias). PyNite es productor PROVISIONAL hasta cablear motor-fem."
+requires-python = ">=3.10"
+# Sin dependencias propias: el servidor es stdlib (http.server). El cálculo lo
+# aportan los paquetes hermanos del pipeline (instalados aparte en el entorno).
+dependencies = [
+    "aqyra-puente-calculo",
+    "aqyra-qa-pynite",
+    "aqyra-verificacion-ec",
+    "aqyra-firma",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

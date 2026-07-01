@@ -1,0 +1,112 @@
+{
+  "validacion": {
+    "invariancia_rotacion": {
+      "Mx_th0": 15.640423219154108,
+      "Mx_th30": 15.51813694651923,
+      "err_Mx": 0.00781860381406566,
+      "My_th0": 12.485305840470621,
+      "My_th30": 12.38529755943208,
+      "err_My": 0.008010078592898096,
+      "ok": true
+    },
+    "equilibrio_pct": 5.318017631200039e-11
+  },
+  "losa": {
+    "t": 0.2,
+    "d_x_mm": 157.0,
+    "d_y_mm": 169.0,
+    "fck_MPa": 30.0,
+    "recubrimiento_mm": 25.0,
+    "phi_mm": 12.0,
+    "dir_gobernante": "y",
+    "x_inferior": {
+      "m_Ed_kNm_m": 6.4948051491064245,
+      "mu": 0.013174581421368868,
+      "mu_ok": true,
+      "As_req_cm2_m": 1.057186966945844,
+      "As_min_cm2_m": 2.36756,
+      "As_max_cm2_m": 80.0,
+      "As_dim_cm2_m": 2.36756,
+      "armado": "φ10/300",
+      "As_prov_cm2_m": 2.6179938779914944,
+      "ok": true
+    },
+    "y_inferior": {
+      "m_Ed_kNm_m": 38.097462395443884,
+      "mu": 0.06669490283156031,
+      "mu_ok": true,
+      "As_req_cm2_m": 5.760957495694999,
+      "As_min_cm2_m": 2.5485200000000003,
+      "As_max_cm2_m": 80.0,
+      "As_dim_cm2_m": 5.760957495694999,
+      "armado": "φ10/125",
+      "As_prov_cm2_m": 6.283185307179586,
+      "ok": true,
+      "adoptado": {
+        "sep_mm": 125,
+        "As_cm2_m": 6.283185307179586,
+        "armado": "phi10/125"
+      }
+    },
+    "flecha": {
+      "L_m": 6.0,
+      "f_total_mm": 4.843010022421742,
+      "lim_total_mm": 20.0,
+      "u_total": 0.24215050112108713,
+      "ok_total": true,
+      "f_activa_mm": 0.6918585746316842,
+      "lim_activa_mm": 12.0,
+      "u_activa": 0.057654881219307015,
+      "ok_activa": true
+    }
+  },
+  "membrana": {
+    "n_comp_kN_m": -67.40480266069862,
+    "n_trac_kN_m": 67.68541856176333,
+    "n_xy_kN_m": 7.084618462519321,
+    "nRd_comp_kN_m": 4000.0,
+    "u_comp": 0.016851200665174655,
+    "ok_comp": true,
+    "q_tangencial_kN_m2": 4.799999999999999,
+    "n_tangencial_teorico_kN_m": 14.399999999999997,
+    "nota": "membrana del faldon: empuje tangencial q*sen(theta) transmitido a alero/cumbrera (arco atado) + acoplamiento flexion-membrana por borde coartado; interaccion N-M conservadora aparte"
+  },
+  "fisuracion": {
+    "M_qp_kNm_m": 25.00145969701002,
+    "sigma_s_MPa": 261.6111699731719,
+    "rho_p_eff": 0.008107335880231725,
+    "hc_ef_mm": 77.5,
+    "eps_sm_cm": 0.0007848335099195157,
+    "sr_max_mm": 294.68663752357213,
+    "wk_mm": 0.23127994805400515,
+    "wmax_mm": 0.3,
+    "u": 0.7709331601800172,
+    "ok": true,
+    "adoptado": {
+      "sep_mm": 125,
+      "As_cm2_m": 6.283185307179586,
+      "armado": "phi10/125"
+    },
+    "direccion": "y"
+  },
+  "equilibrio": {
+    "aplicada_ELU_kN": 460.8,
+    "reaccion_ELU_kN": 460.80000000024506,
+    "error_pct": 5.318017631200039e-11
+  },
+  "reacciones": {
+    "alero_ELU_kN": 230.70166729635437,
+    "cumbrera_ELU_kN": 230.09833270389072
+  },
+  "info": {
+    "Lu": 6.0,
+    "Lv": 8.0,
+    "espesor": 0.2,
+    "angulo": 29.999999999999996,
+    "peso_losa_N_m2": 4905.0,
+    "material": "C30/37",
+    "area_real": 48.0,
+    "incluye_pp": true,
+    "via": "ortodoxa"
+  }
+}

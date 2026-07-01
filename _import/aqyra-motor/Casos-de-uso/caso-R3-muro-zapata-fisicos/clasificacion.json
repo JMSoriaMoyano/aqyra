@@ -1,0 +1,34 @@
+{
+  "sistema": "muro_de_carga_sobre_zapata",
+  "cadena_muro_cimiento": true,
+  "muro": "Muro_carga",
+  "zapata": "Zapata_aislada",
+  "superficies": [
+    {
+      "superficie": "Muro_carga",
+      "clase_ifc": "IfcWall",
+      "orientacion": "vertical",
+      "hormigon": true,
+      "espesor_m": 0.2,
+      "material": "C25/30",
+      "zapata_asociada": "Zapata_aislada",
+      "muros_asociados": [],
+      "rol": "muro_de_carga",
+      "modulo": "laminas/solver_muro (EC2 §5.8.8)"
+    },
+    {
+      "superficie": "Zapata_aislada",
+      "clase_ifc": "IfcFooting",
+      "orientacion": "horizontal",
+      "hormigon": true,
+      "espesor_m": 0.6,
+      "material": "C30/37",
+      "zapata_asociada": null,
+      "muros_asociados": [
+        "Muro_carga"
+      ],
+      "rol": "zapata",
+      "modulo": "cimentaciones/solver_zapata (EC7 + EC2)"
+    }
+  ]
+}

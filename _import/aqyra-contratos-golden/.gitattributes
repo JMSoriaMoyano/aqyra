@@ -1,0 +1,21 @@
+# Normalizar texto a LF en el repo y en el working tree.
+# Evita el "churn" de CRLF en Windows (core.autocrlf) sin .gitattributes.
+* text=auto eol=lf
+
+# Binarios explicitos (git NO debe normalizarlos)
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.pdf  binary
+*.docx binary
+*.xlsx binary
+*.pptx binary
+*.zip  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
+*.plugin binary

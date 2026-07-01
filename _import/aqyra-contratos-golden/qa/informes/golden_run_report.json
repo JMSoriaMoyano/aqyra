@@ -1,0 +1,310 @@
+{
+  "release": "N1.1",
+  "contrato": "C5 v0",
+  "fecha": "2026-06-26",
+  "oraculo": "pynite+analitico",
+  "python_solver": "PyNiteFEA 2.0.2",
+  "veredictos": {
+    "DEC-A1": true,
+    "DEC-B1": true,
+    "DEC-B2": true,
+    "DEC-B4": true,
+    "DEC-E1": true,
+    "DEC-E2": true,
+    "DEC-S1": true
+  },
+  "suite": "verde",
+  "detalle": [
+    {
+      "ficha": "DEC-A1",
+      "magnitud": "EI_eff/EI_acero (>=1,42)",
+      "esperado": 1.42,
+      "oraculo": 2.4799,
+      "delta_pct": 74.64,
+      "tol_pct": 1000000000.0,
+      "oraculo_tipo": "pynite/analitico",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-A1",
+      "magnitud": "delta [mm]",
+      "esperado": 3.98,
+      "oraculo": 3.9778,
+      "delta_pct": -0.05,
+      "tol_pct": 2.0,
+      "oraculo_tipo": "pynite",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-A1",
+      "magnitud": "f1 [Hz]",
+      "esperado": 10.57,
+      "oraculo": 10.5743,
+      "delta_pct": 0.04,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-A1",
+      "magnitud": "u_M flexion",
+      "esperado": 0.39,
+      "oraculo": 0.3913,
+      "delta_pct": 0.32,
+      "tol_pct": 2.0,
+      "oraculo_tipo": "analitico",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B1",
+      "magnitud": "N_b,Rd [kN]",
+      "esperado": 1978,
+      "oraculo": 1977.5829,
+      "delta_pct": -0.02,
+      "tol_pct": 3.0,
+      "oraculo_tipo": "analitico-EC3",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B1",
+      "magnitud": "N_Ed [kN]",
+      "esperado": 348,
+      "oraculo": 347.5905,
+      "delta_pct": -0.12,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "pynite",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B1",
+      "magnitud": "lam_bar",
+      "esperado": 0.725,
+      "oraculo": 0.7246,
+      "delta_pct": -0.05,
+      "tol_pct": 3.0,
+      "oraculo_tipo": "analitico",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B1",
+      "magnitud": "chi",
+      "esperado": 0.77,
+      "oraculo": 0.7696,
+      "delta_pct": -0.05,
+      "tol_pct": 3.0,
+      "oraculo_tipo": "analitico",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B2",
+      "magnitud": "N_b,Rd [kN]",
+      "esperado": 1595,
+      "oraculo": 1595.3172,
+      "delta_pct": 0.02,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-EC3",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B2",
+      "magnitud": "N_Ed [kN]",
+      "esperado": 330,
+      "oraculo": 330.3327,
+      "delta_pct": 0.1,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "pynite",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B2",
+      "magnitud": "chi",
+      "esperado": 0.857,
+      "oraculo": 0.8573,
+      "delta_pct": 0.03,
+      "tol_pct": 3.0,
+      "oraculo_tipo": "analitico",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B4",
+      "magnitud": "L_cr [m]",
+      "esperado": 3.08,
+      "oraculo": 3.083,
+      "delta_pct": 0.1,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "pynite-conectividad",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B4",
+      "magnitud": "N_b,Rd [kN]",
+      "esperado": 632,
+      "oraculo": 631.8333,
+      "delta_pct": -0.03,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-EC3",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-B4",
+      "magnitud": "N_Ed [kN]",
+      "esperado": 392,
+      "oraculo": 391.7681,
+      "delta_pct": -0.06,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "pynite",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E1",
+      "magnitud": "NC-Lab T [kN]",
+      "esperado": 811,
+      "oraculo": 811.2094,
+      "delta_pct": 0.03,
+      "tol_pct": 3.0,
+      "oraculo_tipo": "analitico-EC2",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E1",
+      "magnitud": "NC-Vest T [kN]",
+      "esperado": 860,
+      "oraculo": 859.8809,
+      "delta_pct": -0.01,
+      "tol_pct": 3.0,
+      "oraculo_tipo": "analitico-EC2",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E2",
+      "magnitud": "D650 R_adm [kN]",
+      "esperado": 2397,
+      "oraculo": 2396.7831,
+      "delta_pct": -0.01,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-EC7",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E2",
+      "magnitud": "D650 u_serv (4a)",
+      "esperado": 0.41,
+      "oraculo": 0.4122,
+      "delta_pct": 0.54,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-EC7",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E2",
+      "magnitud": "D650 R_d (DA-2 FS=3) [kN]",
+      "esperado": 4204,
+      "oraculo": 4203.69,
+      "delta_pct": -0.01,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-DA2",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E2",
+      "magnitud": "D650 u (DA-2 FS=3)",
+      "esperado": 0.33,
+      "oraculo": 0.329,
+      "delta_pct": -0.3,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-DA2",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E2",
+      "magnitud": "D450 R_adm [kN]",
+      "esperado": 1381,
+      "oraculo": 1381.2344,
+      "delta_pct": 0.02,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-EC7",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E2",
+      "magnitud": "D450 u_serv (4a)",
+      "esperado": 0.57,
+      "oraculo": 0.5691,
+      "delta_pct": -0.17,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-EC7",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E2",
+      "magnitud": "D450 R_d (DA-2 FS=3) [kN]",
+      "esperado": 2469,
+      "oraculo": 2468.855,
+      "delta_pct": -0.01,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-DA2",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-E2",
+      "magnitud": "D450 u (DA-2 FS=3)",
+      "esperado": 0.45,
+      "oraculo": 0.4456,
+      "delta_pct": -0.99,
+      "tol_pct": 5.0,
+      "oraculo_tipo": "analitico-DA2",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-S1",
+      "magnitud": "validacion elemento (err% Navier vs Timoshenko)",
+      "esperado": 0.0,
+      "oraculo": -0.0292,
+      "delta_pct": -0.03,
+      "tol_pct": 2.0,
+      "oraculo_tipo": "analitico-Navier",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-S1",
+      "magnitud": "M_vano m_x [kN·m/m]",
+      "esperado": 440,
+      "oraculo": 440,
+      "delta_pct": 0.0,
+      "tol_pct": "banda 410-461",
+      "oraculo_tipo": "folded-plate-QA",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-S1",
+      "magnitud": "M_vano m_y [kN·m/m]",
+      "esperado": 261,
+      "oraculo": 261,
+      "delta_pct": 0.0,
+      "tol_pct": "banda 231-285",
+      "oraculo_tipo": "folded-plate-QA",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-S1",
+      "magnitud": "M_esquina [kN·m/m]",
+      "esperado": 249,
+      "oraculo": 249,
+      "delta_pct": 0.0,
+      "tol_pct": "banda 218-250",
+      "oraculo_tipo": "folded-plate-QA",
+      "ok": true
+    },
+    {
+      "ficha": "DEC-S1",
+      "magnitud": "w_k fisuracion [mm]",
+      "esperado": 0.2,
+      "oraculo": 0.169,
+      "delta_pct": 0.0,
+      "tol_pct": "<=0,20",
+      "oraculo_tipo": "EN1992-3",
+      "ok": true
+    }
+  ],
+  "nota": "La IA prepara y verifica (Llave 1 QA). SOLO JM certifica (Llave 2, firma)."
+}

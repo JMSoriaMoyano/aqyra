@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+src/aqyra_verificacion_ec.egg-info/PKG-INFO
+src/aqyra_verificacion_ec.egg-info/SOURCES.txt
+src/aqyra_verificacion_ec.egg-info/dependency_links.txt
+src/aqyra_verificacion_ec.egg-info/top_level.txt
+src/verificacion_ec/__init__.py
+src/verificacion_ec/ec3.py
+tests/test_ec3.py

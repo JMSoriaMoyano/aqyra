@@ -1,0 +1,38 @@
+# Dependencias instaladas (nunca en git) — causa del fallo de git add (.bin/nanoid)
+node_modules/
+**/node_modules/
+.bin/
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*aqyra_venv*/
+.pytest_cache/
+.ipynb_checkpoints/
+# Builds / distribuibles
+dist/
+build/
+*.egg-info/
+# Sistema / editores
+.DS_Store
+Thumbs.db
+*.swp
+*~
+# Temporales
+*.tmp
+*.log
+
+# Helpers de git/firma y logs reubicados (reorg 2026-06-29)
+_operativo/
+st
+.__*
+# Helpers operativos de git (no son del proyecto; se ejecutan y se borran)
+/COMMIT_motor_CN-convenciones.bat
+/LIMPIAR_log_amend.bat
+/PUSH_motor_main.bat
+/LIMPIAR_motor_eol.bat
+# Logs de resultado de los .bat de git (traza operativa, no del proyecto)
+git_resultado_*.txt

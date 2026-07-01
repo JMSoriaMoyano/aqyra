@@ -1,0 +1,15 @@
+{
+  "name": "visor-ifc-pipeline",
+  "version": "0.5.0",
+  "private": true,
+  "type": "module",
+  "description": "Pipeline IFC -> fragments + indice de propiedades por GlobalId (motor del Visor IFC v0.5)",
+  "scripts": {
+    "convertir": "node pipeline.mjs"
+  },
+  "dependencies": {
+    "@thatopen/fragments": "3.4.5",
+    "three": "0.184.0",
+    "web-ifc": "0.0.77"
+  }
+}

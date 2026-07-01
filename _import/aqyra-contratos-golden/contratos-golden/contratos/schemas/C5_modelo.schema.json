@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.openbim/contratos/C5/modelo/v0.json",
+  "title": "C5 v0 — Modelo de análisis estructural (entrada del motor-fem)",
+  "description": "Representacion canonica JSON, equivalente al dominio de analisis del IFC. Texto diff-able. Toda la idealizacion derivada del fisico se entrega como 'proposal' (revisable, no certificada). Unidades SI: m, N, Pa, kg; angulos en grados.",
+  "type": "object",
+  "required": ["meta", "nodos", "materiales", "secciones", "apoyos", "acciones", "combinaciones", "verificacion"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["contrato", "estado", "unidades"],
+      "properties": {
+        "contrato": { "const": "C5 v0" },
+        "estado": { "enum": ["proposal", "verified"], "description": "proposal = idealizacion autorada pendiente de revision humana" },
+        "unidades": { "type": "object", "properties": { "longitud": {"const":"m"}, "fuerza": {"const":"N"}, "tension": {"const":"Pa"}, "masa": {"const":"kg"} } },
+        "ifc_origen": { "type": "string", "description": "id/GUID del IFC fisico del que se derivo, si aplica" }
+      }
+    },
+    "nodos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "x", "y", "z"],
+        "properties": {
+          "id": { "type": "string" },
+          "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" }
+        }
+      }
+    },
+    "materiales": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "E", "nu", "rho"],
+        "properties": {
+          "id": { "type": "string" },
+          "E": { "type": "number", "description": "modulo elastico [Pa]" },
+          "nu": { "type": "number", "description": "coef. de Poisson" },
+          "G": { "type": "number", "description": "modulo cortante [Pa] (opcional; si falta se deriva de E,nu)" },
+          "rho": { "type": "number", "description": "densidad [kg/m3]" },
+          "f_y": { "type": "number", "description": "limite elastico acero [Pa] (EC3)" },
+          "f_ck": { "type": "number", "description": "resistencia caract. hormigon [Pa] (EC2)" },
+          "gamma_M": { "type": "number", "description": "coef. parcial del material" }
+        }
+      }
+    },
+    "secciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "tipo"],
+        "properties": {
+          "id": { "type": "string" },
+          "tipo": { "type": "string", "description": "IPE160 / SHS200x10 / parametrica / ..." },
+          "A": { "type": "number", "description": "area [m2]" },
+          "Iy": { "type": "number" }, "Iz": { "type": "number" }, "It": { "type": "number" },
+          "Wy": { "type": "number" }, "Wz": { "type": "number" },
+          "clase_ec3": { "type": "integer", "minimum": 1, "maximum": 4 }
+        }
+      }
+    },
+    "barras": {
+      "type": "array",
+      "description": "elementos lineales (1D)",
+      "items": {
+        "type": "object",
+        "required": ["id", "nodo_i", "nodo_j", "seccion", "material"],
+        "properties": {
+          "id": { "type": "string" },
+          "nodo_i": { "type": "string" }, "nodo_j": { "type": "string" },
+          "seccion": { "type": "string" }, "material": { "type": "string" },
+          "rol": { "type": "string", "description": "cordon/diagonal/montante/viga/pilar/..." },
+          "L_pandeo": { "type": "object", "properties": { "y": {"type":"number"}, "z": {"type":"number"} }, "description": "longitudes de pandeo si difieren de la geometrica" },
+          "liberaciones": {
+            "type": "object",
+            "description": "release por extremo; true = liberado (D-018). Prohibido liberar axil o torsion en ambos extremos.",
+            "properties": {
+              "i": { "$ref": "#/$defs/release6" },
+              "j": { "$ref": "#/$defs/release6" }
+            }
+          }
+        }
+      }
+    },
+    "laminas": {
+      "type": "array",
+      "description": "elementos superficie (2D) — losas y muros (alcance v0, decision 2026-06-26)",
+      "items": {
+        "type": "object",
+        "required": ["id", "nodos", "espesor", "material"],
+        "properties": {
+          "id": { "type": "string" },
+          "nodos": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 4, "description": "tri o quad" },
+          "espesor": { "type": "number", "description": "[m]" },
+          "material": { "type": "string" },
+          "rol": { "type": "string", "description": "losa/muro/solera/cubierta/..." },
+          "comportamiento": { "enum": ["placa", "membrana", "lamina"], "default": "lamina", "description": "lamina = flexion+membrana acopladas (folded-plate)" }
+        }
+      }
+    },
+    "apoyos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nodo", "tipo"],
+        "properties": {
+          "nodo": { "type": "string" },
+          "tipo": { "enum": ["empotrado", "articulado", "resorte", "winkler"] },
+          "rigideces": {
+            "type": "object",
+            "description": "para resorte/winkler [N/m, N·m/rad]; o k_s [N/m3] para lecho elastico",
+            "properties": { "kx":{"type":"number"},"ky":{"type":"number"},"kz":{"type":"number"},"krx":{"type":"number"},"kry":{"type":"number"},"krz":{"type":"number"},"k_s":{"type":"number"} }
+          }
+        }
+      }
+    },
+    "acciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["caso", "tipo", "valor", "objetivo"],
+        "properties": {
+          "caso": { "type": "string", "description": "id de caso de carga" },
+          "tipo": { "enum": ["permanente", "uso", "viento", "nieve", "termica", "sismo", "empuje", "agua"] },
+          "categoria_uso": { "type": "string", "description": "categoria EC1 (A..K) si tipo=uso" },
+          "valor": { "type": "number" },
+          "direccion": { "type": "string", "description": "global X/Y/Z o local" },
+          "objetivo": { "type": "string", "description": "id de nodo/barra/lamina o 'global'" },
+          "ac": { "type": "number", "description": "aceleracion sismica de calculo [g] si tipo=sismo" }
+        }
+      }
+    },
+    "combinaciones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "estado_limite", "terminos"],
+        "properties": {
+          "id": { "type": "string" },
+          "estado_limite": { "enum": ["ELU", "ELS_caracteristica", "ELS_frecuente", "ELS_cuasipermanente", "sismica"] },
+          "terminos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["caso", "gamma"],
+              "properties": { "caso": {"type":"string"}, "gamma": {"type":"number"}, "psi": {"type":"number"} }
+            }
+          }
+        }
+      }
+    },
+    "verificacion": {
+      "type": "object",
+      "required": ["normas", "anejo_nacional"],
+      "properties": {
+        "normas": { "type": "array", "items": { "enum": ["EC0","EC1","EC2","EC3","EC4","EC5","EC7","EC8"] } },
+        "anejo_nacional": { "type": "string", "description": "p.ej. 'ES'" },
+        "ndp": {
+          "type": "array",
+          "description": "parametros de determinacion nacional; marcar pendientes",
+          "items": { "type": "object", "properties": { "clave": {"type":"string"}, "valor": {}, "estado": {"enum":["confirmado","confirmar_AN"]} } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "release6": {
+      "type": "object",
+      "description": "6 GdL en ejes locales; true = liberado",
+      "properties": { "n":{"type":"boolean"},"vy":{"type":"boolean"},"vz":{"type":"boolean"},"mt":{"type":"boolean"},"mStrong":{"type":"boolean"},"mWeak":{"type":"boolean"} }
+    }
+  }
+}

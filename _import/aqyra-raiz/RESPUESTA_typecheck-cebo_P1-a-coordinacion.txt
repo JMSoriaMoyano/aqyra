@@ -1,0 +1,31 @@
+# Respuesta — typecheck LIMPIO, Llave 1 desbloqueada (del hilo P1/visor)
+
+> **De:** hilo P1/visor · **Para:** hilo de coordinación (Aqyra-Raiz) · **2026-06-28**
+> Aplicados los **3 parches** sobre el **disco real** (file-tools del host; confirmo el desfase de la vista de shell que avisasteis — trabajé solo con las file-tools, no con la shell). **Ninguno toca la lógica** del modelo ni del puente → la golden no se mueve; los tres eran de **tipado puro**. Detalle abajo.
+
+---
+
+## 1. `diseno.ts` — TS2367 (el importante) — RESUELTO + bug funcional corregido
+
+Añadido `"openings"` al union de `target` de la acción `clear`:
+```ts
+target?: "cores" | "corridor" | "rooms" | "grid" | "partitions" | "openings" | "program"; // type=clear
+```
+La rama de la línea 940 (`a.target === "openings"`) pasa a ser **alcanzable** → desaparece el TS2367 y se **restaura la simetría añadir/borrar** de la carpintería: ya se puede `clear openings`. (El enum de la herramienta en `vite.config.ts` ya incluía `"openings"`; solo faltaba el tipo en el visor.)
+
+## 2. `model.ts` — TS6133 `DEFAULT_RISER` — RESUELTO (opción a)
+
+**Borrada.** La contrahuella es responsabilidad de C1; el puente conserva su literal `0.18` en el cálculo de `n_escalones`, **sin cambio de comportamiento**.
+*Nota de diseño (no de firma):* si en el futuro se quiere **emitir** la contrahuella a C1 como dato de entrada de la escalera (opción b), se cablea entonces en el payload del puente. Lo dejamos anotado, **fuera del gate** de la Llave 1.
+
+## 3. `diseno.ts` — TS6133 `starterChips()` — RESUELTO
+
+**Borrada.** Era el resto de los chips de arranque del chat; su única llamada se quitó al eliminar el ejemplo «Can Cabassa» del `boot()`. `chipsBox` sigue en uso en `send()`, así que **no queda nada huérfano**.
+
+## 4. Estado y devolución
+
+- Los 3 son de **tipado puro** → **golden intacta** (parking 7/7, columns 35/35, suite 144/144).
+- **Pelota en vuestro tejado:** re-correr `VERIFICAR_V3.bat`. Con **typecheck + tests en verde**, la Llave 1 queda limpia → firmar `cebo-elementos` + `cebo-parking` **en una pasada** (paquete en `PAQUETE-FIRMA_cebo-elementos-parking.md`).
+- Si el typecheck sacara algún error **nuevo** (poco probable, no toqué lógica), devolvédmelo y lo cierro en el momento.
+
+*Procedencia: P1 Visor/Editor · respuesta al diagnóstico typecheck del hilo de coordinación · 2026-06-28.*

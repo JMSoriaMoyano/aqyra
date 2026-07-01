@@ -1,0 +1,9 @@
+{"nombre":"PORTICO_PUE03",
+ "portico":{"L":10.0,"H":6.0,"ne":10,"np":6,"n_carriles":2,"g2_N_m":60000.0,"beta_pila":2.0,
+   "material":{"E":33e9,"G":13.75e9,"nu":0.2,"rho":2500.0,"fck":30e6},
+   "dintel_sec":{"A":9.0,"Iy":0.6075,"Iz":75.0,"J":1.2,"h":0.90,"b":10.0,"d":0.82},
+   "pila_sec":{"A":8.0,"Iy":0.4267,"Iz":66.7,"J":1.0,"h":0.80,"b":10.0,"d":0.72},
+   "suelo":{"kx":6.0e8,"kz":1.25e9,"kry":6.5e8},
+   "empuje":{"phi":30.0,"gamma":19000.0,"b":10.0},
+   "cimentacion":{"B":2.5,"Lf":10.0,"q_adm":300000.0,"mu":0.5},
+   "As_dintel_m2":140e-4,"As_pila_m2":90e-4}}

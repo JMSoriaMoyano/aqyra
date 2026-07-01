@@ -1,0 +1,2236 @@
+{
+ "unidades": {
+  "longitud": "m",
+  "fuerza": "N",
+  "momento": "N*m"
+ },
+ "materiales": {
+  "HORM": {
+   "E": 34000000000.0,
+   "G": 14200000000.0,
+   "nu": 0.2,
+   "rho": 2500.0,
+   "fck": 45000000.0,
+   "fctm": 3800000.0
+  }
+ },
+ "secciones": {
+  "VIGA": {
+   "A": 0.7,
+   "Iy": 0.22,
+   "Iz": 0.03,
+   "J": 0.01,
+   "Avz": null,
+   "Avy": null
+  },
+  "RIOSTRA": {
+   "A": 0.2,
+   "Iy": 0.01,
+   "Iz": 0.005,
+   "J": 0.002,
+   "Avz": null,
+   "Avy": null
+  }
+ },
+ "nodos": {
+  "N_0_0": {
+   "x": 0.0,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  "N_0_1": {
+   "x": 1.25,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_2": {
+   "x": 2.5,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_3": {
+   "x": 3.75,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_4": {
+   "x": 5.0,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_5": {
+   "x": 6.25,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_6": {
+   "x": 7.5,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_7": {
+   "x": 8.75,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_8": {
+   "x": 10.0,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_9": {
+   "x": 11.25,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_10": {
+   "x": 12.5,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_11": {
+   "x": 13.75,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_12": {
+   "x": 15.0,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_13": {
+   "x": 16.25,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_14": {
+   "x": 17.5,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_15": {
+   "x": 18.75,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_16": {
+   "x": 20.0,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_17": {
+   "x": 21.25,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_18": {
+   "x": 22.5,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_19": {
+   "x": 23.75,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_0_20": {
+   "x": 25.0,
+   "y": -3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  "N_1_0": {
+   "x": 0.0,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  "N_1_1": {
+   "x": 1.25,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_2": {
+   "x": 2.5,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_3": {
+   "x": 3.75,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_4": {
+   "x": 5.0,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_5": {
+   "x": 6.25,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_6": {
+   "x": 7.5,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_7": {
+   "x": 8.75,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_8": {
+   "x": 10.0,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_9": {
+   "x": 11.25,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_10": {
+   "x": 12.5,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_11": {
+   "x": 13.75,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_12": {
+   "x": 15.0,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_13": {
+   "x": 16.25,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_14": {
+   "x": 17.5,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_15": {
+   "x": 18.75,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_16": {
+   "x": 20.0,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_17": {
+   "x": 21.25,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_18": {
+   "x": 22.5,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_19": {
+   "x": 23.75,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_1_20": {
+   "x": 25.0,
+   "y": -1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  "N_2_0": {
+   "x": 0.0,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  "N_2_1": {
+   "x": 1.25,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_2": {
+   "x": 2.5,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_3": {
+   "x": 3.75,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_4": {
+   "x": 5.0,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_5": {
+   "x": 6.25,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_6": {
+   "x": 7.5,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_7": {
+   "x": 8.75,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_8": {
+   "x": 10.0,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_9": {
+   "x": 11.25,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_10": {
+   "x": 12.5,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_11": {
+   "x": 13.75,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_12": {
+   "x": 15.0,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_13": {
+   "x": 16.25,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_14": {
+   "x": 17.5,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_15": {
+   "x": 18.75,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_16": {
+   "x": 20.0,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_17": {
+   "x": 21.25,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_18": {
+   "x": 22.5,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_19": {
+   "x": 23.75,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_2_20": {
+   "x": 25.0,
+   "y": 1.25,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  "N_3_0": {
+   "x": 0.0,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  "N_3_1": {
+   "x": 1.25,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_2": {
+   "x": 2.5,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_3": {
+   "x": 3.75,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_4": {
+   "x": 5.0,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_5": {
+   "x": 6.25,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_6": {
+   "x": 7.5,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_7": {
+   "x": 8.75,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_8": {
+   "x": 10.0,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_9": {
+   "x": 11.25,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_10": {
+   "x": 12.5,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_11": {
+   "x": 13.75,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_12": {
+   "x": 15.0,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_13": {
+   "x": 16.25,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_14": {
+   "x": 17.5,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_15": {
+   "x": 18.75,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_16": {
+   "x": 20.0,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_17": {
+   "x": 21.25,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_18": {
+   "x": 22.5,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_19": {
+   "x": 23.75,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  "N_3_20": {
+   "x": 25.0,
+   "y": 3.75,
+   "z": 0.0,
+   "apoyo": [
+    0,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  }
+ },
+ "barras": {
+  "G_0_0": {
+   "ni": "N_0_0",
+   "nj": "N_0_1",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_1": {
+   "ni": "N_0_1",
+   "nj": "N_0_2",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_2": {
+   "ni": "N_0_2",
+   "nj": "N_0_3",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_3": {
+   "ni": "N_0_3",
+   "nj": "N_0_4",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_4": {
+   "ni": "N_0_4",
+   "nj": "N_0_5",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_5": {
+   "ni": "N_0_5",
+   "nj": "N_0_6",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_6": {
+   "ni": "N_0_6",
+   "nj": "N_0_7",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_7": {
+   "ni": "N_0_7",
+   "nj": "N_0_8",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_8": {
+   "ni": "N_0_8",
+   "nj": "N_0_9",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_9": {
+   "ni": "N_0_9",
+   "nj": "N_0_10",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_10": {
+   "ni": "N_0_10",
+   "nj": "N_0_11",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_11": {
+   "ni": "N_0_11",
+   "nj": "N_0_12",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_12": {
+   "ni": "N_0_12",
+   "nj": "N_0_13",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_13": {
+   "ni": "N_0_13",
+   "nj": "N_0_14",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_14": {
+   "ni": "N_0_14",
+   "nj": "N_0_15",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_15": {
+   "ni": "N_0_15",
+   "nj": "N_0_16",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_16": {
+   "ni": "N_0_16",
+   "nj": "N_0_17",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_17": {
+   "ni": "N_0_17",
+   "nj": "N_0_18",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_18": {
+   "ni": "N_0_18",
+   "nj": "N_0_19",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_0_19": {
+   "ni": "N_0_19",
+   "nj": "N_0_20",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_0": {
+   "ni": "N_1_0",
+   "nj": "N_1_1",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_1": {
+   "ni": "N_1_1",
+   "nj": "N_1_2",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_2": {
+   "ni": "N_1_2",
+   "nj": "N_1_3",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_3": {
+   "ni": "N_1_3",
+   "nj": "N_1_4",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_4": {
+   "ni": "N_1_4",
+   "nj": "N_1_5",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_5": {
+   "ni": "N_1_5",
+   "nj": "N_1_6",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_6": {
+   "ni": "N_1_6",
+   "nj": "N_1_7",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_7": {
+   "ni": "N_1_7",
+   "nj": "N_1_8",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_8": {
+   "ni": "N_1_8",
+   "nj": "N_1_9",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_9": {
+   "ni": "N_1_9",
+   "nj": "N_1_10",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_10": {
+   "ni": "N_1_10",
+   "nj": "N_1_11",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_11": {
+   "ni": "N_1_11",
+   "nj": "N_1_12",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_12": {
+   "ni": "N_1_12",
+   "nj": "N_1_13",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_13": {
+   "ni": "N_1_13",
+   "nj": "N_1_14",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_14": {
+   "ni": "N_1_14",
+   "nj": "N_1_15",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_15": {
+   "ni": "N_1_15",
+   "nj": "N_1_16",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_16": {
+   "ni": "N_1_16",
+   "nj": "N_1_17",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_17": {
+   "ni": "N_1_17",
+   "nj": "N_1_18",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_18": {
+   "ni": "N_1_18",
+   "nj": "N_1_19",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_1_19": {
+   "ni": "N_1_19",
+   "nj": "N_1_20",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_0": {
+   "ni": "N_2_0",
+   "nj": "N_2_1",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_1": {
+   "ni": "N_2_1",
+   "nj": "N_2_2",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_2": {
+   "ni": "N_2_2",
+   "nj": "N_2_3",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_3": {
+   "ni": "N_2_3",
+   "nj": "N_2_4",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_4": {
+   "ni": "N_2_4",
+   "nj": "N_2_5",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_5": {
+   "ni": "N_2_5",
+   "nj": "N_2_6",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_6": {
+   "ni": "N_2_6",
+   "nj": "N_2_7",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_7": {
+   "ni": "N_2_7",
+   "nj": "N_2_8",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_8": {
+   "ni": "N_2_8",
+   "nj": "N_2_9",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_9": {
+   "ni": "N_2_9",
+   "nj": "N_2_10",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_10": {
+   "ni": "N_2_10",
+   "nj": "N_2_11",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_11": {
+   "ni": "N_2_11",
+   "nj": "N_2_12",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_12": {
+   "ni": "N_2_12",
+   "nj": "N_2_13",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_13": {
+   "ni": "N_2_13",
+   "nj": "N_2_14",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_14": {
+   "ni": "N_2_14",
+   "nj": "N_2_15",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_15": {
+   "ni": "N_2_15",
+   "nj": "N_2_16",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_16": {
+   "ni": "N_2_16",
+   "nj": "N_2_17",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_17": {
+   "ni": "N_2_17",
+   "nj": "N_2_18",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_18": {
+   "ni": "N_2_18",
+   "nj": "N_2_19",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_2_19": {
+   "ni": "N_2_19",
+   "nj": "N_2_20",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_0": {
+   "ni": "N_3_0",
+   "nj": "N_3_1",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_1": {
+   "ni": "N_3_1",
+   "nj": "N_3_2",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_2": {
+   "ni": "N_3_2",
+   "nj": "N_3_3",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_3": {
+   "ni": "N_3_3",
+   "nj": "N_3_4",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_4": {
+   "ni": "N_3_4",
+   "nj": "N_3_5",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_5": {
+   "ni": "N_3_5",
+   "nj": "N_3_6",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_6": {
+   "ni": "N_3_6",
+   "nj": "N_3_7",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_7": {
+   "ni": "N_3_7",
+   "nj": "N_3_8",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_8": {
+   "ni": "N_3_8",
+   "nj": "N_3_9",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_9": {
+   "ni": "N_3_9",
+   "nj": "N_3_10",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_10": {
+   "ni": "N_3_10",
+   "nj": "N_3_11",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_11": {
+   "ni": "N_3_11",
+   "nj": "N_3_12",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_12": {
+   "ni": "N_3_12",
+   "nj": "N_3_13",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_13": {
+   "ni": "N_3_13",
+   "nj": "N_3_14",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_14": {
+   "ni": "N_3_14",
+   "nj": "N_3_15",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_15": {
+   "ni": "N_3_15",
+   "nj": "N_3_16",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_16": {
+   "ni": "N_3_16",
+   "nj": "N_3_17",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_17": {
+   "ni": "N_3_17",
+   "nj": "N_3_18",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_18": {
+   "ni": "N_3_18",
+   "nj": "N_3_19",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "G_3_19": {
+   "ni": "N_3_19",
+   "nj": "N_3_20",
+   "seccion": "VIGA",
+   "material": "HORM",
+   "tipo": "viga"
+  },
+  "R_0_0": {
+   "ni": "N_0_0",
+   "nj": "N_1_0",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  },
+  "R_1_0": {
+   "ni": "N_1_0",
+   "nj": "N_2_0",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  },
+  "R_2_0": {
+   "ni": "N_2_0",
+   "nj": "N_3_0",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  },
+  "R_0_10": {
+   "ni": "N_0_10",
+   "nj": "N_1_10",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  },
+  "R_1_10": {
+   "ni": "N_1_10",
+   "nj": "N_2_10",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  },
+  "R_2_10": {
+   "ni": "N_2_10",
+   "nj": "N_3_10",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  },
+  "R_0_20": {
+   "ni": "N_0_20",
+   "nj": "N_1_20",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  },
+  "R_1_20": {
+   "ni": "N_1_20",
+   "nj": "N_2_20",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  },
+  "R_2_20": {
+   "ni": "N_2_20",
+   "nj": "N_3_20",
+   "seccion": "RIOSTRA",
+   "material": "HORM",
+   "tipo": "riostra"
+  }
+ },
+ "cargas": [
+  {
+   "caso": "G",
+   "barra": "G_0_0",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_1",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_2",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_3",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_4",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_5",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_6",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_7",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_8",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_9",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_10",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_11",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_12",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_13",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_14",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_15",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_16",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_17",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_18",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_0_19",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_0",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_1",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_2",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_3",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_4",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_5",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_6",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_7",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_8",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_9",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_10",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_11",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_12",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_13",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_14",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_15",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_16",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_17",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_18",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_1_19",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_0",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_1",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_2",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_3",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_4",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_5",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_6",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_7",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_8",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_9",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_10",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_11",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_12",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_13",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_14",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_15",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_16",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_17",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_18",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_2_19",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_0",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_1",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_2",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_3",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_4",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_5",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_6",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_7",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_8",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_9",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_10",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_11",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_12",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_13",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_14",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_15",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_16",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_17",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_18",
+   "direccion": "GZ",
+   "qz": -23730.0
+  },
+  {
+   "caso": "G",
+   "barra": "G_3_19",
+   "direccion": "GZ",
+   "qz": -23730.0
+  }
+ ]
+}

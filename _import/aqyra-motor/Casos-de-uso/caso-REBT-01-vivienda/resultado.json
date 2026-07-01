@@ -1,0 +1,314 @@
+{
+  "veredicto": "CUMPLE",
+  "metodo": "Intensidades (I*R con cosphi, mono/tri); seccion propuesta por momentos + intensidad admisible (ITC-BT-19) [confirmar AN]",
+  "topologia": {
+    "n_nodos": 9,
+    "n_tramos": 8,
+    "n_lazos": 0,
+    "tipo": "radial"
+  },
+  "hipotesis": {
+    "aislamiento": "PVC",
+    "material": "Cu",
+    "gamma_m_ohm_mm2": 56.0,
+    "U_mono_V": 230.0,
+    "U_tri_V": 400.0
+  },
+  "activos": [
+    "C1-Iluminacion",
+    "C12-Adicional",
+    "C2-Tomas-generales",
+    "C3-Cocina-horno",
+    "C4-Lavadora-termo",
+    "C5-Tomas-bano-cocina",
+    "C8-Calefaccion",
+    "C9-Aire-acondicionado"
+  ],
+  "potencia_cabecera_W": 18705.8,
+  "caida_max_pct": 1.098,
+  "terminal_gobernante": "C8-Calefaccion",
+  "tramos": {
+    "T1": {
+      "potencia_W": 1552.5,
+      "intensidad_A": 7.5,
+      "fases": "mono",
+      "cosphi": 0.9,
+      "tension_V": 230.0,
+      "seccion_mm2": 1.5,
+      "I_admisible_A": 15.0,
+      "longitud_m": 15.0,
+      "caida_tension_V": 2.4107,
+      "caida_tension_pct": 1.0481,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N2"
+    },
+    "T2": {
+      "potencia_W": 368.0,
+      "intensidad_A": 1.684,
+      "fases": "mono",
+      "cosphi": 0.95,
+      "tension_V": 230.0,
+      "seccion_mm2": 2.5,
+      "I_admisible_A": 21.0,
+      "longitud_m": 15.0,
+      "caida_tension_V": 0.3429,
+      "caida_tension_pct": 0.1491,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N3"
+    },
+    "T3": {
+      "potencia_W": 2025.0,
+      "intensidad_A": 9.268,
+      "fases": "mono",
+      "cosphi": 0.95,
+      "tension_V": 230.0,
+      "seccion_mm2": 6.0,
+      "I_admisible_A": 36.0,
+      "longitud_m": 15.0,
+      "caida_tension_V": 0.7861,
+      "caida_tension_pct": 0.3418,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N4"
+    },
+    "T4": {
+      "potencia_W": 1707.8,
+      "intensidad_A": 7.816,
+      "fases": "mono",
+      "cosphi": 0.95,
+      "tension_V": 230.0,
+      "seccion_mm2": 4.0,
+      "I_admisible_A": 27.0,
+      "longitud_m": 15.0,
+      "caida_tension_V": 0.9944,
+      "caida_tension_pct": 0.4324,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N5"
+    },
+    "T5": {
+      "potencia_W": 690.0,
+      "intensidad_A": 3.158,
+      "fases": "mono",
+      "cosphi": 0.95,
+      "tension_V": 230.0,
+      "seccion_mm2": 2.5,
+      "I_admisible_A": 21.0,
+      "longitud_m": 16.9706,
+      "caida_tension_V": 0.7273,
+      "caida_tension_pct": 0.3162,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N6"
+    },
+    "T6": {
+      "potencia_W": 5750.0,
+      "intensidad_A": 26.316,
+      "fases": "mono",
+      "cosphi": 0.95,
+      "tension_V": 230.0,
+      "seccion_mm2": 6.0,
+      "I_admisible_A": 36.0,
+      "longitud_m": 16.9706,
+      "caida_tension_V": 2.5254,
+      "caida_tension_pct": 1.098,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N7"
+    },
+    "T7": {
+      "potencia_W": 5750.0,
+      "intensidad_A": 26.316,
+      "fases": "mono",
+      "cosphi": 0.95,
+      "tension_V": 230.0,
+      "seccion_mm2": 6.0,
+      "I_admisible_A": 36.0,
+      "longitud_m": 16.9706,
+      "caida_tension_V": 2.5254,
+      "caida_tension_pct": 1.098,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N8"
+    },
+    "T8": {
+      "potencia_W": 862.5,
+      "intensidad_A": 3.947,
+      "fases": "mono",
+      "cosphi": 0.95,
+      "tension_V": 230.0,
+      "seccion_mm2": 2.5,
+      "I_admisible_A": 21.0,
+      "longitud_m": 16.9706,
+      "caida_tension_V": 0.9091,
+      "caida_tension_pct": 0.3953,
+      "material": "Cu",
+      "ni": "N1",
+      "nj": "N9"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "caida_acum_V": 0.0,
+      "tipo": "fuente"
+    },
+    "N2": {
+      "caida_acum_V": 2.4107,
+      "tipo": "terminal"
+    },
+    "N3": {
+      "caida_acum_V": 0.3429,
+      "tipo": "terminal"
+    },
+    "N4": {
+      "caida_acum_V": 0.7861,
+      "tipo": "terminal"
+    },
+    "N5": {
+      "caida_acum_V": 0.9944,
+      "tipo": "terminal"
+    },
+    "N6": {
+      "caida_acum_V": 0.7273,
+      "tipo": "terminal"
+    },
+    "N7": {
+      "caida_acum_V": 2.5254,
+      "tipo": "terminal"
+    },
+    "N8": {
+      "caida_acum_V": 2.5254,
+      "tipo": "terminal"
+    },
+    "N9": {
+      "caida_acum_V": 0.9091,
+      "tipo": "terminal"
+    }
+  },
+  "terminales": [
+    {
+      "id": "C1-Iluminacion",
+      "nodo": "N2",
+      "activo": true,
+      "potencia_W": 1552.5,
+      "cosphi": 0.9,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "alumbrado",
+      "circuito": "C1",
+      "caida_acum_pct": 1.0481,
+      "du_max_pct": 3.0,
+      "margen_pct": 1.9519,
+      "cumple": true
+    },
+    {
+      "id": "C2-Tomas-generales",
+      "nodo": "N3",
+      "activo": true,
+      "potencia_W": 368.0,
+      "cosphi": 0.95,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "fuerza",
+      "circuito": "C2",
+      "caida_acum_pct": 0.1491,
+      "du_max_pct": 5.0,
+      "margen_pct": 4.8509,
+      "cumple": true
+    },
+    {
+      "id": "C3-Cocina-horno",
+      "nodo": "N4",
+      "activo": true,
+      "potencia_W": 2025.0,
+      "cosphi": 0.95,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "fuerza",
+      "circuito": "C3",
+      "caida_acum_pct": 0.3418,
+      "du_max_pct": 5.0,
+      "margen_pct": 4.6582,
+      "cumple": true
+    },
+    {
+      "id": "C4-Lavadora-termo",
+      "nodo": "N5",
+      "activo": true,
+      "potencia_W": 1707.8,
+      "cosphi": 0.95,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "fuerza",
+      "circuito": "C4",
+      "caida_acum_pct": 0.4324,
+      "du_max_pct": 5.0,
+      "margen_pct": 4.5676,
+      "cumple": true
+    },
+    {
+      "id": "C5-Tomas-bano-cocina",
+      "nodo": "N6",
+      "activo": true,
+      "potencia_W": 690.0,
+      "cosphi": 0.95,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "fuerza",
+      "circuito": "C5",
+      "caida_acum_pct": 0.3162,
+      "du_max_pct": 5.0,
+      "margen_pct": 4.6838,
+      "cumple": true
+    },
+    {
+      "id": "C8-Calefaccion",
+      "nodo": "N7",
+      "activo": true,
+      "potencia_W": 5750.0,
+      "cosphi": 0.95,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "fuerza",
+      "circuito": "C8",
+      "caida_acum_pct": 1.098,
+      "du_max_pct": 5.0,
+      "margen_pct": 3.902,
+      "cumple": true
+    },
+    {
+      "id": "C9-Aire-acondicionado",
+      "nodo": "N8",
+      "activo": true,
+      "potencia_W": 5750.0,
+      "cosphi": 0.95,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "fuerza",
+      "circuito": "C9",
+      "caida_acum_pct": 1.098,
+      "du_max_pct": 5.0,
+      "margen_pct": 3.902,
+      "cumple": true
+    },
+    {
+      "id": "C12-Adicional",
+      "nodo": "N9",
+      "activo": true,
+      "potencia_W": 862.5,
+      "cosphi": 0.95,
+      "fases": "mono",
+      "tension_V": 230.0,
+      "uso": "fuerza",
+      "circuito": "C12",
+      "caida_acum_pct": 0.3953,
+      "du_max_pct": 5.0,
+      "margen_pct": 4.6047,
+      "cumple": true
+    }
+  ],
+  "errores": [],
+  "avisos": []
+}

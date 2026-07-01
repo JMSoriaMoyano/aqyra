@@ -1,0 +1,197 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "caudal": "l/s",
+    "presion": "kPa",
+    "potencia": "W"
+  },
+  "sistema": {
+    "tipo": "SEWAGE",
+    "fluido": null,
+    "nombre": "Red de saneamiento residual",
+    "clase_riesgo": null,
+    "demanda": {
+      "disciplina": "saneamiento",
+      "regimen": "separativo-residuales",
+      "dotacion_l_hab_dia": 200.0,
+      "coef_retorno": 0.8,
+      "coef_punta": 2.5,
+      "caudal_infiltracion_l_s": 0.0,
+      "caudal_total_l_s": 31.9444,
+      "criterio": "EN 752 (redes de saneamiento); dotacion y coef. de punta segun criterio del despacho/ordenanza municipal [confirmar AN]"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 100.5,
+      "tipo": "terminal",
+      "cota_solera": 100.5
+    },
+    "N2": {
+      "x": 50.0,
+      "y": 50.0,
+      "z": 100.0,
+      "tipo": "union",
+      "cota_solera": 100.0
+    },
+    "N3": {
+      "x": 0.0,
+      "y": 100.0,
+      "z": 100.5,
+      "tipo": "terminal",
+      "cota_solera": 100.5
+    },
+    "N4": {
+      "x": 100.0,
+      "y": 50.0,
+      "z": 99.5,
+      "tipo": "vertido",
+      "cota_solera": 99.5
+    },
+    "N5": {
+      "x": 120.0,
+      "y": 0.0,
+      "z": 100.2,
+      "tipo": "terminal",
+      "cota_solera": 100.2
+    }
+  },
+  "tramos": {
+    "T1": {
+      "ni": "N1",
+      "nj": "N2",
+      "dn": 315.0,
+      "material": "hormigon",
+      "rugosidad": null,
+      "longitud": 70.7124,
+      "elemento": "COL-1",
+      "clase": "IfcFlowSegment"
+    },
+    "T2": {
+      "ni": "N3",
+      "nj": "N2",
+      "dn": 315.0,
+      "material": "hormigon",
+      "rugosidad": null,
+      "longitud": 70.7124,
+      "elemento": "COL-2",
+      "clase": "IfcFlowSegment"
+    },
+    "T3": {
+      "ni": "N2",
+      "nj": "N4",
+      "dn": 400.0,
+      "material": "hormigon",
+      "rugosidad": null,
+      "longitud": 50.0025,
+      "elemento": "COL-3",
+      "clase": "IfcFlowSegment"
+    },
+    "T4": {
+      "ni": "N5",
+      "nj": "N4",
+      "dn": 315.0,
+      "material": "hormigon",
+      "rugosidad": null,
+      "longitud": 53.8562,
+      "elemento": "COL-4",
+      "clase": "IfcFlowSegment"
+    }
+  },
+  "terminales": [
+    {
+      "id": "ACO-1",
+      "tipo": "USERDEFINED",
+      "nodo": "N1",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_aporte": "acometida",
+        "habitantes_eq": 2600.0,
+        "dotacion_l_hab_dia": 200.0,
+        "coef_retorno": 0.8,
+        "coef_punta": 2.5,
+        "caudal_medio_l_s": 4.8148,
+        "caudal_infiltracion_l_s": 0.0,
+        "caudal_l_s": 12.037,
+        "fuente_dato": "normativa",
+        "criterio": "EN 752 (redes de saneamiento); dotacion y coef. de punta segun criterio del despacho/ordenanza municipal [confirmar AN]"
+      },
+      "habitantes_eq": 2600.0
+    },
+    {
+      "id": "ACO-2",
+      "tipo": "USERDEFINED",
+      "nodo": "N3",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_aporte": "acometida",
+        "habitantes_eq": 2600.0,
+        "dotacion_l_hab_dia": 200.0,
+        "coef_retorno": 0.8,
+        "coef_punta": 2.5,
+        "caudal_medio_l_s": 4.8148,
+        "caudal_infiltracion_l_s": 0.0,
+        "caudal_l_s": 12.037,
+        "fuente_dato": "normativa",
+        "criterio": "EN 752 (redes de saneamiento); dotacion y coef. de punta segun criterio del despacho/ordenanza municipal [confirmar AN]"
+      },
+      "habitantes_eq": 2600.0
+    },
+    {
+      "id": "ACO-3",
+      "tipo": "USERDEFINED",
+      "nodo": "N5",
+      "caudal_min": null,
+      "presion_min": null,
+      "demanda": {
+        "tipo_aporte": "acometida",
+        "habitantes_eq": 1700.0,
+        "dotacion_l_hab_dia": 200.0,
+        "coef_retorno": 0.8,
+        "coef_punta": 2.5,
+        "caudal_medio_l_s": 3.1481,
+        "caudal_infiltracion_l_s": 0.0,
+        "caudal_l_s": 7.8704,
+        "fuente_dato": "normativa",
+        "criterio": "EN 752 (redes de saneamiento); dotacion y coef. de punta segun criterio del despacho/ordenanza municipal [confirmar AN]"
+      },
+      "habitantes_eq": 1700.0
+    }
+  ],
+  "fuentes": [],
+  "vertidos": [
+    {
+      "id": "VERTIDO",
+      "nodo": "N4",
+      "tipo": "vertido"
+    }
+  ],
+  "metricas": {
+    "nudos_fusionados": 3,
+    "huecos_puenteados": [],
+    "cruces_troceados": [],
+    "segmentos_sin_puerto": [],
+    "factor_escala_ifc": 1.0,
+    "tol_snap_m": 0.001
+  },
+  "red": {
+    "norma": "EN 752",
+    "regimen": "separativo-residuales",
+    "metodo": "Manning lamina libre (grafo de red)",
+    "veredicto": "CUMPLE",
+    "caudal_total_vertido_l_s": 31.9444,
+    "velocidad_pico_m_s": 1.1054,
+    "llenado_pico_pct": 24.35,
+    "n_tramos_no_cumple": 0,
+    "topologia": {
+      "n_nodos": 5,
+      "n_tramos": 4,
+      "n_lazos": 0,
+      "tipo": "arbol"
+    }
+  }
+}

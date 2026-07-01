@@ -1,0 +1,6 @@
+{"nombre":"CELOSIA_PUE04",
+ "celosia":{"L":40.0,"h":5.0,"n":8,"n_carriles":2,"g_N_m":42000.0,"curva_pandeo":"b","posiciones":33,
+   "material":{"E":210e9,"G":81e9,"nu":0.3,"rho":7850.0,"fy":355e6},
+   "cordon_sec":{"A":0.0220,"Iy":6.0e-4,"Iz":6.0e-4,"J":1.0e-5},
+   "diagonal_sec":{"A":0.0120,"Iy":2.5e-4,"Iz":2.5e-4,"J":5.0e-6},
+   "montante_sec":{"A":0.0115,"Iy":2.4e-4,"Iz":2.4e-4,"J":4.0e-6}}}

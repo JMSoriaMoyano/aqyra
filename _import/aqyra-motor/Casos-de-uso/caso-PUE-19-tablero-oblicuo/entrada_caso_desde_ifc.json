@@ -1,0 +1,23 @@
+{
+  "nombre": "OBLICUO",
+  "oblicuo": {
+    "L": 18.0,
+    "B": 10.0,
+    "esviaje_deg": 30.0,
+    "t": 0.8,
+    "nx": 16,
+    "ny": 12,
+    "n_carriles": 2,
+    "g2_N_m2": 3000.0,
+    "recubrimiento": 0.04,
+    "material": {
+      "E": 33000000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fck": 35000000.0,
+      "G": 13750000000.0,
+      "fyk": 500000000.0
+    }
+  },
+  "_tipologia": "oblicuo"
+}

@@ -1,0 +1,152 @@
+{
+  "veredicto": "CUMPLE",
+  "metodo": "Manning lamina libre (calado normal por seccion parcialmente llena) [confirmar AN]",
+  "sistema": "SEWAGE",
+  "topologia": {
+    "n_nodos": 5,
+    "n_tramos": 4,
+    "n_lazos": 0,
+    "tipo": "arbol"
+  },
+  "hardy_cross": null,
+  "hipotesis": {
+    "fill_max": 0.75,
+    "v_min_m_s": 0.6,
+    "v_max_m_s": 5.0,
+    "dn_min_mm": 300.0,
+    "n_manning_def": 0.013,
+    "cota_solera": "Pset/IFC si esta; si no, z del nodo [confirmar AN]"
+  },
+  "caudal_total_vertido_l_s": 31.9444,
+  "velocidad_pico_m_s": 1.1054,
+  "llenado_pico_pct": 24.35,
+  "tramos": {
+    "T1": {
+      "caudal_l_s": 12.037,
+      "caudal_signed_l_s": 12.037,
+      "sentido": "ni->nj",
+      "dn": 315.0,
+      "seccion": "circular",
+      "longitud_m": 70.7124,
+      "n_manning": 0.013,
+      "pendiente_J": 0.007071,
+      "ni": "N1",
+      "nj": "N2",
+      "calado_y_m": 0.0767,
+      "llenado_pct": 24.35,
+      "velocidad_m_s": 0.8201,
+      "froude": 1.1239,
+      "regimen": "supercritico",
+      "sobrecarga": false,
+      "errores_tramo": [],
+      "elemento": "COL-1"
+    },
+    "T2": {
+      "caudal_l_s": 12.037,
+      "caudal_signed_l_s": 12.037,
+      "sentido": "ni->nj",
+      "dn": 315.0,
+      "seccion": "circular",
+      "longitud_m": 70.7124,
+      "n_manning": 0.013,
+      "pendiente_J": 0.007071,
+      "ni": "N3",
+      "nj": "N2",
+      "calado_y_m": 0.0767,
+      "llenado_pct": 24.35,
+      "velocidad_m_s": 0.8201,
+      "froude": 1.1239,
+      "regimen": "supercritico",
+      "sobrecarga": false,
+      "errores_tramo": [],
+      "elemento": "COL-2"
+    },
+    "T3": {
+      "caudal_l_s": 24.074,
+      "caudal_signed_l_s": 24.074,
+      "sentido": "ni->nj",
+      "dn": 400.0,
+      "seccion": "circular",
+      "longitud_m": 50.0025,
+      "n_manning": 0.013,
+      "pendiente_J": 0.01,
+      "ni": "N2",
+      "nj": "N4",
+      "calado_y_m": 0.0918,
+      "llenado_pct": 22.96,
+      "velocidad_m_s": 1.1054,
+      "froude": 1.3872,
+      "regimen": "supercritico",
+      "sobrecarga": false,
+      "errores_tramo": [],
+      "elemento": "COL-3"
+    },
+    "T4": {
+      "caudal_l_s": 7.8704,
+      "caudal_signed_l_s": 7.8704,
+      "sentido": "ni->nj",
+      "dn": 315.0,
+      "seccion": "circular",
+      "longitud_m": 53.8562,
+      "n_manning": 0.013,
+      "pendiente_J": 0.012998,
+      "ni": "N5",
+      "nj": "N4",
+      "calado_y_m": 0.0535,
+      "llenado_pct": 16.97,
+      "velocidad_m_s": 0.8979,
+      "froude": 1.4892,
+      "regimen": "supercritico",
+      "sobrecarga": false,
+      "errores_tramo": [],
+      "elemento": "COL-4"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "tipo": "terminal",
+      "cota_solera_m": 100.5
+    },
+    "N2": {
+      "tipo": "union",
+      "cota_solera_m": 100.0
+    },
+    "N3": {
+      "tipo": "terminal",
+      "cota_solera_m": 100.5
+    },
+    "N4": {
+      "tipo": "vertido",
+      "cota_solera_m": 99.5
+    },
+    "N5": {
+      "tipo": "terminal",
+      "cota_solera_m": 100.2
+    }
+  },
+  "terminales": [
+    {
+      "id": "ACO-1",
+      "nodo": "N1",
+      "caudal_l_s": 12.037,
+      "activo": true
+    },
+    {
+      "id": "ACO-2",
+      "nodo": "N3",
+      "caudal_l_s": 12.037,
+      "activo": true
+    },
+    {
+      "id": "ACO-3",
+      "nodo": "N5",
+      "caudal_l_s": 7.8704,
+      "activo": true
+    }
+  ],
+  "vertidos": [
+    "N4"
+  ],
+  "errores": [],
+  "avisos": []
+}

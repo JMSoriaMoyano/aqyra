@@ -1,0 +1,382 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N"
+  },
+  "materiales": {
+    "C30/37": {
+      "E": 33000000000.0,
+      "G": 13750000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "secciones": {
+    "C 400x400": {
+      "A": 0.16000000000000003,
+      "Iy": 0.002133333333333334,
+      "Iz": 0.002133333333333334,
+      "J": 0.0036053333333333345,
+      "Wely": 0.010666666666666668,
+      "Wply": 0.016000000000000004,
+      "Welz": 0.010666666666666668,
+      "Wplz": 0.016000000000000004,
+      "Avz": 0.13333333333333336,
+      "h": 0.4,
+      "b": 0.4,
+      "clase": 1,
+      "fuente": "geometria_rect"
+    }
+  },
+  "nodos": {
+    "H1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "H2": {
+      "x": 5.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B2": {
+      "x": 5.0,
+      "y": 0.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "H3": {
+      "x": 10.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B3": {
+      "x": 10.0,
+      "y": 0.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "H4": {
+      "x": 0.0,
+      "y": 5.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B4": {
+      "x": 0.0,
+      "y": 5.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "H5": {
+      "x": 5.0,
+      "y": 5.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B5": {
+      "x": 5.0,
+      "y": 5.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "H6": {
+      "x": 10.0,
+      "y": 5.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B6": {
+      "x": 10.0,
+      "y": 5.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "H7": {
+      "x": 0.0,
+      "y": 10.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B7": {
+      "x": 0.0,
+      "y": 10.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "H8": {
+      "x": 5.0,
+      "y": 10.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B8": {
+      "x": 5.0,
+      "y": 10.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "H9": {
+      "x": 10.0,
+      "y": 10.0,
+      "z": 0.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "B9": {
+      "x": 10.0,
+      "y": 10.0,
+      "z": -3.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    }
+  },
+  "barras": {
+    "P1": {
+      "ni": "B1",
+      "nj": "H1",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "P2": {
+      "ni": "B2",
+      "nj": "H2",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "P3": {
+      "ni": "B3",
+      "nj": "H3",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "P4": {
+      "ni": "B4",
+      "nj": "H4",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "P5": {
+      "ni": "B5",
+      "nj": "H5",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "P6": {
+      "ni": "B6",
+      "nj": "H6",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "P7": {
+      "ni": "B7",
+      "nj": "H7",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "P8": {
+      "ni": "B8",
+      "nj": "H8",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    },
+    "P9": {
+      "ni": "B9",
+      "nj": "H9",
+      "seccion": "C 400x400",
+      "material": "C30/37",
+      "tipo": "pilar"
+    }
+  },
+  "superficies": [
+    {
+      "nombre": "Losa",
+      "esquinas": [
+        "H1",
+        "H3",
+        "H9",
+        "H7"
+      ],
+      "esquinas_coords": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          10.0,
+          0.0
+        ],
+        [
+          0.0,
+          10.0,
+          0.0
+        ]
+      ],
+      "espesor": 0.28,
+      "malla": 0.5,
+      "material": "C30/37",
+      "apoyo": "",
+      "cargas": [
+        {
+          "caso": "G",
+          "qz": -8500.0
+        },
+        {
+          "caso": "Q",
+          "qz": -3000.0
+        }
+      ]
+    }
+  ]
+}

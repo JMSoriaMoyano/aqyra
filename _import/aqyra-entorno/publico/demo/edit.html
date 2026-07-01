@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aqyra — Modo edición (playground)</title>
+    <style>
+      html, body { margin: 0; min-height: 100%; background: #0e1116; color: #e6e6e6; font-family: system-ui, sans-serif; }
+      header { padding: 14px 18px; border-bottom: 1px solid #2a313c; }
+      header h1 { font-size: 15px; margin: 0; font-weight: 700; }
+      header p { font-size: 12px; opacity: .7; margin: 6px 0 0; }
+      main { display: grid; grid-template-columns: 600px 1fr; gap: 16px; padding: 16px 18px; align-items: start; }
+      .card { border: 1px solid #2a313c; border-radius: 10px; background: rgba(20,24,31,.7); padding: 12px; }
+      .card h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; opacity: .65; margin: 0 0 10px; }
+      #svgbox { width: 100%; height: 460px; background: #0b0e13; border-radius: 8px; }
+      #threebox { width: 100%; height: 420px; background: #0b0e13; border-radius: 8px; display: none; margin-top: 10px; }
+      .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+      label { font-size: 12px; opacity: .75; }
+      select, button { font-size: 13px; border-radius: 7px; border: 1px solid #2a313c; background: #1a1f27; color: #e6e6e6; padding: 6px 10px; cursor: pointer; }
+      button:hover { background: #232a34; }
+      button.accent { background: #2b6cb0; border-color: #2b6cb0; color: #fff; }
+      .pad { display: grid; grid-template-columns: repeat(3, 40px); gap: 4px; }
+      .pad button { padding: 8px 0; }
+      pre { font-size: 11.5px; background: #0b0e13; border-radius: 8px; padding: 10px; max-height: 240px; overflow: auto; margin: 0; }
+      .hint { font-size: 11.5px; opacity: .7; margin-top: 8px; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Aqyra · Modo edición — playground (Hito 2)</h1>
+      <p>Manipulación directa como DATO. Mueve/gira un elemento editable y observa el override que produce.
+         Mismo <code>{dx,dy,rotDeg}</code> que <code>buildModel</code> aplica. La IA prepara; JM prueba y firma.</p>
+    </header>
+    <main>
+      <div class="card">
+        <h2>Vista 2D (planta · N arriba) — corre sin dependencias</h2>
+        <div class="row">
+          <label>Modelo</label><select id="sample"></select>
+          <label>Elemento</label><select id="sel"></select>
+        </div>
+        <div class="row">
+          <div class="pad">
+            <span></span><button id="up" title="+0,5 m Norte">↑</button><span></span>
+            <button id="left" title="−0,5 m">←</button><button id="reset" title="Quitar override">⟲0</button><button id="right" title="+0,5 m">→</button>
+            <span></span><button id="down" title="−0,5 m Sur">↓</button><span></span>
+          </div>
+          <button id="rotL" title="+15°">⟲ 15°</button>
+          <button id="rotR" title="−15°">⟳ 15°</button>
+          <button id="open3d" class="accent" title="Carga el gizmo Three (requiere pnpm install)">Vista 3D (Three)</button>
+          <button id="mode" style="display:none">Gizmo: mover</button>
+        </div>
+        <svg id="svgbox"></svg>
+        <div id="threebox"></div>
+        <div id="threehint" class="hint"></div>
+      </div>
+      <div class="card">
+        <h2>Overrides (estado · BuildingInput.overrides)</h2>
+        <pre id="readout">{}</pre>
+        <div class="hint">
+          Arrastra un elemento en la vista 2D, o usa las flechas (±0,5 m) y los giros (±15°).
+          La cota Z se difiere (es del nivel). Para la vista 3D: <code>pnpm install</code> en <code>publico/</code> (three ya está en package.json) y pulsa «Vista 3D».
+        </div>
+      </div>
+    </main>
+    <script type="module" src="/src/edit-playground.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,469 @@
+{
+  "unidades": {
+    "longitud": "m",
+    "fuerza": "N",
+    "momento": "N*m"
+  },
+  "origen": "puente_fisico_analitico",
+  "materiales": {
+    "S275": {
+      "E": 210000000000.0,
+      "G": 80770000000.0,
+      "nu": 0.3,
+      "rho": 7850.0,
+      "fy": 275000000.0
+    },
+    "C25/30": {
+      "E": 31000000000.0,
+      "G": 12916666666.666668,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 25000000.0,
+      "fctm": 2600000.0
+    },
+    "C30/37": {
+      "E": 32840000000.0,
+      "G": 13683333333.333334,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "secciones": {
+    "HEB 240": {
+      "A": 0.0106,
+      "Iy": 0.0001126,
+      "Iz": 3.923e-05,
+      "Wely": 0.0009383,
+      "Wply": 0.001053,
+      "Welz": 0.0003269,
+      "Wplz": 0.0004984,
+      "J": 1.027e-06,
+      "Avz": 0.003323,
+      "h": 0.24,
+      "clase": 1,
+      "fuente": "catalogo"
+    },
+    "Pilar 400x400": {
+      "A": 0.16000000000000003,
+      "Iy": 0.002133333333333334,
+      "Iz": 0.002133333333333334,
+      "J": 0.0036053333333333345,
+      "Wely": 0.010666666666666668,
+      "Wply": 0.016000000000000004,
+      "Welz": 0.010666666666666668,
+      "Wplz": 0.016000000000000004,
+      "Avz": 0.13333333333333336,
+      "h": 0.4,
+      "b": 0.4,
+      "clase": 1,
+      "fuente": "geometria_rect"
+    },
+    "IPE 360": {
+      "A": 0.007273,
+      "Iy": 0.0001627,
+      "Iz": 1.043e-05,
+      "Wely": 0.0009036,
+      "Wply": 0.001019,
+      "Welz": 0.0001228,
+      "Wplz": 0.0001911,
+      "J": 3.732e-07,
+      "Avz": 0.003514,
+      "h": 0.36,
+      "clase": 1,
+      "fuente": "catalogo"
+    },
+    "IPE 400": {
+      "A": 0.008446,
+      "Iy": 0.0002313,
+      "Iz": 1.318e-05,
+      "Wely": 0.001156,
+      "Wply": 0.001307,
+      "Welz": 0.0001464,
+      "Wplz": 0.000229,
+      "J": 5.108e-07,
+      "Avz": 0.004269,
+      "h": 0.4,
+      "clase": 1,
+      "fuente": "catalogo"
+    }
+  },
+  "nodos": {
+    "N1": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N2": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 4.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "N3": {
+      "x": 6.0,
+      "y": 0.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N4": {
+      "x": 6.0,
+      "y": 0.0,
+      "z": 4.0,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "N5": {
+      "x": 40.0,
+      "y": 0.0,
+      "z": 0.6,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "N6": {
+      "x": 40.0,
+      "y": 0.0,
+      "z": 1.6,
+      "apoyo": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "N7": {
+      "x": 0.0,
+      "y": 20.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    },
+    "N8": {
+      "x": 8.0,
+      "y": 20.0,
+      "z": 0.0,
+      "apoyo": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    }
+  },
+  "barras": {
+    "C1": {
+      "ni": "N1",
+      "nj": "N2",
+      "seccion": "HEB 240",
+      "material": "S275",
+      "tipo": "pilar",
+      "elemento_fisico": "Portico_Pilar_1",
+      "clase_ifc": "IfcColumn"
+    },
+    "C2": {
+      "ni": "N3",
+      "nj": "N4",
+      "seccion": "HEB 240",
+      "material": "S275",
+      "tipo": "pilar",
+      "elemento_fisico": "Portico_Pilar_2",
+      "clase_ifc": "IfcColumn"
+    },
+    "C3": {
+      "ni": "N5",
+      "nj": "N6",
+      "seccion": "Pilar 400x400",
+      "material": "C30/37",
+      "tipo": "pilar",
+      "elemento_fisico": "Cim_Pilar",
+      "clase_ifc": "IfcColumn"
+    },
+    "B1": {
+      "ni": "N2",
+      "nj": "N4",
+      "seccion": "IPE 360",
+      "material": "S275",
+      "tipo": "viga",
+      "elemento_fisico": "Portico_Dintel",
+      "clase_ifc": "IfcBeam"
+    },
+    "B2": {
+      "ni": "N7",
+      "nj": "N8",
+      "seccion": "IPE 400",
+      "material": "S275",
+      "tipo": "viga",
+      "elemento_fisico": "Mixta_Viga",
+      "clase_ifc": "IfcBeam"
+    }
+  },
+  "superficies": [
+    {
+      "nombre": "Mixta_Losa",
+      "clase_ifc": "IfcSlab",
+      "esquinas_coords": [
+        [
+          0.0,
+          18.5,
+          0.06
+        ],
+        [
+          8.0,
+          18.5,
+          0.06
+        ],
+        [
+          8.0,
+          21.5,
+          0.06
+        ],
+        [
+          0.0,
+          21.5,
+          0.06
+        ]
+      ],
+      "z_medio": 0.06,
+      "orientacion": "horizontal",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "largo": 8.0,
+      "altura": 0.0,
+      "espesor": 0.12,
+      "espesor_origen": "IfcMaterialLayerSet",
+      "material": "C25/30",
+      "malla": 0.5,
+      "apoyo": "",
+      "cargas": [],
+      "vigas_asociadas": [
+        "B2"
+      ],
+      "muros_asociados": [],
+      "zapata_asociada": null
+    },
+    {
+      "nombre": "Muro_Carga",
+      "clase_ifc": "IfcWall",
+      "esquinas_coords": [
+        [
+          30.0,
+          0.1,
+          0.0
+        ],
+        [
+          31.0,
+          0.1,
+          0.0
+        ],
+        [
+          31.0,
+          0.1,
+          3.0
+        ],
+        [
+          30.0,
+          0.1,
+          3.0
+        ]
+      ],
+      "z_medio": 1.5,
+      "orientacion": "vertical",
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "largo": 1.0,
+      "altura": 3.0,
+      "espesor": 0.2,
+      "espesor_origen": "IfcMaterialLayerSet",
+      "material": "C30/37",
+      "malla": 0.5,
+      "apoyo": "",
+      "cargas": [],
+      "vigas_asociadas": [],
+      "muros_asociados": [],
+      "zapata_asociada": null,
+      "cabeza": [
+        {
+          "caso": "G",
+          "N_N_m": 250000.0,
+          "M_Nm_m": 6250.0
+        },
+        {
+          "caso": "Q",
+          "N_N_m": 120000.0,
+          "M_Nm_m": 3000.0
+        }
+      ],
+      "e_cabeza_m": 0.025,
+      "arriostrado": true
+    },
+    {
+      "nombre": "Zapata_Aislada",
+      "clase_ifc": "IfcFooting",
+      "esquinas_coords": [
+        [
+          38.75,
+          -1.25,
+          0.3
+        ],
+        [
+          41.25,
+          -1.25,
+          0.3
+        ],
+        [
+          41.25,
+          1.25,
+          0.3
+        ],
+        [
+          38.75,
+          1.25,
+          0.3
+        ]
+      ],
+      "z_medio": 0.3,
+      "orientacion": "horizontal",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "largo": 2.5,
+      "altura": 0.0,
+      "espesor": 0.6,
+      "espesor_origen": "IfcMaterialLayerSet",
+      "material": "C30/37",
+      "malla": 0.5,
+      "apoyo": "",
+      "cargas": [],
+      "vigas_asociadas": [],
+      "muros_asociados": [],
+      "zapata_asociada": null
+    }
+  ],
+  "cargas": [
+    {
+      "caso": "G",
+      "barra": "B1",
+      "direccion": "GZ",
+      "qz": -12000.0
+    },
+    {
+      "caso": "Q",
+      "barra": "B1",
+      "direccion": "GZ",
+      "qz": -10000.0
+    }
+  ],
+  "hipotesis": {
+    "apoyos": [
+      {
+        "elemento": "Muro_Carga",
+        "clase_ifc": "IfcWall",
+        "cota_z": 0.0,
+        "tipo": "base_empotrada_cabeza_arriostrada",
+        "ubicacion": "pie_del_muro"
+      },
+      {
+        "elemento": "Zapata_Aislada",
+        "clase_ifc": "IfcFooting",
+        "cota_z": 0.0,
+        "tipo": "lecho_elastico_winkler",
+        "ubicacion": "base_de_la_zapata"
+      }
+    ],
+    "cargas": [
+      {
+        "muro": "Muro_Carga",
+        "caso": "G",
+        "N_kN_m": 250.0,
+        "excentricidad_m": 0.025,
+        "M_kNm_m": 6.25,
+        "direccion": "-Z",
+        "tipo": "cabeza_muro",
+        "descripcion": "carga vertical de cabeza del muro de carga con excentricidad"
+      },
+      {
+        "muro": "Muro_Carga",
+        "caso": "Q",
+        "N_kN_m": 120.0,
+        "excentricidad_m": 0.025,
+        "M_kNm_m": 3.0,
+        "direccion": "-Z",
+        "tipo": "cabeza_muro",
+        "descripcion": "carga vertical de cabeza del muro de carga con excentricidad"
+      },
+      {
+        "barra": "B1",
+        "elemento_fisico": "Portico_Dintel",
+        "caso": "G",
+        "q_kN_m": 12.0,
+        "direccion": "-Z",
+        "tipo": "linea",
+        "descripcion": "carga gravitatoria de servicio sobre el dintel del portico"
+      },
+      {
+        "barra": "B1",
+        "elemento_fisico": "Portico_Dintel",
+        "caso": "Q",
+        "q_kN_m": 10.0,
+        "direccion": "-Z",
+        "tipo": "linea",
+        "descripcion": "carga gravitatoria de servicio sobre el dintel del portico"
+      }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "materiales": {
+    "C25/30": {
+      "E": 31000000000.0,
+      "G": 12900000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 25000000.0,
+      "fctm": 2600000.0
+    },
+    "C30/37": {
+      "E": 33000000000.0,
+      "G": 13750000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fy": null,
+      "fck": 30000000.0,
+      "fctm": 2900000.0
+    }
+  },
+  "muro": {
+    "tipo": "mensula",
+    "Hm": 5.0,
+    "t_alz": 0.4,
+    "e_z": 0.5,
+    "puntera": 1.0,
+    "talon": 2.0,
+    "B": 3.4,
+    "Df": 0.8,
+    "material": "C30/37"
+  },
+  "terreno": {
+    "metodo": "rankine",
+    "gamma": 19000.0,
+    "phi": 30.0,
+    "c": 0.0,
+    "beta": 0.0,
+    "delta": 20.0,
+    "phi_pas": 30.0,
+    "gamma_pas": 19000.0,
+    "f_pas": 0.5,
+    "phi_base": 30.0,
+    "adh_base": 0.0,
+    "Rd": 300000.0,
+    "nf": 10.0,
+    "gamma_w": 9810.0
+  },
+  "sobrecarga": 10000.0,
+  "coronacion": {},
+  "via": "ortodoxo"
+}

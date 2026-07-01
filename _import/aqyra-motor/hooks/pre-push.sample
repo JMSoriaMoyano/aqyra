@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Hook pre-push: bloquea el push si la golden no esta verde.
+# Instalar:  cp hooks/pre-push.sample .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+exec "$(git rev-parse --show-toplevel)/ci/gate_golden.sh"

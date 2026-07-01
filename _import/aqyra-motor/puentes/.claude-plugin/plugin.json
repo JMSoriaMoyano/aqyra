@@ -1,0 +1,17 @@
+{
+  "name": "puentes",
+  "version": "0.3.0",
+  "description": "Disciplina Puentes de carretera (Ola 7). Consume motor-fem (C5, FEM-1) y Alignment (C1). Tablero: vigas pretensadas, losa postesada (DKMQ), portico (K0) y celosia (EC3). Subestructura (PT 7.3): PILA columna+aparato de apoyo (resorte 6 GdL)+cimentacion enrutada (zapata/pilotes/encepado, EC2 M-N+2.o orden+EC7) y ESTRIBO muro+empuje Ka/K0+cargas de tablero (reusa muros EC7/EC2). Acciones IAP-11 (frenado), EC8-2 diferida, memoria y write-back. Agente + 6 subagentes. Revisar por ICCP.",
+  "author": {
+    "name": "Estructurando"
+  },
+  "license": "Proprietary",
+  "keywords": [
+    "puentes", "tablero", "subestructura", "pila", "aparato de apoyo", "elastomerico",
+    "POT", "cimentacion", "zapata", "pilotes", "encepado", "estribo", "muro",
+    "empuje de tierras", "Ka", "K0", "frenado", "arranque", "2.o orden", "EC2", "EC7",
+    "EC8-2", "vigas pretensadas", "losa postesada", "lamina DKMQ", "portico", "celosia",
+    "resortes Winkler", "IAP-11", "LM1", "cargas moviles", "lineas de influencia",
+    "modal", "motor-fem", "C5", "FEM-1", "Alignment", "IFC", "write-back", "Ola 7"
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "name": "alineacion-vial-acceso",
+  "alineacion": {
+    "nombre": "Eje C-001 · vial de acceso",
+    "infraestructura": {
+      "clase": "IfcRoad",
+      "nombre": "Vial de acceso"
+    },
+    "ancho_ref": 3.5,
+    "inicio": {
+      "x": 0,
+      "y": 0,
+      "acimut_deg": 0,
+      "cota": 0
+    },
+    "planta": [
+      {
+        "tipo": "recta",
+        "longitud": 100
+      },
+      {
+        "tipo": "curva",
+        "longitud": 471.239,
+        "radio": 300
+      },
+      {
+        "tipo": "recta",
+        "longitud": 100
+      }
+    ]
+  },
+  "paso": 5,
+  "radioMinimo": 250,
+  "snapshot": {
+    "nombre": "Eje C-001 · vial de acceso",
+    "nSegmentos": 3,
+    "nRectas": 2,
+    "nCurvas": 1,
+    "longitudTotal": 671.239,
+    "fin": [
+      400,
+      400,
+      1.570797
+    ],
+    "nPuntos": 98,
+    "muestraPuntos": [
+      [
+        0,
+        0
+      ],
+      [
+        100,
+        0
+      ],
+      [
+        104.96,
+        0.041
+      ],
+      [
+        109.919,
+        0.164
+      ],
+      [
+        114.875,
+        0.369
+      ],
+      [
+        119.827,
+        0.656
+      ]
+    ],
+    "avisosRadio": 0,
+    "alto": {
+      "nombre": "Eje C-001 · vial de acceso",
+      "infraestructura": {
+        "clase": "IfcRoad",
+        "nombre": "Vial de acceso"
+      },
+      "ancho_ref": 3.5,
+      "inicio": {
+        "x": 0,
+        "y": 0,
+        "acimut_deg": 0,
+        "cota": 0
+      },
+      "planta": [
+        {
+          "tipo": "recta",
+          "longitud": 100
+        },
+        {
+          "tipo": "curva",
+          "longitud": 471.239,
+          "radio": 300
+        },
+        {
+          "tipo": "recta",
+          "longitud": 100
+        }
+      ]
+    }
+  }
+}

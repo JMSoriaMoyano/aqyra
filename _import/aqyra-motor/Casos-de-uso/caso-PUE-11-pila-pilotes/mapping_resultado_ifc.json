@@ -1,0 +1,33 @@
+{
+  "elementos": {
+    "PILA_fuste": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "pila",
+        "Aprovechamiento_max": 0.893,
+        "Veredicto": "CUMPLE",
+        "M_Ed_ELU_kNm": 11020.0,
+        "M_Rd_kNm": 12346.1,
+        "N_Ed_ELU_kN": 8737.9
+      }
+    },
+    "CIMENTACION_pilotes": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "pila",
+        "Aprovechamiento_max": 0.839,
+        "Veredicto": "CUMPLE"
+      }
+    },
+    "PILA": {
+      "Pset_Estructurando_ResultadoPuente": {
+        "Tipologia": "pila",
+        "Cimentacion": "pilotes",
+        "Aprov_cimentacion": 0.839,
+        "Delta_2orden": 1.052,
+        "Desplazamiento_cabeza_mm": 212.7,
+        "Frecuencia_fundamental_Hz": 1.9,
+        "Aprovechamiento_max": 0.893,
+        "Veredicto_global": "CUMPLE"
+      }
+    }
+  }
+}

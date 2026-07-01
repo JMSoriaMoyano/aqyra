@@ -1,0 +1,360 @@
+{
+  "nombre_tablero": "CAJON",
+  "tipologia": "cajon",
+  "cajon": {
+    "L": 40.0,
+    "n_vanos": 3,
+    "bs": 11.0,
+    "bi": 6.0,
+    "h": 2.5,
+    "t_top": 0.3,
+    "t_bot": 0.25,
+    "t_web": 0.45,
+    "nx": 12,
+    "nyt": 6,
+    "nyb": 3,
+    "nz": 3,
+    "posiciones": 17,
+    "n_carriles": 3,
+    "g2_N_m2": 3000.0,
+    "fck_transferencia": 28000000.0,
+    "V_Ed_N": 6000000.0,
+    "T_Ed_Nm": 4000000.0,
+    "A_geom_m2": 6.4300000000000015,
+    "Iy_geom_m4": 15.194379461963292,
+    "J_geom_m4": 14.438183092358138,
+    "material": {
+      "E": 35000000000.0,
+      "nu": 0.2,
+      "rho": 2500.0,
+      "fck": 40000000.0,
+      "fctm": 3510000.0,
+      "G": 14583333333.333334
+    }
+  },
+  "postesado": {
+    "P0_N": 70000000.0,
+    "perdidas_pct": 18.0,
+    "e_p": 1.0,
+    "f_sag": 1.1,
+    "Ap_m2": 0.042,
+    "fpk": 1860000000.0,
+    "As_pas_m2": 0.02,
+    "d_p": 2.3
+  },
+  "balance_postesado": {
+    "P0_N": 70000000.0,
+    "Pinf_N": 57400000.00000001,
+    "perdidas_pct": 18.0,
+    "f_sag_m": 1.1,
+    "w_p_N_m": 315700.00000000006
+  },
+  "seccion_props": {
+    "A": 7.981980515339464,
+    "Iy": 8.555602931213253,
+    "c_sup": 0.9681150723587917,
+    "c_inf": 1.5318849276412083,
+    "Am_bredt": 17.911250000000003,
+    "J_bredt": 17.763470004585045
+  },
+  "n_nodos": 555,
+  "n_elementos": 540,
+  "carriles": [
+    "carril1",
+    "carril2",
+    "carril3"
+  ],
+  "f1_Hz": 3.1378516615517937,
+  "modal": {
+    "frecuencias_Hz": [
+      0.0,
+      9.952731403091312e-07,
+      0.08311941591949198,
+      3.1378516615517937,
+      3.586846570121127,
+      4.268294197128033,
+      4.438585250719792,
+      5.535626860986082
+    ]
+  },
+  "secciones": [
+    {
+      "vano": 0,
+      "x": 20.0,
+      "panel_bot": "BOT_6_1",
+      "panel_top": "TOP_6_3",
+      "esfuerzos": {
+        "sig_top_transfer": 1868808.264757209,
+        "sig_bot_transfer": -3500174.4606482224,
+        "sig_top_serv": -662633.9608565406,
+        "sig_bot_serv": 850247.2516161636,
+        "sig_bot_cp": -1136026.8736471604,
+        "M_Ed_ELU_Nm": 50000817.40619659,
+        "V_Ed_N": 6000000.0,
+        "T_Ed_Nm": 4000000.0,
+        "Nx_ala_borde": -726478.3244236114,
+        "Nx_ala_centro": -599925.3882528611
+      },
+      "veredicto": "CUMPLE",
+      "aprov_max": 0.7303528431572245,
+      "checks": [
+        {
+          "nombre": "constr_comp_inf",
+          "valor": -12269927.765041372,
+          "limite": -16800000.0,
+          "aprov": 0.7303528431572245,
+          "cumple": true
+        },
+        {
+          "nombre": "constr_tracc_sup",
+          "valor": 0.0,
+          "limite": 3510000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -7853831.670458924,
+          "limite": -24000000.0,
+          "aprov": 0.32724298626912185,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 0.0,
+          "limite": 3510000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU",
+          "valor": 50000817.40619659,
+          "limite": 166231663.85976973,
+          "aprov": 0.30078997132806445,
+          "cumple": true
+        },
+        {
+          "nombre": "cortante_torsion_interaccion",
+          "valor": 0.5323376342521665,
+          "limite": 1.0,
+          "aprov": 0.5323376342521665,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "constr_sup_Pa": -6900945.039635941,
+        "constr_inf_Pa": -12269927.765041372,
+        "servicio_sup_Pa": -7853831.670458924,
+        "servicio_inf_Pa": -6340950.457986221,
+        "descompresion_inf_cp_Pa": -8327224.583249545,
+        "sigma_cp0_Pa": -8769753.30439315,
+        "sigma_cp_Pa": -7191197.709602384
+      },
+      "M_Rd_Nm": 166231663.85976973,
+      "interaccion_VT": 0.5323376342521665,
+      "shear_lag_beff_frac": 0.8257994328032326
+    },
+    {
+      "vano": 1,
+      "x": 60.0,
+      "panel_bot": "BOT_18_1",
+      "panel_top": "TOP_18_3",
+      "esfuerzos": {
+        "sig_top_transfer": 440855.56768214604,
+        "sig_bot_transfer": -1264514.8771520988,
+        "sig_top_serv": -1120629.7927501067,
+        "sig_bot_serv": 1551544.9908046243,
+        "sig_bot_cp": -185449.04114424088,
+        "M_Ed_ELU_Nm": 26905712.485213462,
+        "V_Ed_N": 6000000.0,
+        "T_Ed_Nm": 4000000.0,
+        "Nx_ala_borde": -281241.36780761584,
+        "Nx_ala_centro": -153298.05036470623
+      },
+      "veredicto": "CUMPLE",
+      "aprov_max": 0.597277867949122,
+      "checks": [
+        {
+          "nombre": "constr_comp_inf",
+          "valor": -10034268.181545248,
+          "limite": -16800000.0,
+          "aprov": 0.597277867949122,
+          "cumple": true
+        },
+        {
+          "nombre": "constr_tracc_sup",
+          "valor": 0.0,
+          "limite": 3510000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -8311827.502352491,
+          "limite": -24000000.0,
+          "aprov": 0.3463261459313538,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 0.0,
+          "limite": 3510000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU",
+          "valor": 26905712.485213462,
+          "limite": 166231663.85976973,
+          "aprov": 0.16185672368599205,
+          "cumple": true
+        },
+        {
+          "nombre": "cortante_torsion_interaccion",
+          "valor": 0.5323376342521665,
+          "limite": 1.0,
+          "aprov": 0.5323376342521665,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "constr_sup_Pa": -8328897.736711004,
+        "constr_inf_Pa": -10034268.181545248,
+        "servicio_sup_Pa": -8311827.502352491,
+        "servicio_inf_Pa": -5639652.71879776,
+        "descompresion_inf_cp_Pa": -7376646.750746625,
+        "sigma_cp0_Pa": -8769753.30439315,
+        "sigma_cp_Pa": -7191197.709602384
+      },
+      "M_Rd_Nm": 166231663.85976973,
+      "interaccion_VT": 0.5323376342521665,
+      "shear_lag_beff_frac": 0.5450764642475011
+    },
+    {
+      "vano": 2,
+      "x": 100.0,
+      "panel_bot": "BOT_30_1",
+      "panel_top": "TOP_30_3",
+      "esfuerzos": {
+        "sig_top_transfer": 2108125.81259088,
+        "sig_bot_transfer": -3900039.66817675,
+        "sig_top_serv": -718142.4299631724,
+        "sig_bot_serv": 872340.0029986296,
+        "sig_bot_cp": -1277508.076369876,
+        "M_Ed_ELU_Nm": 55223767.2519139,
+        "V_Ed_N": 6000000.0,
+        "T_Ed_Nm": 4000000.0,
+        "Nx_ala_borde": -807790.1666274251,
+        "Nx_ala_centro": -681538.2039196611
+      },
+      "veredicto": "CUMPLE",
+      "aprov_max": 0.7541543436053512,
+      "checks": [
+        {
+          "nombre": "constr_comp_inf",
+          "valor": -12669792.9725699,
+          "limite": -16800000.0,
+          "aprov": 0.7541543436053512,
+          "cumple": true
+        },
+        {
+          "nombre": "constr_tracc_sup",
+          "valor": 0.0,
+          "limite": 3510000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_comp_sup",
+          "valor": -7909340.139565556,
+          "limite": -24000000.0,
+          "aprov": 0.32955583914856484,
+          "cumple": true
+        },
+        {
+          "nombre": "servicio_tracc_inf",
+          "valor": 0.0,
+          "limite": 3510000.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "descompresion_inf_cp",
+          "valor": 0.0,
+          "limite": 0.0,
+          "aprov": 0.0,
+          "cumple": true
+        },
+        {
+          "nombre": "flexion_ELU",
+          "valor": 55223767.2519139,
+          "limite": 166231663.85976973,
+          "aprov": 0.33220967636165727,
+          "cumple": true
+        },
+        {
+          "nombre": "cortante_torsion_interaccion",
+          "valor": 0.5323376342521665,
+          "limite": 1.0,
+          "aprov": 0.5323376342521665,
+          "cumple": true
+        }
+      ],
+      "tensiones": {
+        "constr_sup_Pa": -6661627.49180227,
+        "constr_inf_Pa": -12669792.9725699,
+        "servicio_sup_Pa": -7909340.139565556,
+        "servicio_inf_Pa": -6318857.706603754,
+        "descompresion_inf_cp_Pa": -8468705.78597226,
+        "sigma_cp0_Pa": -8769753.30439315,
+        "sigma_cp_Pa": -7191197.709602384
+      },
+      "M_Rd_Nm": 166231663.85976973,
+      "interaccion_VT": 0.5323376342521665,
+      "shear_lag_beff_frac": 0.8437069824272881
+    }
+  ],
+  "seccion_critica": 2,
+  "aprovechamiento_max": 0.7541543436053512,
+  "veredicto_global": "CUMPLE",
+  "mapping_writeback": {
+    "elementos": {
+      "CAJON": {
+        "Pset_Estructurando_ResultadoPuente": {
+          "Tipologia": "cajon_postesado",
+          "A_m2": 7.982,
+          "Iy_m4": 8.5556,
+          "J_Bredt_m4": 17.7635,
+          "P0_kN": 70000.0,
+          "P_inf_kN": 57400.0,
+          "w_postesado_kN_m": 315.7,
+          "Sigma_constr_sup_MPa": -6.66,
+          "Sigma_constr_inf_MPa": -12.67,
+          "Sigma_servicio_sup_MPa": -7.91,
+          "Sigma_servicio_inf_MPa": -6.32,
+          "M_Ed_ELU_kNm": 55223.8,
+          "M_Rd_kNm": 166231.7,
+          "Interaccion_V_T": 0.532,
+          "Shear_lag_beff_frac": 0.844,
+          "Frecuencia_fundamental_Hz": 3.14,
+          "Aprovechamiento_max": 0.754,
+          "Veredicto_global": "CUMPLE"
+        }
+      }
+    }
+  }
+}

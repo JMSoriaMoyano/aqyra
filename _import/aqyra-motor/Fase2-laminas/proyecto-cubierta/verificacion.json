@@ -1,0 +1,91 @@
+{
+  "validacion": {
+    "invariancia_rotacion": {
+      "Mx_th0": 15.640423219154108,
+      "Mx_th30": 15.51813694651923,
+      "err_Mx": 0.00781860381406566,
+      "My_th0": 12.485305840470621,
+      "My_th30": 12.38529755943208,
+      "err_My": 0.008010078592898096,
+      "ok": true
+    },
+    "equilibrio_pct": 2.86397388316835e-12
+  },
+  "losa": {
+    "t": 0.18,
+    "d_x_mm": 149.0,
+    "d_y_mm": 136.99999999999997,
+    "fck_MPa": 30.0,
+    "recubrimiento_mm": 25.0,
+    "phi_mm": 12.0,
+    "x_inferior": {
+      "m_Ed_kNm_m": 13.138803754581627,
+      "mu": 0.02959056743971359,
+      "mu_ok": true,
+      "As_req_cm2_m": 2.2534861025755215,
+      "As_min_cm2_m": 2.24692,
+      "As_max_cm2_m": 72.0,
+      "As_dim_cm2_m": 2.2534861025755215,
+      "armado": "φ10/300",
+      "As_prov_cm2_m": 2.6179938779914944,
+      "ok": true
+    },
+    "y_inferior": {
+      "m_Ed_kNm_m": 9.934838299062045,
+      "mu": 0.026466083166556683,
+      "mu_ok": true,
+      "As_req_cm2_m": 1.8532139568404462,
+      "As_min_cm2_m": 2.0659599999999996,
+      "As_max_cm2_m": 72.0,
+      "As_dim_cm2_m": 2.0659599999999996,
+      "armado": "φ10/300",
+      "As_prov_cm2_m": 2.6179938779914944,
+      "ok": true
+    },
+    "flecha": {
+      "L_m": 6.0,
+      "f_total_mm": 1.3736242370253835,
+      "lim_total_mm": 20.0,
+      "u_total": 0.06868121185126917,
+      "ok_total": true,
+      "f_activa_mm": 0.19865850560783566,
+      "lim_activa_mm": 12.0,
+      "u_activa": 0.016554875467319638,
+      "ok_activa": true
+    }
+  },
+  "membrana": {
+    "n_comp_kN_m": -96.02290807158055,
+    "n_trac_kN_m": 38.964288702732325,
+    "nRd_comp_kN_m": 3600.0,
+    "u_comp": 0.026673030019883484,
+    "ok_comp": true,
+    "nota": "compresion de membrana del faldon (empuje a aleros); interaccion N-M conservadora aparte"
+  },
+  "fisuracion": {
+    "M_qp_kNm_m": 8.60883022516543,
+    "sigma_s_MPa": 245.21483392823131,
+    "rho_p_eff": 0.003378056616763219,
+    "hc_ef_mm": 77.5,
+    "eps_sm_cm": 0.0007356445017846939,
+    "sr_max_mm": 688.8975160678876,
+    "wk_mm": 0.5067836699884744,
+    "wmax_mm": 0.3,
+    "u": 1.6892788999615813,
+    "ok": false
+  },
+  "equilibrio": {
+    "aplicada_ELU_kN": 284.53725,
+    "reaccion_ELU_kN": 284.53725000000816,
+    "error_pct": 2.86397388316835e-12
+  },
+  "info": {
+    "Lu": 6.0,
+    "Lv": 5.0,
+    "espesor": 0.18,
+    "angulo": 20.0,
+    "peso_losa_N_m2": 4414.5,
+    "material": "C30/37",
+    "area_real": 30.0
+  }
+}

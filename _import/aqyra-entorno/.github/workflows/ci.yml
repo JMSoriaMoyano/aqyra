@@ -1,0 +1,63 @@
+name: CI (publico)
+
+on:
+  push:
+    paths: ["publico/**", ".github/workflows/ci.yml"]
+  pull_request:
+    paths: ["publico/**", ".github/workflows/ci.yml"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: publico
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: publico/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build (visor + openbim + embed)
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+      - name: Gate de licencias (bloquea GPL/AGPL en publico/)
+        run: pnpm licenses
+
+  e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: publico
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: publico/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: Build bundle e2e (+ WASM)
+        run: pnpm e2e:build
+      - name: Instalar Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Render en navegador real (WebGL)
+        run: pnpm e2e:test

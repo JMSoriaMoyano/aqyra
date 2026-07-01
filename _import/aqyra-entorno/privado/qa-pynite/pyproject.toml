@@ -1,0 +1,14 @@
+[project]
+name = "aqyra-qa-pynite"
+version = "0.1.0"
+description = "QA independiente con PyNite (2.a llave tecnica, D-023): re-calculo + equilibrio + reconciliacion del resultado del motor anclado. Anzuelo (privado)."
+requires-python = ">=3.10"
+# PyNite es un solver DISTINTO del nucleo de motor-fem (independencia D-023.C.1).
+dependencies = ["PyNiteFEA>=1.0", "numpy"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
