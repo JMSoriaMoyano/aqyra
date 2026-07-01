@@ -22,6 +22,13 @@ Thumbs.db
 # Rastro del probe del entorno montado (se limpia en el .bat de arranque)
 .probe_test/
 
+# PR-E1 · retirada del espejo del engine. El compilador narración→IFC es fuente única en
+# engines/ifc; en el plugin re-homed su copia NO se commitea: se GENERA en build (tools/
+# build_plugin_iso19650.py copia engines/ifc → skills/narracion-a-ifc/scripts/). Guardián:
+# engines/ifc/tests/test_no_reaparicion_espejo.py (inspecciona ficheros trackeados).
+plugins/iso19650-openbim/skills/narracion-a-ifc/scripts/
+plugins/iso19650-openbim/scripts/lineal/generate_test_ifc_lineal.py
+
 # Operativa local (.bat de arranque/PR + logs): no es producto
 _operativo/
 *.bat

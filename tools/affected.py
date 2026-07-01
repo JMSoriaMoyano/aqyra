@@ -29,6 +29,7 @@ PATH_TARGETS: list[tuple[str, set[str]]] = [
     ("packages/packs/",     {"packs"}),         # loader de packs -> sus tests
     ("data/packs/",         {"packs"}),         # datos de packs -> golden de pack
     ("engines/",            {"ifc", "golden"}), # engine -> su identidad + la golden que lo compila
+    ("plugins/",            {"ifc"}),           # plugin re-homed -> guardián anti-reaparición del espejo
     ("apps/visor/",         {"visor"}),
     ("versions.lock",       {"golden", "core", "packs", "ifc"}),
     ("justfile",            {"golden", "visor", "core", "packs", "ifc"}),

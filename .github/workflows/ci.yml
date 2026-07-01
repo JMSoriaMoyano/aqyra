@@ -41,6 +41,9 @@ jobs:
       - name: Paso 1 · núcleo (core) + packs + engine C1 — comportamiento, identidad y golden de pack
         run: uv run pytest packages/core packages/packs engines/ifc -q
 
+      - name: Paso 1b · el plugin re-homed construye APTO (compilador consumido de engines/ifc)
+        run: uv run python tools/build_plugin_iso19650.py
+
       - name: Paso 2 · esquemas de contrato bien formados
         run: uv run --package aqyra-golden aqyra-golden --schema-only --golden-dir packages/golden
 
