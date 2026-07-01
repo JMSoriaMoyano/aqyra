@@ -1,0 +1,5 @@
+{
+  "pack": "codigos/EC-ES/2021",
+  "content_sha256": "c854d413f6e1b50e248a24e01a1033e8d8a6e97991464820fc99e99789d54fe6",
+  "_nota": "Golden de pack (nivel esqueleto): identidad del contenido por hash. Cambiar el contenido sin bump de versión + actualizar este hash rompe el test (no drift silencioso). Cuando exista el engine, se sustituye por el resultado de un proyecto de referencia bajo este pack."
+}

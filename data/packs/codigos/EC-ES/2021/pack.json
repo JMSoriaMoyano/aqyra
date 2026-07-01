@@ -1,0 +1,13 @@
+{
+  "id": "EC-ES",
+  "familia": "codigos",
+  "version": "2021",
+  "titulo": "Eurocódigos estructurales con Anejo Nacional español",
+  "fuente": "EN 1990..1999 + Anejos Nacionales (España). Subconjunto mínimo demostrativo (Fase 0), NO exhaustivo.",
+  "vigencia": {"desde": "2021", "estado": "vigente"},
+  "metadatos": {"autoria": "terceros (importado)", "nota": "esqueleto: solo coeficientes estándar para probar el mecanismo de packs"},
+  "contenido": {
+    "coeficientes_parciales_ELU": {"gamma_c": 1.5, "gamma_s": 1.15, "gamma_G": 1.35, "gamma_Q": 1.5},
+    "alpha_cc": 0.85
+  }
+}

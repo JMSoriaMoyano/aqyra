@@ -28,8 +28,12 @@ golden:
 test-core:
     uv run pytest packages/core -q
 
-# puerta completa que exige el CI: esquema válido + tests de core + golden verde
-check: schema-check test-core golden
+# tests de packs (manifiesto + versión anclada + golden de pack por hash)
+test-packs:
+    uv run pytest packages/packs -q
+
+# puerta completa que exige el CI: esquema válido + tests de core/packs + golden verde
+check: schema-check test-core test-packs golden
 
 # lista los objetivos afectados por el diff contra {{base}}
 affected base=base:

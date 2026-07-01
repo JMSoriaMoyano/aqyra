@@ -1,6 +1,6 @@
 name: CI (Llave 1)
 
-# Llave 1 — automática. En cada PR corre core + golden + validación de esquemas de lo AFECTADO.
+# Llave 1 — automática. En cada PR corre core + packs + golden + validación de esquemas.
 # Rojo bloquea el merge (regla de protección de rama). El CI NUNCA certifica: la firma
 # (Llave 2) es humana, en el flujo de release.
 # NOTA DE GOBIERNO: el contexto requerido por la protección de main es el `name:` del job,
@@ -38,8 +38,8 @@ jobs:
       - name: Calcular objetivos afectados (informativo)
         run: uv run python tools/affected.py --base origin/${{ github.base_ref || 'main' }} || true
 
-      - name: Paso 1 · núcleo (core) — comportamiento + identidad byte a byte
-        run: uv run pytest packages/core -q
+      - name: Paso 1 · núcleo (core) + packs — comportamiento, identidad y golden de pack
+        run: uv run pytest packages/core packages/packs -q
 
       - name: Paso 2 · esquemas de contrato bien formados
         run: uv run --package aqyra-golden aqyra-golden --schema-only --golden-dir packages/golden
