@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Aqyra — demo</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #0e1116; color: #e6e6e6; font-family: system-ui, sans-serif; }
+      #app { position: fixed; inset: 0; }
+      aqyra-viewer { width: 100%; height: 100%; display:block; }
+      #hint { position: fixed; inset: 0; display: flex; flex-direction: column; gap: 14px;
+        align-items: center; justify-content: center; pointer-events: none; text-align: center; }
+      #hint .box { pointer-events: auto; border: 1px dashed #3a4150; border-radius: 12px; padding: 28px 36px; background: rgba(20,24,31,.6); }
+      label.btn { display: inline-block; margin-top: 10px; padding: 8px 14px; border-radius: 8px; background: #2b6cb0; color: #fff; cursor: pointer; }
+      input[type=file] { display: none; }
+      #status { position: fixed; bottom: 10px; left: 12px; font-size: 12px; opacity: .75; max-width: 60%; }
+      .panel { position: fixed; top: 12px; background: rgba(20,24,31,.92); border: 1px solid #2a313c;
+        border-radius: 10px; padding: 10px 12px; font-size: 12px; max-height: 80vh; overflow: auto; display: none; }
+      #classes { left: 12px; width: 230px; }
+      #tree { left: 12px; width: 260px; top: 56px; }
+      #props { right: 12px; width: 280px; }
+      #toolbar { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 6; display: flex; gap: 8px; }
+      button.btn { border: none; padding: 8px 14px; border-radius: 8px; background: #2b6cb0; color: #fff; cursor: pointer; font-size: 13px; }
+      button.btn:hover { background: #3a7cc0; }
+      .tnode { padding: 1px 0; white-space: nowrap; }
+      .tnode .ty { opacity: .5; font-size: 10px; margin-left: 6px; }
+      .hd { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+      .muted { opacity: .55; font-size: 11px; margin-bottom: 8px; word-break: break-all; }
+      .row { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+      .row span { flex: 1; }
+      .ps { margin-top: 8px; font-weight: 600; color: #7fb2e6; }
+      .kv { display: flex; justify-content: space-between; gap: 10px; padding: 1px 0; }
+      .kv span { opacity: .8; }
+      input[type=color] { width: 22px; height: 18px; border: none; background: none; padding: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="toolbar">
+      <button id="crear" class="btn" title="El editor crea un IFC desde cero (incremento 1)">Crear estructura (Can Cabassa)</button>
+    </div>
+    <div id="classes" class="panel"></div>
+    <div id="tree" class="panel"></div>
+    <div id="props" class="panel"></div>
+    <div id="hint"><div class="box">
+      <div style="font-size:18px;font-weight:600">Aqyra · visor OpenBIM</div>
+      <div style="opacity:.8;margin-top:6px">Arrastra y suelta un archivo <b>.ifc</b> (IFC4 / IFC4.3)</div>
+      <div style="opacity:.6;font-size:12px">Suelta dos o más para federarlos · clic en un elemento para ver sus Psets</div>
+      <label class="btn">Elegir archivo<input id="file" type="file" accept=".ifc" multiple /></label>
+    </div></div>
+    <div id="status">listo</div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "name": "reticula-120x24-6x6",
+  "input": {
+    "project": "Retícula 120x24",
+    "building": "Forjado sobre retícula",
+    "storeys": { "count": 3, "height": 3 },
+    "plan": { "rooms": null, "corridor": null, "cores": [] },
+    "grid": { "sepX": 6, "sepY": 6 }
+  },
+  "ctx": { "W": 120, "D": 24 },
+  "snapshot": {
+    "storeys": 3,
+    "spacesPerStorey": 0,
+    "totalSpaces": 0,
+    "byObjectType": {},
+    "zones": [],
+    "sampleCodes": [],
+    "totalColumns": 315,
+    "columnsPerStorey": 105,
+    "sampleColumnCodes": [
+      "AQ-PIL-P00-A1",
+      "AQ-PIL-P00-A2",
+      "AQ-PIL-P00-A3",
+      "AQ-PIL-P00-A4",
+      "AQ-PIL-P00-A5",
+      "AQ-PIL-P00-A6"
+    ],
+    "totalSlabs": 3,
+    "totalOpenings": 0,
+    "totalWalls": 12
+  }
+}

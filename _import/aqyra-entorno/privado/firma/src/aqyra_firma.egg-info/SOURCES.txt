@@ -1,0 +1,8 @@
+pyproject.toml
+src/aqyra_firma.egg-info/PKG-INFO
+src/aqyra_firma.egg-info/SOURCES.txt
+src/aqyra_firma.egg-info/dependency_links.txt
+src/aqyra_firma.egg-info/top_level.txt
+src/firma/__init__.py
+src/firma/sign.py
+tests/test_pipeline.py

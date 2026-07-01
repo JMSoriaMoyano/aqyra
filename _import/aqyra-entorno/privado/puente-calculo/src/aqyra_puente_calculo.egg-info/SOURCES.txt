@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+src/aqyra_puente_calculo.egg-info/PKG-INFO
+src/aqyra_puente_calculo.egg-info/SOURCES.txt
+src/aqyra_puente_calculo.egg-info/dependency_links.txt
+src/aqyra_puente_calculo.egg-info/top_level.txt
+src/puente_calculo/__init__.py
+src/puente_calculo/adapter.py
+src/puente_calculo/contract.py
+src/puente_calculo/engine.py
+src/puente_calculo/motor_request.py
+src/puente_calculo/translate.py
+src/puente_calculo/writeback.py
+tests/test_adapter.py
+tests/test_motor_request.py

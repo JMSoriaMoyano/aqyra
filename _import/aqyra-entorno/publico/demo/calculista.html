@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Aqyra — Calculista</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #0e1116; color: #e6e6e6; font-family: system-ui, sans-serif; }
+      #app { position: fixed; inset: 0; }
+      aqyra-viewer { width: 100%; height: 100%; display: block; }
+
+      /* única afordancia persistente: la barra de comandos */
+      #bar { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); width: min(680px, 92vw);
+        display: flex; align-items: center; gap: 8px; background: rgba(18,22,29,.92); border: 1px solid #2a313c;
+        border-radius: 12px; padding: 8px 12px; box-shadow: 0 8px 30px rgba(0,0,0,.4); }
+      #bar .chip { font-size: 11px; color: #9fd0ff; border: 1px solid #2b6cb0; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+      #bar button { background: #222a35; border: 1px solid #2a313c; color: #cfe0f5; border-radius: 8px; padding: 5px 9px; cursor: pointer; font-size: 12px; white-space: nowrap; }
+      #cmd { flex: 1; background: transparent; border: none; outline: none; color: #e6e6e6; font-size: 14px; }
+      #cmd::placeholder { color: #7c8696; }
+
+      #hint { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; text-align: center; }
+      #hint .box { pointer-events: auto; border: 1px dashed #3a4150; border-radius: 12px; padding: 26px 34px; background: rgba(20,24,31,.6); }
+      label.btn { display:inline-block; margin-top:10px; padding:8px 14px; border-radius:8px; background:#2b6cb0; color:#fff; cursor:pointer; }
+      input[type=file]{ display:none; }
+
+      #toast { position: fixed; left: 50%; bottom: 78px; transform: translateX(-50%); background: rgba(20,24,31,.95);
+        border: 1px solid #2a313c; border-radius: 8px; padding: 8px 14px; font-size: 13px; display: none; max-width: 80vw; }
+
+      #pop { position: fixed; background: rgba(20,24,31,.97); border: 1px solid #2a313c; border-radius: 10px;
+        padding: 8px; font-size: 13px; display: none; min-width: 190px; box-shadow: 0 8px 30px rgba(0,0,0,.45); z-index: 5; }
+      #pop .t { font-weight: 700; padding: 4px 6px 8px; }
+      #pop button { display: block; width: 100%; text-align: left; background: none; border: none; color: #e6e6e6;
+        padding: 7px 8px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+      #pop button:hover { background: #222a35; }
+      #pop button[disabled] { color: #6b7480; cursor: default; }
+      #pop button[disabled]:hover { background: none; }
+
+      .card { position: fixed; background: rgba(20,24,31,.95); border: 1px solid #2a313c; border-radius: 10px;
+        padding: 10px 12px; font-size: 12px; max-height: 78vh; overflow: auto; z-index: 4;
+        scrollbar-width: thin; scrollbar-color: #3a4150 transparent; }
+      .card::-webkit-scrollbar { width: 6px; height: 6px; }
+      .card::-webkit-scrollbar-thumb { background: #3a4150; border-radius: 4px; }
+      .card::-webkit-scrollbar-thumb:hover { background: #4a5260; }
+      .card::-webkit-scrollbar-track { background: transparent; }
+      #props { right: 14px; top: 14px; width: 280px; display: none; }
+      #tree { left: 14px; top: 14px; width: 250px; display: none; }
+      .x { float: right; cursor: pointer; opacity: .6; }
+      .hd { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+      .muted { opacity: .55; font-size: 11px; margin-bottom: 8px; word-break: break-all; }
+      .ps { margin-top: 8px; font-weight: 600; color: #7fb2e6; }
+      .kv { display: flex; justify-content: space-between; gap: 10px; padding: 1px 0; }
+      .kv span { opacity: .8; }
+      #tree .mh { font-weight: 600; color: #7fb2e6; margin: 6px 0 2px; }
+      .tn { cursor: pointer; padding: 2px 6px; border-radius: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tn:hover { background: #222a35; }
+      .crow { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+      .crow .clabel { flex: 1; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .crow .clabel:hover { color: #9fd0ff; }
+      .crow input[type=color] { width: 20px; height: 16px; border: none; background: none; padding: 0; cursor: pointer; }
+      .applybtn { margin-top: 12px; width: 100%; padding: 9px; background: #2b6cb0; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; }
+      .applybtn:hover { background: #2f7bca; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <div id="hint"><div class="box">
+      <div style="font-size:18px;font-weight:600">Aqyra · Calculista</div>
+      <div style="opacity:.8;margin-top:6px">Arrastra tus <b>.ifc</b> (uno o varios) para empezar</div>
+      <label class="btn">Elegir archivo<input id="file" type="file" accept=".ifc" multiple /></label>
+    </div></div>
+
+    <div id="tree" class="card"></div>
+    <div id="pop"></div>
+    <div id="props" class="card"></div>
+    <div id="toast"></div>
+
+    <div id="bar">
+      <button id="treeBtn" title="Estructura espacial">≡ Estructura</button>
+      <span class="chip">Calculista</span>
+      <input id="cmd" autocomplete="off" placeholder="Habla con el modelo:  aísla las vigas" />
+    </div>
+
+    <script type="module" src="/src/calculista.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+# versions.lock — núcleo que CONSUME el proyecto Entorno (consumidor)
+# Regla (heredada del gobierno): el Entorno nunca consume "latest" ni la rama
+# viva. Subir una versión es deliberado: bump aquí -> re-correr la suite golden
+# del Entorno -> adoptar solo si verde. SemVer MAJOR.MINOR.PATCH; MAJOR = cambia
+# un contrato (C1..C8). El Entorno NO bifurca el núcleo: lo solicita y lo ancla.
+# Tags del primer corte del núcleo según N1.1 (plan de release, 2026-06-23),
+# política 0.x pre-estable. Anclados 2026-06-24. El sello de dos llaves del
+# release (suite golden en verde + tag GPG firmado por JM) es el cierre formal.
+# Reconciliación C7/C8 firmada por JM 2026-06-24 (ver ../DECISIONES.md §7).
+# P4 EJECUTADO 2026-06-26: golden C5 v0 VERDE con PyNite; tags certificados via
+# ../../Estructurando/release.manifest.json. Falta P5 (firma GPG de JM). Paridad con 2.0.
+
+nucleo:
+  motor-fem:            "0.1.0"   # C5 · built_from 0.1.0 · GOLDEN VERDE (P3 PyNite 2026-06-26) · paridad 2.0
+  motor-calculo:        "0.1.0"   # built_from 0.23.0 (DEC-A1 Opción A + P3) · GOLDEN VERDE · tag cortado en P4 · paridad 2.0
+
+plugins:
+  iso19650-openbim:     "0.10.0"   # C1 v0 apertura familias P1 (huecos/clases/alineaciones/doble clasif/forward-open) - golden C1-APERTURA-01 verde + firma JM 2026-06-28
+  visor-ifc:            "0.4.0"   # = paquete @aqyra/visor · 0.3.0 georref+Norte/soleamiento · 0.4.0 entorno (planta Catastro/CartoCiudad→GeoJSON) + terreno/topografía · golden VERDE (17 files/119 tests) + firma JM 2026-06-28 · C1 sin cambios · abierto no-bloqueante: confirmar BU/viales en vivo
+  estructuras-eurocodigos: "0.1.0"   # skills EC en uso (N1.1)
+
+# capas nuevas del Hilo 2 (si se aprueban los contratos):
+operador:               "0.0.0"   # capa 6 · C7 (criterio del copiloto, en privado/)
+corpus:                 "0.0.0"   # capa 7 · C6 (recuperación por OIR, en privado/)
+
+# contratos vigentes que el Entorno consume (golden vN valida contrato vN):
+contratos:
+  C1: "v0"   # parser / lectura IFC
+  C5: "v0"   # motor-fem (resultados de post-proceso)
+  C6: "v0"   # corpus golden / recuperación   (PROPUESTO, Hilo 2)
+  C7: "v0"   # operador IA                     (PROPUESTO, Hilo 2)
+  C8: "v0"   # CDE (Entorno Común de Datos)    · se CONSUME anclado; vive en zona protegida de 2.0, NO viaja

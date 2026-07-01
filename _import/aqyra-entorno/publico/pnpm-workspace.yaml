@@ -1,0 +1,6 @@
+packages:
+  - 'visor'
+  - 'openbim'
+  - 'embed'
+  - 'ui-nl'
+  - 'demo'
