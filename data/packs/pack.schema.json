@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/data/packs/pack.schema.json",
+  "title": "Manifiesto de pack (conocimiento externo versionado)",
+  "description": "Un pack es una unidad versionada de conocimiento externo que un engine consume; NO es código. Cambiar de mercado/localidad/año = cambiar de pack, no de engine. Todo pack se ancla en versions.lock y trae su golden.",
+  "type": "object",
+  "required": ["id", "familia", "version", "fuente", "contenido"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "familia": {"type": "string", "enum": ["codigos", "normativa", "banco", "ids"]},
+    "version": {"type": "string", "minLength": 1},
+    "titulo": {"type": "string"},
+    "fuente": {"type": "string", "minLength": 1, "description": "origen y vigencia; los de terceros se importan con su fuente/fecha"},
+    "vigencia": {"type": "object", "additionalProperties": true},
+    "metadatos": {"type": "object", "additionalProperties": true},
+    "contenido": {"type": "object", "minProperties": 1, "description": "lo que el engine consume; su hash es la identidad de la golden de pack"}
+  }
+}

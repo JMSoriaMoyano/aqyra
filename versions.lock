@@ -1,30 +1,34 @@
 # versions.lock — ancla la versión del ESQUEMA de contrato, del ENGINE y del PACK.
 # Invariante (FUNDACION_C6 §3): un resultado solo es reproducible si se fija engine + pack.
-# Fase 0: solo C1. El resto entra contract-first, por fase (C4 → C3 → C5 → C9/C10 …).
+# Fase 0: C1 (esquema) + core + un pack de ejemplo. El resto entra contract-first, por fase.
 # Este fichero es la fuente de verdad que el CI lee. Se toca por PR (zona de gobierno).
 
 [contracts.C1]
 nombre          = "interoperabilidad"
-schema_version  = "0.1.0"              # esquema formalizado en este hilo (Fase 0)
+schema_version  = "0.1.0"              # esquema formalizado (Fase 0)
 engine          = "iso19650-openbim"
 engine_version  = "0.10.0"             # firmado aguas arriba (Llave 2) — golden C1-APERTURA-01
 golden          = "C1-APERTURA-01"
 oraculo         = "conteo de entidades + round-trip"
-estado          = "esquema-formalizado"  # engine firmado; su import al monorepo es 0.5
-# nota: en Fase 0 el runner recomputa el oráculo desde el IFC congelado de la golden.
-#       cuando engines/ifc se importe (0.5), se antepone el paso compile contra el mismo expected.json.
+estado          = "esquema-formalizado"  # engine firmado; su import al monorepo es posterior
 
 # --- core (0.5): núcleo compartido, extraído del canónico Nucleo-transversal ---
-# No es un contrato (no produce/consume C-); se ancla su PROCEDENCIA e IDENTIDAD byte a byte.
-# El test packages/core/tests/test_identidad_nucleo.py verifica estos md5 (LF) en el CI.
+# No es un contrato; se ancla su procedencia e IDENTIDAD byte a byte (test_identidad_nucleo).
 [core]
 version         = "0.1.0"
 origen          = "Estructurando/Nucleo-transversal/nucleo"
 ifc_utils_md5   = "ad06f87d648fc0388b35d10deeb290b7"
 grafo_red_md5   = "fe5dfebb4c5adb73f90718d57978e8a4"
-estado          = "extraído (fin del espejo en el monorepo); retirada del espejo en los 5 plugins aguas arriba = pendiente (requiere importar engines)"
+estado          = "extraído (fin del espejo en el monorepo); retirada del espejo aguas arriba = pendiente"
 
-# --- packs (vacío en Fase 0; data/ es 0.6) ---
-# [packs.codigo]     id = "EC-ES"   version = "2021"
-# [packs.banco]      id = "BEDEC"   version = "2026-Q1"
-# [packs.ids]        id = "proyecto" version = "v3"
+# --- packs (0.6): conocimiento externo versionado. data/packs/<familia>/<id>/<version>/ ---
+# Cambiar de pack es una decisión explícita: se re-ancla aquí y se actualiza su golden.
+[packs.codigo]
+id              = "EC-ES"
+familia         = "codigos"
+version         = "2021"
+golden          = "identidad de contenido (hash)"
+estado          = "esqueleto (subconjunto mínimo de coeficientes estándar)"
+# [packs.banco]      id = "BEDEC"   version = "2026-Q1"   (0.6+, cuando C5 lo consuma)
+# [packs.normativa]  id = "CTE"     version = "2019"      (cuando C3 lo consuma)
+# [packs.ids]        id = "proyecto" version = "v3"       (cuando C4/C7 lo consuman)
