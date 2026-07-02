@@ -1,0 +1,280 @@
+{
+  "caso": "C4-FED-05",
+  "contrato": "C4-federacion",
+  "_oraculo": "POLITICA mantener-separada (D22), IMPLEMENTADA en el service 0.4.0 en este mismo hilo (hallazgo 1.4: 0.3.0 la ecoaba sin aplicarla). Entradas limpias del 01 byte a byte. El manifiesto mantiene los nodos POR MODELO sin fundir: 'Emplazamiento' y 'Edificio' aparecen DOS veces (aportado_por unitario); el Project sigue unico por definicion. Expected calculado con el service y verificado A MANO: informe identico al del 01 por modelo (mismos ficheros, mismo pack); sin emision (el 04 ya ancla la emision).",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "653a359154112146d82ca02de0fde2ee",
+    "entrada/EST.ifc": "b84cb79c4a7cf4b560148340bc8dc305"
+  },
+  "maestro_manifiesto": {
+    "proyecto": "C4-FED-05 - Estructura espacial mantenida separada",
+    "crs": {
+      "epsg": "EPSG:25830",
+      "descripcion": "ETRS89 / UTM zone 30N",
+      "datum_vertical": "EGM2008"
+    },
+    "modelos": [
+      {
+        "id": "ARQ",
+        "disciplina": "ARQ",
+        "fichero_origen": "entrada/ARQ.ifc",
+        "md5": "653a359154112146d82ca02de0fde2ee",
+        "transformacion": {
+          "traslacion": [
+            337000.0,
+            4610000.0,
+            700.0
+          ],
+          "rotacion_deg": 0.0,
+          "escala": 1.0
+        },
+        "estado_entrada": "S1",
+        "n_elementos": 6
+      },
+      {
+        "id": "EST",
+        "disciplina": "EST",
+        "fichero_origen": "entrada/EST.ifc",
+        "md5": "b84cb79c4a7cf4b560148340bc8dc305",
+        "transformacion": {
+          "traslacion": [
+            337000.0,
+            4610000.0,
+            700.0
+          ],
+          "rotacion_deg": 0.0,
+          "escala": 1.0
+        },
+        "estado_entrada": "S1",
+        "n_elementos": 7
+      }
+    ],
+    "estructura_espacial": {
+      "politica": "mantenida-separada",
+      "agregados": [
+        {
+          "nivel": "Project",
+          "nombre": "C4-FED-05 - Estructura espacial mantenida separada",
+          "aportado_por": [
+            "ARQ",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Site",
+          "nombre": "Emplazamiento",
+          "aportado_por": [
+            "ARQ"
+          ]
+        },
+        {
+          "nivel": "Site",
+          "nombre": "Emplazamiento",
+          "aportado_por": [
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Building",
+          "nombre": "Edificio",
+          "aportado_por": [
+            "ARQ"
+          ]
+        },
+        {
+          "nivel": "Building",
+          "nombre": "Edificio",
+          "aportado_por": [
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Planta Baja",
+          "aportado_por": [
+            "ARQ"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Planta 1",
+          "aportado_por": [
+            "ARQ"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Nivel 00",
+          "aportado_por": [
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Nivel 01",
+          "aportado_por": [
+            "EST"
+          ]
+        }
+      ]
+    },
+    "guids": {
+      "politica": "preservados"
+    },
+    "procedencia": {
+      "generado_por": "services/federacion 0.4.0",
+      "reglas_md5": "a7d2eb66de76b3284b4d031a956f474e"
+    }
+  },
+  "informe_qa": {
+    "proyecto": "C4-FED-05 - Estructura espacial mantenida separada",
+    "ids": {
+      "pack_id": "proyecto-piloto",
+      "pack_version": "v1",
+      "fichero": "requisitos.ids",
+      "version_ids": "1.0"
+    },
+    "requisitos": [
+      {
+        "id": "R1-CLASIF",
+        "origen": "ids",
+        "titulo": "Todo elemento objetivo lleva doble clasificacion: bsDD (URI) + Uniclass 2015",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcDoor|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 5,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "pass",
+            "n_comprobados": 7,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R2-EXTERIOR",
+        "origen": "ids",
+        "titulo": "Todo muro declara Pset_WallCommon.IsExternal",
+        "aplicabilidad": "IfcWall",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 2,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "no-aplica",
+            "n_comprobados": 0,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R3-MATERIAL",
+        "origen": "ids",
+        "titulo": "Elementos constructivos declaran su material (Pset_Estructurando_Spec.Material)",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 4,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "pass",
+            "n_comprobados": 7,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R4-GEORREF",
+        "origen": "modulo",
+        "titulo": "Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS)",
+        "aplicabilidad": "IfcProject",
+        "resultado": "fail",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "fail",
+            "n_comprobados": 1,
+            "n_fallos": 1,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          },
+          "EST": {
+            "resultado": "fail",
+            "n_comprobados": 1,
+            "n_fallos": 1,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          }
+        }
+      },
+      {
+        "id": "R5-PLANTAS",
+        "origen": "ids",
+        "titulo": "Nomenclatura de plantas del proyecto: IfcBuildingStorey.Name conforme a 'Planta ...'",
+        "aplicabilidad": "IfcBuildingStorey",
+        "resultado": "fail",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 2,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "fail",
+            "n_comprobados": 2,
+            "n_fallos": 2,
+            "detalle": "'Nivel 00' y 'Nivel 01' no conforman el requisito R5-PLANTAS"
+          }
+        }
+      }
+    ],
+    "incidencias": [
+      {
+        "id": "INC-01",
+        "requisito": "R4-GEORREF",
+        "modelo": "ARQ",
+        "guids": [],
+        "titulo": "ARQ no conforma R4-GEORREF (Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS))",
+        "severidad": "mayor"
+      },
+      {
+        "id": "INC-02",
+        "requisito": "R4-GEORREF",
+        "modelo": "EST",
+        "guids": [],
+        "titulo": "EST no conforma R4-GEORREF (Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS))",
+        "severidad": "mayor"
+      },
+      {
+        "id": "INC-03",
+        "requisito": "R5-PLANTAS",
+        "modelo": "EST",
+        "guids": [
+          "3OM3R50xH9rQrxdF_D157W",
+          "1_IR0JcG90ghN9CC8WB7E9"
+        ],
+        "titulo": "R5-PLANTAS no conforme en EST (Nivel 00 / Nivel 01)",
+        "severidad": "menor"
+      }
+    ],
+    "estados": {
+      "por_modelo": {
+        "ARQ": "S1",
+        "EST": "S1"
+      },
+      "maestro": "S1"
+    },
+    "veredicto": "no-conforme",
+    "bcf": {
+      "estandar": "BCF",
+      "version": "3.0",
+      "emitido": false
+    }
+  }
+}

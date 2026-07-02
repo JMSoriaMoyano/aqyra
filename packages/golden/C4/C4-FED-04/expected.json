@@ -1,0 +1,316 @@
+{
+  "caso": "C4-FED-04",
+  "contrato": "C4-federacion",
+  "_oraculo": "INTEGRACION 1.2x1.3 (D21): federacion MIXTA con entradas RE-USADAS byte a byte (SUCIO.ifc del 03 + EST.ifc del 01, patron D14) y emitido=true. Ancla JUNTOS avisos_lectura (solo SUC — procedencia POR MODELO), incidencias de ambos modelos y sus topics BCF; estados HETEROGENEOS S1/S3 → maestro=min(S)=S1 y transformacion NO trivial (puntos base distintos, rotacion 14.5 / -7.25 — METADATO declarado, D23). Expected calculado con el service 0.4.0 y verificado A MANO: cada fila por_modelo coincide con la fila congelada de su caso de procedencia (SUC==03, EST==01), avisos==03, guids==casos de origen, 4 topics (R4 sin viewpoint, R5 con el). Los casos 01/02/03 no se tocan.",
+  "entradas_md5": {
+    "entrada/SUCIO.ifc": "1dd956ca02fd085f06a2eaf6dcb10988",
+    "entrada/EST.ifc": "b84cb79c4a7cf4b560148340bc8dc305"
+  },
+  "maestro_manifiesto": {
+    "proyecto": "C4-FED-04 - Federacion mixta (integracion)",
+    "crs": {
+      "epsg": "EPSG:25830",
+      "descripcion": "ETRS89 / UTM zone 30N",
+      "datum_vertical": "EGM2008"
+    },
+    "modelos": [
+      {
+        "id": "SUC",
+        "disciplina": "ARQ",
+        "fichero_origen": "entrada/SUCIO.ifc",
+        "md5": "1dd956ca02fd085f06a2eaf6dcb10988",
+        "transformacion": {
+          "traslacion": [
+            336987.123456,
+            4610012.654321,
+            699.87
+          ],
+          "rotacion_deg": 14.5,
+          "escala": 1.0
+        },
+        "estado_entrada": "S1",
+        "n_elementos": 6
+      },
+      {
+        "id": "EST",
+        "disciplina": "EST",
+        "fichero_origen": "entrada/EST.ifc",
+        "md5": "b84cb79c4a7cf4b560148340bc8dc305",
+        "transformacion": {
+          "traslacion": [
+            337050.987654,
+            4609950.123456,
+            702.5
+          ],
+          "rotacion_deg": -7.25,
+          "escala": 1.0
+        },
+        "estado_entrada": "S3",
+        "n_elementos": 7
+      }
+    ],
+    "estructura_espacial": {
+      "politica": "unificada-por-nombre",
+      "agregados": [
+        {
+          "nivel": "Project",
+          "nombre": "C4-FED-04 - Federacion mixta (integracion)",
+          "aportado_por": [
+            "SUC",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Site",
+          "nombre": "Emplazamiento",
+          "aportado_por": [
+            "SUC",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Building",
+          "nombre": "Edificio",
+          "aportado_por": [
+            "SUC",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Planta Baja",
+          "aportado_por": [
+            "SUC"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "(sin nombre)",
+          "aportado_por": [
+            "SUC"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Nivel 00",
+          "aportado_por": [
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Nivel 01",
+          "aportado_por": [
+            "EST"
+          ]
+        }
+      ]
+    },
+    "guids": {
+      "politica": "preservados"
+    },
+    "procedencia": {
+      "generado_por": "services/federacion 0.4.0",
+      "reglas_md5": "fa2c464d136e88df5766dcdb8c269d6a"
+    }
+  },
+  "informe_qa": {
+    "proyecto": "C4-FED-04 - Federacion mixta (integracion)",
+    "ids": {
+      "pack_id": "proyecto-piloto",
+      "pack_version": "v1",
+      "fichero": "requisitos.ids",
+      "version_ids": "1.0"
+    },
+    "requisitos": [
+      {
+        "id": "R1-CLASIF",
+        "origen": "ids",
+        "titulo": "Todo elemento objetivo lleva doble clasificacion: bsDD (URI) + Uniclass 2015",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcDoor|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "pass",
+            "n_comprobados": 5,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "pass",
+            "n_comprobados": 7,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R2-EXTERIOR",
+        "origen": "ids",
+        "titulo": "Todo muro declara Pset_WallCommon.IsExternal",
+        "aplicabilidad": "IfcWall",
+        "resultado": "pass",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "pass",
+            "n_comprobados": 2,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "no-aplica",
+            "n_comprobados": 0,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R3-MATERIAL",
+        "origen": "ids",
+        "titulo": "Elementos constructivos declaran su material (Pset_Estructurando_Spec.Material)",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "pass",
+            "n_comprobados": 4,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "pass",
+            "n_comprobados": 7,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R4-GEORREF",
+        "origen": "modulo",
+        "titulo": "Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS)",
+        "aplicabilidad": "IfcProject",
+        "resultado": "fail",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "fail",
+            "n_comprobados": 2,
+            "n_fallos": 2,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          },
+          "EST": {
+            "resultado": "fail",
+            "n_comprobados": 1,
+            "n_fallos": 1,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          }
+        }
+      },
+      {
+        "id": "R5-PLANTAS",
+        "origen": "ids",
+        "titulo": "Nomenclatura de plantas del proyecto: IfcBuildingStorey.Name conforme a 'Planta ...'",
+        "aplicabilidad": "IfcBuildingStorey",
+        "resultado": "fail",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "fail",
+            "n_comprobados": 3,
+            "n_fallos": 1,
+            "detalle": "'(sin nombre)' no conforman el requisito R5-PLANTAS"
+          },
+          "EST": {
+            "resultado": "fail",
+            "n_comprobados": 2,
+            "n_fallos": 2,
+            "detalle": "'Nivel 00' y 'Nivel 01' no conforman el requisito R5-PLANTAS"
+          }
+        }
+      }
+    ],
+    "incidencias": [
+      {
+        "id": "INC-01",
+        "requisito": "R4-GEORREF",
+        "modelo": "SUC",
+        "guids": [],
+        "titulo": "SUC no conforma R4-GEORREF (Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS))",
+        "severidad": "mayor",
+        "bcf_topic_guid": "25143580-ce4f-54e0-8caf-11cae328458c"
+      },
+      {
+        "id": "INC-02",
+        "requisito": "R4-GEORREF",
+        "modelo": "EST",
+        "guids": [],
+        "titulo": "EST no conforma R4-GEORREF (Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS))",
+        "severidad": "mayor",
+        "bcf_topic_guid": "51b2509f-f2cf-5184-ae8d-67a4e8b48056"
+      },
+      {
+        "id": "INC-03",
+        "requisito": "R5-PLANTAS",
+        "modelo": "SUC",
+        "guids": [
+          "2VR4ZUrG9A9Bh0O0cEw4bM"
+        ],
+        "titulo": "R5-PLANTAS no conforme en SUC (?)",
+        "severidad": "menor",
+        "bcf_topic_guid": "a13d8083-ace2-5165-be7e-27081fb8ef27"
+      },
+      {
+        "id": "INC-04",
+        "requisito": "R5-PLANTAS",
+        "modelo": "EST",
+        "guids": [
+          "3OM3R50xH9rQrxdF_D157W",
+          "1_IR0JcG90ghN9CC8WB7E9"
+        ],
+        "titulo": "R5-PLANTAS no conforme en EST (Nivel 00 / Nivel 01)",
+        "severidad": "menor",
+        "bcf_topic_guid": "cd51f16d-80aa-52f8-8366-fb5827679507"
+      }
+    ],
+    "avisos_lectura": [
+      {
+        "modelo": "SUC",
+        "codigo": "multi-proyecto",
+        "detalle": "2 IfcProject (#1, #246); se esperaba 1"
+      },
+      {
+        "modelo": "SUC",
+        "codigo": "nombre-vacio",
+        "detalle": "IfcBuildingStorey #18 sin Name; nodo '(sin nombre)' en la estructura espacial"
+      },
+      {
+        "modelo": "SUC",
+        "codigo": "nombre-duplicado",
+        "detalle": "IfcBuildingStorey 'Planta Baja' aparece 2 veces (#16, #244); unificados en un nodo"
+      }
+    ],
+    "estados": {
+      "por_modelo": {
+        "SUC": "S1",
+        "EST": "S3"
+      },
+      "maestro": "S1"
+    },
+    "veredicto": "no-conforme",
+    "bcf": {
+      "estandar": "BCF",
+      "version": "3.0",
+      "emitido": true,
+      "carpeta": "bcf"
+    }
+  },
+  "bcf_generacion": {
+    "_nota": "metadatos de generacion INYECTADOS por el runner en emitir_bcf (D13); los GUIDs de topic son uuid5(NAMESPACE_AQYRA, 'C4-FED-04/INC-xx') y no dependen de esto",
+    "autor": "services/federacion 0.4.0",
+    "fecha": "2026-07-02T00:00:00Z"
+  },
+  "bcf_md5": {
+    "_nota": "arbol BCF 3.0 descomprimido, md5 por fichero (D12); 4 topics = 4 incidencias (R4-GEORREF x2 SIN viewpoint — regla de modulo sin GUIDs; R5-PLANTAS x2 CON viewpoint)",
+    "25143580-ce4f-54e0-8caf-11cae328458c/markup.bcf": "1d766ed6b6db63a1e16f59ae784be3c0",
+    "51b2509f-f2cf-5184-ae8d-67a4e8b48056/markup.bcf": "c04930d57f737161425dc70c1d9963e8",
+    "a13d8083-ace2-5165-be7e-27081fb8ef27/markup.bcf": "8d93b94d1e6fa2ef81177c7747b0d7f3",
+    "a13d8083-ace2-5165-be7e-27081fb8ef27/viewpoint.bcfv": "068458f20b59a652af6c62f3e48a7fed",
+    "bcf.version": "920b5ebbd45b3c42ab09c18e7fcc0dbe",
+    "cd51f16d-80aa-52f8-8366-fb5827679507/markup.bcf": "9f876c73d27b9b95a4c05a69dce46a83",
+    "cd51f16d-80aa-52f8-8366-fb5827679507/viewpoint.bcfv": "ca4ab0429276a258e0c341aeb7e4f956"
+  }
+}

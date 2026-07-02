@@ -1,0 +1,51 @@
+{
+  "proyecto": "C4-FED-05 - Estructura espacial mantenida separada",
+  "crs_destino": {
+    "epsg": "EPSG:25830",
+    "descripcion": "ETRS89 / UTM zone 30N",
+    "datum_vertical": "EGM2008"
+  },
+  "modelos": [
+    {
+      "id": "ARQ",
+      "disciplina": "ARQ",
+      "fichero": "entrada/ARQ.ifc",
+      "md5": "653a359154112146d82ca02de0fde2ee",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 337000.0,
+        "n": 4610000.0,
+        "cota": 700.0,
+        "rotacion_deg": 0.0,
+        "declarado_por": "JM (reglas del caso golden; los IFC de entrada NO vienen georreferenciados)"
+      },
+      "estado_entrada": "S1",
+      "prioridad": 1
+    },
+    {
+      "id": "EST",
+      "disciplina": "EST",
+      "fichero": "entrada/EST.ifc",
+      "md5": "b84cb79c4a7cf4b560148340bc8dc305",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 337000.0,
+        "n": 4610000.0,
+        "cota": 700.0,
+        "rotacion_deg": 0.0,
+        "declarado_por": "JM (reglas del caso golden; los IFC de entrada NO vienen georreferenciados)"
+      },
+      "estado_entrada": "S1",
+      "prioridad": 2
+    }
+  ],
+  "deduplicacion": {
+    "elementos": "nunca",
+    "estructura_espacial": "mantener-separada"
+  },
+  "ids_pack": {
+    "familia": "ids",
+    "id": "proyecto-piloto",
+    "version": "v1"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "_regla_de_oro": "Un fallo NO se arregla aflojando esta golden: se corrige el codigo (o se re-ancla el oraculo por decision explicita con JM).",
+  "_modo": "recompute + EMISION BCF + avisos_lectura JUNTOS (integracion 1.2x1.3, D21); las entradas son las CONGELADAS de 03 y 01 byte a byte (patron D14)",
+  "traslacion_m": 1e-06,
+  "rotacion_deg": 1e-09,
+  "_nota": "primera golden con transformacion NO trivial (D23): las tolerancias tienen valores reales que tolerar; la rotacion es METADATO declarado (v0 no rota geometria)"
+}

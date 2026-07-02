@@ -1,0 +1,6 @@
+{
+  "_regla_de_oro": "Un fallo NO se arregla aflojando esta golden: se corrige el codigo (o se re-ancla el oraculo por decision explicita con JM).",
+  "_modo": "recompute con mantener-separada (D22): los nodos por modelo son EXACTOS (conteos y aportado_por); cambiar la politica del caso es DISENO, no excusa",
+  "traslacion_m": 1e-06,
+  "rotacion_deg": 1e-09
+}

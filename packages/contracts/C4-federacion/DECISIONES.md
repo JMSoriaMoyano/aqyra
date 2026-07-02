@@ -198,5 +198,54 @@ lo estructural degradado ya queda visible en sus `agregados`. La API crece →
 `services/federacion` 0.3.0.
 
 ---
+
+> Bloque del hilo 2.5 (golden de federación adicional — tarea 1.4). Resueltas con JM el
+> **2026-07-02** (OK explícito), antes de tocar código. D1–D20 no se reabren.
+
+## D21 · Alcance de 1.4 — DOS casos: C4-FED-04 (integración) + C4-FED-05 (mantener-separada)
+
+**C4-FED-04** es el caso de INTEGRACIÓN: federación MIXTA (el `SUCIO.ifc` CONGELADO del 03
++ el `EST.ifc` CONGELADO del 01, reutilizados **byte a byte** — patrón D14, cero ficheros
+de entrada nuevos; la suciedad ya está diseñada) **con emisión** (`emitido=true`). Ancla lo
+que ningún caso ancla: la interacción 1.2×1.3 (informe con `avisos_lectura` + emisión de
+topics BCF) y la **procedencia de los avisos POR MODELO** (solo SUC aporta avisos; EST
+limpio no aparece). Usa `unificar-por-nombre` para seguir comparable con 01/03.
+**C4-FED-05** es el caso pequeño dedicado a la política `mantener-separada` (D22), con las
+entradas limpias del 01 (`ARQ.ifc` + `EST.ifc`, byte a byte) y sin emisión.
+
+## D22 · `mantener-separada` — SE IMPLEMENTA y se ancla en C4-FED-05
+
+**Hallazgo de 1.4:** el service 0.3.0 ACEPTABA la política y la ECOABA en el manifiesto
+(`"mantenida-separada"`) sin aplicarla — los nodos se unificaban por `(nivel, nombre)`
+incondicionalmente. Un manifiesto que declara una política que no aplicó es un bug, y
+anclarlo en golden anclaría comportamiento incorrecto. Se implementa: con
+`mantener-separada` la clave del nodo incluye el MODELO → nodos por modelo sin fundir
+(`aportado_por` unitario); el nivel Project sigue único por definición (política
+documentada en `federar.py`, sin cambio). Comportamiento nuevo → service **0.4.0** (D25).
+
+## D23 · Estados y transformación del 04 — heterogéneos y no triviales
+
+Estados DISTINTOS por modelo: `SUC=S1, EST=S3` → `maestro=S1` — primera vez que la regla
+"maestro = min(S)" (política de v0, qa.py) se ancla con estados que difieren. Puntos base
+DISTINTOS por modelo y `rotacion_deg ≠ 0`: ancla la copia declarada de la transformación
+y da a las tolerancias del recompute (±1e-6 m, ±1e-9°) valores reales que tolerar. La
+rotación es METADATO declarado (ADR punto base declarado): el service NO rota geometría
+en v0 y el caso no lo finge.
+
+## D24 · `prioridad` — RESERVADA en v0 (sin semántica)
+
+El service no la usa y no se inventa semántica sin caso de uso real. Se documenta en
+`reglas-federacion.schema.json` (`$comment`: reservada en v0). Si algún día gana
+significado (p. ej. orden de resolución en conflictos de unificación), será decisión
+nueva con su propio anclaje golden.
+
+## D25 · Versionado y release — service 0.4.0, SIN release
+
+**0.4.0** por D22 (comportamiento nuevo en una entrada documentada), no 0.3.1: semver
+honesto. SIN tag/release en este hilo: la Llave 2 del service sigue en `federacion-v0.2.0`
+y el siguiente tag llegará con superficie nueva de adopción (IFC federado derivado, v0.x
+— D6), no con cobertura. Confirmado con JM al cierre.
+
+---
 *Regla de oro heredada: un fallo no se arregla aflojando la golden. El CI nunca certifica
 (Llave 2 = JM).*

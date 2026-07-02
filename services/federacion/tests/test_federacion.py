@@ -123,6 +123,51 @@ def test_incidencias(informe):
     assert incs[2]["severidad"] == "menor"
 
 
+# --------------------------- mantener-separada (D22, 1.4) -------------------
+CASO05 = REPO / "packages" / "golden" / "C4" / "C4-FED-05"
+
+
+def test_mantener_separada_nodos_por_modelo():
+    m = federar_fichero(CASO05 / "reglas.json")
+    ag = m["estructura_espacial"]["agregados"]
+    assert m["estructura_espacial"]["politica"] == "mantenida-separada"
+    no_project = [a for a in ag if a["nivel"] != "Project"]
+    assert all(len(a["aportado_por"]) == 1 for a in no_project)   # nada se funde
+    nombres = [(a["nivel"], a["nombre"], a["aportado_por"][0]) for a in no_project]
+    assert ("Site", "Emplazamiento", "ARQ") in nombres            # el mismo nombre,
+    assert ("Site", "Emplazamiento", "EST") in nombres            # POR MODELO
+    assert ("Building", "Edificio", "ARQ") in nombres
+    assert ("Building", "Edificio", "EST") in nombres
+    assert len(ag) == 1 + 2 + 2 + 4    # Project único + 2 Site + 2 Building + 4 Storey
+    proyecto = [a for a in ag if a["nivel"] == "Project"]
+    assert proyecto[0]["aportado_por"] == ["ARQ", "EST"]          # único por definición
+
+
+def test_politica_desconocida_rechazada(tmp_path):
+    reglas = json.loads((CASO / "reglas.json").read_text(encoding="utf-8"))
+    (tmp_path / "entrada").mkdir()
+    for m in reglas["modelos"]:
+        (tmp_path / m["fichero"]).write_bytes((CASO / m["fichero"]).read_bytes())
+    reglas["deduplicacion"]["estructura_espacial"] = "fundir-todo"
+    from aqyra_federacion import federar
+    with pytest.raises(ValueError, match="no soportada"):
+        federar(reglas, tmp_path)
+
+
+def test_estados_heterogeneos_min(tmp_path):
+    reglas = json.loads((CASO / "reglas.json").read_text(encoding="utf-8"))
+    (tmp_path / "entrada").mkdir()
+    for m in reglas["modelos"]:
+        (tmp_path / m["fichero"]).write_bytes((CASO / m["fichero"]).read_bytes())
+    reglas["modelos"][0]["estado_entrada"] = "S1"
+    reglas["modelos"][1]["estado_entrada"] = "S3"
+    from aqyra_federacion import federar
+    m = federar(reglas, tmp_path)
+    inf = validar(m, PACK, tmp_path)
+    assert inf["estados"] == {"por_modelo": {"ARQ": "S1", "EST": "S3"},
+                              "maestro": "S1"}                    # min(S), política de v0
+
+
 # --------------------------- determinismo -----------------------------------
 def test_determinista():
     a = federar_fichero(CASO / "reglas.json")

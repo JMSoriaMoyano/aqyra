@@ -2,9 +2,10 @@
 
 El artefacto autoritativo es el MANIFIESTO (D1): refs a los IFC fuente por hash,
 transformación al CRS destino por el punto base DECLARADO (ADR: nunca adivinado),
-estructura espacial unificada por nombre con procedencia (`aportado_por`), GUIDs
-preservados, elementos sin deduplicar (v0.1). El IFC federado derivado NO se emite
-en v0 (D6 — llega en v0.x con su anclaje decidido entonces).
+estructura espacial según la política de las reglas (unificar-por-nombre o
+mantener-separada — D22) con procedencia (`aportado_por`), GUIDs preservados,
+elementos sin deduplicar (v0.1). El IFC federado derivado NO se emite en v0
+(D6 — llega en v0.x con su anclaje decidido entonces).
 
 Determinista: mismos IFC + mismas reglas → mismo manifiesto. La fecha de la
 procedencia es opcional (metadato de generación, no contenido federado).
@@ -21,9 +22,11 @@ from .lectura import SIN_NOMBRE, LecturaIfcError
 # - El nivel Project SIEMPRE se unifica en el proyecto de federación (nombre =
 #   reglas.proyecto, aportado por todos los modelos): el Maestro tiene UN proyecto
 #   por definición; los Project de origen llevan nombres por disciplina.
-# - Site / Building / Storey se unifican POR NOMBRE (política de las reglas):
-#   mismo nombre → un nodo con la procedencia acumulada; nombre distinto → nodos
-#   separados (nada se funde en silencio).
+# - Site / Building / Storey, según la política de las reglas (D22, 1.4):
+#   · unificar-por-nombre: mismo nombre → un nodo con la procedencia acumulada;
+#     nombre distinto → nodos separados (nada se funde en silencio).
+#   · mantener-separada: la clave del nodo incluye el MODELO → nodos por modelo
+#     sin fundir (aportado_por unitario); Project sigue único por definición.
 _NIVELES = {"IfcSite": "Site", "IfcBuilding": "Building", "IfcBuildingStorey": "Storey"}
 _RANGO_NIVEL = {"Project": 0, "Site": 1, "Building": 2, "Storey": 3}
 
@@ -53,14 +56,17 @@ def federar(reglas: dict, base_dir: Path, reglas_md5: str | None = None,
     dedup = reglas.get("deduplicacion", {})
     if dedup.get("elementos", "nunca") != "nunca":
         raise ValueError("v0.1 solo admite deduplicacion.elementos = 'nunca' (ADR)")
-    politica_ee = _POLITICA_EE.get(dedup.get("estructura_espacial", "unificar-por-nombre"))
+    politica_reglas = dedup.get("estructura_espacial", "unificar-por-nombre")
+    politica_ee = _POLITICA_EE.get(politica_reglas)
     if politica_ee is None:
         raise ValueError(f"política de estructura espacial no soportada: "
                          f"{dedup.get('estructura_espacial')!r}")
+    separada = politica_reglas == "mantener-separada"   # D22 (1.4): nodos por modelo
 
     modelos_out: list[dict] = []
-    # nodos de estructura espacial: (nivel, nombre) → aportado_por (orden de inserción)
-    nodos: dict[tuple[str, str], list[str]] = {}
+    # nodos de estructura espacial: (nivel, nombre, modelo|None) → aportado_por
+    # (orden de inserción; el 3.er término solo discrimina con mantener-separada)
+    nodos: dict[tuple[str, str, str | None], list[str]] = {}
 
     for m in reglas["modelos"]:
         ruta = base_dir / m["fichero"]
@@ -91,14 +97,15 @@ def federar(reglas: dict, base_dir: Path, reglas_md5: str | None = None,
         for clase, nivel in _NIVELES.items():
             for ent in lectura.by_type_seguro(ifc, clase, include_subtypes=False):
                 nombre, _legible = lectura.nombre_seguro(ent)   # 1.3: Name=None/roto
-                clave = (nivel, nombre or SIN_NOMBRE)           # → nodo declarado
+                clave = (nivel, nombre or SIN_NOMBRE,           # → nodo declarado
+                         m["id"] if separada else None)         # D22: por modelo
                 nodos.setdefault(clave, [])
                 if m["id"] not in nodos[clave]:
                     nodos[clave].append(m["id"])
 
     todos = [m["id"] for m in reglas["modelos"]]
     agregados = [{"nivel": "Project", "nombre": reglas["proyecto"], "aportado_por": todos}]
-    for idx, ((nivel, nombre), aportado) in enumerate(nodos.items()):
+    for idx, ((nivel, nombre, _mid), aportado) in enumerate(nodos.items()):
         agregados.append({"nivel": nivel, "nombre": nombre, "aportado_por": aportado,
                           "_idx": idx})
     agregados.sort(key=lambda a: (_RANGO_NIVEL[a["nivel"]], a.pop("_idx", -1)))

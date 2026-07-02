@@ -1,0 +1,51 @@
+{
+  "proyecto": "C4-FED-04 - Federacion mixta (integracion)",
+  "crs_destino": {
+    "epsg": "EPSG:25830",
+    "descripcion": "ETRS89 / UTM zone 30N",
+    "datum_vertical": "EGM2008"
+  },
+  "modelos": [
+    {
+      "id": "SUC",
+      "disciplina": "ARQ",
+      "fichero": "entrada/SUCIO.ifc",
+      "md5": "1dd956ca02fd085f06a2eaf6dcb10988",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 336987.123456,
+        "n": 4610012.654321,
+        "cota": 699.87,
+        "rotacion_deg": 14.5,
+        "declarado_por": "JM (reglas del caso golden; los IFC de entrada NO vienen georreferenciados)"
+      },
+      "estado_entrada": "S1",
+      "prioridad": 1
+    },
+    {
+      "id": "EST",
+      "disciplina": "EST",
+      "fichero": "entrada/EST.ifc",
+      "md5": "b84cb79c4a7cf4b560148340bc8dc305",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 337050.987654,
+        "n": 4609950.123456,
+        "cota": 702.5,
+        "rotacion_deg": -7.25,
+        "declarado_por": "JM (reglas del caso golden; los IFC de entrada NO vienen georreferenciados)"
+      },
+      "estado_entrada": "S3",
+      "prioridad": 2
+    }
+  ],
+  "deduplicacion": {
+    "elementos": "nunca",
+    "estructura_espacial": "unificar-por-nombre"
+  },
+  "ids_pack": {
+    "familia": "ids",
+    "id": "proyecto-piloto",
+    "version": "v1"
+  }
+}
