@@ -29,6 +29,11 @@ Thumbs.db
 plugins/iso19650-openbim/skills/narracion-a-ifc/scripts/
 plugins/iso19650-openbim/scripts/lineal/generate_test_ifc_lineal.py
 
+# PR-E2 · retirada del espejo del núcleo. El núcleo transversal (ifc_utils, grafo_red) es
+# fuente única en packages/core; en el plugin su copia NO se commitea: se GENERA en build
+# (tools/build_plugin_iso19650.py copia packages/core → scripts/nucleo/). Mismo guardián.
+plugins/iso19650-openbim/scripts/nucleo/
+
 # Operativa local (.bat de arranque/PR + logs): no es producto
 _operativo/
 *.bat

@@ -2,16 +2,20 @@
 # -*- coding: utf-8 -*-
 """build_plugin_iso19650.py — empaqueta el .plugin `iso19650-openbim` 0.10.0 desde el monorepo.
 
-PR-E1 (Fase I · hilo 2): retirada del espejo del engine. El compilador narración→IFC es
-FUENTE ÚNICA en `engines/ifc`; el plugin NO lleva copia commiteada. Este build la INYECTA:
+PR-E1 (Fase I · hilo 2): retirada del espejo del engine. PR-E2 (Fase I · hilo 3): retirada
+del espejo del NÚCLEO. El compilador narración→IFC es FUENTE ÚNICA en `engines/ifc` y el
+núcleo transversal lo es en `packages/core`; el plugin NO lleva copia commiteada de ninguno.
+Este build las INYECTA:
 
   skills/narracion-a-ifc/scripts/   ←  engines/ifc/narracion-ifc/*   (8 ficheros de ENGINE)
                                      +  plugins/.../narracion-a-ifc/_aux/*  (auxiliares no-engine)
   scripts/lineal/generate_test_ifc_lineal.py  ←  engines/ifc/scripts/lineal/  (ENGINE)
+  scripts/nucleo/{ifc_utils,grafo_red}.py     ←  packages/core/src/aqyra_core/  (NÚCLEO)
 
-Antes de zipar, PRUEBA que cada fichero de engine inyectado es byte-a-byte idéntico al
-anclaje md5 (LF) de `versions.lock [engines.ifc.md5]`: si el build no deriva del canónico,
-falla. Luego zipa a dist/ y pasa la puerta `tools/verificar_empaquetado.py`.
+Antes de zipar, PRUEBA que cada fichero inyectado es byte-a-byte idéntico a su anclaje
+md5 (LF) de `versions.lock` ([engines.ifc.md5] para el engine, [core] para el núcleo):
+si el build no deriva del canónico, falla. Luego zipa a dist/ y pasa la puerta
+`tools/verificar_empaquetado.py`.
 
 Uso:
     python3 tools/build_plugin_iso19650.py            # build + verificación intrínseca
@@ -37,6 +41,7 @@ MEMBER = ROOT / "plugins" / "iso19650-openbim"
 ENGINE = ROOT / "engines" / "ifc"
 NARRA = ENGINE / "narracion-ifc"
 LINEAL = ENGINE / "scripts" / "lineal"
+CORE = ROOT / "packages" / "core" / "src" / "aqyra_core"
 # El staging es EFÍMERO y va fuera del árbol montado (el mount no borra en host).
 STAGE = Path(tempfile.mkdtemp(prefix="iso19650-build-"))
 DIST = ROOT / "dist" / "plugins"
@@ -50,10 +55,16 @@ ENGINE_NARRA = [
 ]
 ENGINE_LINEAL = "generate_test_ifc_lineal.py"
 
+# Ficheros de NÚCLEO que se inyectan en scripts/nucleo/ desde packages/core (PR-E2).
+NUCLEO_FILES = ["ifc_utils.py", "grafo_red.py"]
+
 # Rutas del miembro que NUNCA se copian al staging: son artefactos generados (gitignored)
-# o fuentes auxiliares que se recolocan.
-SKIP_REL = {
+# o fuentes auxiliares que se recolocan. Las CARPETAS se saltan con todo su contenido.
+SKIP_DIRS = (
     "skills/narracion-a-ifc/scripts",                 # se REGENERA desde engine + _aux
+    "scripts/nucleo",                                 # se REGENERA desde packages/core (PR-E2)
+)
+SKIP_REL = {
     "scripts/lineal/generate_test_ifc_lineal.py",     # se REGENERA desde engine (leftover)
 }
 SKIP_AUX_DIR = "skills/narracion-a-ifc/_aux"           # su contenido va DENTRO de scripts/
@@ -82,6 +93,25 @@ def _anchors() -> dict[str, str]:
     return out
 
 
+def _core_anchors() -> dict[str, str]:
+    """md5 anclados en versions.lock [core] (ifc_utils_md5 / grafo_red_md5)."""
+    txt = LOCK.read_text(encoding="utf-8")
+    out: dict[str, str] = {}
+    in_block = False
+    for line in txt.splitlines():
+        s = line.strip()
+        if s.startswith("[core]"):
+            in_block = True
+            continue
+        if in_block and s.startswith("["):
+            break
+        if in_block:
+            m = re.match(r'(\w+)_md5\s*=\s*"([0-9a-f]{32})"', s)
+            if m:
+                out[m.group(1) + ".py"] = m.group(2)
+    return out
+
+
 def _rel(p: Path) -> str:
     return p.relative_to(MEMBER).as_posix()
 
@@ -96,6 +126,8 @@ def _copy_member() -> None:
         if "__pycache__" in src.parts or rel.endswith(".pyc"):
             continue
         if rel in SKIP_REL or rel.startswith(SKIP_AUX_DIR):
+            continue
+        if any(rel == d or rel.startswith(d + "/") for d in SKIP_DIRS):
             continue
         dst = STAGE / rel
         if src.is_dir():
@@ -141,6 +173,30 @@ def _inject_engine(anchors: dict[str, str]) -> list[str]:
     return errores
 
 
+def _inject_nucleo(anchors: dict[str, str]) -> list[str]:
+    """Inyecta el núcleo desde packages/core y prueba identidad vs versions.lock [core].
+
+    PR-E2 (Fase I · hilo 3): el plugin no commitea scripts/nucleo/; se genera aquí desde
+    el canónico. Los scripts del plugin lo consumen por sys.path (import ifc_utils /
+    import grafo_red), sin __init__: se inyectan solo los dos módulos.
+    """
+    errores: list[str] = []
+    nucleo = STAGE / "scripts" / "nucleo"
+    nucleo.mkdir(parents=True, exist_ok=True)
+    for name in NUCLEO_FILES:
+        src = CORE / name
+        if not src.exists():
+            errores.append(f"núcleo ausente: packages/core/src/aqyra_core/{name}")
+            continue
+        shutil.copy2(src, nucleo / name)
+        got, exp = _md5_lf(src), anchors.get(name)
+        if not exp:
+            errores.append(f"{name}: sin anclaje md5 en versions.lock [core]")
+        elif got != exp:
+            errores.append(f"{name}: md5 {got[:8]} != anclaje {exp[:8]} (build no deriva del canónico)")
+    return errores
+
+
 def _zip(version: str) -> Path:
     DIST.mkdir(parents=True, exist_ok=True)
     out = DIST / f"iso19650-openbim-{version}.plugin"
@@ -181,6 +237,10 @@ def main() -> int:
     if not anchors:
         print("ERROR: no pude leer [engines.ifc.md5] de versions.lock", file=sys.stderr)
         return 1
+    core_anchors = _core_anchors()
+    if not core_anchors:
+        print("ERROR: no pude leer los md5 de [core] de versions.lock", file=sys.stderr)
+        return 1
 
     _copy_member()
     errs = _inject_engine(anchors)
@@ -190,6 +250,14 @@ def main() -> int:
             print("  -", e, file=sys.stderr)
         return 1
     print(f"  engine inyectado desde engines/ifc y verificado vs versions.lock (identidad OK)")
+
+    errs = _inject_nucleo(core_anchors)
+    if errs:
+        print("NO APTO — el núcleo inyectado no deriva del canónico:", file=sys.stderr)
+        for e in errs:
+            print("  -", e, file=sys.stderr)
+        return 1
+    print(f"  núcleo inyectado desde packages/core y verificado vs versions.lock [core] (identidad OK)")
 
     out = _zip(version)
     print(f"  empaquetado: {out.relative_to(ROOT)}  ({out.stat().st_size} B)")
