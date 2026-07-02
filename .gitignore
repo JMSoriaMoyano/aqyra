@@ -49,6 +49,12 @@ plugins/obras-lineales/scripts/nucleo/
 # tools/_inyectar_nucleo.py). Mismo guardián.
 plugins/puentes/scripts/nucleo/
 
+# PR-E6 · re-home de motor-fem (desde el FROZEN v0.3.0 — árbol 0.2.1 obsoleto, ver
+# packages/core/NUCLEO_PR-E6_decision.md): nace SIN copia trackeada del núcleo;
+# scripts/nucleo/ se GENERA en build (tools/build_plugin_motor_fem.py vía
+# tools/_inyectar_nucleo.py). Mismo guardián. Vaciado de espejos COMPLETO (Fase I).
+plugins/motor-fem/scripts/nucleo/
+
 # Operativa local (.bat de arranque/PR + logs): no es producto
 _operativo/
 *.bat
