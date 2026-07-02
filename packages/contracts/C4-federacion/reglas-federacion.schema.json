@@ -52,7 +52,7 @@
         },
         "punto_base": { "$ref": "#/$defs/punto_base" },
         "estado_entrada": { "$ref": "#/$defs/estado_s" },
-        "prioridad": { "type": "integer", "minimum": 1, "$comment": "orden de resolución al unificar la estructura espacial" }
+        "prioridad": { "type": "integer", "minimum": 1, "$comment": "RESERVADA en v0 (D24): el service no la usa; sin semántica hasta decisión nueva con su propio anclaje golden" }
       }
     },
     "deduplicacion": {
