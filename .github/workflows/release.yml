@@ -1,6 +1,7 @@
 name: Release (verifica las dos llaves)
 
-# Se dispara al empujar un tag vX.Y.Z. NO firma nada: la firma (Llave 2) la hace JM en local
+# Se dispara al empujar un tag vX.Y.Z (repo/engine) o federacion-vX.Y.Z (service, D15 del
+# contrato C4). NO firma nada: la firma (Llave 2) la hace JM en local
 # con su clave GPG (ed25519). Este workflow solo VERIFICA que:
 #   - la golden está VERDE (Llave 1), y
 #   - el tag está FIRMADO por GPG (Llave 2 presente).
@@ -8,7 +9,7 @@ name: Release (verifica las dos llaves)
 
 on:
   push:
-    tags: ["v*"]
+    tags: ["v*", "federacion-v*"]
 
 jobs:
   verificar:
