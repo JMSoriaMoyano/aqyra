@@ -131,25 +131,62 @@ def aplicables(ifc, spec: Spec) -> list:
 
 
 def _sistemas_clasificacion(el) -> set[str]:
+    """Sistemas de clasificación del elemento.
+
+    1.3 (hallazgo #9): `ReferencedSource` puede ser una CADENA de
+    IfcClassificationReference (patrón Revit/IFC4) — se sigue hasta la
+    IfcClassification raíz (tope 8, como el runner). Name=None no entra al set.
+    """
     sistemas = set()
     for rel in getattr(el, "HasAssociations", None) or []:
-        if rel.is_a("IfcRelAssociatesClassification"):
-            ref = rel.RelatingClassification
-            if ref.is_a("IfcClassificationReference"):
-                fuente = ref.ReferencedSource
-                if fuente is not None and fuente.is_a("IfcClassification"):
-                    sistemas.add(fuente.Name)
-            elif ref.is_a("IfcClassification"):
-                sistemas.add(ref.Name)
+        if not rel.is_a("IfcRelAssociatesClassification"):
+            continue
+        cur = rel.RelatingClassification
+        for _ in range(8):
+            if cur is None:
+                break
+            if cur.is_a("IfcClassification"):
+                if getattr(cur, "Name", None):
+                    sistemas.add(cur.Name)
+                break
+            cur = getattr(cur, "ReferencedSource", None)
     return sistemas
 
 
-def _tiene_propiedad(el, pset: str, nombre: str) -> bool:
-    for rel in getattr(el, "IsDefinedBy", None) or []:
+def _psets_de(objeto):
+    """IfcPropertySet de un objeto (ocurrencia o tipo), tolerante a suciedad."""
+    for rel in getattr(objeto, "IsDefinedBy", None) or []:
         if rel.is_a("IfcRelDefinesByProperties"):
             pd = rel.RelatingPropertyDefinition
-            if pd.is_a("IfcPropertySet") and pd.Name == pset:
-                for p in pd.HasProperties:
+            if pd is not None and pd.is_a("IfcPropertySet"):
+                yield pd
+    # tipo con Psets directos (IfcTypeObject.HasPropertySets)
+    for pd in getattr(objeto, "HasPropertySets", None) or []:
+        if pd is not None and pd.is_a("IfcPropertySet"):
+            yield pd
+
+
+def _tipos_de(el):
+    """Tipos del elemento: IsTypedBy (IFC4/4X3) y IsDefinedBy→IfcRelDefinesByType (2X3)."""
+    for rel in getattr(el, "IsTypedBy", None) or []:
+        if getattr(rel, "RelatingType", None) is not None:
+            yield rel.RelatingType
+    for rel in getattr(el, "IsDefinedBy", None) or []:
+        if rel.is_a("IfcRelDefinesByType") and getattr(rel, "RelatingType", None) is not None:
+            yield rel.RelatingType
+
+
+def _tiene_propiedad(el, pset: str, nombre: str) -> bool:
+    """1.3 (hallazgo #10): herencia ocurrencia > TIPO, como manda IDS.
+
+    Los exports de Revit ponen Psets en el IfcTypeObject y no en la ocurrencia:
+    mirar solo IsDefinedBy daba FALSOS FAIL sobre IFC conforme.
+    """
+    objetos = [el, *_tipos_de(el)]
+    for objeto in objetos:
+        for pd in _psets_de(objeto):
+            if pd.Name == pset:
+                for p in getattr(pd, "HasProperties", None) or []:
                     if (p.is_a("IfcPropertySingleValue") and p.Name == nombre
                             and p.NominalValue is not None):
                         return True
@@ -172,7 +209,23 @@ def cumple(el, req: Requisito) -> bool:
 
 
 def evaluar_spec(ifc, spec: Spec) -> dict:
-    """Evalúa un spec sobre un modelo → {n_comprobados, n_fallos, fallos:[elementos]}."""
+    """Evalúa un spec sobre un modelo → {n_comprobados, n_fallos, fallos, corruptos}.
+
+    1.3 (D17): un elemento cuyos atributos revientan al evaluarlo (entidad corrupta)
+    se SALTA y se reporta en `corruptos` (ids '#n') — no cuenta en n_comprobados;
+    el consumidor (qa.py) lo declara como aviso `entidad-corrupta`.
+    """
     els = aplicables(ifc, spec)
-    fallos = [el for el in els if not all(cumple(el, r) for r in spec.requisitos)]
-    return {"n_comprobados": len(els), "n_fallos": len(fallos), "fallos": fallos}
+    fallos, corruptos = [], []
+    for el in els:
+        try:
+            if not all(cumple(el, r) for r in spec.requisitos):
+                fallos.append(el)
+        except Exception:  # noqa: BLE001 — atributos rotos: saltar y declarar
+            try:
+                corruptos.append(f"#{el.id()}")
+            except Exception:  # noqa: BLE001
+                corruptos.append("#?")
+    n = len(els) - len(corruptos)
+    return {"n_comprobados": n, "n_fallos": len(fallos), "fallos": fallos,
+            "corruptos": corruptos}

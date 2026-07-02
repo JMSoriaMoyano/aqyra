@@ -1,0 +1,35 @@
+{
+  "proyecto": "C4-FED-03 - IFC sucio (camino feliz-degradado)",
+  "crs_destino": {
+    "epsg": "EPSG:25830",
+    "descripcion": "ETRS89 / UTM zone 30N",
+    "datum_vertical": "EGM2008"
+  },
+  "modelos": [
+    {
+      "id": "SUC",
+      "disciplina": "ARQ",
+      "fichero": "entrada/SUCIO.ifc",
+      "md5": "1dd956ca02fd085f06a2eaf6dcb10988",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 337000.0,
+        "n": 4610000.0,
+        "cota": 700.0,
+        "rotacion_deg": 0.0,
+        "declarado_por": "JM (reglas del caso golden; el IFC sucio NO viene georreferenciado)"
+      },
+      "estado_entrada": "S1",
+      "prioridad": 1
+    }
+  ],
+  "deduplicacion": {
+    "elementos": "nunca",
+    "estructura_espacial": "unificar-por-nombre"
+  },
+  "ids_pack": {
+    "familia": "ids",
+    "id": "proyecto-piloto",
+    "version": "v1"
+  }
+}

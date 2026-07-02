@@ -12,21 +12,22 @@ golden          = "C1-APERTURA-01"
 oraculo         = "conteo de entidades + round-trip"
 estado          = "engine-importado"     # Fase I·h1: corte mínimo en engines/ifc; la golden compila con el engine real
 
-# --- contrato C4 (Fase II·h1→h3): federación — contract-first COMPLETADO con el service ---
-# Decisiones D1–D15 ancladas en packages/contracts/C4-federacion/DECISIONES.md (OK JM 2026-07-02).
+# --- contrato C4 (Fase II·h1→h4): federación — contract-first COMPLETADO con el service ---
+# Decisiones D1–D20 ancladas en packages/contracts/C4-federacion/DECISIONES.md (OK JM 2026-07-02).
 # El Maestro autoritativo es el MANIFIESTO (D1); el IFC federado derivado NO se emite en v0 (D6).
-# Motor IDS propio mínimo (D7); emisión BCF 3.0 HECHA en 1.2 (Fase II·h3, D11–D14):
-# emitir_bcf() como tercera función, árbol descomprimido anclado por md5, GUIDs uuid5.
+# Motor IDS propio mínimo (D7); emisión BCF 3.0 HECHA en 1.2 (Fase II·h3, D11–D14).
+# LECTURA ENDURECIDA para IFC sucio HECHA en 1.3 (Fase II·h4, D16–D20): tolerable →
+# avisos_lectura en el informe; bloqueante → LecturaIfcError con diagnóstico.
 [contracts.C4]
 nombre          = "federacion"
 schema_version  = "0.1.0"              # 3 esquemas: reglas-federacion + maestro-manifiesto + informe-qa
 engine          = "services/federacion"
-engine_version  = "0.2.0"              # service v0.2 (Fase II·h3): + emitir_bcf() — topics BCF 3.0 reales
+engine_version  = "0.3.0"              # service v0.3 (Fase II·h4): lectura endurecida — avisos_lectura (D20)
 bcf             = "3.0"                # estándar buildingSMART, por referencia (no se re-esquematiza)
 ids_pack        = "ids/proyecto-piloto/v1"
-golden          = "C4-FED-01 + C4-FED-02"
-oraculo         = "recompute (federar+validar contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 — D10: más checks, nunca menos; C4-FED-02 añade la EMISIÓN: árbol BCF 3.0 anclado por md5 de fichero (D12) con GUIDs uuid5 deterministas (D13) y generación inyectada (bcf_generacion)"
-estado          = "service v0.2 (emisión BCF 3.0 hecha — tarea 1.2, Fase II·h3; Llave 2 = tag firmado federacion-v0.2.0, D15); IFC derivado = v0.x (D6)"
+golden          = "C4-FED-01 + C4-FED-02 + C4-FED-03"
+oraculo         = "recompute (federar+validar contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 — D10: más checks, nunca menos; C4-FED-02 añade la EMISIÓN: árbol BCF 3.0 anclado por md5 de fichero (D12) con GUIDs uuid5 deterministas (D13) y generación inyectada (bcf_generacion); C4-FED-03 añade el IFC SUCIO (D18-D19): camino feliz-degradado con avisos_lectura anclados en el expected"
+estado          = "service v0.3 (lectura endurecida IFC sucio — tarea 1.3, Fase II·h4, D16–D20; ADR 'parser sucio' CERRADO); IFC derivado = v0.x (D6)"
 
 # --- engine C1 (Fase I·h1): corte mínimo narración→IFC importado del canónico 0.10.0 ---
 # Copiado BYTE A BYTE de _import/aqyra-motor (procedencia). Identidad vigilada por

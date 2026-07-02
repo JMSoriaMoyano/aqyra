@@ -1,0 +1,7 @@
+{
+  "_regla_de_oro": "Un fallo NO se arregla aflojando esta golden: se corrige el codigo (o se re-ancla el oraculo por decision explicita con JM).",
+  "_modo": "recompute con el service (0.3.0) + modo anclado; el IFC sucio esta CONGELADO — ensuciarlo mas o menos es DISENO del caso (D18), no excusa para tolerancias",
+  "traslacion_m": 1e-06,
+  "rotacion_deg": 1e-09,
+  "_nota": "avisos_lectura se compara por modelo+codigo (detalle es texto libre, normalizado por el runner como titulo/detalle de requisitos)"
+}

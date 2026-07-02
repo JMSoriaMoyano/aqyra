@@ -14,7 +14,8 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
-import ifcopenshell
+from . import lectura
+from .lectura import SIN_NOMBRE, LecturaIfcError
 
 # Política de estructura espacial (documentada, v0):
 # - El nivel Project SIEMPRE se unifica en el proyecto de federación (nombre =
@@ -63,11 +64,16 @@ def federar(reglas: dict, base_dir: Path, reglas_md5: str | None = None,
 
     for m in reglas["modelos"]:
         ruta = base_dir / m["fichero"]
+        if not ruta.is_file():
+            raise LecturaIfcError(ruta, f"el fichero del modelo {m['id']!r} no existe "
+                                        f"(revisa 'fichero' en las reglas)")
         md5 = _md5(ruta)
         declarado = m.get("md5")
         if declarado and declarado != md5:
-            raise ValueError(f"integridad: {m['fichero']} md5={md5} ≠ declarado {declarado}")
-        ifc = ifcopenshell.open(str(ruta))
+            raise LecturaIfcError(ruta, f"integridad: md5={md5} ≠ declarado {declarado} "
+                                        f"(el fichero no es el que anclan las reglas)",
+                                  campo="md5")
+        ifc = lectura.abrir_ifc(ruta)
         pb = m["punto_base"]
         modelos_out.append({
             "id": m["id"],
@@ -83,8 +89,9 @@ def federar(reglas: dict, base_dir: Path, reglas_md5: str | None = None,
             "n_elementos": len(ifc.by_type("IfcElement")),
         })
         for clase, nivel in _NIVELES.items():
-            for ent in ifc.by_type(clase, include_subtypes=False):
-                clave = (nivel, ent.Name or "")
+            for ent in lectura.by_type_seguro(ifc, clase, include_subtypes=False):
+                nombre, _legible = lectura.nombre_seguro(ent)   # 1.3: Name=None/roto
+                clave = (nivel, nombre or SIN_NOMBRE)           # → nodo declarado
                 nodos.setdefault(clave, [])
                 if m["id"] not in nodos[clave]:
                     nodos[clave].append(m["id"])

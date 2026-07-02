@@ -101,9 +101,50 @@
           "type": "string"
         }
       }
+    },
+    "avisos_lectura": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/aviso_lectura"
+      },
+      "$comment": "D20 (tarea 1.3, IFC sucio): degradaciones DECLARADAS de la lectura de los IFC de entrada. La clave SOLO aparece cuando hay avisos (modelos limpios → ausente). La semántica anclada es modelo+codigo; detalle es texto libre."
     }
   },
   "$defs": {
+    "aviso_lectura": {
+      "description": "Una degradación tolerada al leer un IFC de entrada (D17: suciedad TOLERABLE se declara, nunca se calla). Los códigos son taxonomía cerrada de v0.3, ampliable de forma aditiva.",
+      "type": "object",
+      "required": [
+        "modelo",
+        "codigo"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "modelo": {
+          "type": "string",
+          "$comment": "id del modelo (procedencia)"
+        },
+        "codigo": {
+          "type": "string",
+          "enum": [
+            "nombre-vacio",
+            "nombre-duplicado",
+            "nivel-ausente",
+            "multi-proyecto",
+            "esquema-no-4x3",
+            "unidades-no-metricas",
+            "sin-unidades",
+            "entidad-corrupta",
+            "fichero-grande"
+          ]
+        },
+        "detalle": {
+          "type": "string",
+          "$comment": "texto libre (no se compara literalmente en el recompute)"
+        }
+      }
+    },
     "estado_s": {
       "type": "string",
       "enum": [

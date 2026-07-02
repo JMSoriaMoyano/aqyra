@@ -3,7 +3,7 @@
 > **Ficha autoritativa** (6 campos). Fuente: `Aqyra-Raiz/C4_federacion.md §1`
 > (las fichas de `Aqyra-Raiz` son la fuente; esta copia es la que rige en el monorepo).
 > El **esquema ejecutable** de este contrato son los tres `*.schema.json` de esta carpeta.
-> Decisiones de contrato ancladas en `DECISIONES.md` (D1–D5, OK JM 2026-07-02).
+> Decisiones de contrato ancladas en `DECISIONES.md` (D1–D20, OK JM 2026-07-02).
 
 ## Ficha (6 campos)
 
@@ -38,7 +38,8 @@ Oráculo: golden `C4-*` (p. ej. `C4-FED-01`, en `packages/golden/C4/`) — **mod
 
 **Versión.** SemVer; el consumidor ancla `federacion x.y.z` + `IDS vN` + `BCF 3.0` en
 `versions.lock` (`[contracts.C4]`).
-**Estado: contract-first, sin engine** (schema 0.1.0; service = tarea 1.1).
+**Estado: service 0.3.0** (schema 0.1.0; federar+validar+emitir_bcf con LECTURA
+ENDURECIDA para IFC sucio — tareas 1.1, 1.2 y 1.3 hechas; golden C4-FED-01/02/03).
 
 ## API abstracta
 
@@ -56,7 +57,9 @@ validar(maestro, ids)     → {informe, bcf}
   en las reglas (input), no se infiere en silencio.
 - **No funde ni renombra GUIDs de terceros**: procedencia por disciplina preservada en el
   manifiesto; los elementos no se deduplican (v0.1: solo la estructura espacial se unifica).
-- El endurecimiento del parser C1 para IFC sucio es **dependencia** de C4, tarea aparte (1.3).
+- El endurecimiento para IFC sucio vive en el CONSUMIDOR (tarea 1.3 HECHA, D16–D20): el
+  engine C1 es zona firmada y no se toca; `services/federacion` tolera+declara
+  (`avisos_lectura`) o aborta con diagnóstico (`LecturaIfcError`).
 
 ## Regla de evolución (heredada de C1, sagrada)
 
