@@ -1,0 +1,22 @@
+{
+  "proyecto": "C4-FED-01 - Edificio piloto (disciplina EST)",
+  "esquema": "IFC4X3",
+  "niveles": [
+    {"nombre": "Nivel 00", "cota": 0.0},
+    {"nombre": "Nivel 01", "cota": 3.0}
+  ],
+  "pilares": [
+    {"nombre": "P1", "nivel": "Nivel 00", "pos": [0.0, 0.0], "seccion": [0.4, 0.4], "altura": 3.0, "material": "HA-30"},
+    {"nombre": "P2", "nivel": "Nivel 00", "pos": [6.0, 0.0], "seccion": [0.4, 0.4], "altura": 3.0, "material": "HA-30"},
+    {"nombre": "P3", "nivel": "Nivel 00", "pos": [6.0, 6.0], "seccion": [0.4, 0.4], "altura": 3.0, "material": "HA-30"},
+    {"nombre": "P4", "nivel": "Nivel 00", "pos": [0.0, 6.0], "seccion": [0.4, 0.4], "altura": 3.0, "material": "HA-30"}
+  ],
+  "losas": [
+    {"nombre": "Forjado-N01", "nivel": "Nivel 01", "contorno": [[0.0,0.0],[6.0,0.0],[6.0,6.0],[0.0,6.0]],
+     "espesor": 0.30, "material": "HA-30"}
+  ],
+  "elementos": [
+    {"ifcClass": "IfcFooting", "predefined": "PAD_FOOTING", "nombre": "Z1", "nivel": "Nivel 00", "pos": [0.0, 0.0], "material": "HA-25"},
+    {"ifcClass": "IfcFooting", "predefined": "PAD_FOOTING", "nombre": "Z2", "nivel": "Nivel 00", "pos": [6.0, 0.0], "material": "HA-25"}
+  ]
+}

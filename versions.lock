@@ -12,6 +12,20 @@ golden          = "C1-APERTURA-01"
 oraculo         = "conteo de entidades + round-trip"
 estado          = "engine-importado"     # Fase I·h1: corte mínimo en engines/ifc; la golden compila con el engine real
 
+# --- contrato C4 (Fase II·h1): federación, CONTRACT-FIRST — el esquema ANTES que el service ---
+# Decisiones D1–D5 ancladas en packages/contracts/C4-federacion/DECISIONES.md (OK JM 2026-07-02).
+# El Maestro autoritativo es el MANIFIESTO (D1); el IFC federado es derivado. BCF 3.0 por referencia (D2).
+[contracts.C4]
+nombre          = "federacion"
+schema_version  = "0.1.0"              # 3 esquemas: reglas-federacion + maestro-manifiesto + informe-qa
+engine          = "services/federacion"
+engine_version  = ""                   # SIN ENGINE: el service es la tarea 1.1 (la Llave 2 de adopción llega con él)
+bcf             = "3.0"                # estándar buildingSMART, por referencia (no se re-esquematiza)
+ids_pack        = "ids/proyecto-piloto/v1"
+golden          = "C4-FED-01"
+oraculo         = "modo anclado: conformidad de esquemas + hashes de entradas congeladas + coherencia interna (oráculo manual documentado en la ficha; recompute contra el service en 1.1)"
+estado          = "contract-first, sin engine"
+
 # --- engine C1 (Fase I·h1): corte mínimo narración→IFC importado del canónico 0.10.0 ---
 # Copiado BYTE A BYTE de _import/aqyra-motor (procedencia). Identidad vigilada por
 # engines/ifc/tests/test_identidad_ifc.py (hash fijo) y test_espejo_ifc.py (vs procedencia).
@@ -55,7 +69,14 @@ golden          = "identidad de contenido (hash)"
 estado          = "esqueleto (subconjunto mínimo de coeficientes estándar)"
 # [packs.banco]      id = "BEDEC"   version = "2026-Q1"   (0.6+, cuando C5 lo consuma)
 # [packs.normativa]  id = "CTE"     version = "2019"      (cuando C3 lo consuma)
-# [packs.ids]        id = "proyecto" version = "v3"       (cuando C4/C7 lo consuman)
+
+# pack IDS (Fase II·h1): adoptado por C4 en contract-first — golden C4-FED-01 lo referencia.
+[packs.ids]
+id              = "proyecto-piloto"
+familia         = "ids"
+version         = "v1"
+golden          = "identidad de contenido (hash: md5 del .ids + lista de requisitos)"
+estado          = "adoptado por C4 (contract-first): 4 requisitos IDS 1.0 en el .ids + R4-GEORREF como regla de módulo (fuera del .ids, ficha C4 §3)"
 
 # --- historia (0.7): importación de los 4 repos aguas arriba PRESERVANDO firmas ---
 # Estrategia A: `git subtree add --prefix=_import/<repo>` conserva los SHA de los commits,

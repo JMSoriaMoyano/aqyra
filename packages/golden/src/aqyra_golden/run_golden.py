@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
-"""Runner de la golden (Llave 1) — vertical C1.
+"""Runner de la golden (Llave 1) — multi-contrato (C1 + C4).
 
 Dos pasos de validación (ver CONTRATOS_estado-validacion-ubicacion.md §2):
-  1. El esquema de contrato es JSON Schema bien formado.
-  2. La golden lo ejercita: el caso conforma el esquema y coincide con el oráculo (± tolerancia).
-
-El oráculo real de C1 es *compilar→parsear→contar*. Fase I (hilo 1): el compile aterriza en
-engines/ifc (corte mínimo importado del canónico iso19650-openbim 0.10.0). El runner COMPILA
-`caso.alto.json` → IFC con el engine y recomputa las métricas sobre ESE IFC, comparándolas con
-el MISMO expected.json. La costura de Fase 0 (recomputar desde el IFC congelado) queda cerrada.
+  1. TODOS los esquemas de contrato (packages/contracts/C*/*.schema.json) son JSON Schema
+     bien formados.
+  2. La golden los ejercita, DESPACHADA POR CONTRATO (Fase II·h1):
+     - C1: compile real (caso.alto.json → IFC con engines/ifc) + recompute de métricas
+       contra expected.json (costura cerrada en Fase I·h1).
+     - C4: modo ANCLADO (el service NO existe — contract-first): conformidad de esquemas,
+       identidad por hash de las entradas congeladas y coherencia interna del caso.
+       Cuando exista services/federacion (tarea 1.1) se antepone federar+validar contra
+       el MISMO expected.json (misma costura que C1 en Fase 0 → Fase I).
 
 Regla de oro: un fallo se corrige en el código, NUNCA aflojando la golden.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import sys
@@ -47,6 +50,24 @@ def load_c1_schemas(contracts_dir: Path) -> dict[str, dict]:
     return out
 
 
+def load_c4_schemas(contracts_dir: Path) -> dict[str, dict]:
+    base = contracts_dir / "C4-federacion"
+    out = {}
+    for key, fname in (("reglas", "reglas-federacion.schema.json"),
+                       ("manifiesto", "maestro-manifiesto.schema.json"),
+                       ("informe", "informe-qa.schema.json")):
+        out[key] = json.loads((base / fname).read_text(encoding="utf-8"))
+    return out
+
+
+def discover_schemas(contracts_dir: Path) -> dict[str, dict]:
+    """TODOS los esquemas de contrato del registro (paso 1 es multi-contrato)."""
+    out = {}
+    for p in sorted(contracts_dir.glob("C*/*.schema.json")):
+        out[f"{p.parent.name}/{p.name}"] = json.loads(p.read_text(encoding="utf-8"))
+    return out
+
+
 def check_schemas_wellformed(schemas: dict[str, dict]) -> list[tuple[str, bool, str]]:
     """Paso 1: los esquemas son JSON Schema bien formados (meta-validación)."""
     from jsonschema import Draft202012Validator
@@ -72,7 +93,7 @@ def validate_against_schema(instance: dict, schema: dict) -> tuple[bool, str]:
 
 
 # --------------------------------------------------------------------------- #
-# Oráculo: métricas recomputadas desde el IFC congelado                       #
+# C1 · oráculo: compile real + métricas recomputadas                           #
 # --------------------------------------------------------------------------- #
 def _attr(seg, name, idx):
     try:
@@ -172,7 +193,7 @@ def compute_metrics(ifc_path: Path) -> dict:
 
 
 # --------------------------------------------------------------------------- #
-# Comparación caso vs oráculo                                                 #
+# C1 · comparación caso vs oráculo                                             #
 # --------------------------------------------------------------------------- #
 def compare(expected: dict, got: dict, tol: dict) -> list[tuple[str, bool, str]]:
     checks: list[tuple[str, bool, str]] = []
@@ -212,6 +233,157 @@ def compare(expected: dict, got: dict, tol: dict) -> list[tuple[str, bool, str]]
 
 
 # --------------------------------------------------------------------------- #
+# Casos por contrato                                                          #
+# --------------------------------------------------------------------------- #
+def run_case_c1(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict) -> bool:
+    """C1: conformidad del caso + compile real + recompute de métricas (Fase I·h1)."""
+    schemas = load_c1_schemas(contracts_dir)
+    case_ok = True
+
+    alto_path = case_dir / "caso.alto.json"
+    if alto_path.exists():
+        alto = json.loads(alto_path.read_text(encoding="utf-8"))
+        ok, detail = validate_against_schema(alto, schemas["alto"])
+        print_checks([("caso conforma alto-spec", ok, detail)])
+        case_ok &= ok
+    else:
+        print_checks([("caso.alto.json presente", False, "no encontrado (necesario para compilar)")])
+        return False
+
+    import tempfile
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            compiled = Path(td) / "compilado.ifc"
+            compile_case(alto_path, compiled)
+            print_checks([("compile narración→IFC", True, f"engine → {compiled.name}")])
+            got = compute_metrics(compiled)
+            checks = compare(expected, got, tol)
+            print_checks(checks)
+            case_ok &= all(ok for _, ok, _ in checks)
+    except Exception as e:  # noqa: BLE001
+        print_checks([("compile+oráculo", False, f"{type(e).__name__}: {e}")])
+        case_ok = False
+    return case_ok
+
+
+def _md5(path: Path) -> str:
+    return hashlib.md5(path.read_bytes()).hexdigest()
+
+
+def _ids_identifiers(ids_path: Path) -> set[str]:
+    """Identificadores de las specifications del .ids (IDS 1.0, buildingSMART)."""
+    import xml.etree.ElementTree as ET
+    ns = "{http://standards.buildingsmart.org/IDS}"
+    root = ET.parse(str(ids_path)).getroot()
+    out = set()
+    for spec in root.iter(f"{ns}specification"):
+        out.add(spec.get("identifier") or spec.get("name") or "")
+    return out - {""}
+
+
+def _lock_packs_ids(repo: Path) -> dict:
+    """Sección [packs.ids] de versions.lock (ancla del pack IDS)."""
+    try:  # Python 3.11+
+        import tomllib
+    except ModuleNotFoundError:  # 3.10
+        import tomli as tomllib
+    with open(repo / "versions.lock", "rb") as f:
+        lock = tomllib.load(f)
+    return lock.get("packs", {}).get("ids", {})
+
+
+def run_case_c4(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                repo: Path = DEFAULT_REPO) -> bool:
+    """C4: modo ANCLADO (contract-first, sin service) — ver golden/C4/*/ficha.md.
+
+    1. Conformidad de esquemas (reglas + manifiesto esperado + informe esperado).
+    2. Identidad por hash de las entradas congeladas (triple coherencia de md5).
+    3. Coherencia interna (modelos, pack IDS anclado, requisitos ⊆ .ids, veredicto).
+    En 1.1 se antepone federar+validar (service real) contra el MISMO expected.
+    """
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c4_schemas(contracts_dir)
+    manifiesto = expected.get("maestro_manifiesto", {})
+    informe = expected.get("informe_qa", {})
+
+    reglas_path = case_dir / "reglas.json"
+    if not reglas_path.exists():
+        print_checks([("reglas.json presente", False, "no encontrado")])
+        return False
+    reglas = json.loads(reglas_path.read_text(encoding="utf-8"))
+
+    # 1 · conformidad de esquemas
+    for name, inst, key in (("reglas conforman esquema", reglas, "reglas"),
+                            ("manifiesto esperado conforma", manifiesto, "manifiesto"),
+                            ("informe esperado conforma", informe, "informe")):
+        ok, detail = validate_against_schema(inst, schemas[key])
+        checks.append((name, ok, detail))
+
+    # 2 · identidad de las entradas congeladas (hash) + triple coherencia
+    entradas = expected.get("entradas_md5", {})
+    checks.append(("entradas declaradas", bool(entradas), f"{len(entradas)} fichero/s"))
+    for rel, exp_md5 in sorted(entradas.items()):
+        p = case_dir / rel
+        if not p.exists():
+            checks.append((f"identidad {rel}", False, "fichero no encontrado"))
+            continue
+        got = _md5(p)
+        checks.append((f"identidad {rel}", got == exp_md5,
+                       f"md5 {got[:12]}… (esperado {exp_md5[:12]}…)"))
+    md5_reglas = {m["fichero"]: m.get("md5") for m in reglas.get("modelos", [])}
+    md5_man = {m["fichero_origen"]: m.get("md5") for m in manifiesto.get("modelos", [])}
+    checks.append(("md5 reglas == entradas", md5_reglas == entradas,
+                   "los md5 de reglas.json anclan los mismos ficheros"))
+    checks.append(("md5 manifiesto == entradas", md5_man == entradas,
+                   "los md5 del manifiesto anclan los mismos ficheros"))
+
+    # 3 · coherencia interna
+    ids_reglas = {m["id"] for m in reglas.get("modelos", [])}
+    ids_man = {m["id"] for m in manifiesto.get("modelos", [])}
+    ids_estados = set(informe.get("estados", {}).get("por_modelo", {}))
+    checks.append(("modelos coherentes", ids_reglas == ids_man == ids_estados,
+                   f"reglas={sorted(ids_reglas)} manifiesto={sorted(ids_man)} informe={sorted(ids_estados)}"))
+
+    pack_reglas = reglas.get("ids_pack", {})
+    pack_informe = informe.get("ids", {})
+    mismo_pack = (pack_reglas.get("id") == pack_informe.get("pack_id")
+                  and pack_reglas.get("version") == pack_informe.get("pack_version"))
+    checks.append(("pack IDS reglas == informe", mismo_pack,
+                   f"{pack_reglas.get('id')}/{pack_reglas.get('version')}"))
+
+    lock_ids = _lock_packs_ids(repo)
+    anclado = (lock_ids.get("id") == pack_reglas.get("id")
+               and lock_ids.get("version") == pack_reglas.get("version"))
+    checks.append(("pack IDS anclado en versions.lock", anclado,
+                   f"lock={lock_ids.get('id')}/{lock_ids.get('version')}"))
+
+    pack_dir = repo / "data" / "packs" / "ids" / str(pack_reglas.get("id")) / str(pack_reglas.get("version"))
+    ids_ok, ids_detail = False, "pack.json no encontrado"
+    if (pack_dir / "pack.json").exists():
+        pack = json.loads((pack_dir / "pack.json").read_text(encoding="utf-8"))
+        ids_file = pack_dir / pack["contenido"]["fichero"]
+        declarados = _ids_identifiers(ids_file)
+        exigidos = {r["id"] for r in informe.get("requisitos", []) if r.get("origen", "ids") == "ids"}
+        faltan = exigidos - declarados
+        ids_ok = not faltan
+        ids_detail = (f"{sorted(exigidos)} ⊆ .ids" if ids_ok
+                      else f"requisitos SIN respaldo en el .ids: {sorted(faltan)}")
+    checks.append(("requisitos (origen=ids) ⊆ .ids del pack", ids_ok, ids_detail))
+
+    resultados = [r.get("resultado") for r in informe.get("requisitos", [])]
+    esperado_veredicto = "no-conforme" if "fail" in resultados else "conforme"
+    checks.append(("veredicto coherente", informe.get("veredicto") == esperado_veredicto,
+                   f"{informe.get('veredicto')} (requisitos: "
+                   f"{resultados.count('pass')} pass / {resultados.count('fail')} fail)"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
+CASE_RUNNERS = {"C1": run_case_c1, "C4": run_case_c4}
+
+
+# --------------------------------------------------------------------------- #
 # Orquestación                                                                #
 # --------------------------------------------------------------------------- #
 def discover_cases(golden_dir: Path) -> list[Path]:
@@ -228,14 +400,14 @@ def discover_cases(golden_dir: Path) -> list[Path]:
 def print_checks(checks, indent="    "):
     for name, ok, detail in checks:
         mark = f"{GREEN}[OK]{RST}" if ok else f"{RED}[FALLA]{RST}"
-        print(f"{indent}{mark} {name:<24} {DIM}{detail}{RST}")
+        print(f"{indent}{mark} {name:<38} {DIM}{detail}{RST}")
 
 
 def run(golden_dir: Path, contracts_dir: Path, schema_only: bool) -> int:
     print(f"{DIM}contracts: {contracts_dir}{RST}")
     print(f"{DIM}golden:    {golden_dir}{RST}\n")
 
-    schemas = load_c1_schemas(contracts_dir)
+    schemas = discover_schemas(contracts_dir)
     schema_checks = check_schemas_wellformed(schemas)
     print("Paso 1 · esquemas de contrato (JSON Schema válido):")
     print_checks(schema_checks)
@@ -254,41 +426,19 @@ def run(golden_dir: Path, contracts_dir: Path, schema_only: bool) -> int:
 
     print(f"\nPaso 2 · golden ({len(cases)} caso/s):")
     for case_dir in cases:
+        contract = case_dir.parent.name
         expected = json.loads((case_dir / "expected.json").read_text(encoding="utf-8"))
         tol_path = case_dir / "tolerancias.json"
         tol = json.loads(tol_path.read_text(encoding="utf-8")) if tol_path.exists() else {}
         name = expected.get("caso", case_dir.name)
-        print(f"\n  ▶ {name}")
-
-        case_ok = True
-        # 2a. conformidad de esquema del caso
-        alto_path = case_dir / "caso.alto.json"
-        if alto_path.exists():
-            alto = json.loads(alto_path.read_text(encoding="utf-8"))
-            ok, detail = validate_against_schema(alto, schemas["alto"])
-            print_checks([("caso conforma alto-spec", ok, detail)])
-            case_ok &= ok
-
-        # 2b. oráculo: COMPILE REAL (caso.alto.json → IFC con el engine) + recompute
-        if not alto_path.exists():
-            print_checks([("caso.alto.json presente", False, "no encontrado (necesario para compilar)")])
-            case_ok = False
-        else:
-            import tempfile
-            try:
-                with tempfile.TemporaryDirectory() as td:
-                    compiled = Path(td) / "compilado.ifc"
-                    compile_case(alto_path, compiled)
-                    print_checks([("compile narración→IFC", True, f"engine → {compiled.name}")])
-                    got = compute_metrics(compiled)
-                    checks = compare(expected, got, tol)
-                    print_checks(checks)
-                    case_ok &= all(ok for _, ok, _ in checks)
-            except Exception as e:  # noqa: BLE001
-                print_checks([("compile+oráculo", False, f"{type(e).__name__}: {e}")])
-                case_ok = False
-
-        all_ok &= case_ok
+        runner = CASE_RUNNERS.get(contract)
+        print(f"\n  ▶ {name} {DIM}[{contract}]{RST}")
+        if runner is None:
+            print_checks([("contrato con runner", False,
+                           f"'{contract}' sin modo de ejecución en CASE_RUNNERS")])
+            all_ok = False
+            continue
+        all_ok &= runner(case_dir, contracts_dir, expected, tol)
 
     verdict = "VERDE" if all_ok else "ROJO"
     color = GREEN if all_ok else RED
@@ -298,7 +448,7 @@ def run(golden_dir: Path, contracts_dir: Path, schema_only: bool) -> int:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Runner de la golden (Llave 1) — vertical C1.")
+    ap = argparse.ArgumentParser(description="Runner de la golden (Llave 1) — multi-contrato.")
     ap.add_argument("--golden-dir", type=Path, default=DEFAULT_GOLDEN_DIR)
     ap.add_argument("--contracts-dir", type=Path, default=None,
                     help="por defecto: <repo>/packages/contracts")
@@ -314,3 +464,4 @@ def main() -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 # Fase I · hilo 1: costura cerrada (compile real narración→IFC). Ver engines/ifc/compile_c1.py.
+# Fase II · hilo 1: dispatch por contrato (CASE_RUNNERS); C4 en modo ANCLADO hasta el service (1.1).

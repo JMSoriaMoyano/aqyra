@@ -1,0 +1,19 @@
+{
+  "id": "proyecto-piloto",
+  "familia": "ids",
+  "version": "v1",
+  "titulo": "IDS del proyecto piloto (plantilla EIR mínima) — requisitos de información para C4",
+  "fuente": "propio (despacho) — requisitos redactados para el golden C4-FED-01; estándar IDS 1.0 de buildingSMART",
+  "vigencia": {"desde": "2026-07-02", "estado": "vigente"},
+  "metadatos": {
+    "autoria": "propia",
+    "estandar": "IDS 1.0 (buildingSMART)",
+    "nota": "R4-GEORREF no está en el .ids: no es expresable en IDS puro; es regla adicional del módulo QA (origen='modulo', ficha C4 §3). Consumidores: C4 (services/federacion) y C7."
+  },
+  "contenido": {
+    "fichero": "requisitos.ids",
+    "version_ids": "1.0",
+    "md5_ids": "e7b294be71092f3ad1c4eed31fddf5f2",
+    "requisitos": ["R1-CLASIF", "R2-EXTERIOR", "R3-MATERIAL", "R5-PLANTAS"]
+  }
+}

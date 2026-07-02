@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/contracts/C4/maestro-manifiesto.schema.json",
+  "title": "C4 · manifiesto del Maestro (fuente de verdad de la federación)",
+  "description": "Salida de federar(): el Maestro autoritativo es este manifiesto (D1) — refs a los IFC fuente por hash, transformación aplicada por modelo, procedencia por disciplina y política de GUIDs. El IFC federado es un DERIVADO determinista de este manifiesto (su esquema es IFC4X3, no JSON). Forward-open.",
+  "type": "object",
+  "required": ["proyecto", "crs", "modelos", "guids", "procedencia"],
+  "additionalProperties": true,
+  "properties": {
+    "proyecto": { "type": "string", "minLength": 1 },
+    "crs": {
+      "type": "object",
+      "required": ["epsg"],
+      "additionalProperties": true,
+      "properties": {
+        "epsg": { "type": "string", "pattern": "^EPSG:[0-9]{4,6}$" },
+        "descripcion": { "type": "string" },
+        "datum_vertical": { "type": "string" }
+      }
+    },
+    "modelos": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/modelo_federado" } },
+    "estructura_espacial": { "$ref": "#/$defs/estructura_espacial" },
+    "guids": {
+      "type": "object",
+      "required": ["politica"],
+      "additionalProperties": true,
+      "properties": {
+        "politica": {
+          "type": "string", "enum": ["preservados"],
+          "$comment": "ADR: no fundir ni renombrar GUIDs de terceros. v0.1 solo admite 'preservados'; forward-open para políticas futuras."
+        }
+      }
+    },
+    "ifc_derivado": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "fichero": { "type": "string" },
+        "md5": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+        "determinista": { "type": "boolean", "const": true }
+      },
+      "$comment": "opcional en v0.1 (contract-first, sin service); obligatorio de facto cuando exista services/federacion (1.1)"
+    },
+    "procedencia": {
+      "type": "object",
+      "required": ["generado_por"],
+      "additionalProperties": true,
+      "properties": {
+        "generado_por": { "type": "string", "$comment": "'services/federacion x.y.z' — o 'oráculo manual (contract-first)' en la golden anclada" },
+        "fecha": { "type": "string" },
+        "reglas_md5": { "type": "string", "pattern": "^[a-f0-9]{32}$" }
+      }
+    }
+  },
+  "$defs": {
+    "modelo_federado": {
+      "type": "object",
+      "required": ["id", "disciplina", "fichero_origen", "md5", "transformacion"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "disciplina": { "type": "string", "minLength": 1 },
+        "fichero_origen": { "type": "string", "minLength": 1 },
+        "md5": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+        "transformacion": { "$ref": "#/$defs/transformacion" },
+        "estado_entrada": { "type": "string", "enum": ["S0","S1","S2","S3","S4","S5","S6","S7"] },
+        "n_elementos": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "transformacion": {
+      "description": "Cómo se llevó el origen local del modelo al CRS destino: la traslación/rotación que materializa el punto base DECLARADO en las reglas.",
+      "type": "object",
+      "required": ["traslacion", "rotacion_deg"],
+      "additionalProperties": true,
+      "properties": {
+        "traslacion": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" }, "$comment": "[dE, dN, dCota] en el CRS destino" },
+        "rotacion_deg": { "type": "number" },
+        "escala": { "type": "number", "default": 1.0 }
+      }
+    },
+    "estructura_espacial": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "politica": { "type": "string", "enum": ["unificada-por-nombre", "mantenida-separada"] },
+        "agregados": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["nivel", "nombre", "aportado_por"],
+            "additionalProperties": true,
+            "properties": {
+              "nivel": { "type": "string", "$comment": "Project | Site | Building | Storey" },
+              "nombre": { "type": "string" },
+              "aportado_por": { "type": "array", "minItems": 1, "items": { "type": "string" }, "$comment": "ids de modelo que aportan este nodo (procedencia de la agregación)" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

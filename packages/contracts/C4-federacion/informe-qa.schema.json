@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/contracts/C4/informe-qa.schema.json",
+  "title": "C4 · informe de QA (validar: Maestro vs IDS → pass/fail + estados S0–S7)",
+  "description": "Salida de validar(): pass/fail por requisito IDS, incidencias con GUIDs (materia de los topics BCF 3.0 — por referencia, D2) y estados de entrega ISO 19650 (S0–S7) por modelo y para el Maestro. Forward-open.",
+  "type": "object",
+  "required": [
+    "proyecto",
+    "ids",
+    "requisitos",
+    "estados",
+    "veredicto"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "proyecto": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ids": {
+      "type": "object",
+      "required": [
+        "pack_id",
+        "pack_version"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "pack_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pack_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fichero": {
+          "type": "string",
+          "$comment": "el .ids dentro del pack"
+        },
+        "version_ids": {
+          "type": "string",
+          "$comment": "versión del estándar IDS de buildingSMART (p. ej. '1.0')"
+        }
+      }
+    },
+    "requisitos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/requisito"
+      }
+    },
+    "incidencias": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/incidencia"
+      }
+    },
+    "estados": {
+      "type": "object",
+      "required": [
+        "maestro"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "por_modelo": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/estado_s"
+          }
+        },
+        "maestro": {
+          "$ref": "#/$defs/estado_s"
+        }
+      }
+    },
+    "veredicto": {
+      "type": "string",
+      "enum": [
+        "conforme",
+        "no-conforme"
+      ]
+    },
+    "bcf": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "estandar": {
+          "type": "string",
+          "const": "BCF"
+        },
+        "version": {
+          "type": "string",
+          "$comment": "fijada en el contrato y en versions.lock: 3.0"
+        },
+        "emitido": {
+          "type": "boolean",
+          "$comment": "false en la golden anclada (el service aún no existe); true cuando 1.1/1.2 emitan los topics"
+        },
+        "carpeta": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "estado_s": {
+      "type": "string",
+      "enum": [
+        "S0",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7"
+      ]
+    },
+    "resultado": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "no-aplica"
+      ]
+    },
+    "requisito": {
+      "type": "object",
+      "required": [
+        "id",
+        "titulo",
+        "resultado"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "$comment": "si origen='ids', debe existir en el .ids del pack (coherencia que vigila el runner)"
+        },
+        "titulo": {
+          "type": "string"
+        },
+        "aplicabilidad": {
+          "type": "string",
+          "$comment": "sobre qué aplica (clase IFC / disciplina)"
+        },
+        "resultado": {
+          "$ref": "#/$defs/resultado",
+          "$comment": "agregado: fail si falla en algún modelo"
+        },
+        "por_modelo": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "resultado"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "resultado": {
+                "$ref": "#/$defs/resultado"
+              },
+              "n_comprobados": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "n_fallos": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "detalle": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "origen": {
+          "type": "string",
+          "enum": [
+            "ids",
+            "modulo"
+          ],
+          "default": "ids",
+          "$comment": "ids = expresado en el .ids del pack (el runner exige que el id exista alli); modulo = regla de validacion adicional del propio module QA, marcada como tal (ficha C4 §3: 'no todo es IDS' — p. ej. georreferenciacion del proyecto)"
+        }
+      }
+    },
+    "incidencia": {
+      "description": "Materia de un topic BCF 3.0: cada incidencia mapea 1:1 a un topic (viewpoint con los GUIDs afectados) cuando el service emita BCF. La golden anclada las declara; no las emite.",
+      "type": "object",
+      "required": [
+        "id",
+        "requisito",
+        "modelo",
+        "titulo"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requisito": {
+          "type": "string",
+          "$comment": "id del requisito IDS que la origina"
+        },
+        "modelo": {
+          "type": "string",
+          "$comment": "id del modelo (procedencia)"
+        },
+        "guids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 22,
+            "maxLength": 22
+          },
+          "$comment": "IfcGloballyUniqueId (22 chars, base64-IFC)"
+        },
+        "titulo": {
+          "type": "string"
+        },
+        "severidad": {
+          "type": "string",
+          "enum": [
+            "bloqueante",
+            "mayor",
+            "menor",
+            "info"
+          ]
+        },
+        "bcf_topic_guid": {
+          "type": "string",
+          "$comment": "UUID del topic cuando se emita BCF (vacío en la golden anclada)"
+        }
+      }
+    }
+  }
+}
