@@ -43,7 +43,7 @@ version         = "0.1.0"
 origen          = "Estructurando/Nucleo-transversal/nucleo"
 ifc_utils_md5   = "ad06f87d648fc0388b35d10deeb290b7"
 grafo_red_md5   = "fe5dfebb4c5adb73f90718d57978e8a4"
-estado          = "extraído; espejo del NÚCLEO retirado del PILOTO (PR-E2): plugins/iso19650-openbim consume packages/core por build (tools/build_plugin_iso19650.py inyecta scripts/nucleo/); guardián anti-reaparición en test_no_reaparicion_espejo.py. Pendiente re-home + retirada en 4 plugins (PR-E3…E6: instalaciones → obras-lineales → puentes → motor-fem)"
+estado          = "extraído; espejo del NÚCLEO retirado del PILOTO (PR-E2) y de INSTALACIONES (PR-E3: plugins/instalaciones re-homed SIN copia trackeada; tools/build_plugin_instalaciones.py inyecta scripts/nucleo/, gate Paso 1c); guardián anti-reaparición en test_no_reaparicion_espejo.py cubre ambos por nombre. Quedan 3 (PR-E4…E6: obras-lineales → puentes → motor-fem)"
 
 # --- packs (0.6): conocimiento externo versionado. data/packs/<familia>/<id>/<version>/ ---
 # Cambiar de pack es una decisión explícita: se re-ancla aquí y se actualiza su golden.
