@@ -43,6 +43,12 @@ plugins/instalaciones/scripts/nucleo/
 # Mismo guardián.
 plugins/obras-lineales/scripts/nucleo/
 
+# PR-E5 · re-home de puentes (desde el FROZEN v0.6.0 — árbol 0.3.0 obsoleto, ver
+# packages/core/NUCLEO_PR-E5_decision.md): nace SIN copia trackeada del núcleo;
+# scripts/nucleo/ se GENERA en build (tools/build_plugin_puentes.py vía
+# tools/_inyectar_nucleo.py). Mismo guardián.
+plugins/puentes/scripts/nucleo/
+
 # Operativa local (.bat de arranque/PR + logs): no es producto
 _operativo/
 *.bat
