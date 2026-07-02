@@ -1,30 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""build_plugin_instalaciones.py — empaqueta el .plugin `instalaciones` 0.3.0 desde el monorepo.
+"""build_plugin_obras_lineales.py — empaqueta el .plugin `obras-lineales` 0.4.0 desde el monorepo.
 
-PR-E3 (Fase I · hilo 4): primer plugin re-homed que NACE sin espejo. `plugins/instalaciones`
+PR-E4 (Fase I · hilo 5): segundo plugin re-homed que NACE sin espejo. `plugins/obras-lineales`
 no lleva copia commiteada del núcleo transversal (`ifc_utils`, `grafo_red`): la fuente única
-es `packages/core` y este build la INYECTA:
+es `packages/core` y este build la INYECTA vía `tools/_inyectar_nucleo.py` (fuente única de
+la inyección desde este PR, tercer consumidor):
 
   scripts/nucleo/{ifc_utils,grafo_red}.py  ←  packages/core/src/aqyra_core/  (NÚCLEO)
 
 Antes de zipar, PRUEBA que cada fichero inyectado es byte-a-byte idéntico a su anclaje md5
 (LF) de `versions.lock [core]`: si el build no deriva del canónico, falla. Luego zipa a
-dist/ y pasa la puerta `tools/verificar_empaquetado.py` con el frozen v0.3.0 como --ref.
+dist/ y pasa la puerta `tools/verificar_empaquetado.py` con el frozen v0.4.0 como --ref.
 
 Diferencia esperada vs el frozen: el nuevo .plugin no lleva `scripts/nucleo/{test_grafo_red.py,
-README.md}` (artefactos de desarrollo del núcleo, igual que el piloto). En la puerta, la
-ausencia de un .py de la ref es AVISO, no bloqueo: único aviso esperado = test_grafo_red.py.
-
-PR-E4 (Fase I · hilo 5): la inyección del núcleo se consume de `tools/_inyectar_nucleo.py`
-(fuente única de la inyección con el tercer consumidor; deuda anclada en
-NUCLEO_PR-E3_cierre.md pagada). El contrato y el producto no cambian.
+README.md}` (artefactos de desarrollo del núcleo, igual que el piloto e instalaciones). En la
+puerta, la ausencia de un .py de la ref es AVISO, no bloqueo: único aviso esperado =
+test_grafo_red.py.
 
 Uso:
-    python3 tools/build_plugin_instalaciones.py            # build + verificación intrínseca
-    python3 tools/build_plugin_instalaciones.py --ref <v0.3.0.plugin>   # + contraste de tamaños
+    python3 tools/build_plugin_obras_lineales.py            # build + verificación intrínseca
+    python3 tools/build_plugin_obras_lineales.py --ref <v0.4.0.plugin>   # + contraste de tamaños
 
-Exit 0 = APTO (dist/plugins/instalaciones-<v>.plugin listo para firmar/publicar).
+Exit 0 = APTO (dist/plugins/obras-lineales-<v>.plugin listo para firmar/publicar).
 """
 from __future__ import annotations
 
@@ -41,10 +39,10 @@ from _inyectar_nucleo import core_anchors as _core_anchors_from
 from _inyectar_nucleo import inject_nucleo as _inject_nucleo_into
 
 ROOT = Path(__file__).resolve().parents[1]
-MEMBER = ROOT / "plugins" / "instalaciones"
+MEMBER = ROOT / "plugins" / "obras-lineales"
 CORE = ROOT / "packages" / "core" / "src" / "aqyra_core"
 # El staging es EFÍMERO y va fuera del árbol montado (el mount no borra en host).
-STAGE = Path(tempfile.mkdtemp(prefix="instalaciones-build-"))
+STAGE = Path(tempfile.mkdtemp(prefix="obras-lineales-build-"))
 DIST = ROOT / "dist" / "plugins"
 LOCK = ROOT / "versions.lock"
 
@@ -89,7 +87,7 @@ def _inject_nucleo(anchors: dict[str, str]) -> list[str]:
 
 def _zip(version: str) -> Path:
     DIST.mkdir(parents=True, exist_ok=True)
-    out = DIST / f"instalaciones-{version}.plugin"
+    out = DIST / f"obras-lineales-{version}.plugin"
     # modo "w" trunca un fichero existente (no requiere borrado — el mount no borra en host).
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for f in sorted(STAGE.rglob("*")):
@@ -102,8 +100,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--ref",
-        default=str(ROOT / "_import" / "aqyra-motor" / "instalaciones-v0.3.0.plugin"),
-        help=".plugin previo (v0.3.0, frozen) para el contraste anti-truncado",
+        default=str(ROOT / "_import" / "aqyra-motor" / "obras-lineales-v0.4.0.plugin"),
+        help=".plugin previo (v0.4.0, frozen) para el contraste anti-truncado",
     )
     ap.add_argument(
         "--allow-shrink",
@@ -114,7 +112,7 @@ def main() -> int:
 
     pj = json.loads((MEMBER / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
     version = pj["version"]
-    print(f"== build instalaciones {version} ==")
+    print(f"== build obras-lineales {version} ==")
 
     core_anchors = _core_anchors()
     if not core_anchors:
