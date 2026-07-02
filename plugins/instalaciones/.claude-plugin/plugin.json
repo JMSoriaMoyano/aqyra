@@ -1,0 +1,43 @@
+{
+  "name": "instalaciones",
+  "version": "0.3.0",
+  "description": "Disciplina Instalaciones (IFC MEP -> modelo neutro de red): vertical PCI (RIPCI/UNE-EN 671/UNE-EN 12845/DB-SI; BIE y rociadores; Darcy-Weisbach en arbol y malla Hardy-Cross) y vertical electrico REBT (ITC-BT-10/19/25; redes radiales BT: intensidad, seccion y caida de tension). Bases de demanda, verificacion y write-back de Psets de resultado al IFC; memoria. Agente ingeniero-de-instalaciones + subagentes PCI y electrico. Predimensionado a revisar/firmar por tecnico competente.",
+  "author": {
+    "name": "Estructurando"
+  },
+  "license": "Proprietary",
+  "keywords": [
+    "instalaciones",
+    "PCI",
+    "proteccion contra incendios",
+    "RIPCI",
+    "BIE",
+    "rociadores",
+    "UNE-EN 671",
+    "UNE-EN 12845",
+    "UNE 23500",
+    "DB-SI",
+    "hidraulica",
+    "red a presion",
+    "malla",
+    "Hardy-Cross",
+    "perdida de carga",
+    "Darcy-Weisbach",
+    "motor hidraulico de red",
+    "bases de demanda",
+    "Psets de resultado",
+    "IFC",
+    "MEP",
+    "BIM",
+    "REBT",
+    "baja tension",
+    "ITC-BT",
+    "caida de tension",
+    "seccion de conductor",
+    "intensidad admisible",
+    "ITC-BT-25",
+    "ITC-BT-19",
+    "electrico",
+    "RITE"
+  ]
+}

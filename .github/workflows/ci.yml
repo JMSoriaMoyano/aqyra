@@ -44,6 +44,9 @@ jobs:
       - name: Paso 1b · el plugin re-homed construye APTO (compilador consumido de engines/ifc)
         run: uv run python tools/build_plugin_iso19650.py
 
+      - name: Paso 1c · instalaciones construye APTO (núcleo consumido de packages/core, PR-E3)
+        run: uv run python tools/build_plugin_instalaciones.py
+
       - name: Paso 2 · esquemas de contrato bien formados
         run: uv run --package aqyra-golden aqyra-golden --schema-only --golden-dir packages/golden
 
