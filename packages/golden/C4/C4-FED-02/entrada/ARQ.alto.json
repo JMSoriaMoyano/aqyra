@@ -1,0 +1,23 @@
+{
+  "proyecto": "C4-FED-01 - Edificio piloto (disciplina ARQ)",
+  "esquema": "IFC4X3",
+  "niveles": [
+    {"nombre": "Planta Baja", "cota": 0.0},
+    {"nombre": "Planta 1", "cota": 3.0}
+  ],
+  "muros": [
+    {"nombre": "M-Fachada-Sur", "nivel": "Planta Baja", "inicio": [0.0, 0.0], "fin": [6.0, 0.0],
+     "espesor": 0.25, "altura": 3.0, "material": "Ladrillo", "exterior": true,
+     "huecos": [{"ancho": 1.0, "alto": 2.1, "pos": 3.0, "alfeizar": 0.0, "tipo": "puerta"}]},
+    {"nombre": "M-Interior-01", "nivel": "Planta Baja", "inicio": [3.0, 0.0], "fin": [3.0, 6.0],
+     "espesor": 0.15, "altura": 3.0, "material": "Ladrillo", "exterior": false}
+  ],
+  "losas": [
+    {"nombre": "Solado-PB", "nivel": "Planta Baja", "contorno": [[0.0,0.0],[6.0,0.0],[6.0,6.0],[0.0,6.0]],
+     "espesor": 0.15, "material": "HA-25"}
+  ],
+  "elementos": [
+    {"ifcClass": "IfcTransportElement", "predefined": "ELEVATOR", "nombre": "Ascensor-01",
+     "nivel": "Planta Baja", "pos": [1.2, 1.2], "material": "Acero"}
+  ]
+}

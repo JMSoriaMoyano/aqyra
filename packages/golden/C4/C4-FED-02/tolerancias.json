@@ -1,0 +1,7 @@
+{
+  "_regla_de_oro": "Un fallo NO se arregla aflojando esta golden: se corrige el codigo (o se re-ancla el oraculo por decision explicita con JM).",
+  "_modo": "recompute + EMISION BCF (Fase II·h3): conteos, estados y arbol BCF (md5 por fichero) EXACTOS",
+  "traslacion_m": 1e-06,
+  "rotacion_deg": 1e-09,
+  "_nota": "las tolerancias numericas aplican al recompute del manifiesto; la emision BCF se compara byte a byte (md5) — el runner inyecta bcf_generacion"
+}

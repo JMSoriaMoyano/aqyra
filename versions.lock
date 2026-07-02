@@ -12,20 +12,21 @@ golden          = "C1-APERTURA-01"
 oraculo         = "conteo de entidades + round-trip"
 estado          = "engine-importado"     # Fase I·h1: corte mínimo en engines/ifc; la golden compila con el engine real
 
-# --- contrato C4 (Fase II·h1→h2): federación — contract-first COMPLETADO con el service ---
-# Decisiones D1–D10 ancladas en packages/contracts/C4-federacion/DECISIONES.md (OK JM 2026-07-02).
+# --- contrato C4 (Fase II·h1→h3): federación — contract-first COMPLETADO con el service ---
+# Decisiones D1–D15 ancladas en packages/contracts/C4-federacion/DECISIONES.md (OK JM 2026-07-02).
 # El Maestro autoritativo es el MANIFIESTO (D1); el IFC federado derivado NO se emite en v0 (D6).
-# Motor IDS propio mínimo (D7); BCF declarado y no emitido hasta 1.2 (D8).
+# Motor IDS propio mínimo (D7); emisión BCF 3.0 HECHA en 1.2 (Fase II·h3, D11–D14):
+# emitir_bcf() como tercera función, árbol descomprimido anclado por md5, GUIDs uuid5.
 [contracts.C4]
 nombre          = "federacion"
 schema_version  = "0.1.0"              # 3 esquemas: reglas-federacion + maestro-manifiesto + informe-qa
 engine          = "services/federacion"
-engine_version  = "0.1.0"              # service v0 (Fase II·h2): federar()+validar() reproducen la golden
+engine_version  = "0.2.0"              # service v0.2 (Fase II·h3): + emitir_bcf() — topics BCF 3.0 reales
 bcf             = "3.0"                # estándar buildingSMART, por referencia (no se re-esquematiza)
 ids_pack        = "ids/proyecto-piloto/v1"
-golden          = "C4-FED-01"
-oraculo         = "recompute (federar+validar con el service contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 (esquemas + hashes + coherencia interna) — D10: más checks, nunca menos"
-estado          = "service v0 (costura cerrada en Fase II·h2); IFC derivado = v0.x (D6), emisión BCF = 1.2 (D8)"
+golden          = "C4-FED-01 + C4-FED-02"
+oraculo         = "recompute (federar+validar contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 — D10: más checks, nunca menos; C4-FED-02 añade la EMISIÓN: árbol BCF 3.0 anclado por md5 de fichero (D12) con GUIDs uuid5 deterministas (D13) y generación inyectada (bcf_generacion)"
+estado          = "service v0.2 (emisión BCF 3.0 hecha — tarea 1.2, Fase II·h3; Llave 2 = tag firmado federacion-v0.2.0, D15); IFC derivado = v0.x (D6)"
 
 # --- engine C1 (Fase I·h1): corte mínimo narración→IFC importado del canónico 0.10.0 ---
 # Copiado BYTE A BYTE de _import/aqyra-motor (procedencia). Identidad vigilada por

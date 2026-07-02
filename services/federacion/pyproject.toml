@@ -1,7 +1,7 @@
 [project]
 name = "aqyra-federacion"
-version = "0.1.0"
-description = "Service C4 — federación: federar(ifcs[], reglas) → Maestro (manifiesto) · validar(maestro, ids) → informe QA. Contract-first: nace para reproducir el golden C4-FED-01."
+version = "0.2.0"
+description = "Service C4 — federación: federar(ifcs[], reglas) → Maestro (manifiesto) · validar(maestro, ids) → informe QA · emitir_bcf(informe, carpeta) → topics BCF 3.0. Contract-first: reproduce las golden C4-FED-01 y C4-FED-02."
 requires-python = ">=3.10"
 dependencies = [
   "ifcopenshell>=0.7",

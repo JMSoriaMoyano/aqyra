@@ -369,6 +369,33 @@ def _recompute_c4(case_dir: Path, reglas: dict, repo: Path) -> tuple[dict, dict]
     return manifiesto, informe
 
 
+def _emitir_bcf_c4(inf_rec: dict, expected: dict, checks: list) -> dict:
+    """Fase II·h3 (tarea 1.2, D14): paso de EMISIÓN, activado por el expected
+    (informe_qa.bcf.emitido == true). Emite con el service en un directorio
+    temporal, ancla el ÁRBOL BCF 3.0 por md5 de fichero (D12) y devuelve el
+    informe actualizado (emitido=true) para el diff contra el expected.
+    C4-FED-01 (emitido=false) ni pasa por aquí — su expected no se toca."""
+    import tempfile
+    from aqyra_federacion import emitir_bcf
+    gen = expected.get("bcf_generacion", {})
+    nombre = expected.get("informe_qa", {}).get("bcf", {}).get("carpeta", "bcf")
+    with tempfile.TemporaryDirectory() as td:
+        carpeta = Path(td) / nombre
+        inf_rec = emitir_bcf(inf_rec, carpeta, caso=expected.get("caso"),
+                             autor=gen.get("autor"), fecha=gen.get("fecha"))
+        got = {q.relative_to(carpeta).as_posix(): _md5(q)
+               for q in sorted(carpeta.rglob("*")) if q.is_file()}
+    checks.append(("emisión BCF 3.0 ejecuta", True,
+                   f"{len(got)} fichero/s en '{nombre}/' (un topic por incidencia)"))
+    exp = {k: v for k, v in expected.get("bcf_md5", {}).items()
+           if not k.startswith("_")}
+    dif = sorted(set(exp.items()) ^ set(got.items()))
+    checks.append(("árbol BCF == expected (md5/fichero)", got == exp,
+                   f"{len(dif)} diff/s — {dif[0][0]}" if dif
+                   else f"{len(exp)} fichero/s reproducidos byte a byte"))
+    return inf_rec
+
+
 def run_case_c4(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
     """C4: recompute con el service (Fase II·h2) + checks anclados del 2.1 — ver ficha.
@@ -398,6 +425,8 @@ def run_case_c4(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
         man_rec, inf_rec = _recompute_c4(case_dir, reglas, repo)
         checks.append(("service federar()+validar() ejecuta", True,
                        "services/federacion (import de path)"))
+        if informe.get("bcf", {}).get("emitido"):
+            inf_rec = _emitir_bcf_c4(inf_rec, expected, checks)   # Fase II·h3 (D14)
         for name, inst, key in (("manifiesto recomputado conforma", man_rec, "manifiesto"),
                                 ("informe recomputado conforma", inf_rec, "informe")):
             ok, detail = validate_against_schema(inst, schemas[key])
@@ -569,3 +598,4 @@ if __name__ == "__main__":
 # Fase I · hilo 1: costura cerrada (compile real narración→IFC). Ver engines/ifc/compile_c1.py.
 # Fase II · hilo 1: dispatch por contrato (CASE_RUNNERS); C4 en modo ANCLADO hasta el service (1.1).
 # Fase II · hilo 2: costura C4 CERRADA — recompute federar+validar con services/federacion (D10).
+# Fase II · hilo 3: emisión BCF 3.0 (tarea 1.2) — paso activado por el expected (C4-FED-02, D14).

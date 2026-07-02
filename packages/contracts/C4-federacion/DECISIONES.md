@@ -94,5 +94,51 @@ estados exactos; traslación ±1e-6 m, rotación ±1e-9°). Más checks, nunca m
 costura idéntica a la que cerró C1 en Fase I·h1.
 
 ---
+
+> Bloque del hilo 2.3 (emisión BCF 3.0, tarea 1.2). Resueltas con JM el **2026-07-02**
+> (OK explícito), antes de tocar código. D1–D10 no se reabren.
+
+## D11 · Superficie de la API — `emitir_bcf(informe, carpeta)` como TERCERA función
+
+`validar()` queda intacta y C4-FED-01 intocado POR CONSTRUCCIÓN, no por disciplina: la
+salida por defecto del service sigue declarando `emitido=false` (D8). La emisión refleja
+`emitido=true` + `carpeta` + `bcf_topic_guid` por incidencia SOLO en el informe que
+devuelve, y solo cuando se invoca (no muta la entrada). CLI: subcomando `emitir-bcf`
+(con `--bcfzip` opcional para el derivado).
+
+## D12 · Contenedor — el ÁRBOL descomprimido es lo anclado (md5 por fichero)
+
+La golden ancla el contenedor BCF 3.0 descomprimido con md5 por fichero (`bcf_md5` del
+expected), coherente con cómo ya se anclan las entradas. Un zip determinista es frágil
+(zlib/orden/timestamps) y sería el único hash "de segundo orden" del repo. El `.bcfzip`
+de intercambio es un DERIVADO sin anclar (lo genera el CLI).
+
+## D13 · GUIDs de topic — uuid5 deterministas; autor/fecha inyectables
+
+`guid_topic = uuid5(NAMESPACE_AQYRA, "{caso}/{INC-xx}")` y
+`guid_viewpoint = uuid5(NAMESPACE_AQYRA, "{caso}/{INC-xx}/viewpoint")`, con
+`NAMESPACE_AQYRA = uuid5(NAMESPACE_DNS, "aqyra.bcf")`: estables entre ejecuciones y
+ANCLADOS en el expected de C4-FED-02 (un UUID aleatorio obligaría a sacar el guid del
+diff, debilitando el oráculo). `autor`/`fecha` (CreationAuthor/CreationDate) son
+metadatos de generación INYECTABLES — misma filosofía que la `procedencia` del
+manifiesto; la golden los fija en `bcf_generacion` y el runner los inyecta.
+
+## D14 · Golden — caso NUEVO C4-FED-02; el paso de emisión lo activa el expected
+
+Mismas entradas CONGELADAS que el 01 (mismos md5, byte a byte), expected propio con
+`emitido=true` + árbol BCF anclado. C4-FED-01 queda como record intocado del
+contract-first. El runner descubre el caso por glob y la emisión se activa por presencia
+en el expected (`informe_qa.bcf.emitido == true`): el 01 ni se entera. D10 se respeta —
+más checks, nunca menos.
+
+## D15 · Release — Llave 2 del service en este hilo
+
+`federacion` 0.2.0 con la emisión = primera superficie completa de adopción → primer tag
+FIRMADO del service tras el merge: `federacion-v0.2.0` (estilo de los tags de componente
+del repo), patrón del release v0.10.0 del engine (tag GPG anotado sobre main;
+release.yml verifica golden VERDE + tipo+firma con el re-fetch del objeto de tag, PR
+#10). release.yml amplía su disparo en UNA línea: `tags: ["v*", "federacion-v*"]`.
+
+---
 *Regla de oro heredada: un fallo no se arregla aflojando la golden. El CI nunca certifica
 (Llave 2 = JM).*

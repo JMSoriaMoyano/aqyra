@@ -1,0 +1,287 @@
+{
+  "caso": "C4-FED-02",
+  "contrato": "C4",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "653a359154112146d82ca02de0fde2ee",
+    "entrada/EST.ifc": "b84cb79c4a7cf4b560148340bc8dc305"
+  },
+  "maestro_manifiesto": {
+    "proyecto": "C4-FED-01 - Edificio piloto federado",
+    "crs": {
+      "epsg": "EPSG:25830",
+      "descripcion": "ETRS89 / UTM zone 30N",
+      "datum_vertical": "EGM2008"
+    },
+    "modelos": [
+      {
+        "id": "ARQ",
+        "disciplina": "ARQ",
+        "fichero_origen": "entrada/ARQ.ifc",
+        "md5": "653a359154112146d82ca02de0fde2ee",
+        "transformacion": {
+          "traslacion": [
+            337000.0,
+            4610000.0,
+            700.0
+          ],
+          "rotacion_deg": 0.0,
+          "escala": 1.0
+        },
+        "estado_entrada": "S1",
+        "n_elementos": 6
+      },
+      {
+        "id": "EST",
+        "disciplina": "EST",
+        "fichero_origen": "entrada/EST.ifc",
+        "md5": "b84cb79c4a7cf4b560148340bc8dc305",
+        "transformacion": {
+          "traslacion": [
+            337000.0,
+            4610000.0,
+            700.0
+          ],
+          "rotacion_deg": 0.0,
+          "escala": 1.0
+        },
+        "estado_entrada": "S1",
+        "n_elementos": 7
+      }
+    ],
+    "estructura_espacial": {
+      "politica": "unificada-por-nombre",
+      "agregados": [
+        {
+          "nivel": "Project",
+          "nombre": "C4-FED-01 - Edificio piloto federado",
+          "aportado_por": [
+            "ARQ",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Site",
+          "nombre": "Emplazamiento",
+          "aportado_por": [
+            "ARQ",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Building",
+          "nombre": "Edificio",
+          "aportado_por": [
+            "ARQ",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Planta Baja",
+          "aportado_por": [
+            "ARQ"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Planta 1",
+          "aportado_por": [
+            "ARQ"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Nivel 00",
+          "aportado_por": [
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Nivel 01",
+          "aportado_por": [
+            "EST"
+          ]
+        }
+      ]
+    },
+    "guids": {
+      "politica": "preservados"
+    },
+    "procedencia": {
+      "generado_por": "oraculo manual (contract-first, Fase II·h1 — sin service)",
+      "fecha": "2026-07-02",
+      "reglas_md5": "fc16bee23d074a1f2a3424100e8877f7"
+    }
+  },
+  "informe_qa": {
+    "proyecto": "C4-FED-01 - Edificio piloto federado",
+    "ids": {
+      "pack_id": "proyecto-piloto",
+      "pack_version": "v1",
+      "fichero": "requisitos.ids",
+      "version_ids": "1.0"
+    },
+    "requisitos": [
+      {
+        "id": "R1-CLASIF",
+        "origen": "ids",
+        "titulo": "Doble clasificacion bsDD + Uniclass 2015",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcDoor|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 5,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "pass",
+            "n_comprobados": 7,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R2-EXTERIOR",
+        "origen": "ids",
+        "titulo": "Muros declaran Pset_WallCommon.IsExternal",
+        "aplicabilidad": "IfcWall",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 2,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "no-aplica",
+            "n_comprobados": 0,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R3-MATERIAL",
+        "origen": "ids",
+        "titulo": "Material declarado (Pset_Estructurando_Spec.Material)",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 4,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "pass",
+            "n_comprobados": 7,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R4-GEORREF",
+        "origen": "modulo",
+        "titulo": "Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS)",
+        "aplicabilidad": "IfcProject",
+        "resultado": "fail",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "fail",
+            "n_comprobados": 1,
+            "n_fallos": 1,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          },
+          "EST": {
+            "resultado": "fail",
+            "n_comprobados": 1,
+            "n_fallos": 1,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          }
+        }
+      },
+      {
+        "id": "R5-PLANTAS",
+        "origen": "ids",
+        "titulo": "Nomenclatura de plantas conforme ('Planta ...')",
+        "aplicabilidad": "IfcBuildingStorey",
+        "resultado": "fail",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 2,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "fail",
+            "n_comprobados": 2,
+            "n_fallos": 2,
+            "detalle": "'Nivel 00' y 'Nivel 01' no conforman el patron 'Planta .*'"
+          }
+        }
+      }
+    ],
+    "incidencias": [
+      {
+        "id": "INC-01",
+        "requisito": "R4-GEORREF",
+        "modelo": "ARQ",
+        "guids": [],
+        "titulo": "ARQ sin georreferenciacion declarada en el IFC",
+        "severidad": "mayor",
+        "_nota": "resuelta a nivel de FEDERACION por punto base DECLARADO en reglas (ADR); el requisito a nivel de modelo sigue fallando",
+        "bcf_topic_guid": "6dcf89b3-1970-5bf0-aef7-4bb9edc9cd66"
+      },
+      {
+        "id": "INC-02",
+        "requisito": "R4-GEORREF",
+        "modelo": "EST",
+        "guids": [],
+        "titulo": "EST sin georreferenciacion declarada en el IFC",
+        "severidad": "mayor",
+        "_nota": "resuelta a nivel de FEDERACION por punto base DECLARADO en reglas (ADR); el requisito a nivel de modelo sigue fallando",
+        "bcf_topic_guid": "33627e72-9886-586e-9570-d55af9fcff9c"
+      },
+      {
+        "id": "INC-03",
+        "requisito": "R5-PLANTAS",
+        "modelo": "EST",
+        "guids": [
+          "3OM3R50xH9rQrxdF_D157W",
+          "1_IR0JcG90ghN9CC8WB7E9"
+        ],
+        "titulo": "Nomenclatura de plantas no conforme (Nivel 00 / Nivel 01)",
+        "severidad": "menor",
+        "bcf_topic_guid": "6f848b43-ad9c-58d3-b4c0-7974e5fc5b3b"
+      }
+    ],
+    "estados": {
+      "por_modelo": {
+        "ARQ": "S1",
+        "EST": "S1"
+      },
+      "maestro": "S1"
+    },
+    "veredicto": "no-conforme",
+    "bcf": {
+      "estandar": "BCF",
+      "version": "3.0",
+      "emitido": true,
+      "carpeta": "bcf"
+    }
+  },
+  "bcf_generacion": {
+    "_nota": "metadatos de generacion INYECTADOS por el runner en emitir_bcf (D13: misma filosofia que procedencia); los GUIDs de topic son uuid5(NAMESPACE_AQYRA, 'C4-FED-02/INC-xx') y no dependen de esto",
+    "autor": "services/federacion 0.2.0",
+    "fecha": "2026-07-02T00:00:00Z"
+  },
+  "bcf_md5": {
+    "_nota": "arbol BCF 3.0 ANCLADO (D12): md5 por fichero del contenedor descomprimido; el .bcfzip es derivado sin anclar",
+    "33627e72-9886-586e-9570-d55af9fcff9c/markup.bcf": "ca1d0a60f975d8fd4d9aa64faab6fd37",
+    "6dcf89b3-1970-5bf0-aef7-4bb9edc9cd66/markup.bcf": "df678e57e68a39f36b90ce923e42f87c",
+    "6f848b43-ad9c-58d3-b4c0-7974e5fc5b3b/markup.bcf": "e94ef53516a514b3fd509dfcb39ae6e9",
+    "6f848b43-ad9c-58d3-b4c0-7974e5fc5b3b/viewpoint.bcfv": "205976ae70f10c8b9abc2664aa944303",
+    "bcf.version": "920b5ebbd45b3c42ab09c18e7fcc0dbe"
+  }
+}
