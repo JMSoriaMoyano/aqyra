@@ -140,5 +140,63 @@ release.yml verifica golden VERDE + tipo+firma con el re-fetch del objeto de tag
 #10). release.yml amplía su disparo en UNA línea: `tags: ["v*", "federacion-v*"]`.
 
 ---
+
+> Bloque del hilo 2.4 (IFC sucio — tarea 1.3). Resueltas con JM el **2026-07-02**
+> (OK explícito), antes de tocar código. D1–D15 no se reabren. Este bloque CIERRA el
+> ADR de la ficha "parser sucio = tarea 1.3".
+
+## D16 · Dónde vive el endurecimiento — SOLO `services/federacion`
+
+El engine C1 es zona firmada y produce IFC limpio por construcción; toda la suciedad
+real entra por el CONSUMIDOR (`federar()`/`validar()`), que es donde se endurece
+(módulo `lectura.py` + retoques en `federar.py`/`qa.py`/`ids_min.py`). Si algún hilo
+futuro exigiera tocar `engines/ifc`, será PR separado con su propia justificación.
+
+## D17 · Política de fallo — taxonomía de DOS NIVELES
+
+**TOLERABLE** → se lee, se degrada y se DECLARA (nunca en silencio): `Name=None` en la
+estructura espacial → nodo `"(sin nombre)"` + aviso · nombre duplicado intra-modelo y
+mismo nivel → aviso · nivel ausente (sin Site/Building/Storey) → aviso · más de un
+`IfcProject` → aviso · esquema ≠ IFC4X3 (IFC2X3/IFC4) → aviso y R4-GEORREF falla con
+detalle en vez de reventar · unidades no métricas o ausentes → aviso · entidad corrupta
+saltable → aviso con su `#id` · fichero grande (>256 MB) → aviso (política de tamaño,
+sin optimización). **BLOQUEANTE** → `LecturaIfcError` (subclase de `ValueError`) con
+diagnóstico accionable (fichero, entidad, campo, motivo — nunca stack trace pelado):
+fichero ausente · no parsea · md5 ≠ declarado. **Matiz anclado:** Psets vía TIPO
+(`IsTypedBy`/`IfcRelDefinesByType`) y clasificaciones con `ReferencedSource` ENCADENADO
+no son suciedad — son IFC conforme (patrón Revit) que el motor v0 leía mal; su arreglo
+es CORRECCIÓN de lectura (la herencia ocurrencia>tipo la manda IDS), sin aviso, y el
+recompute de C4-FED-01/02 demuestra que no mueve nada.
+
+## D18 · IFC sucio del golden — SINTÉTICO ensuciado adrede por script
+
+`entrada/ensuciar.py` (versionado en el caso, procedencia) parte del `ARQ.ifc` CONGELADO
+de C4-FED-01 (anclado por md5) e inyecta cada suciedad por separado con ifcopenshell,
+normalizando la cabecera SPF (timestamp fijo) para que la generación sea determinista.
+El resultado `SUCIO.ifc` se congela byte a byte (md5 en el expected), como toda entrada
+golden. Sin derechos de terceros. Un export real de Revit puede entrar después como
+pytest local no versionado si se quiere fidelidad extra (decisión nueva).
+
+## D19 · Forma del golden — caso NUEVO C4-FED-03 + pytest para bloqueantes
+
+C4-FED-03 ancla el CAMINO FELIZ-DEGRADADO: IFC sucio → manifiesto (con nodos
+`"(sin nombre)"` visibles) + informe con las degradaciones declaradas en el expected.
+Activación por contenido (patrón D14): 01 y 02 ni se enteran; el runner lo descubre por
+glob y NO se toca (`ci.yml` tampoco). La suciedad BLOQUEANTE (diagnósticos de
+`LecturaIfcError`) se cubre con pytest (`tests/test_lectura.py`) — los errores no se
+anclan en golden.
+
+## D20 · Contrato de la degradación — clave forward-open `avisos_lectura` en el INFORME QA
+
+`validar()` añade al informe `avisos_lectura`: lista de `{modelo, codigo, detalle}` por
+modelo, SOLO cuando hay avisos (modelos limpios → la clave NO aparece: C4-FED-01/02
+intactos por construcción, y `_diffs` del runner no ve claves nuevas). `detalle` es texto
+libre (normalizado en el recompute, como `titulo`); la semántica anclada son `modelo` +
+`codigo`. El esquema ya es forward-open; se documenta la clave en
+`informe-qa.schema.json` (aditivo). El MANIFIESTO no gana claves (procedencia intacta);
+lo estructural degradado ya queda visible en sus `agregados`. La API crece →
+`services/federacion` 0.3.0.
+
+---
 *Regla de oro heredada: un fallo no se arregla aflojando la golden. El CI nunca certifica
 (Llave 2 = JM).*

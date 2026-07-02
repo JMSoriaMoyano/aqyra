@@ -22,9 +22,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import ifcopenshell
-
-from . import ids_min
+from . import ids_min, lectura
 
 # Reglas de módulo (origen='modulo'): no expresables en IDS puro.
 _R4 = {
@@ -35,12 +33,21 @@ _R4 = {
 
 
 def _georref(ifc) -> dict:
-    """R4: georreferenciación = presencia de IfcMapConversion + IfcProjectedCRS."""
-    n_proj = len(ifc.by_type("IfcProject"))
-    ok = bool(ifc.by_type("IfcMapConversion")) and bool(ifc.by_type("IfcProjectedCRS"))
+    """R4: georreferenciación = presencia de IfcMapConversion + IfcProjectedCRS.
+
+    1.3 (hallazgo #7): en IFC2X3 esas clases NO existen en el esquema y `by_type`
+    LANZA — `by_type_seguro` lo convierte en fail DIAGNOSTICADO, no en crash.
+    """
+    n_proj = len(lectura.by_type_seguro(ifc, "IfcProject"))
+    ok = (bool(lectura.by_type_seguro(ifc, "IfcMapConversion"))
+          and bool(lectura.by_type_seguro(ifc, "IfcProjectedCRS")))
     out = {"n_comprobados": n_proj, "n_fallos": 0 if ok else n_proj}
     if not ok:
-        out["detalle"] = "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+        esquema = str(ifc.schema)
+        out["detalle"] = ("sin IfcMapConversion/IfcProjectedCRS en el IFC"
+                          if esquema.startswith("IFC4")
+                          else f"esquema {esquema}: IfcMapConversion/IfcProjectedCRS "
+                               f"no existen en ese esquema (georref no expresable)")
     return out
 
 
@@ -73,8 +80,13 @@ def validar(manifiesto: dict, pack_dir: Path, base_dir: Path,
     specs = ids_min.parse_ids(pack_dir / pack["contenido"]["fichero"])
 
     modelos = manifiesto["modelos"]
-    ifcs = {m["id"]: ifcopenshell.open(str(base_dir / m["fichero_origen"])) for m in modelos}
+    ifcs = {m["id"]: lectura.abrir_ifc(base_dir / m["fichero_origen"]) for m in modelos}
     orden_modelos = [m["id"] for m in modelos]
+
+    # 1.3 (D17/D20): avisos de lectura por modelo (suciedad TOLERABLE, declarada).
+    avisos_por_modelo = {m["id"]: lectura.avisos_de_modelo(
+        ifcs[m["id"]], base_dir / m["fichero_origen"], m["id"]) for m in modelos}
+    corruptos_por_modelo: dict[str, dict[str, str]] = {mid: {} for mid in orden_modelos}
 
     requisitos = []
     fallos_detalle: dict[tuple[str, str], list] = {}   # (req_id, modelo) → elementos
@@ -90,6 +102,8 @@ def validar(manifiesto: dict, pack_dir: Path, base_dir: Path,
                 r["detalle"] = (f"{' y '.join(repr(n) for n in nombres)} no conforman "
                                 f"el requisito {spec.id}")
                 fallos_detalle[(spec.id, mid)] = ev["fallos"]
+            for eid in ev.get("corruptos", []):        # 1.3: elemento saltado → aviso
+                corruptos_por_modelo[mid].setdefault(eid, spec.id)
             por_modelo[mid] = r
         requisitos.append({"id": spec.id, "origen": "ids", "titulo": spec.titulo,
                            "aplicabilidad": spec.aplicabilidad,
@@ -125,14 +139,27 @@ def validar(manifiesto: dict, pack_dir: Path, base_dir: Path,
                 inc["severidad"] = "mayor"
             else:
                 els = fallos_detalle.get((req["id"], mid), [])
-                inc["guids"] = [el.GlobalId for el in els]
+                # 1.3: GlobalId roto no revienta la incidencia (getattr-safe)
+                inc["guids"] = [g for g in (getattr(el, "GlobalId", None) for el in els)
+                                if g]
                 nombres = " / ".join(getattr(el, "Name", None) or "?" for el in els)
                 inc["titulo"] = f"{req['id']} no conforme en {mid} ({nombres})"
                 inc["severidad"] = "menor"
             incidencias.append(inc)
 
+    # 1.3 (D20): clave forward-open SOLO si hay avisos (los casos limpios ni se enteran)
+    avisos = []
+    for mid in orden_modelos:
+        avisos += avisos_por_modelo[mid]
+        for eid, req_id in sorted(corruptos_por_modelo[mid].items()):
+            avisos.append({"modelo": mid, "codigo": "entidad-corrupta",
+                           "detalle": f"elemento {eid} saltado al evaluar {req_id} "
+                                      f"(atributos rotos); no cuenta en n_comprobados"})
+
     estados_modelo = {m["id"]: m.get("estado_entrada", "S0") for m in modelos}
     resultados = [r["resultado"] for r in requisitos]
+
+    informe_extra = {"avisos_lectura": avisos} if avisos else {}
 
     return {
         "proyecto": manifiesto["proyecto"],
@@ -141,6 +168,7 @@ def validar(manifiesto: dict, pack_dir: Path, base_dir: Path,
                 "version_ids": pack["contenido"]["version_ids"]},
         "requisitos": requisitos,
         "incidencias": incidencias,
+        **informe_extra,
         "estados": {"por_modelo": estados_modelo,
                     "maestro": _estado_min(list(estados_modelo.values()))},
         "veredicto": "no-conforme" if "fail" in resultados else "conforme",

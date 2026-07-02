@@ -1,0 +1,214 @@
+{
+  "caso": "C4-FED-03",
+  "contrato": "C4-federacion",
+  "_oraculo": "IFC SUCIO sintetico (D18: ARQ.ifc de C4-FED-01 ensuciado adrede por entrada/ensuciar.py — S1 Name=None, S2 storey duplicado, S3 doble IfcProject). Camino feliz-degradado (D19): la lectura TOLERA y DECLARA (avisos_lectura, D20); los 3 avisos, el nodo '(sin nombre)' y el fail de R5 con su GUID se verificaron A MANO contra la taxonomia D17 antes de anclar. Los casos 01/02 no se tocan.",
+  "entradas_md5": {
+    "entrada/SUCIO.ifc": "1dd956ca02fd085f06a2eaf6dcb10988"
+  },
+  "maestro_manifiesto": {
+    "proyecto": "C4-FED-03 - IFC sucio (camino feliz-degradado)",
+    "crs": {
+      "epsg": "EPSG:25830",
+      "descripcion": "ETRS89 / UTM zone 30N",
+      "datum_vertical": "EGM2008"
+    },
+    "modelos": [
+      {
+        "id": "SUC",
+        "disciplina": "ARQ",
+        "fichero_origen": "entrada/SUCIO.ifc",
+        "md5": "1dd956ca02fd085f06a2eaf6dcb10988",
+        "transformacion": {
+          "traslacion": [
+            337000.0,
+            4610000.0,
+            700.0
+          ],
+          "rotacion_deg": 0.0,
+          "escala": 1.0
+        },
+        "estado_entrada": "S1",
+        "n_elementos": 6
+      }
+    ],
+    "estructura_espacial": {
+      "politica": "unificada-por-nombre",
+      "agregados": [
+        {
+          "nivel": "Project",
+          "nombre": "C4-FED-03 - IFC sucio (camino feliz-degradado)",
+          "aportado_por": [
+            "SUC"
+          ]
+        },
+        {
+          "nivel": "Site",
+          "nombre": "Emplazamiento",
+          "aportado_por": [
+            "SUC"
+          ]
+        },
+        {
+          "nivel": "Building",
+          "nombre": "Edificio",
+          "aportado_por": [
+            "SUC"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Planta Baja",
+          "aportado_por": [
+            "SUC"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "(sin nombre)",
+          "aportado_por": [
+            "SUC"
+          ]
+        }
+      ]
+    },
+    "guids": {
+      "politica": "preservados"
+    },
+    "procedencia": {
+      "generado_por": "services/federacion 0.3.0",
+      "reglas_md5": "2af28143ea56f441825282bde3526f14"
+    }
+  },
+  "informe_qa": {
+    "proyecto": "C4-FED-03 - IFC sucio (camino feliz-degradado)",
+    "ids": {
+      "pack_id": "proyecto-piloto",
+      "pack_version": "v1",
+      "fichero": "requisitos.ids",
+      "version_ids": "1.0"
+    },
+    "requisitos": [
+      {
+        "id": "R1-CLASIF",
+        "origen": "ids",
+        "titulo": "Todo elemento objetivo lleva doble clasificacion: bsDD (URI) + Uniclass 2015",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcDoor|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "pass",
+            "n_comprobados": 5,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R2-EXTERIOR",
+        "origen": "ids",
+        "titulo": "Todo muro declara Pset_WallCommon.IsExternal",
+        "aplicabilidad": "IfcWall",
+        "resultado": "pass",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "pass",
+            "n_comprobados": 2,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R3-MATERIAL",
+        "origen": "ids",
+        "titulo": "Elementos constructivos declaran su material (Pset_Estructurando_Spec.Material)",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "pass",
+            "n_comprobados": 4,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R4-GEORREF",
+        "origen": "modulo",
+        "titulo": "Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS)",
+        "aplicabilidad": "IfcProject",
+        "resultado": "fail",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "fail",
+            "n_comprobados": 2,
+            "n_fallos": 2,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          }
+        }
+      },
+      {
+        "id": "R5-PLANTAS",
+        "origen": "ids",
+        "titulo": "Nomenclatura de plantas del proyecto: IfcBuildingStorey.Name conforme a 'Planta ...'",
+        "aplicabilidad": "IfcBuildingStorey",
+        "resultado": "fail",
+        "por_modelo": {
+          "SUC": {
+            "resultado": "fail",
+            "n_comprobados": 3,
+            "n_fallos": 1,
+            "detalle": "'(sin nombre)' no conforman el requisito R5-PLANTAS"
+          }
+        }
+      }
+    ],
+    "incidencias": [
+      {
+        "id": "INC-01",
+        "requisito": "R4-GEORREF",
+        "modelo": "SUC",
+        "guids": [],
+        "titulo": "SUC no conforma R4-GEORREF (Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS))",
+        "severidad": "mayor"
+      },
+      {
+        "id": "INC-02",
+        "requisito": "R5-PLANTAS",
+        "modelo": "SUC",
+        "guids": [
+          "2VR4ZUrG9A9Bh0O0cEw4bM"
+        ],
+        "titulo": "R5-PLANTAS no conforme en SUC (?)",
+        "severidad": "menor"
+      }
+    ],
+    "avisos_lectura": [
+      {
+        "modelo": "SUC",
+        "codigo": "multi-proyecto",
+        "detalle": "2 IfcProject (#1, #246); se esperaba 1"
+      },
+      {
+        "modelo": "SUC",
+        "codigo": "nombre-vacio",
+        "detalle": "IfcBuildingStorey #18 sin Name; nodo '(sin nombre)' en la estructura espacial"
+      },
+      {
+        "modelo": "SUC",
+        "codigo": "nombre-duplicado",
+        "detalle": "IfcBuildingStorey 'Planta Baja' aparece 2 veces (#16, #244); unificados en un nodo"
+      }
+    ],
+    "estados": {
+      "por_modelo": {
+        "SUC": "S1"
+      },
+      "maestro": "S1"
+    },
+    "veredicto": "no-conforme",
+    "bcf": {
+      "estandar": "BCF",
+      "version": "3.0",
+      "emitido": false
+    }
+  }
+}
