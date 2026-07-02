@@ -7,10 +7,11 @@ Dos pasos de validación (ver CONTRATOS_estado-validacion-ubicacion.md §2):
   2. La golden los ejercita, DESPACHADA POR CONTRATO (Fase II·h1):
      - C1: compile real (caso.alto.json → IFC con engines/ifc) + recompute de métricas
        contra expected.json (costura cerrada en Fase I·h1).
-     - C4: modo ANCLADO (el service NO existe — contract-first): conformidad de esquemas,
-       identidad por hash de las entradas congeladas y coherencia interna del caso.
-       Cuando exista services/federacion (tarea 1.1) se antepone federar+validar contra
-       el MISMO expected.json (misma costura que C1 en Fase 0 → Fase I).
+     - C4: RECOMPUTE con el service real (services/federacion, costura cerrada en
+       Fase II·h2 — misma costura que C1 en Fase 0 → Fase I): federar+validar sobre
+       las entradas congeladas contra el MISMO expected.json, con tolerancias; MÁS
+       los checks ANCLADOS del 2.1 (conformidad de esquemas, identidad por hash y
+       coherencia interna), que se conservan íntegros (D10: más checks, nunca menos).
 
 Regla de oro: un fallo se corrige en el código, NUNCA aflojando la golden.
 """
@@ -292,14 +293,92 @@ def _lock_packs_ids(repo: Path) -> dict:
     return lock.get("packs", {}).get("ids", {})
 
 
+# --------------------------------------------------------------------------- #
+# C4 · recompute con el service real (Fase II·h2 — costura cerrada)            #
+# --------------------------------------------------------------------------- #
+DEFAULT_SERVICE_SRC = DEFAULT_REPO / "services" / "federacion" / "src"
+
+# Campos de TEXTO LIBRE del contrato (presentación humana): se comprueban por
+# esquema (presencia/tipo) pero NO se comparan literalmente en el recompute —
+# la semántica del contrato son ids, resultados, conteos, GUIDs, estados,
+# severidades y veredicto. Ídem claves '_*' (comentario, convención del repo).
+_CAMPOS_LIBRES = {"titulo", "detalle"}
+
+
+def _norm_contrato(x):
+    if isinstance(x, dict):
+        return {k: _norm_contrato(v) for k, v in x.items()
+                if not k.startswith("_") and k not in _CAMPOS_LIBRES}
+    if isinstance(x, list):
+        return [_norm_contrato(v) for v in x]
+    return x
+
+
+def _norm_manifiesto(m: dict) -> dict:
+    """Además de la normalización general, la procedencia es metadato de
+    generación: se compara reglas_md5 (exacto) y la PRESENCIA de generado_por,
+    no su literal (el expected lo generó el oráculo manual; el recompute, el service)."""
+    m = _norm_contrato(m)
+    p = m.get("procedencia", {}) or {}
+    m["procedencia"] = {"reglas_md5": p.get("reglas_md5"),
+                        "tiene_generado_por": bool(p.get("generado_por"))}
+    return m
+
+
+def _diffs(exp, got, tol_tras: float, tol_rot: float,
+           path: str = "", clave=None, out=None) -> list[str]:
+    """Comparación profunda expected vs recompute con las tolerancias del caso."""
+    if out is None:
+        out = []
+    if isinstance(exp, dict) and isinstance(got, dict):
+        for k in sorted(set(exp) | set(got)):
+            if k not in exp:
+                out.append(f"{path}/{k}: clave no esperada")
+            elif k not in got:
+                out.append(f"{path}/{k}: falta en el recompute")
+            else:
+                _diffs(exp[k], got[k], tol_tras, tol_rot, f"{path}/{k}", k, out)
+    elif isinstance(exp, list) and isinstance(got, list):
+        if len(exp) != len(got):
+            out.append(f"{path}: longitud {len(exp)} vs {len(got)}")
+        else:
+            for i, (a, b) in enumerate(zip(exp, got)):
+                _diffs(a, b, tol_tras, tol_rot, f"{path}[{i}]", clave, out)
+    elif isinstance(exp, float) or isinstance(got, float):
+        tol = tol_tras if clave == "traslacion" else (tol_rot if clave == "rotacion_deg" else 0.0)
+        if abs(float(exp) - float(got)) > tol:
+            out.append(f"{path}: {exp} vs {got} (tol ±{tol})")
+    elif exp != got:
+        out.append(f"{path}: {exp!r} vs {got!r}")
+    return out
+
+
+def _recompute_c4(case_dir: Path, reglas: dict, repo: Path) -> tuple[dict, dict]:
+    """Cierra la costura: federar+validar con services/federacion (import de path,
+    mismo patrón que engines/ifc). Un fallo aquí se investiga en el SERVICE,
+    jamás en expected.json (regla de oro)."""
+    p = str(repo / "services" / "federacion" / "src")
+    if p not in sys.path:
+        sys.path.insert(0, p)
+    from aqyra_federacion import federar_fichero, validar
+    manifiesto = federar_fichero(case_dir / "reglas.json")
+    pack = reglas.get("ids_pack", {})
+    pack_dir = (repo / "data" / "packs" / str(pack.get("familia", "ids"))
+                / str(pack.get("id")) / str(pack.get("version")))
+    informe = validar(manifiesto, pack_dir, case_dir)
+    return manifiesto, informe
+
+
 def run_case_c4(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
-    """C4: modo ANCLADO (contract-first, sin service) — ver golden/C4/*/ficha.md.
+    """C4: recompute con el service (Fase II·h2) + checks anclados del 2.1 — ver ficha.
 
+    0. RECOMPUTE (costura cerrada): federar+validar con services/federacion sobre
+       las entradas congeladas → manifiesto e informe comparados contra el MISMO
+       expected.json (tolerancias del caso; texto libre y procedencia normalizados).
     1. Conformidad de esquemas (reglas + manifiesto esperado + informe esperado).
     2. Identidad por hash de las entradas congeladas (triple coherencia de md5).
     3. Coherencia interna (modelos, pack IDS anclado, requisitos ⊆ .ids, veredicto).
-    En 1.1 se antepone federar+validar (service real) contra el MISMO expected.
     """
     checks: list[tuple[str, bool, str]] = []
     schemas = load_c4_schemas(contracts_dir)
@@ -311,6 +390,30 @@ def run_case_c4(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
         print_checks([("reglas.json presente", False, "no encontrado")])
         return False
     reglas = json.loads(reglas_path.read_text(encoding="utf-8"))
+
+    # 0 · RECOMPUTE con el service real (Fase II·h2, D10) — se ANTEPONE al anclado
+    tol_tras = float(tol.get("traslacion_m", 0.0))
+    tol_rot = float(tol.get("rotacion_deg", 0.0))
+    try:
+        man_rec, inf_rec = _recompute_c4(case_dir, reglas, repo)
+        checks.append(("service federar()+validar() ejecuta", True,
+                       "services/federacion (import de path)"))
+        for name, inst, key in (("manifiesto recomputado conforma", man_rec, "manifiesto"),
+                                ("informe recomputado conforma", inf_rec, "informe")):
+            ok, detail = validate_against_schema(inst, schemas[key])
+            checks.append((name, ok, detail))
+        d_man = _diffs(_norm_manifiesto(manifiesto), _norm_manifiesto(man_rec),
+                       tol_tras, tol_rot)
+        checks.append(("recompute manifiesto == expected", not d_man,
+                       f"{len(d_man)} diff/s — {d_man[0]}" if d_man
+                       else f"reproducido (±{tol_tras} m, ±{tol_rot}°)"))
+        d_inf = _diffs(_norm_contrato(informe), _norm_contrato(inf_rec),
+                       tol_tras, tol_rot)
+        checks.append(("recompute informe == expected", not d_inf,
+                       f"{len(d_inf)} diff/s — {d_inf[0]}" if d_inf
+                       else "reproducido (pass/fail, conteos, GUIDs, estados, veredicto)"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("recompute con el service", False, f"{type(e).__name__}: {e}"))
 
     # 1 · conformidad de esquemas
     for name, inst, key in (("reglas conforman esquema", reglas, "reglas"),
@@ -465,3 +568,4 @@ if __name__ == "__main__":
     raise SystemExit(main())
 # Fase I · hilo 1: costura cerrada (compile real narración→IFC). Ver engines/ifc/compile_c1.py.
 # Fase II · hilo 1: dispatch por contrato (CASE_RUNNERS); C4 en modo ANCLADO hasta el service (1.1).
+# Fase II · hilo 2: costura C4 CERRADA — recompute federar+validar con services/federacion (D10).

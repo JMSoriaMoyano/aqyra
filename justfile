@@ -36,8 +36,12 @@ test-packs:
 test-engine:
     uv run pytest engines/ifc -q
 
-# puerta completa que exige el CI: esquema válido + tests de core/packs/engine + golden verde
-check: schema-check test-core test-packs test-engine golden
+# tests del service C4 (federación: unidad + conformidad de esquemas de sus salidas)
+test-service:
+    uv run pytest services/federacion -q
+
+# puerta completa que exige el CI: esquema válido + tests de core/packs/engine/service + golden verde
+check: schema-check test-core test-packs test-engine test-service golden
 
 # lista los objetivos afectados por el diff contra {{base}}
 affected base=base:

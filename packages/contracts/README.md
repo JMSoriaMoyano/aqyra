@@ -12,7 +12,7 @@ Protegido por **CODEOWNERS**: cambios por PR aprobado.
 | Contrato | Ficha | Esquema | Golden | Estado |
 |---|---|---|---|---|
 | **C1** interoperabilidad | ✅ | ✅ `modelo-neutro` + `alto-spec` | ✅ `C1-APERTURA-01` | **Formalizado (Fase 0)** |
-| **C4** federación | ✅ | ✅ `reglas-federacion` + `maestro-manifiesto` + `informe-qa` (BCF 3.0 por referencia) | ✅ `C4-FED-01` (modo anclado) | **Contract-first (Fase II·h1) — sin service (1.1)** |
+| **C4** federación | ✅ | ✅ `reglas-federacion` + `maestro-manifiesto` + `informe-qa` (BCF 3.0 por referencia) | ✅ `C4-FED-01` (recompute + anclado) | **Service v0 (Fase II·h2) — `services/federacion` 0.1.0, costura cerrada** |
 | C9 estructura (fem) | ✅ | ⏳ | ✅ 7/7 | firmado aguas arriba; esquema a formalizar |
 | C3 cumplimiento | ✅ | ⏳ | — | Fase 2 |
 | C5 presupuesto | ✅ | ⏳ | — | Fase 3 |

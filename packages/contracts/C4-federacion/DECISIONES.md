@@ -50,5 +50,49 @@ Fichero `.ids` (**IDS 1.0** estándar, versión fijada) + `pack.json` conforme a
 1–2 fallan adrede. Anclado en `versions.lock [packs.ids]`.
 
 ---
+
+> Bloque del hilo 2.2 (service v0, tarea 1.1). Resueltas con JM el **2026-07-02**
+> (OK explícito), antes de tocar código. D1–D5 no se reabren.
+
+## D6 · IFC federado derivado — NO en v0 (v0 = manifiesto + informe)
+
+La golden anclada no ancla ningún IFC derivado; emitir una salida sin oráculo rompe el
+espíritu contract-first. El esquema deja `ifc_derivado` opcional adrede (D1: la verdad
+vive en el manifiesto). El IFC derivado llega en v0.x como tarea propia, con su anclaje
+decidido entonces (md5 en expected: decisión explícita con JM).
+
+## D7 · Motor de validación IDS — implementación PROPIA mínima sobre ifcopenshell
+
+Solo se necesitan 4 facets (entity, classification, property, attribute+pattern) y el
+terreno ya está mapeado por el oráculo manual (material en
+`Pset_Estructurando_Spec.Material`, no como asociación IfcMaterial; `IsExternal` en
+`Pset_WallCommon`). `ifctester` sería superficie ajena que anclar y cuya semántica podría
+discrepar del oráculo en los bordes — un desajuste obligaría a investigar SU comportamiento,
+no el nuestro. R4-GEORREF (`origen='modulo'`) va aparte en ambos casos: presencia de
+`IfcMapConversion` + `IfcProjectedCRS`. Puerta abierta a adoptar ifctester en v1 si el
+pack crece más allá de estos facets.
+
+## D8 · BCF en v0 — `bcf.emitido=false` (la emisión de topics es 1.2)
+
+El informe declara las incidencias (con GUIDs) y el bloque `bcf` queda como en el expected
+congelado: `version 3.0, emitido: false`. La emisión de topics BCF 3.0 reales es la tarea
+1.2 (QA/IDS→BCF). Cambiarlo ahora obligaría a tocar el expected (prohibido).
+
+## D9 · Empaquetado — paquete uv del workspace `aqyra-federacion`
+
+`services/federacion/` con `src/aqyra_federacion/` + `tests/` + CLI mínimo, consumido por
+el runner por import de path (mismo patrón que `engines/ifc`). Sus pytest entran al gate
+añadiendo `services/federacion` al Paso 1 de `ci.yml` — una única edición quirúrgica en la
+línea que ya lista los paths explícitos. Nada más de `ci.yml` se toca.
+
+## D10 · Recompute en el runner — anclado + recompute en el MISMO `run_case_c4`
+
+Los checks anclados actuales se conservan íntegros y se ANTEPONE el recompute:
+`federar(entradas, reglas)` + `validar(maestro, ids_pack)` → comparación de manifiesto e
+informe recomputados contra el MISMO `expected.json` con `tolerancias.json` (conteos y
+estados exactos; traslación ±1e-6 m, rotación ±1e-9°). Más checks, nunca menos — la
+costura idéntica a la que cerró C1 en Fase I·h1.
+
+---
 *Regla de oro heredada: un fallo no se arregla aflojando la golden. El CI nunca certifica
 (Llave 2 = JM).*

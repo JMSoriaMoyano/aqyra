@@ -12,19 +12,20 @@ golden          = "C1-APERTURA-01"
 oraculo         = "conteo de entidades + round-trip"
 estado          = "engine-importado"     # Fase I·h1: corte mínimo en engines/ifc; la golden compila con el engine real
 
-# --- contrato C4 (Fase II·h1): federación, CONTRACT-FIRST — el esquema ANTES que el service ---
-# Decisiones D1–D5 ancladas en packages/contracts/C4-federacion/DECISIONES.md (OK JM 2026-07-02).
-# El Maestro autoritativo es el MANIFIESTO (D1); el IFC federado es derivado. BCF 3.0 por referencia (D2).
+# --- contrato C4 (Fase II·h1→h2): federación — contract-first COMPLETADO con el service ---
+# Decisiones D1–D10 ancladas en packages/contracts/C4-federacion/DECISIONES.md (OK JM 2026-07-02).
+# El Maestro autoritativo es el MANIFIESTO (D1); el IFC federado derivado NO se emite en v0 (D6).
+# Motor IDS propio mínimo (D7); BCF declarado y no emitido hasta 1.2 (D8).
 [contracts.C4]
 nombre          = "federacion"
 schema_version  = "0.1.0"              # 3 esquemas: reglas-federacion + maestro-manifiesto + informe-qa
 engine          = "services/federacion"
-engine_version  = ""                   # SIN ENGINE: el service es la tarea 1.1 (la Llave 2 de adopción llega con él)
+engine_version  = "0.1.0"              # service v0 (Fase II·h2): federar()+validar() reproducen la golden
 bcf             = "3.0"                # estándar buildingSMART, por referencia (no se re-esquematiza)
 ids_pack        = "ids/proyecto-piloto/v1"
 golden          = "C4-FED-01"
-oraculo         = "modo anclado: conformidad de esquemas + hashes de entradas congeladas + coherencia interna (oráculo manual documentado en la ficha; recompute contra el service en 1.1)"
-estado          = "contract-first, sin engine"
+oraculo         = "recompute (federar+validar con el service contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 (esquemas + hashes + coherencia interna) — D10: más checks, nunca menos"
+estado          = "service v0 (costura cerrada en Fase II·h2); IFC derivado = v0.x (D6), emisión BCF = 1.2 (D8)"
 
 # --- engine C1 (Fase I·h1): corte mínimo narración→IFC importado del canónico 0.10.0 ---
 # Copiado BYTE A BYTE de _import/aqyra-motor (procedencia). Identidad vigilada por
