@@ -43,7 +43,7 @@ version         = "0.1.0"
 origen          = "Estructurando/Nucleo-transversal/nucleo"
 ifc_utils_md5   = "ad06f87d648fc0388b35d10deeb290b7"
 grafo_red_md5   = "fe5dfebb4c5adb73f90718d57978e8a4"
-estado          = "extraído; espejo del NÚCLEO retirado del PILOTO (PR-E2) y de INSTALACIONES (PR-E3: plugins/instalaciones re-homed SIN copia trackeada; tools/build_plugin_instalaciones.py inyecta scripts/nucleo/, gate Paso 1c); guardián anti-reaparición en test_no_reaparicion_espejo.py cubre ambos por nombre. Quedan 3 (PR-E4…E6: obras-lineales → puentes → motor-fem)"
+estado          = "extraído; espejo del NÚCLEO retirado del PILOTO (PR-E2), de INSTALACIONES (PR-E3) y de OBRAS-LINEALES (PR-E4: plugins/obras-lineales re-homed SIN copia trackeada; inyección FACTORIZADA en tools/_inyectar_nucleo.py, consumida por los 3 builders; gate con paso ÚNICO de builds tools/build_plugin_*.py); guardián anti-reaparición en test_no_reaparicion_espejo.py cubre todos por nombre. Quedan 2 (PR-E5…E6: puentes → motor-fem)"
 
 # --- packs (0.6): conocimiento externo versionado. data/packs/<familia>/<id>/<version>/ ---
 # Cambiar de pack es una decisión explícita: se re-ancla aquí y se actualiza su golden.

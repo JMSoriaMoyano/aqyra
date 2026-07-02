@@ -38,6 +38,11 @@ plugins/iso19650-openbim/scripts/nucleo/
 # se GENERA en build (tools/build_plugin_instalaciones.py copia packages/core). Mismo guardián.
 plugins/instalaciones/scripts/nucleo/
 
+# PR-E4 · re-home de obras-lineales: nace SIN copia trackeada del núcleo; scripts/nucleo/
+# se GENERA en build (tools/build_plugin_obras_lineales.py vía tools/_inyectar_nucleo.py).
+# Mismo guardián.
+plugins/obras-lineales/scripts/nucleo/
+
 # Operativa local (.bat de arranque/PR + logs): no es producto
 _operativo/
 *.bat

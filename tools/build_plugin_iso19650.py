@@ -17,6 +17,10 @@ md5 (LF) de `versions.lock` ([engines.ifc.md5] para el engine, [core] para el n�
 si el build no deriva del canónico, falla. Luego zipa a dist/ y pasa la puerta
 `tools/verificar_empaquetado.py`.
 
+PR-E4 (Fase I · hilo 5): la inyección del NÚCLEO se consume de `tools/_inyectar_nucleo.py`
+(fuente única de la inyección con el tercer consumidor; deuda anclada en
+NUCLEO_PR-E3_cierre.md pagada). El contrato y el producto no cambian.
+
 Uso:
     python3 tools/build_plugin_iso19650.py            # build + verificación intrínseca
     python3 tools/build_plugin_iso19650.py --ref <0.9.2.plugin>   # + contraste de tamaños
@@ -26,7 +30,6 @@ Exit 0 = APTO (dist/plugins/iso19650-openbim-<v>.plugin listo para firmar/public
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 import shutil
@@ -35,6 +38,10 @@ import sys
 import tempfile
 import zipfile
 from pathlib import Path
+
+from _inyectar_nucleo import core_anchors as _core_anchors_from
+from _inyectar_nucleo import inject_nucleo as _inject_nucleo_into
+from _inyectar_nucleo import md5_lf as _md5_lf
 
 ROOT = Path(__file__).resolve().parents[1]
 MEMBER = ROOT / "plugins" / "iso19650-openbim"
@@ -55,9 +62,6 @@ ENGINE_NARRA = [
 ]
 ENGINE_LINEAL = "generate_test_ifc_lineal.py"
 
-# Ficheros de NÚCLEO que se inyectan en scripts/nucleo/ desde packages/core (PR-E2).
-NUCLEO_FILES = ["ifc_utils.py", "grafo_red.py"]
-
 # Rutas del miembro que NUNCA se copian al staging: son artefactos generados (gitignored)
 # o fuentes auxiliares que se recolocan. Las CARPETAS se saltan con todo su contenido.
 SKIP_DIRS = (
@@ -68,10 +72,6 @@ SKIP_REL = {
     "scripts/lineal/generate_test_ifc_lineal.py",     # se REGENERA desde engine (leftover)
 }
 SKIP_AUX_DIR = "skills/narracion-a-ifc/_aux"           # su contenido va DENTRO de scripts/
-
-
-def _md5_lf(p: Path) -> str:
-    return hashlib.md5(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def _anchors() -> dict[str, str]:
@@ -94,22 +94,8 @@ def _anchors() -> dict[str, str]:
 
 
 def _core_anchors() -> dict[str, str]:
-    """md5 anclados en versions.lock [core] (ifc_utils_md5 / grafo_red_md5)."""
-    txt = LOCK.read_text(encoding="utf-8")
-    out: dict[str, str] = {}
-    in_block = False
-    for line in txt.splitlines():
-        s = line.strip()
-        if s.startswith("[core]"):
-            in_block = True
-            continue
-        if in_block and s.startswith("["):
-            break
-        if in_block:
-            m = re.match(r'(\w+)_md5\s*=\s*"([0-9a-f]{32})"', s)
-            if m:
-                out[m.group(1) + ".py"] = m.group(2)
-    return out
+    """md5 anclados en versions.lock [core] — consumido de tools/_inyectar_nucleo.py."""
+    return _core_anchors_from(LOCK)
 
 
 def _rel(p: Path) -> str:
@@ -174,27 +160,8 @@ def _inject_engine(anchors: dict[str, str]) -> list[str]:
 
 
 def _inject_nucleo(anchors: dict[str, str]) -> list[str]:
-    """Inyecta el núcleo desde packages/core y prueba identidad vs versions.lock [core].
-
-    PR-E2 (Fase I · hilo 3): el plugin no commitea scripts/nucleo/; se genera aquí desde
-    el canónico. Los scripts del plugin lo consumen por sys.path (import ifc_utils /
-    import grafo_red), sin __init__: se inyectan solo los dos módulos.
-    """
-    errores: list[str] = []
-    nucleo = STAGE / "scripts" / "nucleo"
-    nucleo.mkdir(parents=True, exist_ok=True)
-    for name in NUCLEO_FILES:
-        src = CORE / name
-        if not src.exists():
-            errores.append(f"núcleo ausente: packages/core/src/aqyra_core/{name}")
-            continue
-        shutil.copy2(src, nucleo / name)
-        got, exp = _md5_lf(src), anchors.get(name)
-        if not exp:
-            errores.append(f"{name}: sin anclaje md5 en versions.lock [core]")
-        elif got != exp:
-            errores.append(f"{name}: md5 {got[:8]} != anclaje {exp[:8]} (build no deriva del canónico)")
-    return errores
+    """Inyecta el núcleo en el staging — consumido de tools/_inyectar_nucleo.py (PR-E4)."""
+    return _inject_nucleo_into(STAGE, CORE, anchors)
 
 
 def _zip(version: str) -> Path:
