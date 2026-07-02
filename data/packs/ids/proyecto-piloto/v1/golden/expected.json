@@ -1,0 +1,5 @@
+{
+  "pack": "ids/proyecto-piloto/v1",
+  "content_sha256": "51e5687b689bf66dfd0c278a8b8a3031d4c48cf55fd4a0731de1346b1107abd4",
+  "_nota": "Golden de pack: identidad del contenido por hash (incluye md5 del .ids y la lista de requisitos). Cambiar el .ids o los requisitos sin bump de versión + nuevo hash rompe el test — no hay drift silencioso."
+}

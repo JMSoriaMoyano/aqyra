@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- IDS 1.0 (buildingSMART) — pack ids/proyecto-piloto/v1.
+     Requisitos de informacion del proyecto piloto (plantilla EIR minima) para C4.
+     R4-GEORREF NO esta aqui: no es expresable en IDS puro; es regla adicional del
+     modulo QA (origen='modulo' en el informe — ficha C4 §3, 'no todo es IDS'). -->
+<ids xmlns="http://standards.buildingsmart.org/IDS"
+     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://standards.buildingsmart.org/IDS http://standards.buildingsmart.org/IDS/1.0/ids.xsd">
+  <info>
+    <title>IDS del proyecto piloto (EIR minimo) - Aqyra C4</title>
+    <version>1.0.0</version>
+    <author>jmsoria@ciccp.es</author>
+    <date>2026-07-02</date>
+    <purpose>Golden C4-FED-01: 4 requisitos IDS comprobables sobre el caso federado</purpose>
+  </info>
+  <specifications>
+    <specification ifcVersion="IFC4X3_ADD2" name="R1-CLASIF" identifier="R1-CLASIF"
+                   description="Todo elemento objetivo lleva doble clasificacion: bsDD (URI) + Uniclass 2015">
+      <applicability minOccurs="0" maxOccurs="unbounded">
+        <entity>
+          <name>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="IFCCOLUMN"/>
+              <xs:enumeration value="IFCWALL"/>
+              <xs:enumeration value="IFCSLAB"/>
+              <xs:enumeration value="IFCFOOTING"/>
+              <xs:enumeration value="IFCDOOR"/>
+              <xs:enumeration value="IFCTRANSPORTELEMENT"/>
+            </xs:restriction>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <classification cardinality="required">
+          <system><simpleValue>bSDD - IFC 4.3</simpleValue></system>
+        </classification>
+        <classification cardinality="required">
+          <system><simpleValue>Uniclass 2015</simpleValue></system>
+        </classification>
+      </requirements>
+    </specification>
+    <specification ifcVersion="IFC4X3_ADD2" name="R2-EXTERIOR" identifier="R2-EXTERIOR"
+                   description="Todo muro declara Pset_WallCommon.IsExternal">
+      <applicability minOccurs="0" maxOccurs="unbounded">
+        <entity><name><simpleValue>IFCWALL</simpleValue></name></entity>
+      </applicability>
+      <requirements>
+        <property cardinality="required" dataType="IFCBOOLEAN">
+          <propertySet><simpleValue>Pset_WallCommon</simpleValue></propertySet>
+          <baseName><simpleValue>IsExternal</simpleValue></baseName>
+        </property>
+      </requirements>
+    </specification>
+    <specification ifcVersion="IFC4X3_ADD2" name="R3-MATERIAL" identifier="R3-MATERIAL"
+                   description="Elementos constructivos declaran su material (Pset_Estructurando_Spec.Material)">
+      <applicability minOccurs="0" maxOccurs="unbounded">
+        <entity>
+          <name>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="IFCCOLUMN"/>
+              <xs:enumeration value="IFCWALL"/>
+              <xs:enumeration value="IFCSLAB"/>
+              <xs:enumeration value="IFCFOOTING"/>
+              <xs:enumeration value="IFCTRANSPORTELEMENT"/>
+            </xs:restriction>
+          </name>
+        </entity>
+      </applicability>
+      <requirements>
+        <property cardinality="required" dataType="IFCLABEL">
+          <propertySet><simpleValue>Pset_Estructurando_Spec</simpleValue></propertySet>
+          <baseName><simpleValue>Material</simpleValue></baseName>
+        </property>
+      </requirements>
+    </specification>
+    <specification ifcVersion="IFC4X3_ADD2" name="R5-PLANTAS" identifier="R5-PLANTAS"
+                   description="Nomenclatura de plantas del proyecto: IfcBuildingStorey.Name conforme a 'Planta ...'">
+      <applicability minOccurs="0" maxOccurs="unbounded">
+        <entity><name><simpleValue>IFCBUILDINGSTOREY</simpleValue></name></entity>
+      </applicability>
+      <requirements>
+        <attribute cardinality="required">
+          <name><simpleValue>Name</simpleValue></name>
+          <value>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="Planta .*"/>
+            </xs:restriction>
+          </value>
+        </attribute>
+      </requirements>
+    </specification>
+  </specifications>
+</ids>
