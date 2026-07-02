@@ -9,8 +9,8 @@ requires-python = ">=3.10"
 package = false
 
 [tool.uv.workspace]
-members = ["packages/core", "packages/golden", "packages/packs"]
-# engines/*, services/* se añaden como miembros cuando aterricen.
+members = ["packages/core", "packages/golden", "packages/packs", "services/federacion"]
+# engines/* se añaden como miembros cuando aterricen (services/federacion aterrizó en Fase II·h2).
 
 # Dependencias de desarrollo del workspace (uv las instala en `uv sync`).
 [dependency-groups]
