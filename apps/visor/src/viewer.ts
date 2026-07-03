@@ -37,6 +37,13 @@ export class Viewer {
   private selectedPrevEmissive = 0x000000;
   private downXY: [number, number] | null = null;
 
+  /** Color de ACENTO de la UX (ámbar) para selección/BCF — distinto del emissive D29. */
+  private readonly ACCENT = 0xff8a3d;
+  /** Mallas con acento activo (para restaurar su emissive). */
+  private selectionAccent: THREE.Mesh[] = [];
+  /** Observa el tamaño real del contenedor (#8): el renderer sigue a `#escena`. */
+  private resizeObserver?: ResizeObserver;
+
   /** Estado de dato (D-021) del layer de resultado activo. `null` = sin resultado a la vista. */
   private dataState: DataState | null = null;
   private stateChip?: HTMLElement;
@@ -458,6 +465,12 @@ export class Viewer {
     renderer.domElement.addEventListener("pointerdown", this.onPointerDown);
     renderer.domElement.addEventListener("pointerup", this.onPointerUp);
     this.resize();
+    // #8 — el renderer sigue el tamaño REAL del contenedor (antes quedaba fijo tras mount).
+    if (typeof ResizeObserver !== "undefined") {
+      this.resizeObserver = new ResizeObserver(() => this.resize());
+      this.resizeObserver.observe(container);
+    }
+    if (typeof window !== "undefined") window.addEventListener("resize", this.onWindowResize);
     this.animate();
   }
 
@@ -620,6 +633,88 @@ export class Viewer {
     this.camera.lookAt(target);
   }
 
+  private readonly onWindowResize = (): void => { this.resize(); };
+
+  /** #4 · «Vista general»: quita acento/ghost y re-encuadra el modelo completo.
+   *  NO altera la cámara D29 de los viewpoints BCF (es aditivo, a demanda del usuario). */
+  frameAll(): void {
+    this.clearSelectionAccent();
+    this.showAll();
+    this.fitToModels();
+  }
+
+  /** #9 · Encuadra la cámara sobre un elemento (árbol → escena). */
+  frameElement(modelID: number, expressId: number): void {
+    this.models.updateMatrixWorld(true);
+    const box = new THREE.Box3();
+    let found = false;
+    this.eachMesh((m) => {
+      if (m.userData.modelID === modelID && m.userData.expressId === expressId) {
+        box.expandByObject(m);
+        found = true;
+      }
+    });
+    if (!found || box.isEmpty()) return;
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const radius = Math.max(size.x, size.y, size.z) || 1;
+    const d = radius * 3;
+    this.camera.position.set(center.x + d, center.y + d, center.z + d);
+    this.camera.near = Math.max(0.01, radius / 500);
+    this.camera.far = Math.max(this.camera.far, radius * 500);
+    this.camera.updateProjectionMatrix();
+    this.camera.lookAt(center);
+    if (this.controls) {
+      this.controls.target.copy(center);
+      this.controls.update();
+    }
+  }
+
+  /** #1/#9 · Resalta un conjunto de elementos con color de ACENTO; opcional: atenúa
+   *  el resto (ghost) para que el topic BCF deje OBVIO qué señala. */
+  highlightSelection(modelID: number, expressIds: number[], opts?: { ghost?: boolean; accent?: number }): void {
+    const set = new Set(expressIds);
+    const accent = opts?.accent ?? this.ACCENT;
+    this.clearSelectionAccent();
+    if (opts?.ghost) this.ghostExcept(modelID, set);
+    this.eachMesh((m) => {
+      if (m.userData.modelID === modelID && set.has(m.userData.expressId as number)) {
+        const mat = m.material as THREE.MeshLambertMaterial;
+        (m.userData as { accentPrev?: number }).accentPrev = mat.emissive.getHex();
+        mat.emissive.setHex(accent);
+        this.selectionAccent.push(m);
+      }
+    });
+  }
+
+  /** Restaura el emissive de las mallas con acento. */
+  clearSelectionAccent(): void {
+    for (const m of this.selectionAccent) {
+      const mat = m.material as THREE.MeshLambertMaterial;
+      const prev = (m.userData as { accentPrev?: number }).accentPrev;
+      mat.emissive.setHex(prev ?? 0x000000);
+    }
+    this.selectionAccent = [];
+  }
+
+  /** Atenúa (ghost) todas las mallas salvo las del conjunto `keep`. */
+  private ghostExcept(modelID: number, keep: Set<number>): void {
+    this.eachMesh((m) => {
+      const mat = m.material as THREE.MeshLambertMaterial;
+      const keepIt = m.userData.modelID === modelID && keep.has(m.userData.expressId as number);
+      if (keepIt) {
+        const o = (m.userData.opacity0 as number) ?? 1;
+        mat.opacity = o;
+        mat.transparent = o < 1;
+        mat.depthWrite = true;
+      } else {
+        mat.transparent = true;
+        mat.opacity = 0.08;
+        mat.depthWrite = false;
+      }
+    });
+  }
+
   private eachMesh(fn: (m: THREE.Mesh) => void): void {
     this.models.traverse((o) => {
       const m = o as THREE.Mesh;
@@ -717,6 +812,9 @@ export class Viewer {
 
   dispose(): void {
     if (this.raf) cancelAnimationFrame(this.raf);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
+    if (typeof window !== "undefined") window.removeEventListener("resize", this.onWindowResize);
     this.stateChip?.remove();
     this.stateWatermark?.remove();
     this.stateChip = undefined;

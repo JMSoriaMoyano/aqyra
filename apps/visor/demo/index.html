@@ -2,19 +2,52 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Aqyra — el visor abierto abre el Maestro (hilo 3.1)</title>
+  <title>Aqyra — el visor abierto abre el Maestro (hilo 3.4 · UX lote 1)</title>
   <style>
-    html, body { margin: 0; height: 100%; font: 13px system-ui, sans-serif; }
-    #app { display: grid; grid-template-columns: 300px 1fr; height: 100%; }
-    #panel { border-right: 1px solid #ccc; padding: 10px; overflow: auto; }
-    #escena { position: relative; }
-    h2 { font-size: 14px; margin: 8px 0 4px; }
-    .topic { border: 1px solid #ddd; border-radius: 6px; padding: 6px; margin: 6px 0; cursor: pointer; }
-    .topic:hover { background: #f4f6f8; }
-    .topic .prio { font-weight: 600; }
-    .topic.sel { outline: 2px solid #2b6cb0; }
-    #props { white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 11px; }
-    .nodo { margin-left: 12px; }
+    :root {
+      --bg: #0e1116; --panel: #161a20; --panel2: #1c222b; --border: #2a2f37;
+      --fg: #cdd3da; --fg-dim: #8b93a0; --accent: #ff8a3d; --sel: #2b6cb0;
+    }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg);
+      font: 13px system-ui, sans-serif; }
+    #app { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+    #panel { background: var(--panel); border-right: 1px solid var(--border);
+      padding: 12px; overflow: auto; }
+    /* #8 — la escena ocupa TODA la columna disponible; el canvas la sigue (ResizeObserver). */
+    #escena { position: relative; min-width: 0; min-height: 0; background: var(--bg); }
+    #escena canvas { display: block; }
+    h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--fg-dim); margin: 14px 0 6px; }
+    #estado { font-size: 12px; color: var(--fg-dim); }
+    /* Árbol INTERACTIVO (#2/#9) */
+    .nodo-row { display: flex; align-items: center; gap: 4px; padding: 2px 4px;
+      border-radius: 4px; white-space: nowrap; }
+    .nodo-row:hover { background: var(--panel2); }
+    .nodo-row.sel { background: var(--sel); color: #fff; }
+    .caret { width: 12px; display: inline-block; text-align: center; color: var(--fg-dim);
+      cursor: pointer; user-select: none; }
+    .caret.leaf { visibility: hidden; }
+    .etq { overflow: hidden; text-overflow: ellipsis; }
+    .etq.elem { color: var(--fg); cursor: pointer; }
+    .etq.espacio { color: var(--fg-dim); }
+    .hijos { margin-left: 12px; border-left: 1px solid var(--border); padding-left: 4px; }
+    .hijos.plegado { display: none; }
+    /* Topics BCF */
+    .topic { border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px;
+      margin: 6px 0; cursor: pointer; background: var(--panel2); }
+    .topic:hover { border-color: var(--fg-dim); }
+    .topic.sel { outline: 2px solid var(--accent); }
+    .topic .prio { font-weight: 600; color: var(--accent); }
+    .topic small { color: var(--fg-dim); }
+    #props { white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 11px;
+      color: var(--fg); background: var(--panel2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px; }
+    /* #4 — botón «vista general» flotante sobre la escena */
+    #vista-general { position: absolute; top: 10px; right: 10px; z-index: 40;
+      background: rgba(28,34,43,.9); color: var(--fg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 6px 10px; font: 600 12px system-ui, sans-serif;
+      cursor: pointer; }
+    #vista-general:hover { border-color: var(--accent); color: #fff; }
   </style>
 </head>
 <body>
@@ -27,9 +60,11 @@
       <h2>Topics BCF</h2>
       <div id="topics"></div>
       <h2>Selección</h2>
-      <div id="props">(clic en un elemento o topic)</div>
+      <div id="props">(clic en un elemento, un nodo del árbol o un topic)</div>
     </div>
-    <div id="escena"></div>
+    <div id="escena">
+      <button id="vista-general" title="Re-encuadra el modelo completo">Vista general</button>
+    </div>
   </div>
   <script type="module" src="./main.ts"></script>
 </body>
