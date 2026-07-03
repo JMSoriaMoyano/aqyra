@@ -1,0 +1,97 @@
+{
+  "banco": "AQ-DEMO/v1",
+  "titulo": "Banco de precios Aqyra DEMO — propio, mínimo (piloto C5)",
+  "descripcion": "Banco de precios PROPIO mínimo (NO BEDEC/PREOC, que son licenciados) para el golden GOL-PRE-01. Partidas descompuestas (MO/materiales/maquinaria + costes indirectos) + mapeo clasificación→partida. El banco real entra como pack cuando el engine lo consuma. Precios de demostración, no de mercado.",
+  "moneda": "EUR",
+  "costes_indirectos_pct": 0.03,
+  "partidas": [
+    {
+      "codigo": "FAB010",
+      "unidad": "m2",
+      "descripcion": "Fábrica de ladrillo cerámico perforado 1/2 pie, para revestir",
+      "clasificacion_uniclass": ["EF_25_10"],
+      "componentes": [
+        { "tipo": "mano_obra", "descripcion": "Oficial 1ª + peón albañilería", "unidad": "h", "rendimiento": 0.75, "precio": 24.0, "subtotal": 18.0 },
+        { "tipo": "material", "descripcion": "Ladrillo perforado + mortero de cemento", "unidad": "m2", "rendimiento": 1.0, "precio": 12.5, "subtotal": 12.5 }
+      ],
+      "costes_indirectos": 0.92,
+      "precio": 31.42
+    },
+    {
+      "codigo": "REV010",
+      "unidad": "m2",
+      "descripcion": "Enfoscado de cemento a buena vista sobre paramento vertical",
+      "clasificacion_uniclass": ["EF_25_10"],
+      "componentes": [
+        { "tipo": "mano_obra", "descripcion": "Oficial 1ª revocos", "unidad": "h", "rendimiento": 0.35, "precio": 25.71, "subtotal": 9.0 },
+        { "tipo": "material", "descripcion": "Mortero de cemento M-5", "unidad": "m2", "rendimiento": 1.0, "precio": 3.2, "subtotal": 3.2 },
+        { "tipo": "maquinaria", "descripcion": "Hormigonera", "unidad": "h", "rendimiento": 0.02, "precio": 5.0, "subtotal": 0.1 }
+      ],
+      "costes_indirectos": 0.37,
+      "precio": 12.67
+    },
+    {
+      "codigo": "PIN010",
+      "unidad": "m2",
+      "descripcion": "Pintura plástica lisa sobre paramento vertical enfoscado",
+      "clasificacion_uniclass": ["EF_25_10"],
+      "componentes": [
+        { "tipo": "mano_obra", "descripcion": "Oficial 1ª pintura", "unidad": "h", "rendimiento": 0.2, "precio": 22.5, "subtotal": 4.5 },
+        { "tipo": "material", "descripcion": "Pintura plástica + imprimación", "unidad": "m2", "rendimiento": 1.0, "precio": 2.0, "subtotal": 2.0 }
+      ],
+      "costes_indirectos": 0.2,
+      "precio": 6.7
+    },
+    {
+      "codigo": "EHL010",
+      "unidad": "m3",
+      "descripcion": "Losa/forjado de hormigón armado HA-25, incluso encofrado y acero B500S",
+      "clasificacion_uniclass": ["EF_30_20"],
+      "componentes": [
+        { "tipo": "mano_obra", "descripcion": "Oficial + peón ferralla/hormigón", "unidad": "h", "rendimiento": 3.5, "precio": 27.14, "subtotal": 95.0 },
+        { "tipo": "material", "descripcion": "Hormigón HA-25 + acero B500S + encofrado", "unidad": "m3", "rendimiento": 1.0, "precio": 110.0, "subtotal": 110.0 },
+        { "tipo": "maquinaria", "descripcion": "Bomba de hormigón + vibrador", "unidad": "h", "rendimiento": 0.5, "precio": 40.0, "subtotal": 20.0 }
+      ],
+      "costes_indirectos": 6.75,
+      "precio": 231.75
+    },
+    {
+      "codigo": "EHS010",
+      "unidad": "m3",
+      "descripcion": "Pilar de hormigón armado HA-25, incluso encofrado y acero B500S",
+      "clasificacion_uniclass": ["EF_20_10_30"],
+      "componentes": [
+        { "tipo": "mano_obra", "descripcion": "Oficial + peón ferralla/hormigón", "unidad": "h", "rendimiento": 4.8, "precio": 27.08, "subtotal": 130.0 },
+        { "tipo": "material", "descripcion": "Hormigón HA-25 + acero B500S + encofrado pilar", "unidad": "m3", "rendimiento": 1.0, "precio": 120.0, "subtotal": 120.0 },
+        { "tipo": "maquinaria", "descripcion": "Grúa + vibrador", "unidad": "h", "rendimiento": 0.6, "precio": 41.67, "subtotal": 25.0 }
+      ],
+      "costes_indirectos": 8.25,
+      "precio": 283.25
+    },
+    {
+      "codigo": "CSZ010",
+      "unidad": "m3",
+      "descripcion": "Zapata de cimentación de hormigón armado HA-25",
+      "clasificacion_uniclass": ["EF_20_05_30"],
+      "componentes": [
+        { "tipo": "mano_obra", "descripcion": "Oficial + peón", "unidad": "h", "rendimiento": 2.2, "precio": 27.27, "subtotal": 60.0 },
+        { "tipo": "material", "descripcion": "Hormigón HA-25 + acero B500S", "unidad": "m3", "rendimiento": 1.0, "precio": 95.0, "subtotal": 95.0 },
+        { "tipo": "maquinaria", "descripcion": "Retroexcavadora + vibrador", "unidad": "h", "rendimiento": 0.45, "precio": 40.0, "subtotal": 18.0 }
+      ],
+      "costes_indirectos": 5.19,
+      "precio": 178.19
+    },
+    {
+      "codigo": "PPM010",
+      "unidad": "ud",
+      "descripcion": "Puerta de paso interior, hoja lisa, incluso herrajes y colocación",
+      "clasificacion_uniclass": ["EF_25_30"],
+      "componentes": [
+        { "tipo": "mano_obra", "descripcion": "Oficial 1ª carpintería", "unidad": "h", "rendimiento": 1.4, "precio": 25.0, "subtotal": 35.0 },
+        { "tipo": "material", "descripcion": "Hoja + cerco + herrajes", "unidad": "ud", "rendimiento": 1.0, "precio": 145.0, "subtotal": 145.0 }
+      ],
+      "costes_indirectos": 5.4,
+      "precio": 185.4
+    }
+  ]
+}

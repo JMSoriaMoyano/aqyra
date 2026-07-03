@@ -1,0 +1,73 @@
+{
+  "criterio": "AQ/v1",
+  "titulo": "Criterio de medición Aqyra — corte mínimo (piloto C5)",
+  "descripcion": "Reglas de medición por clase IFC: unidad, qué cantidad (Qto) se mide, descuento de huecos por umbral de superficie, factor de caras, y mapeo clase→partida(s) (un objeto → varias partidas). El criterio es el 80% del valor y de la dificultad (C5 ADR). Cambiar de criterio = cambiar de pack, no de engine.",
+  "reglas_por_clase": [
+    {
+      "clase": "IfcWall",
+      "partidas": [
+        {
+          "codigo": "FAB010",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 1,
+          "nota": "Fábrica: área de una cara, con descuento de huecos de superficie > 1,00 m²"
+        },
+        {
+          "codigo": "REV010",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 2,
+          "nota": "Enfoscado: dos caras (factor 2) sobre el área neta con descuento de huecos"
+        },
+        {
+          "codigo": "PIN010",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 2,
+          "nota": "Pintura: dos caras (factor 2) sobre el área neta"
+        }
+      ]
+    },
+    {
+      "clase": "IfcSlab",
+      "partidas": [
+        { "codigo": "EHL010", "unidad": "m3", "magnitud": "NetVolume", "nota": "Losa/forjado: volumen neto de hormigón" }
+      ]
+    },
+    {
+      "clase": "IfcColumn",
+      "partidas": [
+        { "codigo": "EHS010", "unidad": "m3", "magnitud": "NetVolume", "nota": "Pilar: volumen neto de hormigón" }
+      ]
+    },
+    {
+      "clase": "IfcFooting",
+      "partidas": [
+        { "codigo": "CSZ010", "unidad": "m3", "magnitud": "NetVolume", "nota": "Zapata: volumen neto de hormigón" }
+      ]
+    },
+    {
+      "clase": "IfcDoor",
+      "partidas": [
+        { "codigo": "PPM010", "unidad": "ud", "magnitud": "conteo", "nota": "Puerta de paso: por unidad" }
+      ]
+    }
+  ],
+  "reglas_sin_geometria": [
+    {
+      "codigo": "SYS010",
+      "unidad": "PA",
+      "origen": "regla",
+      "base": "PEM_medible",
+      "ratio": 0.02,
+      "nota": "Seguridad y salud: partida alzada por ratio (2% del PEM de las partidas medibles). Fija la forma de las partidas sin geometría (D5); el grueso (ayudas, PA, residuos) llega con el engine."
+    }
+  ]
+}

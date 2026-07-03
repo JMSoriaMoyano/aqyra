@@ -8,7 +8,7 @@
   "additionalProperties": true,
   "properties": {
     "id": {"type": "string", "minLength": 1},
-    "familia": {"type": "string", "enum": ["codigos", "normativa", "banco", "ids"]},
+    "familia": {"type": "string", "enum": ["codigos", "normativa", "banco", "criterio", "ids"]},
     "version": {"type": "string", "minLength": 1},
     "titulo": {"type": "string"},
     "fuente": {"type": "string", "minLength": 1, "description": "origen y vigencia; los de terceros se importan con su fuente/fecha"},

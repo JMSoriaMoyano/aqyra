@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/contracts/C5/entrada-presupuesto.schema.json",
+  "title": "C5 · entrada de presupuesto (presupuestar: modelo neutro de medición + criterio + banco + parámetros)",
+  "description": "Entrada de C5: el MODELO NEUTRO DE MEDICIÓN (cantidades por objeto, extraídas de los Qto + la clasificación del modelo — 'la medición nace del modelo, no se teclea'), más el pack de CRITERIO de medición, el pack de BANCO de precios y los parámetros económicos. Forward-open: se AÑADEN claves, nunca se cambia la semántica de las existentes. La extracción IFC(+Qto)→modelo neutro es el módulo 1 del engine (aguas arriba); aquí se declara ya extraída.",
+  "type": "object",
+  "required": ["proyecto", "modelo", "criterio_ref", "banco_ref", "parametros"],
+  "additionalProperties": true,
+  "properties": {
+    "proyecto": { "type": "string", "minLength": 1 },
+    "modelo": { "$ref": "#/$defs/modelo_medicion" },
+    "criterio_ref": { "$ref": "#/$defs/pack_ref_criterio" },
+    "banco_ref": { "$ref": "#/$defs/pack_ref_banco" },
+    "parametros": { "$ref": "#/$defs/parametros" }
+  },
+  "$defs": {
+    "modelo_medicion": {
+      "description": "Modelo neutro de medición: lista de objetos con sus cantidades (Qto) + clasificación + GUID. Es lo que el parser (módulo 1 del engine) produce del IFC(+Qto); en el golden se declara congelado. La medición de producción LEE Qto (precondición de conformidad: el QA/IDS de C4 garantiza su presencia aguas arriba).",
+      "type": "object",
+      "required": ["clase", "objetos"],
+      "additionalProperties": true,
+      "properties": {
+        "clase": {
+          "type": "string",
+          "const": "modelo-neutro-medicion",
+          "$comment": "vista de medición del Maestro (C1 en modo cantidades); no es un IFC suelto"
+        },
+        "fuente_maestro": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "ifc_derivado_md5": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{32}$",
+              "$comment": "md5 del derivado del Maestro del que procede la geometría (C4-FED-06, D26); procedencia"
+            },
+            "modelos": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/modelo_fuente" },
+              "$comment": "las fixtures IFC con Qto (md5 propios de C5) de las que nace la medición"
+            }
+          }
+        },
+        "objetos": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/objeto_medicion" }
+        }
+      }
+    },
+    "modelo_fuente": {
+      "type": "object",
+      "required": ["id", "fichero"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "disciplina": { "type": "string" },
+        "fichero": { "type": "string", "minLength": 1 },
+        "md5": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+        "qto_declarados": {
+          "type": "boolean",
+          "$comment": "el modelo declara Qto en los elementos medibles (precondición de conformidad para medición; garantía del QA/IDS de C4)"
+        }
+      }
+    },
+    "objeto_medicion": {
+      "description": "Un objeto medible del modelo: su GUID (traza), su clase IFC, su doble clasificación (que conecta objeto→partida) y sus cantidades (de los Qto).",
+      "type": "object",
+      "required": ["guid", "clase", "cantidades"],
+      "additionalProperties": true,
+      "properties": {
+        "guid": { "type": "string", "minLength": 1 },
+        "clase": { "type": "string", "minLength": 1, "$comment": "clase IFC (IfcWall, IfcSlab, IfcColumn, ...)" },
+        "nombre": { "type": "string" },
+        "clasificacion": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "uniclass": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": { "codigo": { "type": "string" }, "titulo": { "type": "string" } }
+            },
+            "bsdd": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": { "codigo": { "type": "string" } }
+            }
+          }
+        },
+        "cantidades": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/cantidad" }
+        },
+        "ubicacion": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": { "planta": { "type": "string" }, "disciplina": { "type": "string" } }
+        }
+      }
+    },
+    "cantidad": {
+      "type": "object",
+      "required": ["tipo", "valor"],
+      "additionalProperties": true,
+      "properties": {
+        "magnitud": {
+          "type": "string",
+          "$comment": "nombre de la cantidad base (NetSideArea, NetVolume, Length, ...); mapea al Qto del modelo"
+        },
+        "tipo": {
+          "type": "string",
+          "enum": ["m2", "m3", "ml", "ud"],
+          "$comment": "unidad de la magnitud"
+        },
+        "valor": { "type": "number", "minimum": 0 },
+        "fuente_qto": {
+          "type": "string",
+          "$comment": "Qto set y propiedad de origen (p. ej. 'Qto_WallBaseQuantities.NetSideArea'); la medición nace del modelo"
+        }
+      }
+    },
+    "pack_ref_criterio": {
+      "type": "object",
+      "required": ["id", "version"],
+      "additionalProperties": true,
+      "properties": {
+        "familia": { "type": "string", "const": "criterio" },
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "pack_ref_banco": {
+      "type": "object",
+      "required": ["id", "version"],
+      "additionalProperties": true,
+      "properties": {
+        "familia": { "type": "string", "const": "banco" },
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "parametros": {
+      "description": "Parámetros económicos del presupuesto (convención del proyecto). Determinan PEM→PEC.",
+      "type": "object",
+      "required": ["moneda", "iva_pct", "gg_pct", "bi_pct"],
+      "additionalProperties": true,
+      "properties": {
+        "moneda": { "type": "string", "minLength": 1, "$comment": "ISO 4217 (p. ej. 'EUR')" },
+        "iva_pct": { "type": "number", "minimum": 0, "$comment": "fracción (0.21 = 21%)" },
+        "gg_pct": { "type": "number", "minimum": 0, "$comment": "gastos generales, fracción (0.13 = 13%)" },
+        "bi_pct": { "type": "number", "minimum": 0, "$comment": "beneficio industrial, fracción (0.06 = 6%)" }
+      }
+    }
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/contracts/C5/salida-presupuesto.schema.json",
+  "title": "C5 · salida de presupuesto (estado de mediciones + cuadros de precios 1 y 2 + resumen PEM/PEC)",
+  "description": "Salida AUTORITATIVA de presupuestar() (D1): el estado de mediciones (justificación trazable al objeto), el cuadro de precios nº1 (en letra), el cuadro de precios nº2 (descompuesto MO/mat/maq/indirectos, justificación) y el resumen PEM→GG→BI→base→IVA→PEC. El Documento de Presupuesto (PDF/Word) lo compone C7 aparte. Forward-open. Determinista dado criterio + banco.",
+  "type": "object",
+  "required": ["proyecto", "estado_mediciones", "cuadro_precios_1", "cuadro_precios_2", "resumen"],
+  "additionalProperties": true,
+  "properties": {
+    "proyecto": { "type": "string", "minLength": 1 },
+    "estado_mediciones": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/partida_medida" }
+    },
+    "cuadro_precios_1": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/precio_1" }
+    },
+    "cuadro_precios_2": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/precio_2" }
+    },
+    "resumen": { "$ref": "#/$defs/resumen" },
+    "avisos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nivel", "mensaje"],
+        "additionalProperties": true,
+        "properties": {
+          "codigo": { "type": "string" },
+          "nivel": { "type": "string", "enum": ["info", "aviso", "error"] },
+          "mensaje": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "origen": {
+      "type": "string",
+      "enum": ["modelo", "regla", "manual"],
+      "$comment": "TAXONOMÍA CERRADA (D5). modelo = medición nace del Qto (trazable a GUIDs). regla = partida sin geometría por ratio (S&S, ayudas). manual = introducida a mano. Forward-open dentro del enum."
+    },
+    "partida_medida": {
+      "description": "Una partida del estado de mediciones: su medición (cantidad + criterio + trazabilidad al objeto) y su importe (cantidad × precio unitario). La joya: cada cantidad se justifica hasta los GUIDs que la producen.",
+      "type": "object",
+      "required": ["codigo", "descripcion", "unidad", "cantidad", "precio_unitario", "importe", "origen", "trazabilidad"],
+      "additionalProperties": true,
+      "properties": {
+        "codigo": { "type": "string", "minLength": 1, "$comment": "código de partida; junta entre criterio (medición) y banco (precio)" },
+        "capitulo": { "type": "string", "$comment": "capítulo del presupuesto (código); agrupa parciales" },
+        "descripcion": { "type": "string", "minLength": 1 },
+        "unidad": { "type": "string", "minLength": 1, "$comment": "m², m³, ml, ud, PA" },
+        "cantidad": { "type": "number", "minimum": 0 },
+        "precio_unitario": { "type": "number", "minimum": 0 },
+        "importe": { "type": "number", "minimum": 0, "$comment": "cantidad × precio_unitario (redondeado a 2 decimales)" },
+        "criterio_aplicado": { "type": "string", "$comment": "regla de medición aplicada (unidad, descuento de huecos, factor caras...)" },
+        "origen": { "$ref": "#/$defs/origen" },
+        "trazabilidad": {
+          "type": "array",
+          "items": { "type": "string" },
+          "$comment": "GUIDs de los objetos del modelo que producen esta cantidad (vacío si origen != modelo). Justificación de mediciones."
+        }
+      }
+    },
+    "precio_1": {
+      "description": "Cuadro de precios nº1: precio unitario en cifra y en letra.",
+      "type": "object",
+      "required": ["codigo", "unidad", "precio"],
+      "additionalProperties": true,
+      "properties": {
+        "codigo": { "type": "string", "minLength": 1 },
+        "descripcion": { "type": "string" },
+        "unidad": { "type": "string", "minLength": 1 },
+        "precio": { "type": "number", "minimum": 0 },
+        "precio_en_letra": { "type": "string", "$comment": "el nº1 se expresa en letra" }
+      }
+    },
+    "precio_2": {
+      "description": "Cuadro de precios nº2: descomposición del precio unitario (MO + materiales + maquinaria + costes indirectos), con fuente/fecha del banco. Justificación de precios.",
+      "type": "object",
+      "required": ["codigo", "componentes", "precio_total"],
+      "additionalProperties": true,
+      "properties": {
+        "codigo": { "type": "string", "minLength": 1 },
+        "unidad": { "type": "string" },
+        "componentes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["tipo", "subtotal"],
+            "additionalProperties": true,
+            "properties": {
+              "tipo": { "type": "string", "enum": ["mano_obra", "material", "maquinaria"] },
+              "descripcion": { "type": "string" },
+              "unidad": { "type": "string" },
+              "rendimiento": { "type": "number", "minimum": 0 },
+              "precio": { "type": "number", "minimum": 0 },
+              "subtotal": { "type": "number", "minimum": 0 }
+            }
+          }
+        },
+        "costes_indirectos": { "type": "number", "minimum": 0, "$comment": "importe de costes indirectos (% sobre costes directos)" },
+        "precio_total": { "type": "number", "minimum": 0, "$comment": "Σ subtotales + costes_indirectos == precio del nº1" }
+      }
+    },
+    "resumen": {
+      "description": "Resumen del presupuesto: parciales por capítulo → PEM → (+GG +BI) → base → (+IVA) → PEC.",
+      "type": "object",
+      "required": ["PEM", "gg", "bi", "base", "iva", "PEC"],
+      "additionalProperties": true,
+      "properties": {
+        "moneda": { "type": "string" },
+        "capitulos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["codigo", "importe"],
+            "additionalProperties": true,
+            "properties": {
+              "codigo": { "type": "string" },
+              "descripcion": { "type": "string" },
+              "partidas": { "type": "array", "items": { "type": "string" } },
+              "importe": { "type": "number", "minimum": 0 }
+            }
+          }
+        },
+        "PEM": { "type": "number", "minimum": 0, "$comment": "Presupuesto de Ejecución Material = Σ importes" },
+        "gg_pct": { "type": "number", "minimum": 0 },
+        "gg": { "type": "number", "minimum": 0, "$comment": "gastos generales = gg_pct × PEM" },
+        "bi_pct": { "type": "number", "minimum": 0 },
+        "bi": { "type": "number", "minimum": 0, "$comment": "beneficio industrial = bi_pct × PEM" },
+        "base": { "type": "number", "minimum": 0, "$comment": "PEM + GG + BI (base imponible)" },
+        "iva_pct": { "type": "number", "minimum": 0 },
+        "iva": { "type": "number", "minimum": 0, "$comment": "iva_pct × base" },
+        "PEC": { "type": "number", "minimum": 0, "$comment": "Presupuesto de Ejecución por Contrata = base + IVA" }
+      }
+    }
+  }
+}

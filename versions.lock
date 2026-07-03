@@ -50,6 +50,23 @@ golden          = "GOL-CTE-01"
 oraculo         = "RECOMPUTE con el engine (Fase III·h3, D9): run_case_c3 regenera el Maestro (federar+derivar con services/federacion) y engines/cumplimiento.verificar() emite el veredicto POR EXIGENCIA, comparado contra el MISMO expected (el checklist FIRMADO que era el oráculo del modo anclado), normalizando el texto libre (evidencia/motivo/descripción/detalle). El engine NO federa (D7): abre el IFC derivado y atribuye por_modelo desde el manifiesto; el pack DECLARA el evaluador por exigencia (D8: el código es un PACK anclado, no un `if`). Conserva ÍNTEGROS los 18 checks anclados del 3.2 (conformidad de esquemas + identidad por hash del C4-FED-06 + coherencia interna) — D10: más checks, nunca menos (21 checks)"
 estado          = "engine v0.1 (Fase III·h3, D6–D10): engines/cumplimiento vivo (verificar por registro de evaluadores) + costura del runner (recompute antepuesto) VERDE; pack CTE/2019 enriquecido con evaluador/parametros (md5 y golden de pack re-anclados; expected del C3 intacto); release firmado cumplimiento-v0.1.0 (Llave 2)"
 
+# --- contrato C5 (Fase IV·h1): presupuesto trazable desde la medición — contract-first ---
+# Decisiones D1–D5 + D_modelo + D_scope en packages/contracts/C5-presupuesto/DECISIONES.md (OK JM 2026-07-03).
+# Contract-first ESTRICTO (patrón C4·h1 / C3·h2): 2 esquemas forward-open + packs criterio/AQ/v1 y
+# banco/AQ-DEMO/v1 mínimos + golden GOL-PRE-01 ANCLADA (presupuesto calculado a mano, verificado ×2).
+# La medición NACE de los Qto (fixtures propias con Qto inyectado; originales del C4-FED-06 intactos);
+# el QA/IDS de C4 garantiza los Qto aguas arriba (D_modelo). El engine engines/presupuesto (hilo
+# posterior) ANTEPONDRÁ el recompute (parser Qto + motor) contra el MISMO expected (costura C1/C3/C4).
+[contracts.C5]
+nombre          = "presupuesto"
+schema_version  = "0.1.0"              # 2 esquemas: entrada-presupuesto + salida-presupuesto (forward-open)
+engine          = "engines/presupuesto"   # aún NO existe (contract-first); llega en un hilo posterior
+criterio_pack   = "criterio/AQ/v1"
+banco_pack      = "banco/AQ-DEMO/v1"
+golden          = "GOL-PRE-01"
+oraculo         = "modo ANCLADO (contract-first, sin engine): presupuesto calculado a mano y verificado ×2 sobre la medición del Maestro (geometría del C4-FED-06 + Qto inyectados en fixtures propias). run_case_c5 valida conformidad de los 2 esquemas + identidad por hash de las fixtures con Qto + coherencia interna (importe = cantidad × precio; precio == cuadro nº1 == nº2 (Σ componentes + indirectos); PEM = Σ importes = Σ capítulos; GG/BI/IVA/base/PEC según parametros; partidas origen=modelo ⊆ banco con precio == banco y ⊆ criterio; trazabilidad ⊆ GUIDs del modelo; taxonomía de origen cerrada; S&S = 2% del PEM medible). El engine antepondrá el recompute contra el MISMO expected. PEM 7022.53 → PEC 10111.74 EUR"
+estado          = "contract-first (Fase IV·h1): 2 esquemas + packs criterio/AQ/v1 + banco/AQ-DEMO/v1 + GOL-PRE-01 anclada + run_case_c5 en modo ANCLADO; SIN release (Llave 2 espera al engine engines/presupuesto). Familia de pack NUEVA 'criterio' añadida al enum de pack.schema.json (aditivo)"
+
 # --- apps (Fase III·h1): el visor abierto DENTRO del monorepo — el vertical TS en la Llave 1 ---
 # Re-home del corte mínimo de aqyra-entorno (ARCHIVADO 2026-07-01; árbol == frozen → el corte
 # sale del FROZEN firmado). Decisiones V1–V5 en apps/visor/DECISIONES.md. El visor CONSUME el
@@ -122,6 +139,22 @@ familia         = "ids"
 version         = "v1"
 golden          = "identidad de contenido (hash: md5 del .ids + lista de requisitos)"
 estado          = "adoptado por C4 (contract-first): 4 requisitos IDS 1.0 en el .ids + R4-GEORREF como regla de módulo (fuera del .ids, ficha C4 §3)"
+
+# pack criterio (Fase IV·h1): FAMILIA NUEVA — adoptado por C5 en contract-first; golden GOL-PRE-01 lo referencia.
+[packs.criterio]
+id              = "AQ"
+familia         = "criterio"
+version         = "v1"
+golden          = "identidad de contenido (hash: sha256 del contenido + md5 de criterio.json)"
+estado          = "adoptado por C5 (contract-first, GOL-PRE-01): reglas de medición por clase IFC (unidad, descuento de huecos por umbral, factor de caras) + mapeo clase→partida (un objeto→varias partidas) + reglas sin geometría (S&S por ratio, D5)"
+
+# pack banco (Fase IV·h1): adoptado por C5 en contract-first — golden GOL-PRE-01 lo referencia.
+[packs.banco]
+id              = "AQ-DEMO"
+familia         = "banco"
+version         = "v1"
+golden          = "identidad de contenido (hash: sha256 del contenido + md5 de banco.json)"
+estado          = "adoptado por C5 (contract-first, GOL-PRE-01): banco PROPIO de demostración (NO BEDEC/PREOC licenciados), 7 partidas descompuestas (MO/mat/maq + indirectos 3%) + mapeo clasificación→partida. El banco real entra como pack cuando el engine lo consuma"
 
 # --- historia (0.7): importación de los 4 repos aguas arriba PRESERVANDO firmas ---
 # Estrategia A: `git subtree add --prefix=_import/<repo>` conserva los SHA de los commits,
