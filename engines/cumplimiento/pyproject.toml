@@ -1,0 +1,18 @@
+[project]
+name = "aqyra-cumplimiento"
+version = "0.1.0"
+description = "Engine C3 — cumplimiento normativo multi-código: verificar(maestro, uso, localizacion, pack) → veredicto POR EXIGENCIA + resumen + veredicto global. El código es un PACK anclado (evaluadores deterministas declarados por el pack, D8), no un `if`. Frontera (D7): abre el IFC derivado (la vista del Maestro que produce C4) y usa la procedencia del manifiesto para atribuir por modelo; NO federa. Contract-first: reproduce la golden GOL-CTE-01."
+requires-python = ">=3.10"
+dependencies = [
+  "ifcopenshell>=0.7",
+]
+
+[project.scripts]
+aqyra-cumplimiento = "aqyra_cumplimiento.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aqyra_cumplimiento"]

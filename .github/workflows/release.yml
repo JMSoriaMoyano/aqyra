@@ -9,7 +9,7 @@ name: Release (verifica las dos llaves)
 
 on:
   push:
-    tags: ["v*", "federacion-v*"]
+    tags: ["v*", "federacion-v*", "cumplimiento-v*"]
 
 jobs:
   verificar:

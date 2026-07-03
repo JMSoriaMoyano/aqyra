@@ -34,20 +34,21 @@ golden          = "C4-FED-01 + C4-FED-02 + C4-FED-03 + C4-FED-04 + C4-FED-05 + C
 oraculo         = "recompute (federar+validar contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 — D10: más checks, nunca menos; C4-FED-02 añade la EMISIÓN: árbol BCF 3.0 anclado por md5 de fichero (D12) con GUIDs uuid5 deterministas (D13) y generación inyectada (bcf_generacion); C4-FED-03 añade el IFC SUCIO (D18-D19): camino feliz-degradado con avisos_lectura anclados en el expected; C4-FED-04 añade la INTEGRACIÓN 1.2×1.3 (D21/D23): mixto sucio+limpio con avisos POR MODELO + emisión + estados heterogéneos min(S) + transformación no trivial; C4-FED-05 añade mantener-separada (D22): nodos por modelo sin fundir; C4-FED-06 añade el DERIVADO (D26/D27): .ifc federado anclado por md5 BYTE A BYTE (cabecera SPF determinista con time_stamp de derivado_generacion) + ifc_derivado en el manifiesto + CÁMARA perspectiva determinista en el viewpoint (D29, bbox de orígenes de placement)"
 estado          = "service v0.5 (IFC federado derivado + cámara BCF — v0.x, Fase II·h6, D26–D30; la decisión aplazada por D6, cerrada: el Maestro se puede ABRIR)"
 
-# --- contrato C3 (Fase III·h2): cumplimiento normativo multi-código — contract-first (sin engine) ---
-# Decisiones D1–D5 ancladas en packages/contracts/C3-cumplimiento/DECISIONES.md (OK JM 2026-07-03).
-# Contract-first ESTRICTO (patrón C4·h1): 2 esquemas forward-open (entrada + veredicto) + pack CTE/2019
-# mínimo + golden GOL-CTE-01 ANCLADA (checklist FIRMADO como oráculo, verificado a mano ×2 sobre el
-# Maestro del C4-FED-06). El engine engines/cumplimiento llega en 3.3 y ANTEPONDRÁ el recompute contra
-# el MISMO expected (costura C1/C4). Multi-código: el código es un PACK anclado, no un `if`.
+# --- contrato C3 (Fase III·h2→h3): cumplimiento normativo multi-código — engine VIVO ---
+# Decisiones D1–D5 (contract-first, h2) + D6–D10 (engine, h3) en C3-cumplimiento/DECISIONES.md (OK JM 2026-07-03).
+# h2 (contract-first ESTRICTO, patrón C4·h1): 2 esquemas forward-open + pack CTE/2019 + golden GOL-CTE-01
+# ANCLADA (checklist FIRMADO como oráculo). h3: engines/cumplimiento DA el veredicto (registro de
+# evaluadores DECLARADOS por el pack — D8: multi-código = multi-pack, no un `if`) y el runner ANTEPONE
+# el recompute contra el MISMO expected (costura C1/C4, D9). El engine abre el DERIVADO, no federa (D7).
 [contracts.C3]
 nombre          = "cumplimiento"
 schema_version  = "0.1.0"              # 2 esquemas: entrada-cumplimiento + veredicto-cumplimiento (forward-open)
-engine          = "engines/cumplimiento"   # NO existe aún — contract-first (tarea 3.3)
+engine          = "engines/cumplimiento"   # engine C3 VIVO (Fase III·h3, D6): paquete uv en engines/
+engine_version  = "0.1.0"              # primer release firmado del C3: cumplimiento-v0.1.0 (Llave 2, D10)
 pack_normativa  = "normativa/CTE/2019"
 golden          = "GOL-CTE-01"
-oraculo         = "modo ANCLADO (contract-first, sin engine): checklist FIRMADO a mano como oráculo (cubierto por el tag GPG del cierre, Llave 2); conformidad de los 2 esquemas + identidad por hash (entradas del C4-FED-06 reutilizadas byte a byte + derivado dcb1e14460f3556107ce35d6dade16c3 + pack CTE) + coherencia interna (exigencias del veredicto ⊆ pack; taxonomía CERRADA de resultados; motivo presente en cada no-verificable; resumen == recuento real; veredicto agregado por la regla D4; uso/localización coherentes entrada↔veredicto; por_modelo ⊆ modelos de la entrada). El recompute contra el engine se antepone en 3.3 contra el MISMO expected — D10: más checks, nunca menos"
-estado          = "contract-first (esquema 0.1.0 + pack CTE/2019 mínimo + GOL-CTE-01 anclada); engine en 3.3, sin release (Llave 2 espera al engine)"
+oraculo         = "RECOMPUTE con el engine (Fase III·h3, D9): run_case_c3 regenera el Maestro (federar+derivar con services/federacion) y engines/cumplimiento.verificar() emite el veredicto POR EXIGENCIA, comparado contra el MISMO expected (el checklist FIRMADO que era el oráculo del modo anclado), normalizando el texto libre (evidencia/motivo/descripción/detalle). El engine NO federa (D7): abre el IFC derivado y atribuye por_modelo desde el manifiesto; el pack DECLARA el evaluador por exigencia (D8: el código es un PACK anclado, no un `if`). Conserva ÍNTEGROS los 18 checks anclados del 3.2 (conformidad de esquemas + identidad por hash del C4-FED-06 + coherencia interna) — D10: más checks, nunca menos (21 checks)"
+estado          = "engine v0.1 (Fase III·h3, D6–D10): engines/cumplimiento vivo (verificar por registro de evaluadores) + costura del runner (recompute antepuesto) VERDE; pack CTE/2019 enriquecido con evaluador/parametros (md5 y golden de pack re-anclados; expected del C3 intacto); release firmado cumplimiento-v0.1.0 (Llave 2)"
 
 # --- apps (Fase III·h1): el visor abierto DENTRO del monorepo — el vertical TS en la Llave 1 ---
 # Re-home del corte mínimo de aqyra-entorno (ARCHIVADO 2026-07-01; árbol == frozen → el corte
