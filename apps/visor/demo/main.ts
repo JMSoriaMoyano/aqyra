@@ -22,7 +22,7 @@ function pintaArbol(n: SpatialNode, cont: HTMLElement): void {
 }
 
 async function main(): Promise<void> {
-  const loader = new IfcLoader({ wasmPath: "/node_modules/web-ifc/", wasmAbsolute: true });
+  const loader = new IfcLoader({ wasmPath: "/wasm-web-ifc/", wasmAbsolute: true });
   await loader.init();
 
   const viewer = new Viewer();
