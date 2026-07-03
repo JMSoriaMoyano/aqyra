@@ -57,12 +57,12 @@ estado          = "engine v0.1 (Fase III·h3, D6–D10): engines/cumplimiento vi
 [apps.visor]
 nombre          = "visor"
 paquete         = "@aqyra/visor"
-version         = "0.5.0"                    # hereda del corte 0.4.0 + lectura BCF con cámara (3.1)
+version         = "0.6.0"                    # 0.5.0 (3.1) + UX lote 1 (3.4): fondo oscuro/fullscreen/árbol interactivo/Psets/acento-ghost/vista general
 origen          = "_import/aqyra-entorno/publico/visor (tag firmado cebo-trazado-2026-06-29, 433fe90)"
 corte           = "viewer+ifc-loader+registry+spatial-metric+idealize+data-state; NUEVO src/bcf.ts; adaptaciones declaradas: index.ts recortado + viewer.setCamera + package.json real"
 consume         = "ifc_derivado del manifiesto (D30) + árbol BCF (D12/D29), por RUTA LOCAL (V4)"
 oraculo         = "E2E headless: fixtures/federado.ifc md5 dcb1e14460f3556107ce35d6dade16c3 (== golden C4-FED-06, D26) + árbol BCF md5 por fichero + cámara D29 == expected (verificada a mano en 2.6)"
-estado          = "vertical TS en la Llave 1 (typecheck/build/tests REALES en el paso pnpm de ci.yml — el placeholder exit 0 queda saldado); tag visor-v0.5.0 si Llave 2 (V5)"
+estado          = "vertical TS en la Llave 1 (typecheck/build/tests REALES en el paso pnpm de ci.yml — el placeholder exit 0 queda saldado); UX lote 1 (Fase III·h4, V6): render/DOM sin tocar la zona anclada (E2E md5 dcb1e144… + cámara D29 intactos) + tests de comportamiento (test/ux-behavior.test.ts); backlog mudado a apps/visor/UX_BACKLOG.md; tag visor-v0.5.0 (Llave 2, hecho) → visor-v0.6.0 si Llave 2 (U3)"
 
 # --- engine C1 (Fase I·h1): corte mínimo narración→IFC importado del canónico 0.10.0 ---
 # Copiado BYTE A BYTE de _import/aqyra-motor (procedencia). Identidad vigilada por
