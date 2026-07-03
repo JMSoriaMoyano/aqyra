@@ -41,6 +41,17 @@ uv run --package aqyra-golden aqyra-golden --schema-only --golden-dir packages/g
 **Costura (0.5):** cuando `engines/ifc` se importe, se antepone el paso *compile*
 (`caso.alto.json` → IFC) al oráculo, contra el **mismo** `expected.json`.
 
+## Qué comprueba GOL-CTE-01 (C3 · cumplimiento, modo ANCLADO — Fase III·h2)
+
+Cumplimiento normativo POR EXIGENCIA sobre el **Maestro federado** del `C4-FED-06` (reutilizado
+byte a byte), con el pack `CTE/2019` mínimo. Checklist calculado A MANO y verificado ×2 con
+ifcopenshell: E-SUA-ACCESO=**cumple**, E-SI-RF-DECL=**no-cumple** (adrede), E-SI-EVAC y
+E-HE1-DEMANDA=**no-verificable**, E-RSCIEI=**no-aplica** → veredicto **no-conforme**. `run_case_c3`
+ancla (sin engine): conformidad de los 2 esquemas + identidad por hash (entradas del 06 + derivado
+`dcb1e144…` + pack) + coherencia interna (exigencias ⊆ pack, taxonomía cerrada, motivo en cada
+no-verificable, resumen == recuento, veredicto agregado, uso/localización, por_modelo). El engine
+de 3.3 antepondrá el recompute contra el MISMO `expected`.
+
 ## Añadir una golden
 
 Carpeta nueva bajo `C<n>/<ID>/` con `expected.json` (+ `caso.alto.json`, `golden.ifc`,

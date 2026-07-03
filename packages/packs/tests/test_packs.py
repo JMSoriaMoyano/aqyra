@@ -62,3 +62,32 @@ def test_identidad_contenido_ids_golden():
     ids_file = PACKS_ROOT / "ids/proyecto-piloto/v1" / m["contenido"]["fichero"]
     md5 = hashlib.md5(ids_file.read_bytes()).hexdigest()
     assert md5 == m["contenido"]["md5_ids"], "requisitos.ids cambió sin actualizar el manifiesto"
+
+
+# --- pack normativa/CTE/2019 (adoptado por C3, Fase III·h2) ------------------------------
+
+def test_manifiesto_cte_valido():
+    m = packs.load_pack(PACKS_ROOT, "normativa", "CTE", "2019")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma
+    assert m["familia"] == "normativa" and m["version"] == "2019"
+
+
+def test_version_cte_anclada_en_lock():
+    m = packs.load_pack(PACKS_ROOT, "normativa", "CTE", "2019")
+    anclada = packs.version_anclada(LOCK, "normativa")
+    assert anclada == m["version"], f"lock={anclada} != pack={m['version']}"
+
+
+def test_identidad_contenido_cte_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "normativa", "CTE", "2019")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "normativa/CTE/2019/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack cambió sin actualizar la golden. "
+                        "Bump de versión + nuevo hash, nunca editar en silencio.")
+    # el md5 declarado en el manifiesto corresponde al exigencias.json real (el hash ancla el fichero)
+    exig_file = PACKS_ROOT / "normativa/CTE/2019" / m["contenido"]["fichero"]
+    md5 = hashlib.md5(exig_file.read_bytes()).hexdigest()
+    assert md5 == m["contenido"]["md5_exigencias"], "exigencias.json cambió sin actualizar el manifiesto"

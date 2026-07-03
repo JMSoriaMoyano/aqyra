@@ -14,7 +14,7 @@ Protegido por **CODEOWNERS**: cambios por PR aprobado.
 | **C1** interoperabilidad | ✅ | ✅ `modelo-neutro` + `alto-spec` | ✅ `C1-APERTURA-01` | **Formalizado (Fase 0)** |
 | **C4** federación | ✅ | ✅ `reglas-federacion` + `maestro-manifiesto` + `informe-qa` (BCF 3.0 por referencia) | ✅ `C4-FED-01` (recompute + anclado) | **Service v0 (Fase II·h2) — `services/federacion` 0.1.0, costura cerrada** |
 | C9 estructura (fem) | ✅ | ⏳ | ✅ 7/7 | firmado aguas arriba; esquema a formalizar |
-| C3 cumplimiento | ✅ | ⏳ | — | Fase 2 |
+| **C3** cumplimiento | ✅ | ✅ `entrada-cumplimiento` + `veredicto-cumplimiento` (multi-código: el código es un pack normativo) | ✅ `GOL-CTE-01` (anclado, checklist firmado) | **Contract-first (Fase III·h2) — pack `CTE/2019` mínimo; engine `engines/cumplimiento` en 3.3** |
 | C5 presupuesto | ✅ | ⏳ | — | Fase 3 |
 | C10 red · C7 · C2 · C8 · C6 | ✅ | ⏳ | — | por fase |
 

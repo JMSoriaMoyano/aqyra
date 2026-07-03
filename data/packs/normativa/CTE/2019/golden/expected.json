@@ -1,0 +1,5 @@
+{
+  "pack": "normativa/CTE/2019",
+  "content_sha256": "18c6b43647ca148ca899bf8beafe56f2c8c6fd7bd9f16da843b99618d53cfbca",
+  "_nota": "Golden de pack: identidad del contenido por hash (incluye md5 de exigencias.json y la lista de exigencias). Cambiar exigencias.json o la lista sin bump de versión + nuevo hash rompe el test — no hay drift silencioso. Patrón packs.ids."
+}

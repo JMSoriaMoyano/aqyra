@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Runner de la golden (Llave 1) — multi-contrato (C1 + C4).
+"""Runner de la golden (Llave 1) — multi-contrato (C1 + C4 + C3).
 
 Dos pasos de validación (ver CONTRATOS_estado-validacion-ubicacion.md §2):
   1. TODOS los esquemas de contrato (packages/contracts/C*/*.schema.json) son JSON Schema
@@ -57,6 +57,15 @@ def load_c4_schemas(contracts_dir: Path) -> dict[str, dict]:
     for key, fname in (("reglas", "reglas-federacion.schema.json"),
                        ("manifiesto", "maestro-manifiesto.schema.json"),
                        ("informe", "informe-qa.schema.json")):
+        out[key] = json.loads((base / fname).read_text(encoding="utf-8"))
+    return out
+
+
+def load_c3_schemas(contracts_dir: Path) -> dict[str, dict]:
+    base = contracts_dir / "C3-cumplimiento"
+    out = {}
+    for key, fname in (("entrada", "entrada-cumplimiento.schema.json"),
+                       ("veredicto", "veredicto-cumplimiento.schema.json")):
         out[key] = json.loads((base / fname).read_text(encoding="utf-8"))
     return out
 
@@ -549,7 +558,165 @@ def run_case_c4(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     return all(ok for _, ok, _ in checks)
 
 
-CASE_RUNNERS = {"C1": run_case_c1, "C4": run_case_c4}
+# --------------------------------------------------------------------------- #
+# C3 · cumplimiento — modo ANCLADO (contract-first, Fase III·h2 — sin engine)  #
+# --------------------------------------------------------------------------- #
+RESULTADOS_C3 = {"cumple", "no-cumple", "no-aplica", "no-verificable"}
+
+
+def _lock_packs(repo: Path, clave: str) -> dict:
+    """Sección [packs.<clave>] de versions.lock (ancla del pack)."""
+    try:  # Python 3.11+
+        import tomllib
+    except ModuleNotFoundError:  # 3.10
+        import tomli as tomllib
+    with open(repo / "versions.lock", "rb") as f:
+        lock = tomllib.load(f)
+    return lock.get("packs", {}).get(clave, {})
+
+
+def run_case_c3(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                repo: Path = DEFAULT_REPO) -> bool:
+    """C3: modo ANCLADO (contract-first, D5) — el checklist esperado es el oráculo FIRMADO;
+    el engine `engines/cumplimiento` (tarea 3.3) ANTEPONDRÁ el recompute contra este MISMO
+    expected (costura C1/C4). Verifica lo verificable sin engine:
+
+      1. Conformidad de los 2 esquemas (entrada + veredicto).
+      2. Identidad por hash (entradas del C4-FED-06 reutilizadas + derivado anclado; reglas
+         regeneran el Maestro).
+      3. Coherencia del pack (entrada == veredicto == versions.lock; exigencias ⊆ pack CTE).
+      4. Taxonomía CERRADA de resultado (D4) + motivo en cada no-verificable.
+      5. resumen == recuento real.
+      6. Veredicto agregado según la regla D4.
+      7. uso/localización coherentes entrada↔veredicto.
+      8. por_modelo ⊆ modelos de la entrada.
+    """
+    from collections import Counter
+
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c3_schemas(contracts_dir)
+
+    entrada_path = case_dir / "entrada.json"
+    if not entrada_path.exists():
+        print_checks([("entrada.json presente", False, "no encontrado")])
+        return False
+    entrada = json.loads(entrada_path.read_text(encoding="utf-8"))
+    vc = expected.get("veredicto_cumplimiento", {})
+
+    # 1 · conformidad de esquemas
+    for name, inst, key in (("entrada conforma esquema", entrada, "entrada"),
+                            ("veredicto conforma esquema", vc, "veredicto")):
+        ok, detail = validate_against_schema(inst, schemas[key])
+        checks.append((name, ok, detail))
+
+    # 2 · identidad por hash (entradas del 06 + derivado anclado)
+    entradas = expected.get("entradas_md5", {})
+    checks.append(("entradas declaradas", bool(entradas), f"{len(entradas)} fichero/s"))
+    for rel, exp_md5 in sorted(entradas.items()):
+        p = case_dir / rel
+        if not p.exists():
+            checks.append((f"identidad {rel}", False, "fichero no encontrado"))
+            continue
+        got = _md5(p)
+        checks.append((f"identidad {rel}", got == exp_md5,
+                       f"md5 {got[:12]}… (esperado {exp_md5[:12]}…)"))
+    md5_entrada = {m["fichero"]: m.get("md5")
+                   for m in entrada.get("modelo", {}).get("modelos", [])}
+    checks.append(("md5 entrada == entradas", md5_entrada == entradas,
+                   "los md5 de entrada.json anclan los mismos ficheros"))
+    der_ent = entrada.get("modelo", {}).get("ifc_derivado_md5")
+    der_exp = expected.get("maestro", {}).get("ifc_derivado_md5")
+    checks.append(("derivado (vista del Maestro) coherente", bool(der_ent) and der_ent == der_exp,
+                   f"{str(der_ent)[:12]}… (entrada == expected)"))
+    reglas_rel = entrada.get("modelo", {}).get("reglas")
+    if reglas_rel:
+        rp = case_dir / reglas_rel
+        if not rp.exists():
+            checks.append(("reglas.json presente", False, f"{reglas_rel} no encontrado"))
+        else:
+            reglas = json.loads(rp.read_text(encoding="utf-8"))
+            md5_reglas = {m["fichero"]: m.get("md5") for m in reglas.get("modelos", [])}
+            checks.append(("reglas regeneran el Maestro (md5 == entradas)", md5_reglas == entradas,
+                           "las reglas de federación anclan los mismos IFC"))
+
+    # 3 · coherencia del pack
+    pack_ent = entrada.get("pack_normativo", {})
+    pack_ver = vc.get("pack", {})
+    mismo_pack = (pack_ent.get("id") == pack_ver.get("id")
+                  and pack_ent.get("version") == pack_ver.get("version"))
+    checks.append(("pack entrada == veredicto", mismo_pack,
+                   f"{pack_ent.get('id')}/{pack_ent.get('version')}"))
+    lock_norm = _lock_packs(repo, "normativa")
+    anclado = (lock_norm.get("id") == pack_ent.get("id")
+               and lock_norm.get("version") == pack_ent.get("version"))
+    checks.append(("pack anclado en versions.lock", anclado,
+                   f"lock={lock_norm.get('id')}/{lock_norm.get('version')}"))
+    exigidos = [e.get("id") for e in vc.get("exigencias", [])]
+    pack_dir = (repo / "data" / "packs" / "normativa"
+                / str(pack_ent.get("id")) / str(pack_ent.get("version")))
+    exig_ok, exig_detail = False, "pack.json no encontrado"
+    if (pack_dir / "pack.json").exists():
+        pack = json.loads((pack_dir / "pack.json").read_text(encoding="utf-8"))
+        exig_file = pack_dir / pack["contenido"]["fichero"]
+        declarados = {e["id"] for e in
+                      json.loads(exig_file.read_text(encoding="utf-8")).get("exigencias", [])}
+        faltan = set(exigidos) - declarados
+        exig_ok = bool(exigidos) and not faltan
+        exig_detail = (f"{sorted(exigidos)} ⊆ pack" if exig_ok
+                       else f"exigencias SIN respaldo en el pack: {sorted(faltan)}")
+    checks.append(("exigencias ⊆ pack CTE", exig_ok, exig_detail))
+
+    # 4 · taxonomía CERRADA (D4) + motivo en no-verificable
+    resultados = [e.get("resultado") for e in vc.get("exigencias", [])]
+    checks.append(("taxonomía de resultado cerrada", all(r in RESULTADOS_C3 for r in resultados),
+                   f"{sorted(set(resultados))}"))
+    nv = [e for e in vc.get("exigencias", []) if e.get("resultado") == "no-verificable"]
+    checks.append(("no-verificable declara motivo", all(e.get("motivo_no_verificable") for e in nv),
+                   f"{len(nv)} no-verificable/s con motivo"))
+
+    # 5 · resumen == recuento real
+    cnt = Counter(resultados)
+    resumen = vc.get("resumen", {})
+    por = resumen.get("por_resultado", {})
+    conteo_ok = (resumen.get("total") == len(resultados)
+                 and all(por.get(k, 0) == cnt.get(k, 0) for k in RESULTADOS_C3)
+                 and sum(por.get(k, 0) for k in RESULTADOS_C3) == len(resultados))
+    checks.append(("resumen == recuento real", conteo_ok,
+                   f"total {resumen.get('total')} · {dict(cnt)}"))
+
+    # 6 · veredicto agregado (regla D4)
+    if "no-cumple" in resultados:
+        esperado = "no-conforme"
+    elif "no-verificable" in resultados:
+        esperado = "conforme-con-reservas"
+    else:
+        esperado = "conforme"
+    checks.append(("veredicto agregado coherente", vc.get("veredicto") == esperado,
+                   f"{vc.get('veredicto')} (esperado {esperado})"))
+
+    # 7 · uso/localización coherentes entrada↔veredicto
+    checks.append(("uso coherente entrada↔veredicto",
+                   entrada.get("uso", {}).get("principal") == vc.get("uso", {}).get("principal"),
+                   f"{vc.get('uso', {}).get('principal')}"))
+    loc_e, loc_v = entrada.get("localizacion", {}), vc.get("localizacion", {})
+    loc_keys = ("pais", "provincia", "municipio", "zona_climatica_he")
+    checks.append(("localización coherente entrada↔veredicto",
+                   all(loc_e.get(k) == loc_v.get(k) for k in loc_keys),
+                   f"{loc_v.get('municipio')} ({loc_v.get('zona_climatica_he')})"))
+
+    # 8 · por_modelo ⊆ modelos de la entrada
+    ids_entrada = {m["id"] for m in entrada.get("modelo", {}).get("modelos", [])}
+    pm_ids: set[str] = set()
+    for e in vc.get("exigencias", []):
+        pm_ids |= set((e.get("por_modelo") or {}).keys())
+    checks.append(("por_modelo ⊆ modelos entrada", pm_ids <= ids_entrada,
+                   f"por_modelo={sorted(pm_ids)} ⊆ {sorted(ids_entrada)}"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
+CASE_RUNNERS = {"C1": run_case_c1, "C4": run_case_c4, "C3": run_case_c3}
 
 
 # --------------------------------------------------------------------------- #
@@ -637,3 +804,5 @@ if __name__ == "__main__":
 # Fase II · hilo 2: costura C4 CERRADA — recompute federar+validar con services/federacion (D10).
 # Fase II · hilo 3: emisión BCF 3.0 (tarea 1.2) — paso activado por el expected (C4-FED-02, D14).
 # Fase II · hilo 6: derivación IFC (D26/D30) — paso activado por el expected (C4-FED-06); cámara BCF (D29).
+# Fase III · hilo 2: contrato C3 (cumplimiento) contract-first — run_case_c3 en modo ANCLADO (D5); el
+#                    engine engines/cumplimiento (3.3) antepondrá el recompute contra el MISMO expected.
