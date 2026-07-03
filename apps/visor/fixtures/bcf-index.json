@@ -1,0 +1,8 @@
+{
+  "_nota": "Índice del árbol BCF para la demo (HTTP no lista carpetas). NO es parte del contenedor BCF 3.0: el árbol anclado es fixtures/bcf/** (md5s == golden C4-FED-06).",
+  "topics": [
+    "76468412-69eb-570a-8b52-d4613bc047ac",
+    "ae44673e-01e9-558f-b678-b55be81255f8",
+    "af9f53b5-51cd-5228-ae20-6aecff799de9"
+  ]
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Markup>
+  <Topic Guid="ae44673e-01e9-558f-b678-b55be81255f8" TopicType="Issue" TopicStatus="Open">
+    <Title>R5-PLANTAS no conforme en EST (Nivel 00 / Nivel 01)</Title>
+    <Priority>menor</Priority>
+    <Labels>
+      <Label>R5-PLANTAS</Label>
+      <Label>modelo:EST</Label>
+    </Labels>
+    <CreationDate>2026-07-03T00:00:00Z</CreationDate>
+    <CreationAuthor>services/federacion 0.5.0</CreationAuthor>
+    <Description>Requisito R5-PLANTAS no conforme en el modelo EST.</Description>
+    <Viewpoints>
+      <ViewPoint Guid="47ad952d-e171-51fa-845c-dc7c8d62b660">
+        <Viewpoint>viewpoint.bcfv</Viewpoint>
+      </ViewPoint>
+    </Viewpoints>
+  </Topic>
+</Markup>

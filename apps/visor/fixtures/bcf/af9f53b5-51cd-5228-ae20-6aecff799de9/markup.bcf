@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Markup>
+  <Topic Guid="af9f53b5-51cd-5228-ae20-6aecff799de9" TopicType="Issue" TopicStatus="Open">
+    <Title>EST no conforma R4-GEORREF (Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS))</Title>
+    <Priority>mayor</Priority>
+    <Labels>
+      <Label>R4-GEORREF</Label>
+      <Label>modelo:EST</Label>
+    </Labels>
+    <CreationDate>2026-07-03T00:00:00Z</CreationDate>
+    <CreationAuthor>services/federacion 0.5.0</CreationAuthor>
+    <Description>Requisito R4-GEORREF no conforme en el modelo EST.</Description>
+  </Topic>
+</Markup>
