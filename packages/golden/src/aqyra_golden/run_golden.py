@@ -369,12 +369,39 @@ def _recompute_c4(case_dir: Path, reglas: dict, repo: Path) -> tuple[dict, dict]
     return manifiesto, informe
 
 
-def _emitir_bcf_c4(inf_rec: dict, expected: dict, checks: list) -> dict:
+def _derivar_c4(case_dir: Path, expected: dict, man_rec: dict, checks: list,
+                tmpdir: Path):
+    """Fase II·h6 (D26/D30): paso de DERIVACIÓN, activado por el expected
+    (presencia de maestro_manifiesto.ifc_derivado — patrón D14: 01–05 ni pasan
+    por aquí). Deriva con el service en un directorio temporal, ancla el .ifc
+    por md5 BYTE A BYTE (D26, cabecera determinista con time_stamp inyectado de
+    derivado_generacion) y devuelve el manifiesto actualizado (con ifc_derivado,
+    que el diff compara contra el expected — doble anclaje) + la ruta del
+    derivado (la CÁMARA del BCF lo consume — D29)."""
+    from aqyra_federacion import derivar
+    exp_der = expected["maestro_manifiesto"]["ifc_derivado"]
+    gen = expected.get("derivado_generacion", {})
+    salida = tmpdir / exp_der.get("fichero", "federado.ifc")
+    man_rec = derivar(man_rec, case_dir, salida, fecha=gen.get("fecha"))
+    got = man_rec["ifc_derivado"]["md5"]
+    exp_md5 = exp_der.get("md5")
+    checks.append(("derivación IFC federado ejecuta", True,
+                   f"'{salida.name}' escrito (cabecera SPF determinista)"))
+    checks.append(("derivado md5 == expected (byte a byte)", got == exp_md5,
+                   f"md5 {got[:12]}… (esperado {str(exp_md5)[:12]}…)"))
+    return man_rec, salida
+
+
+def _emitir_bcf_c4(inf_rec: dict, expected: dict, checks: list,
+                   derivado: Path | None = None) -> dict:
     """Fase II·h3 (tarea 1.2, D14): paso de EMISIÓN, activado por el expected
     (informe_qa.bcf.emitido == true). Emite con el service en un directorio
     temporal, ancla el ÁRBOL BCF 3.0 por md5 de fichero (D12) y devuelve el
     informe actualizado (emitido=true) para el diff contra el expected.
-    C4-FED-01 (emitido=false) ni pasa por aquí — su expected no se toca."""
+    C4-FED-01 (emitido=false) ni pasa por aquí — su expected no se toca.
+    Fase II·h6 (D29): si el caso derivó (paso anterior), la emisión recibe el
+    derivado y cada viewpoint gana su CÁMARA determinista — 02/04 (sin derivado)
+    quedan intactos POR CONSTRUCCIÓN."""
     import tempfile
     from aqyra_federacion import emitir_bcf
     gen = expected.get("bcf_generacion", {})
@@ -382,7 +409,8 @@ def _emitir_bcf_c4(inf_rec: dict, expected: dict, checks: list) -> dict:
     with tempfile.TemporaryDirectory() as td:
         carpeta = Path(td) / nombre
         inf_rec = emitir_bcf(inf_rec, carpeta, caso=expected.get("caso"),
-                             autor=gen.get("autor"), fecha=gen.get("fecha"))
+                             autor=gen.get("autor"), fecha=gen.get("fecha"),
+                             derivado=derivado)
         got = {q.relative_to(carpeta).as_posix(): _md5(q)
                for q in sorted(carpeta.rglob("*")) if q.is_file()}
     checks.append(("emisión BCF 3.0 ejecuta", True,
@@ -403,6 +431,8 @@ def run_case_c4(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     0. RECOMPUTE (costura cerrada): federar+validar con services/federacion sobre
        las entradas congeladas → manifiesto e informe comparados contra el MISMO
        expected.json (tolerancias del caso; texto libre y procedencia normalizados).
+       Fase II·h6: si el expected declara ifc_derivado, se ANTEPONE la derivación
+       (md5 byte a byte, D26) y la emisión gana la cámara (D29).
     1. Conformidad de esquemas (reglas + manifiesto esperado + informe esperado).
     2. Identidad por hash de las entradas congeladas (triple coherencia de md5).
     3. Coherencia interna (modelos, pack IDS anclado, requisitos ⊆ .ids, veredicto).
@@ -422,25 +452,32 @@ def run_case_c4(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     tol_tras = float(tol.get("traslacion_m", 0.0))
     tol_rot = float(tol.get("rotacion_deg", 0.0))
     try:
-        man_rec, inf_rec = _recompute_c4(case_dir, reglas, repo)
-        checks.append(("service federar()+validar() ejecuta", True,
-                       "services/federacion (import de path)"))
-        if informe.get("bcf", {}).get("emitido"):
-            inf_rec = _emitir_bcf_c4(inf_rec, expected, checks)   # Fase II·h3 (D14)
-        for name, inst, key in (("manifiesto recomputado conforma", man_rec, "manifiesto"),
-                                ("informe recomputado conforma", inf_rec, "informe")):
-            ok, detail = validate_against_schema(inst, schemas[key])
-            checks.append((name, ok, detail))
-        d_man = _diffs(_norm_manifiesto(manifiesto), _norm_manifiesto(man_rec),
-                       tol_tras, tol_rot)
-        checks.append(("recompute manifiesto == expected", not d_man,
-                       f"{len(d_man)} diff/s — {d_man[0]}" if d_man
-                       else f"reproducido (±{tol_tras} m, ±{tol_rot}°)"))
-        d_inf = _diffs(_norm_contrato(informe), _norm_contrato(inf_rec),
-                       tol_tras, tol_rot)
-        checks.append(("recompute informe == expected", not d_inf,
-                       f"{len(d_inf)} diff/s — {d_inf[0]}" if d_inf
-                       else "reproducido (pass/fail, conteos, GUIDs, estados, veredicto)"))
+        import tempfile
+        with tempfile.TemporaryDirectory() as td6:
+            man_rec, inf_rec = _recompute_c4(case_dir, reglas, repo)
+            checks.append(("service federar()+validar() ejecuta", True,
+                           "services/federacion (import de path)"))
+            derivado = None
+            if manifiesto.get("ifc_derivado"):
+                man_rec, derivado = _derivar_c4(case_dir, expected, man_rec,
+                                                checks, Path(td6))   # Fase II·h6 (D26)
+            if informe.get("bcf", {}).get("emitido"):
+                inf_rec = _emitir_bcf_c4(inf_rec, expected, checks,
+                                         derivado)   # Fase II·h3 (D14) + cámara (D29)
+            for name, inst, key in (("manifiesto recomputado conforma", man_rec, "manifiesto"),
+                                    ("informe recomputado conforma", inf_rec, "informe")):
+                ok, detail = validate_against_schema(inst, schemas[key])
+                checks.append((name, ok, detail))
+            d_man = _diffs(_norm_manifiesto(manifiesto), _norm_manifiesto(man_rec),
+                           tol_tras, tol_rot)
+            checks.append(("recompute manifiesto == expected", not d_man,
+                           f"{len(d_man)} diff/s — {d_man[0]}" if d_man
+                           else f"reproducido (±{tol_tras} m, ±{tol_rot}°)"))
+            d_inf = _diffs(_norm_contrato(informe), _norm_contrato(inf_rec),
+                           tol_tras, tol_rot)
+            checks.append(("recompute informe == expected", not d_inf,
+                           f"{len(d_inf)} diff/s — {d_inf[0]}" if d_inf
+                           else "reproducido (pass/fail, conteos, GUIDs, estados, veredicto)"))
     except Exception as e:  # noqa: BLE001
         checks.append(("recompute con el service", False, f"{type(e).__name__}: {e}"))
 
@@ -599,3 +636,4 @@ if __name__ == "__main__":
 # Fase II · hilo 1: dispatch por contrato (CASE_RUNNERS); C4 en modo ANCLADO hasta el service (1.1).
 # Fase II · hilo 2: costura C4 CERRADA — recompute federar+validar con services/federacion (D10).
 # Fase II · hilo 3: emisión BCF 3.0 (tarea 1.2) — paso activado por el expected (C4-FED-02, D14).
+# Fase II · hilo 6: derivación IFC (D26/D30) — paso activado por el expected (C4-FED-06); cámara BCF (D29).

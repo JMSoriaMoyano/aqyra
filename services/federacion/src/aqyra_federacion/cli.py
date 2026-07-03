@@ -1,4 +1,4 @@
-"""CLI mínimo del service C4: aqyra-federacion federar|validar|emitir-bcf."""
+"""CLI mínimo del service C4: aqyra-federacion federar|derivar|validar|emitir-bcf."""
 from __future__ import annotations
 
 import argparse
@@ -19,6 +19,21 @@ def main() -> int:
                    help="por defecto: la carpeta de reglas.json")
     f.add_argument("-o", "--out", type=Path, default=None, help="por defecto: stdout")
 
+    d = sub.add_parser("derivar",
+                       help="derivar(maestro, base_dir, salida) → IFC federado "
+                            "derivado + manifiesto actualizado (D26/D30)")
+    d.add_argument("--manifiesto", type=Path, required=True,
+                   help="manifiesto del Maestro (salida de federar)")
+    d.add_argument("--base-dir", type=Path, required=True,
+                   help="directorio de los fichero_origen del manifiesto")
+    d.add_argument("--salida", type=Path, required=True,
+                   help="ruta del .ifc federado derivado a escribir")
+    d.add_argument("--fecha", default=None,
+                   help="time_stamp de la cabecera SPF (inyectable, D26); "
+                        "por defecto una constante determinista")
+    d.add_argument("-o", "--out", type=Path, default=None,
+                   help="manifiesto actualizado (con ifc_derivado); por defecto stdout")
+
     v = sub.add_parser("validar", help="validar(maestro, ids) → informe QA")
     v.add_argument("--manifiesto", type=Path, required=True)
     v.add_argument("--pack-dir", type=Path, required=True,
@@ -37,6 +52,9 @@ def main() -> int:
                    help="semilla de los GUIDs deterministas (D13); por defecto: proyecto")
     b.add_argument("--autor", default=None)
     b.add_argument("--fecha", default=None, help='p. ej. "2026-07-02T00:00:00Z"')
+    b.add_argument("--derivado", type=Path, default=None,
+                   help="IFC federado derivado (D26): añade la CÁMARA determinista "
+                        "a cada viewpoint (D29)")
     b.add_argument("--bcfzip", type=Path, default=None,
                    help="además, empaquetar el DERIVADO .bcfzip (sin anclar)")
     b.add_argument("-o", "--out", type=Path, default=None,
@@ -46,6 +64,10 @@ def main() -> int:
     if args.cmd == "federar":
         from .federar import federar_fichero
         salida = federar_fichero(args.reglas, args.base_dir, fecha=date.today().isoformat())
+    elif args.cmd == "derivar":
+        from .derivar import derivar_fichero
+        salida = derivar_fichero(args.manifiesto, args.base_dir, args.salida,
+                                 fecha=args.fecha)
     elif args.cmd == "validar":
         from .qa import validar
         manifiesto = json.loads(args.manifiesto.read_text(encoding="utf-8"))
@@ -54,7 +76,8 @@ def main() -> int:
         from .bcf import emitir_bcf, empaquetar_bcfzip
         informe = json.loads(args.informe.read_text(encoding="utf-8"))
         salida = emitir_bcf(informe, args.carpeta, caso=args.caso,
-                            autor=args.autor, fecha=args.fecha)
+                            autor=args.autor, fecha=args.fecha,
+                            derivado=args.derivado)
         if args.bcfzip:
             empaquetar_bcfzip(args.carpeta, args.bcfzip)
 

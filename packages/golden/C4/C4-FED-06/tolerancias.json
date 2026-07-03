@@ -1,0 +1,5 @@
+{
+  "_nota": "tolerancias del recompute (D10): conteos y estados exactos; la transformacion declarada tolera el ruido de representacion decimal. El md5 del derivado y el arbol BCF son EXACTOS (byte a byte, D26/D12) - sin tolerancia.",
+  "traslacion_m": 1e-6,
+  "rotacion_deg": 1e-9
+}

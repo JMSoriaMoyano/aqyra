@@ -15,7 +15,10 @@ Políticas de v0 (documentadas):
 - severidad de incidencias: 'mayor' si origen=modulo, 'menor' si origen=ids;
 - incidencias de reglas de módulo a nivel de proyecto → sin GUIDs de elemento;
 - estado del maestro = el MENOS maduro de los modelos (min S) — el Maestro no puede
-  estar más maduro que su entrada menos madura.
+  estar más maduro que su entrada menos madura;
+- GlobalId duplicado ENTRE modelos (D28, 2.6): se conserva (dedup=nunca, D1) y se
+  DECLARA con el aviso `guid-duplicado` en el modelo que llega después — la detección
+  vive aquí porque validar() ya abre TODOS los modelos (es transversal, no de fichero).
 """
 from __future__ import annotations
 
@@ -68,6 +71,39 @@ def _estado_min(estados: list[str]) -> str:
     return min(estados, key=lambda s: int(s[1:])) if estados else "S0"
 
 
+def _avisos_guid_duplicado(ifcs: dict, orden_modelos: list[str]) -> dict[str, list[dict]]:
+    """D28 (2.6): GlobalId duplicado ENTRE modelos → aviso en el modelo posterior.
+
+    Un aviso por (modelo, modelo_previo) que AGREGA los GUIDs compartidos (los 3
+    primeros en el detalle) — se declara sin inundar. El orden es determinista:
+    modelos en orden de manifiesto, entidades en orden de fichero. Los duplicados
+    INTRA-modelo no son de D28 (no los crea la federación).
+    """
+    visto: dict[str, str] = {}
+    out: dict[str, list[dict]] = {mid: [] for mid in orden_modelos}
+    for mid in orden_modelos:
+        compartidos: dict[str, list[str]] = {}
+        for ent in lectura.by_type_seguro(ifcs[mid], "IfcRoot"):
+            try:
+                g = ent.GlobalId
+            except Exception:  # noqa: BLE001 — entidad corrupta: ya se declara aparte
+                continue
+            if not g:
+                continue
+            previo = visto.get(g)
+            if previo is None:
+                visto[g] = mid
+            elif previo != mid:
+                compartidos.setdefault(previo, []).append(g)
+        for previo, gs in compartidos.items():
+            extra = f" (+{len(gs) - 3} más)" if len(gs) > 3 else ""
+            out[mid].append({"modelo": mid, "codigo": "guid-duplicado",
+                             "detalle": f"{len(gs)} GlobalId ya aportado/s por "
+                                        f"{previo}: {', '.join(gs[:3])}{extra}; "
+                                        f"ambos se conservan (dedup=nunca, D28)"})
+    return out
+
+
 def validar(manifiesto: dict, pack_dir: Path, base_dir: Path,
             bcf_version: str = "3.0") -> dict:
     """Valida el Maestro contra el pack IDS + reglas de módulo → informe QA.
@@ -86,6 +122,8 @@ def validar(manifiesto: dict, pack_dir: Path, base_dir: Path,
     # 1.3 (D17/D20): avisos de lectura por modelo (suciedad TOLERABLE, declarada).
     avisos_por_modelo = {m["id"]: lectura.avisos_de_modelo(
         ifcs[m["id"]], base_dir / m["fichero_origen"], m["id"]) for m in modelos}
+    # 2.6 (D28): GlobalId duplicado entre modelos, declarado en el modelo posterior.
+    duplicados_por_modelo = _avisos_guid_duplicado(ifcs, orden_modelos)
     corruptos_por_modelo: dict[str, dict[str, str]] = {mid: {} for mid in orden_modelos}
 
     requisitos = []
@@ -155,6 +193,7 @@ def validar(manifiesto: dict, pack_dir: Path, base_dir: Path,
             avisos.append({"modelo": mid, "codigo": "entidad-corrupta",
                            "detalle": f"elemento {eid} saltado al evaluar {req_id} "
                                       f"(atributos rotos); no cuenta en n_comprobados"})
+        avisos += duplicados_por_modelo[mid]           # 2.6 (D28), tras los del modelo
 
     estados_modelo = {m["id"]: m.get("estado_entrada", "S0") for m in modelos}
     resultados = [r["resultado"] for r in requisitos]

@@ -1,0 +1,294 @@
+{
+  "caso": "C4-FED-06",
+  "contrato": "C4-federacion",
+  "_oraculo": "IFC FEDERADO DERIVADO + CAMARA BCF (D26-D30, Fase II-h6): la decision que D6 aplazo. Entradas RE-USADAS byte a byte del 01 (patron D14/D21, cero ficheros de entrada nuevos), rotacion EST=30 que el derivado MATERIALIZA en su placement raiz (D27; la geometria interna no se toca). Ancla: (1) el derivado por md5 BYTE A BYTE (D26, cabecera SPF determinista con time_stamp de derivado_generacion y firma 'aqyra-federacion' sin version); (2) ifc_derivado en el manifiesto (la clave que D6 dejo opcional gana forma final); (3) el arbol BCF donde el viewpoint del topic con GUIDs lleva CAMARA perspectiva determinista (D29: bbox de origenes de placement absolutos de los storeys de EST = punto base de EST, d=D_MIN=1 m, K=1). Expected calculado con el service 0.5.0 y verificado A MANO: md5 del derivado identico en DOS ejecuciones; camara cotejada contra el bbox calculado aparte (pos=pb+(1,-1,1), dir=(-1,1,-1)/raiz3, up=(-1,1,2)/raiz6); filas por_modelo == C4-FED-01 (procedencia). Los casos 01-05 no se tocan.",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "653a359154112146d82ca02de0fde2ee",
+    "entrada/EST.ifc": "b84cb79c4a7cf4b560148340bc8dc305"
+  },
+  "maestro_manifiesto": {
+    "proyecto": "C4-FED-06 - Federacion con IFC derivado",
+    "crs": {
+      "epsg": "EPSG:25830",
+      "descripcion": "ETRS89 / UTM zone 30N",
+      "datum_vertical": "EGM2008"
+    },
+    "modelos": [
+      {
+        "id": "ARQ",
+        "disciplina": "ARQ",
+        "fichero_origen": "entrada/ARQ.ifc",
+        "md5": "653a359154112146d82ca02de0fde2ee",
+        "transformacion": {
+          "traslacion": [
+            337000.0,
+            4610000.0,
+            700.0
+          ],
+          "rotacion_deg": 0.0,
+          "escala": 1.0
+        },
+        "estado_entrada": "S2",
+        "n_elementos": 6
+      },
+      {
+        "id": "EST",
+        "disciplina": "EST",
+        "fichero_origen": "entrada/EST.ifc",
+        "md5": "b84cb79c4a7cf4b560148340bc8dc305",
+        "transformacion": {
+          "traslacion": [
+            337012.5,
+            4609987.5,
+            701.25
+          ],
+          "rotacion_deg": 30.0,
+          "escala": 1.0
+        },
+        "estado_entrada": "S2",
+        "n_elementos": 7
+      }
+    ],
+    "estructura_espacial": {
+      "politica": "unificada-por-nombre",
+      "agregados": [
+        {
+          "nivel": "Project",
+          "nombre": "C4-FED-06 - Federacion con IFC derivado",
+          "aportado_por": [
+            "ARQ",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Site",
+          "nombre": "Emplazamiento",
+          "aportado_por": [
+            "ARQ",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Building",
+          "nombre": "Edificio",
+          "aportado_por": [
+            "ARQ",
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Planta Baja",
+          "aportado_por": [
+            "ARQ"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Planta 1",
+          "aportado_por": [
+            "ARQ"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Nivel 00",
+          "aportado_por": [
+            "EST"
+          ]
+        },
+        {
+          "nivel": "Storey",
+          "nombre": "Nivel 01",
+          "aportado_por": [
+            "EST"
+          ]
+        }
+      ]
+    },
+    "guids": {
+      "politica": "preservados"
+    },
+    "procedencia": {
+      "generado_por": "services/federacion 0.5.0",
+      "reglas_md5": "b8655fb2065d7d890fd62d48ab783011"
+    },
+    "ifc_derivado": {
+      "fichero": "federado.ifc",
+      "md5": "dcb1e14460f3556107ce35d6dade16c3",
+      "determinista": true
+    }
+  },
+  "derivado_generacion": {
+    "_nota": "metadatos de generacion del DERIVADO inyectados por el runner (D26, patron bcf_generacion/D13): time_stamp de la cabecera SPF. El md5 de ifc_derivado se ancla byte a byte.",
+    "fecha": "2026-07-03T00:00:00"
+  },
+  "informe_qa": {
+    "proyecto": "C4-FED-06 - Federacion con IFC derivado",
+    "ids": {
+      "pack_id": "proyecto-piloto",
+      "pack_version": "v1",
+      "fichero": "requisitos.ids",
+      "version_ids": "1.0"
+    },
+    "requisitos": [
+      {
+        "id": "R1-CLASIF",
+        "origen": "ids",
+        "titulo": "Todo elemento objetivo lleva doble clasificacion: bsDD (URI) + Uniclass 2015",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcDoor|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 5,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "pass",
+            "n_comprobados": 7,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R2-EXTERIOR",
+        "origen": "ids",
+        "titulo": "Todo muro declara Pset_WallCommon.IsExternal",
+        "aplicabilidad": "IfcWall",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 2,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "no-aplica",
+            "n_comprobados": 0,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R3-MATERIAL",
+        "origen": "ids",
+        "titulo": "Elementos constructivos declaran su material (Pset_Estructurando_Spec.Material)",
+        "aplicabilidad": "IfcColumn|IfcWall|IfcSlab|IfcFooting|IfcTransportElement",
+        "resultado": "pass",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 4,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "pass",
+            "n_comprobados": 7,
+            "n_fallos": 0
+          }
+        }
+      },
+      {
+        "id": "R4-GEORREF",
+        "origen": "modulo",
+        "titulo": "Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS)",
+        "aplicabilidad": "IfcProject",
+        "resultado": "fail",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "fail",
+            "n_comprobados": 1,
+            "n_fallos": 1,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          },
+          "EST": {
+            "resultado": "fail",
+            "n_comprobados": 1,
+            "n_fallos": 1,
+            "detalle": "sin IfcMapConversion/IfcProjectedCRS en el IFC"
+          }
+        }
+      },
+      {
+        "id": "R5-PLANTAS",
+        "origen": "ids",
+        "titulo": "Nomenclatura de plantas del proyecto: IfcBuildingStorey.Name conforme a 'Planta ...'",
+        "aplicabilidad": "IfcBuildingStorey",
+        "resultado": "fail",
+        "por_modelo": {
+          "ARQ": {
+            "resultado": "pass",
+            "n_comprobados": 2,
+            "n_fallos": 0
+          },
+          "EST": {
+            "resultado": "fail",
+            "n_comprobados": 2,
+            "n_fallos": 2,
+            "detalle": "'Nivel 00' y 'Nivel 01' no conforman el requisito R5-PLANTAS"
+          }
+        }
+      }
+    ],
+    "incidencias": [
+      {
+        "id": "INC-01",
+        "requisito": "R4-GEORREF",
+        "modelo": "ARQ",
+        "guids": [],
+        "titulo": "ARQ no conforma R4-GEORREF (Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS))",
+        "severidad": "mayor",
+        "bcf_topic_guid": "76468412-69eb-570a-8b52-d4613bc047ac"
+      },
+      {
+        "id": "INC-02",
+        "requisito": "R4-GEORREF",
+        "modelo": "EST",
+        "guids": [],
+        "titulo": "EST no conforma R4-GEORREF (Proyecto georreferenciado (IfcMapConversion + IfcProjectedCRS))",
+        "severidad": "mayor",
+        "bcf_topic_guid": "af9f53b5-51cd-5228-ae20-6aecff799de9"
+      },
+      {
+        "id": "INC-03",
+        "requisito": "R5-PLANTAS",
+        "modelo": "EST",
+        "guids": [
+          "3OM3R50xH9rQrxdF_D157W",
+          "1_IR0JcG90ghN9CC8WB7E9"
+        ],
+        "titulo": "R5-PLANTAS no conforme en EST (Nivel 00 / Nivel 01)",
+        "severidad": "menor",
+        "bcf_topic_guid": "ae44673e-01e9-558f-b678-b55be81255f8"
+      }
+    ],
+    "estados": {
+      "por_modelo": {
+        "ARQ": "S2",
+        "EST": "S2"
+      },
+      "maestro": "S2"
+    },
+    "veredicto": "no-conforme",
+    "bcf": {
+      "estandar": "BCF",
+      "version": "3.0",
+      "emitido": true,
+      "carpeta": "bcf"
+    }
+  },
+  "bcf_generacion": {
+    "_nota": "metadatos de generacion INYECTADOS por el runner en emitir_bcf (D13); los GUIDs de topic son uuid5(NAMESPACE_AQYRA, 'C4-FED-06/INC-xx') y no dependen de esto",
+    "autor": "services/federacion 0.5.0",
+    "fecha": "2026-07-03T00:00:00Z"
+  },
+  "bcf_md5": {
+    "_nota": "arbol BCF 3.0 descomprimido, md5 por fichero (D12); 3 topics = 3 incidencias (R4-GEORREF x2 SIN viewpoint; R5-PLANTAS/EST CON viewpoint y CAMARA perspectiva determinista, D29)",
+    "76468412-69eb-570a-8b52-d4613bc047ac/markup.bcf": "15430e972cd20e9aeaa8091f1f153593",
+    "ae44673e-01e9-558f-b678-b55be81255f8/markup.bcf": "6073cdb38d5dd7de0551da5456130e0a",
+    "ae44673e-01e9-558f-b678-b55be81255f8/viewpoint.bcfv": "88b5896cbb20b544fe4b2433131f61aa",
+    "af9f53b5-51cd-5228-ae20-6aecff799de9/markup.bcf": "d68bc22836aa8391608bf25ea6d27d8f",
+    "bcf.version": "920b5ebbd45b3c42ab09c18e7fcc0dbe"
+  }
+}

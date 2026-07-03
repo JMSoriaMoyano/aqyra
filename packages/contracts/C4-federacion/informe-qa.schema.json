@@ -113,7 +113,7 @@
   },
   "$defs": {
     "aviso_lectura": {
-      "description": "Una degradación tolerada al leer un IFC de entrada (D17: suciedad TOLERABLE se declara, nunca se calla). Los códigos son taxonomía cerrada de v0.3, ampliable de forma aditiva.",
+      "description": "Una degradación tolerada al leer un IFC de entrada (D17: suciedad TOLERABLE se declara, nunca se calla). Los códigos son taxonomía cerrada de v0.3, ampliable de forma aditiva (v0.5: +guid-duplicado — D28, GlobalId compartido ENTRE modelos: se conserva y se declara).",
       "type": "object",
       "required": [
         "modelo",
@@ -136,7 +136,8 @@
             "unidades-no-metricas",
             "sin-unidades",
             "entidad-corrupta",
-            "fichero-grande"
+            "fichero-grande",
+            "guid-duplicado"
           ]
         },
         "detalle": {
