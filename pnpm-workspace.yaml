@@ -1,4 +1,8 @@
 # Workspace pnpm — el TS del ecosistema (visor y futuros paquetes front).
-# El visor se desarrolla aquí; en Fase 0 es un esqueleto.
+# Desde el hilo 3.1 el visor es un paquete REAL (re-home del corte mínimo).
 packages:
   - "apps/*"
+
+# pnpm ≥10: los build scripts se aprueban EXPLÍCITAMENTE (esbuild = binario de vite/vitest)
+allowBuilds:
+  esbuild: true

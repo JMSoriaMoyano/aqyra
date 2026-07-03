@@ -1,12 +1,37 @@
 {
-  "name": "visor",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Visor IFC del ecosistema Aqyra (el cebo). Esqueleto en Fase 0.",
+  "name": "@aqyra/visor",
+  "version": "0.5.0",
+  "description": "El visor abierto de Aqyra (carga IFC, escena 3D, selección, Psets, árbol espacial, lectura BCF 3.0 con cámara). Re-home del corte mínimo de aqyra-entorno (hilo 3.1).",
   "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "echo \"[visor] build placeholder (Fase 0)\" && exit 0",
-    "test": "echo \"[visor] sin tests aún (Fase 0)\" && exit 0",
-    "typecheck": "echo \"[visor] typecheck placeholder (Fase 0)\" && exit 0"
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.check.json",
+    "test": "vitest run",
+    "demo": "vite demo"
+  },
+  "dependencies": {
+    "three": "^0.169.0",
+    "web-ifc": "0.0.68"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.5.0",
+    "@types/three": "^0.169.0",
+    "jsdom": "^24.1.1",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.5"
   }
 }

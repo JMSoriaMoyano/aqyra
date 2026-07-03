@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Aqyra — el visor abierto abre el Maestro (hilo 3.1)</title>
+  <style>
+    html, body { margin: 0; height: 100%; font: 13px system-ui, sans-serif; }
+    #app { display: grid; grid-template-columns: 300px 1fr; height: 100%; }
+    #panel { border-right: 1px solid #ccc; padding: 10px; overflow: auto; }
+    #escena { position: relative; }
+    h2 { font-size: 14px; margin: 8px 0 4px; }
+    .topic { border: 1px solid #ddd; border-radius: 6px; padding: 6px; margin: 6px 0; cursor: pointer; }
+    .topic:hover { background: #f4f6f8; }
+    .topic .prio { font-weight: 600; }
+    .topic.sel { outline: 2px solid #2b6cb0; }
+    #props { white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 11px; }
+    .nodo { margin-left: 12px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="panel">
+      <h2>Maestro federado (C4-FED-06)</h2>
+      <div id="estado">cargando…</div>
+      <h2>Estructura espacial</h2>
+      <div id="arbol"></div>
+      <h2>Topics BCF</h2>
+      <div id="topics"></div>
+      <h2>Selección</h2>
+      <div id="props">(clic en un elemento o topic)</div>
+    </div>
+    <div id="escena"></div>
+  </div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

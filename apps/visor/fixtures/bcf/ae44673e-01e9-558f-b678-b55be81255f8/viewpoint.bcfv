@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualizationInfo Guid="47ad952d-e171-51fa-845c-dc7c8d62b660">
+  <Components>
+    <Selection>
+      <Component IfcGuid="3OM3R50xH9rQrxdF_D157W"/>
+      <Component IfcGuid="1_IR0JcG90ghN9CC8WB7E9"/>
+    </Selection>
+    <Visibility DefaultVisibility="true"/>
+  </Components>
+  <PerspectiveCamera>
+    <CameraViewPoint>
+      <X>337013.500000</X>
+      <Y>4609986.500000</Y>
+      <Z>702.250000</Z>
+    </CameraViewPoint>
+    <CameraDirection>
+      <X>-0.577350</X>
+      <Y>0.577350</Y>
+      <Z>-0.577350</Z>
+    </CameraDirection>
+    <CameraUpVector>
+      <X>-0.408248</X>
+      <Y>0.408248</Y>
+      <Z>0.816497</Z>
+    </CameraUpVector>
+    <FieldOfView>60.000000</FieldOfView>
+    <AspectRatio>1.777778</AspectRatio>
+  </PerspectiveCamera>
+</VisualizationInfo>
