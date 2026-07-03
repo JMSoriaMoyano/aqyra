@@ -1,7 +1,7 @@
 [project]
 name = "aqyra-federacion"
-version = "0.4.0"
-description = "Service C4 — federación: federar(ifcs[], reglas) → Maestro (manifiesto; políticas de estructura espacial unificar-por-nombre y mantener-separada, D22) · validar(maestro, ids) → informe QA (con avisos_lectura para IFC sucio, tarea 1.3) · emitir_bcf(informe, carpeta) → topics BCF 3.0. Contract-first: reproduce las golden C4-FED-01/02/03/04/05."
+version = "0.5.0"
+description = "Service C4 — federación: federar(ifcs[], reglas) → Maestro (manifiesto) · derivar(maestro, base_dir, salida) → IFC federado DERIVADO anclable por md5 (D26/D27) · validar(maestro, ids) → informe QA (avisos_lectura + guid-duplicado, D28) · emitir_bcf(informe, carpeta) → topics BCF 3.0 (con cámara determinista si recibe el derivado, D29). Contract-first: reproduce las golden C4-FED-01/02/03/04/05/06."
 requires-python = ">=3.10"
 dependencies = [
   "ifcopenshell>=0.7",

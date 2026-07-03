@@ -247,5 +247,81 @@ y el siguiente tag llegará con superficie nueva de adopción (IFC federado deri
 — D6), no con cobertura. Confirmado con JM al cierre.
 
 ---
+
+> Bloque del hilo 2.6 (IFC federado derivado + cámara BCF — v0.x, D6). Resueltas con JM
+> el **2026-07-03** (OK explícito), antes de tocar código. D1–D25 no se reabren. Este
+> bloque CIERRA la decisión que D6 aplazó ("con su anclaje decidido entonces").
+
+## D26 · Anclaje del derivado — md5 byte a byte, con cabecera determinista PROPIA
+
+El `.ifc` derivado se ancla por **md5 byte a byte** en el expected
+(`maestro_manifiesto.ifc_derivado.md5`), el patrón del repo (entradas por md5, árbol BCF
+por md5 — D12). Lo hace viable el spike del hilo (2026-07-03): dos ejecuciones de la misma
+combinación sobre las entradas congeladas reales del 01 (IFC4X3_ADD2, ifcopenshell 0.8.5)
+→ md5 idéntico; el ÚNICO no-determinismo observado es el timestamp de FILE_NAME. En vez
+de normalizar a posteriori (regex del 03), `derivar()` escribe la cabecera SPF
+DETERMINISTA él mismo: `time_stamp` INYECTADO (patrón `bcf_generacion`/D13 — la golden lo
+fija en `derivado_generacion` y el runner lo inyecta) y
+`preprocessor_version`/`originating_system` fijados a `aqyra-federacion` SIN número de
+versión ADREDE (un bump del service sin cambio de comportamiento no puede mover el md5
+del contrato; la versión ya vive en `procedencia.generado_por` del manifiesto) — un
+string de build del wheel (`IfcOpenShell 0.8.5-1c5b825`) tampoco puede decidir el md5. La versión del writer queda anclada por uv.lock (0.8.5); el md5 se verifica en
+Linux x86_64 (mismo wheel en CI y recompute) — si otra plataforma diera md5 distinto, es
+hallazgo de portabilidad y decisión nueva, no aflojamiento de la golden.
+
+## D27 · Materialización de la transformación — PLACEMENT RAÍZ por modelo + georref IFC
+
+La geometría interna de los modelos NO se toca (se mantiene el principio de v0: el
+service no rota geometría; la transformación es METADATO declarado — D23). El derivado
+materializa la transformación donde IFC manda: cada modelo cuelga de un **placement raíz
+propio** (`IfcLocalPlacement` con `IfcAxis2Placement3D`: Location = traslación declarada
+[dE, dN, dCota], RefDirection = rotación declarada alrededor de Z), y el conjunto declara
+el CRS destino con `IfcMapConversion` + `IfcProjectedCRS` (EPSG de las reglas) sobre el
+contexto geométrico — con lo que el derivado CUMPLE R4-GEORREF de serie, cerrando el
+círculo del QA. Un IfcProject ÚNICO (nombre = proyecto de las reglas), estructura
+espacial de origen re-colgada bajo él SIN fundir nodos (la unificación declarada vive en
+el manifiesto — D1: la verdad no cambia de sitio). Esquemas heterogéneos entre modelos →
+`LecturaIfcError` (el writer no puede mezclar esquemas SPF; diagnóstico accionable, D17).
+
+## D28 · GUIDs duplicados entre modelos — CONSERVAR ambos + aviso `guid-duplicado`
+
+Política D1 intacta: GUIDs preservados, dedup=nunca. Si dos modelos aportan el MISMO
+`GlobalId`, el derivado CONSERVA ambos y la degradación se DECLARA (coherente con D17:
+se declara, no se calla): aviso `{modelo, codigo: "guid-duplicado", detalle}` en
+`avisos_lectura`, emitido por `validar()` (que ya abre todos los modelos — la detección
+es transversal, no de un fichero). La taxonomía del esquema se amplía de forma ADITIVA
+(`informe-qa.schema.json`, enum de `codigo`). Los casos 01–05 no tienen GUIDs cruzados
+(entradas de linajes distintos) → sus expected quedan intactos POR CONSTRUCCIÓN; el
+camino se cubre con pytest (duplicado sintético), no con golden nueva.
+
+## D29 · Cámara del viewpoint — UN caso C4-FED-06 con derivado+cámara JUNTOS
+
+La cámara sin derivado no existe (bcf.py lo documenta desde 1.2): son la misma feature
+vista de dos lados → **un solo caso golden C4-FED-06**. Cámara PERSPECTIVA determinista
+por bounding box de los elementos de los GUIDs del topic en el DERIVADO: el bbox se
+calcula sobre los ORÍGENES de los placements absolutos (cadena de `ObjectPlacement`
+resuelta — determinista y sin motor de geometría; la cámara por malla exacta sería
+decisión nueva), posición = centro + k·(1, −1, 1)·d con **k = 1.0** y d = max(diagonal
+del bbox, 1 m) — constantes DOCUMENTADAS aquí y en el código, sin números mágicos —,
+mirando al centro (`CameraDirection` = normalizado centro−posición, `CameraUpVector`
+ortogonalizado con Z arriba, `FieldOfView` = 60°, `AspectRatio` = 16/9, floats con 6
+decimales fijos). SOLO se emite cuando `emitir_bcf()` recibe el derivado (opt-in;
+activación por contenido del expected — patrón D14): los `bcf_md5` de 02/04 quedan
+intactos POR CONSTRUCCIÓN, no por disciplina.
+
+## D30 · Superficie API + versionado + release — `derivar()` SEPARADA · 0.5.0 · release SÍ
+
+Cuarta función del contrato: **`derivar(manifiesto, base_dir, salida) → manifiesto
+actualizado`** con `ifc_derivado = {fichero, md5, determinista: true}` — la clave que el
+esquema dejó opcional adrede (D6) gana su forma final SIN cambio de esquema. `federar()`
+queda INTACTA (patrón D11: cada superficie nueva es un paso explícito) → 01–05 intocados
+por construcción. CLI: subcomando `derivar`. El runner gana el paso de derivación
+activado por contenido del expected (presencia de `maestro_manifiesto.ifc_derivado`) —
+edición mínima de run_golden.py justificada AQUÍ; ci.yml y release.yml NO se tocan.
+Versionado: **0.5.0** (superficie nueva). Release: **SÍ** — el derivado es la superficie
+nueva de adopción que D25 esperaba → tag firmado `federacion-v0.5.0` + Release run tras
+el merge (Llave 2 = JM, patrón D15/PR #10); confirmación explícita al cierre.
+
+---
 *Regla de oro heredada: un fallo no se arregla aflojando la golden. El CI nunca certifica
 (Llave 2 = JM).*

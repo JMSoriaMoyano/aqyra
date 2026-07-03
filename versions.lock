@@ -20,16 +20,19 @@ estado          = "engine-importado"     # Fase I·h1: corte mínimo en engines/
 # avisos_lectura en el informe; bloqueante → LecturaIfcError con diagnóstico.
 # COBERTURA GOLDEN ADICIONAL en 1.4 (Fase II·h5, D21–D25): integración 1.2×1.3 (04) +
 # mantener-separada IMPLEMENTADA (05 — en 0.3.0 se ecoaba sin aplicarse); prioridad RESERVADA (D24).
+# IFC FEDERADO DERIVADO + CÁMARA BCF en v0.x (Fase II·h6, D26–D30): la decisión que D6 aplazó —
+# derivar() escribe el .ifc federado (anclado por md5 BYTE A BYTE, cabecera SPF determinista) y
+# emitir_bcf(derivado=) pone la CÁMARA perspectiva determinista en cada viewpoint (D29).
 [contracts.C4]
 nombre          = "federacion"
 schema_version  = "0.1.0"              # 3 esquemas: reglas-federacion + maestro-manifiesto + informe-qa
 engine          = "services/federacion"
-engine_version  = "0.4.0"              # service v0.4 (Fase II·h5): mantener-separada real (D22) + cobertura 1.4
+engine_version  = "0.5.0"              # service v0.5 (Fase II·h6): derivar() + cámara BCF (D26–D30)
 bcf             = "3.0"                # estándar buildingSMART, por referencia (no se re-esquematiza)
 ids_pack        = "ids/proyecto-piloto/v1"
-golden          = "C4-FED-01 + C4-FED-02 + C4-FED-03 + C4-FED-04 + C4-FED-05"
-oraculo         = "recompute (federar+validar contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 — D10: más checks, nunca menos; C4-FED-02 añade la EMISIÓN: árbol BCF 3.0 anclado por md5 de fichero (D12) con GUIDs uuid5 deterministas (D13) y generación inyectada (bcf_generacion); C4-FED-03 añade el IFC SUCIO (D18-D19): camino feliz-degradado con avisos_lectura anclados en el expected; C4-FED-04 añade la INTEGRACIÓN 1.2×1.3 (D21/D23): mixto sucio+limpio con avisos POR MODELO + emisión + estados heterogéneos min(S) + transformación no trivial; C4-FED-05 añade mantener-separada (D22): nodos por modelo sin fundir"
-estado          = "service v0.4 (cobertura golden adicional — tarea 1.4, Fase II·h5, D21–D25; mantener-separada implementada y anclada); IFC derivado = v0.x (D6)"
+golden          = "C4-FED-01 + C4-FED-02 + C4-FED-03 + C4-FED-04 + C4-FED-05 + C4-FED-06"
+oraculo         = "recompute (federar+validar contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 — D10: más checks, nunca menos; C4-FED-02 añade la EMISIÓN: árbol BCF 3.0 anclado por md5 de fichero (D12) con GUIDs uuid5 deterministas (D13) y generación inyectada (bcf_generacion); C4-FED-03 añade el IFC SUCIO (D18-D19): camino feliz-degradado con avisos_lectura anclados en el expected; C4-FED-04 añade la INTEGRACIÓN 1.2×1.3 (D21/D23): mixto sucio+limpio con avisos POR MODELO + emisión + estados heterogéneos min(S) + transformación no trivial; C4-FED-05 añade mantener-separada (D22): nodos por modelo sin fundir; C4-FED-06 añade el DERIVADO (D26/D27): .ifc federado anclado por md5 BYTE A BYTE (cabecera SPF determinista con time_stamp de derivado_generacion) + ifc_derivado en el manifiesto + CÁMARA perspectiva determinista en el viewpoint (D29, bbox de orígenes de placement)"
+estado          = "service v0.5 (IFC federado derivado + cámara BCF — v0.x, Fase II·h6, D26–D30; la decisión aplazada por D6, cerrada: el Maestro se puede ABRIR)"
 
 # --- engine C1 (Fase I·h1): corte mínimo narración→IFC importado del canónico 0.10.0 ---
 # Copiado BYTE A BYTE de _import/aqyra-motor (procedencia). Identidad vigilada por
