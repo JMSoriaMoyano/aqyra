@@ -1,0 +1,65 @@
+{
+  "caso": "GOL-PRE-01",
+  "contrato": "C5-presupuesto",
+  "_oraculo": "PRESUPUESTO TRAZABLE sobre la medición del Maestro (contract-first, modo ANCLADO: sin engine hasta un hilo posterior). La medición NACE de los Qto (fixtures ARQ.ifc/EST.ifc = geometria del C4-FED-06 enriquecida con Qto; md5 propios de C5, originales anclados intactos). Corte del criterio AQ/v1: muro (m2 con descuento de hueco>1m2) x2 -> fabrica+enfoscado(2caras)+pintura(2caras); losa (m3); pilar (m3); zapata (m3); puerta (ud); + S&S por ratio (2% PEM, partida sin geometria D5). Precios del banco propio AQ-DEMO/v1. Cantidades y aritmetica calculadas a mano y verificadas x2. PEM 7022.53 -> (+13% GG +6% BI) base 8356.81 -> (+21% IVA) PEC 10111.74 EUR. El engine de presupuesto (hilo posterior) antepondra el recompute (parser Qto + motor) contra ESTE mismo expected.",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "0b998513ab079b9ef0870e9a6c04ca84",
+    "entrada/EST.ifc": "0d7e7f20fc42aa42214ad58de084322e"
+  },
+  "fuente_modelo": {
+    "ifc_derivado_md5": "dcb1e14460f3556107ce35d6dade16c3",
+    "_nota": "procedencia: geometria del Maestro C4-FED-06 (derivado dcb1e144...). Las fixtures de C5 son copias con Qto inyectado (md5 propios) — la zona anclada del C4/C3/visor queda intacta."
+  },
+  "presupuesto": {
+    "proyecto": "GOL-PRE-01 - Presupuesto sobre la medicion del Maestro (geometria C4-FED-06 + Qto)",
+    "estado_mediciones": [
+      { "codigo": "CSZ010", "capitulo": "C01", "descripcion": "Zapata de cimentacion de hormigon armado HA-25", "unidad": "m3", "cantidad": 0.128, "precio_unitario": 178.19, "importe": 22.81, "criterio_aplicado": "NetVolume (volumen neto de hormigon)", "origen": "modelo", "trazabilidad": ["24Jmt2jgjAZwRs2QxmguJ2", "3MEEe_PHvAROisLgr9UDFJ"] },
+      { "codigo": "EHS010", "capitulo": "C02", "descripcion": "Pilar de hormigon armado HA-25", "unidad": "m3", "cantidad": 1.92, "precio_unitario": 283.25, "importe": 543.84, "criterio_aplicado": "NetVolume (4 pilares x 0.48 m3)", "origen": "modelo", "trazabilidad": ["25L7QaZYvArhgaHyvmI_g5", "3HilqY$ZvBIA0bWeM4O$iP", "2FLDv$sybEvf81jmxyrRbq", "2FiwRIQJf8xBQigE4ZzGkN"] },
+      { "codigo": "EHL010", "capitulo": "C02", "descripcion": "Losa/forjado de hormigon armado HA-25", "unidad": "m3", "cantidad": 16.2, "precio_unitario": 231.75, "importe": 3754.35, "criterio_aplicado": "NetVolume (Solado-PB 5.40 + Forjado-N01 10.80 m3)", "origen": "modelo", "trazabilidad": ["1Q0B8PGvD5jewwsbxyzt8T", "28XHZj7n5DN9W6GSGXXm8A"] },
+      { "codigo": "FAB010", "capitulo": "C03", "descripcion": "Fabrica de ladrillo ceramico perforado 1/2 pie", "unidad": "m2", "cantidad": 33.9, "precio_unitario": 31.42, "importe": 1065.14, "criterio_aplicado": "NetSideArea, 1 cara, descuento de huecos > 1.00 m2 (M-Fachada 15.90 + M-Interior 18.00)", "origen": "modelo", "trazabilidad": ["0EAm14JNX7Hu9QtYUgOaK4", "2VyfKvXd12bOJLg7j2fUpO"] },
+      { "codigo": "REV010", "capitulo": "C04", "descripcion": "Enfoscado de cemento a buena vista", "unidad": "m2", "cantidad": 67.8, "precio_unitario": 12.67, "importe": 859.03, "criterio_aplicado": "NetSideArea, 2 caras (factor 2) sobre 33.90 m2", "origen": "modelo", "trazabilidad": ["0EAm14JNX7Hu9QtYUgOaK4", "2VyfKvXd12bOJLg7j2fUpO"] },
+      { "codigo": "PIN010", "capitulo": "C04", "descripcion": "Pintura plastica lisa", "unidad": "m2", "cantidad": 67.8, "precio_unitario": 6.7, "importe": 454.26, "criterio_aplicado": "NetSideArea, 2 caras (factor 2) sobre 33.90 m2", "origen": "modelo", "trazabilidad": ["0EAm14JNX7Hu9QtYUgOaK4", "2VyfKvXd12bOJLg7j2fUpO"] },
+      { "codigo": "PPM010", "capitulo": "C05", "descripcion": "Puerta de paso interior, hoja lisa", "unidad": "ud", "cantidad": 1, "precio_unitario": 185.4, "importe": 185.4, "criterio_aplicado": "conteo (1 ud)", "origen": "modelo", "trazabilidad": ["2cLOPCBwP0_uO$i8nSy_cu"] },
+      { "codigo": "SYS010", "capitulo": "C06", "descripcion": "Seguridad y salud (partida alzada)", "unidad": "PA", "cantidad": 1, "precio_unitario": 137.7, "importe": 137.7, "criterio_aplicado": "regla sin geometria: 2% del PEM medible (6884.83 x 0.02)", "origen": "regla", "trazabilidad": [] }
+    ],
+    "cuadro_precios_1": [
+      { "codigo": "FAB010", "descripcion": "Fabrica de ladrillo ceramico perforado 1/2 pie", "unidad": "m2", "precio": 31.42, "precio_en_letra": "TREINTA Y UNO CON CUARENTA Y DOS CENTIMOS" },
+      { "codigo": "REV010", "descripcion": "Enfoscado de cemento a buena vista", "unidad": "m2", "precio": 12.67, "precio_en_letra": "DOCE CON SESENTA Y SIETE CENTIMOS" },
+      { "codigo": "PIN010", "descripcion": "Pintura plastica lisa", "unidad": "m2", "precio": 6.7, "precio_en_letra": "SEIS CON SETENTA CENTIMOS" },
+      { "codigo": "EHL010", "descripcion": "Losa/forjado de hormigon armado HA-25", "unidad": "m3", "precio": 231.75, "precio_en_letra": "DOSCIENTOS TREINTA Y UNO CON SETENTA Y CINCO CENTIMOS" },
+      { "codigo": "EHS010", "descripcion": "Pilar de hormigon armado HA-25", "unidad": "m3", "precio": 283.25, "precio_en_letra": "DOSCIENTOS OCHENTA Y TRES CON VEINTICINCO CENTIMOS" },
+      { "codigo": "CSZ010", "descripcion": "Zapata de cimentacion de hormigon armado HA-25", "unidad": "m3", "precio": 178.19, "precio_en_letra": "CIENTO SETENTA Y OCHO CON DIECINUEVE CENTIMOS" },
+      { "codigo": "PPM010", "descripcion": "Puerta de paso interior, hoja lisa", "unidad": "ud", "precio": 185.4, "precio_en_letra": "CIENTO OCHENTA Y CINCO CON CUARENTA CENTIMOS" },
+      { "codigo": "SYS010", "descripcion": "Seguridad y salud (partida alzada)", "unidad": "PA", "precio": 137.7, "precio_en_letra": "CIENTO TREINTA Y SIETE CON SETENTA CENTIMOS" }
+    ],
+    "cuadro_precios_2": [
+      { "codigo": "FAB010", "unidad": "m2", "componentes": [ { "tipo": "mano_obra", "descripcion": "Oficial 1a + peon albanileria", "unidad": "h", "rendimiento": 0.75, "precio": 24.0, "subtotal": 18.0 }, { "tipo": "material", "descripcion": "Ladrillo perforado + mortero de cemento", "unidad": "m2", "rendimiento": 1.0, "precio": 12.5, "subtotal": 12.5 } ], "costes_indirectos": 0.92, "precio_total": 31.42 },
+      { "codigo": "REV010", "unidad": "m2", "componentes": [ { "tipo": "mano_obra", "descripcion": "Oficial 1a revocos", "unidad": "h", "rendimiento": 0.35, "precio": 25.71, "subtotal": 9.0 }, { "tipo": "material", "descripcion": "Mortero de cemento M-5", "unidad": "m2", "rendimiento": 1.0, "precio": 3.2, "subtotal": 3.2 }, { "tipo": "maquinaria", "descripcion": "Hormigonera", "unidad": "h", "rendimiento": 0.02, "precio": 5.0, "subtotal": 0.1 } ], "costes_indirectos": 0.37, "precio_total": 12.67 },
+      { "codigo": "PIN010", "unidad": "m2", "componentes": [ { "tipo": "mano_obra", "descripcion": "Oficial 1a pintura", "unidad": "h", "rendimiento": 0.2, "precio": 22.5, "subtotal": 4.5 }, { "tipo": "material", "descripcion": "Pintura plastica + imprimacion", "unidad": "m2", "rendimiento": 1.0, "precio": 2.0, "subtotal": 2.0 } ], "costes_indirectos": 0.2, "precio_total": 6.7 },
+      { "codigo": "EHL010", "unidad": "m3", "componentes": [ { "tipo": "mano_obra", "descripcion": "Oficial + peon ferralla/hormigon", "unidad": "h", "rendimiento": 3.5, "precio": 27.14, "subtotal": 95.0 }, { "tipo": "material", "descripcion": "Hormigon HA-25 + acero B500S + encofrado", "unidad": "m3", "rendimiento": 1.0, "precio": 110.0, "subtotal": 110.0 }, { "tipo": "maquinaria", "descripcion": "Bomba de hormigon + vibrador", "unidad": "h", "rendimiento": 0.5, "precio": 40.0, "subtotal": 20.0 } ], "costes_indirectos": 6.75, "precio_total": 231.75 },
+      { "codigo": "EHS010", "unidad": "m3", "componentes": [ { "tipo": "mano_obra", "descripcion": "Oficial + peon ferralla/hormigon", "unidad": "h", "rendimiento": 4.8, "precio": 27.08, "subtotal": 130.0 }, { "tipo": "material", "descripcion": "Hormigon HA-25 + acero B500S + encofrado pilar", "unidad": "m3", "rendimiento": 1.0, "precio": 120.0, "subtotal": 120.0 }, { "tipo": "maquinaria", "descripcion": "Grua + vibrador", "unidad": "h", "rendimiento": 0.6, "precio": 41.67, "subtotal": 25.0 } ], "costes_indirectos": 8.25, "precio_total": 283.25 },
+      { "codigo": "CSZ010", "unidad": "m3", "componentes": [ { "tipo": "mano_obra", "descripcion": "Oficial + peon", "unidad": "h", "rendimiento": 2.2, "precio": 27.27, "subtotal": 60.0 }, { "tipo": "material", "descripcion": "Hormigon HA-25 + acero B500S", "unidad": "m3", "rendimiento": 1.0, "precio": 95.0, "subtotal": 95.0 }, { "tipo": "maquinaria", "descripcion": "Retroexcavadora + vibrador", "unidad": "h", "rendimiento": 0.45, "precio": 40.0, "subtotal": 18.0 } ], "costes_indirectos": 5.19, "precio_total": 178.19 },
+      { "codigo": "PPM010", "unidad": "ud", "componentes": [ { "tipo": "mano_obra", "descripcion": "Oficial 1a carpinteria", "unidad": "h", "rendimiento": 1.4, "precio": 25.0, "subtotal": 35.0 }, { "tipo": "material", "descripcion": "Hoja + cerco + herrajes", "unidad": "ud", "rendimiento": 1.0, "precio": 145.0, "subtotal": 145.0 } ], "costes_indirectos": 5.4, "precio_total": 185.4 }
+    ],
+    "resumen": {
+      "moneda": "EUR",
+      "capitulos": [
+        { "codigo": "C01", "descripcion": "Cimentacion", "partidas": ["CSZ010"], "importe": 22.81 },
+        { "codigo": "C02", "descripcion": "Estructura", "partidas": ["EHS010", "EHL010"], "importe": 4298.19 },
+        { "codigo": "C03", "descripcion": "Albanileria", "partidas": ["FAB010"], "importe": 1065.14 },
+        { "codigo": "C04", "descripcion": "Revestimientos", "partidas": ["REV010", "PIN010"], "importe": 1313.29 },
+        { "codigo": "C05", "descripcion": "Carpinteria", "partidas": ["PPM010"], "importe": 185.4 },
+        { "codigo": "C06", "descripcion": "Seguridad y Salud", "partidas": ["SYS010"], "importe": 137.7 }
+      ],
+      "PEM": 7022.53,
+      "gg_pct": 0.13,
+      "gg": 912.93,
+      "bi_pct": 0.06,
+      "bi": 421.35,
+      "base": 8356.81,
+      "iva_pct": 0.21,
+      "iva": 1754.93,
+      "PEC": 10111.74
+    }
+  }
+}

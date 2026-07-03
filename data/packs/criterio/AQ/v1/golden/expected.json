@@ -1,0 +1,5 @@
+{
+  "pack": "criterio/AQ/v1",
+  "content_sha256": "dd874113ecb659e9c5bf257346c5652e26fbd282633584d616b7d52f8c5699eb",
+  "_nota": "Golden de pack: identidad del contenido por hash (incluye md5 de criterio.json y la lista de partidas). Cambiar criterio.json o la lista sin bump de versión + nuevo hash rompe el test — no hay drift silencioso. Patrón packs.normativa/ids."
+}

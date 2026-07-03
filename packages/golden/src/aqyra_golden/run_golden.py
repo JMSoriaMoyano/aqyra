@@ -781,7 +781,233 @@ def run_case_c3(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     return all(ok for _, ok, _ in checks)
 
 
-CASE_RUNNERS = {"C1": run_case_c1, "C4": run_case_c4, "C3": run_case_c3}
+# --------------------------------------------------------------------------- #
+# C5 · presupuesto — modo ANCLADO (contract-first, Fase IV·h1 — sin engine)     #
+# --------------------------------------------------------------------------- #
+ORIGEN_C5 = {"modelo", "regla", "manual"}
+
+# Casa del engine C5 (hilo posterior): engines/presupuesto — se importará por path (patrón
+# engines/ifc y _recompute_c4/_recompute_c3). El runner regenerará la medición desde los Qto
+# (parser) y el motor dará el presupuesto; aquí, modo ANCLADO (oráculo congelado, sin engine).
+DEFAULT_ENGINE_C5 = DEFAULT_REPO / "engines" / "presupuesto" / "src"
+
+
+def load_c5_schemas(contracts_dir: Path) -> dict[str, dict]:
+    base = contracts_dir / "C5-presupuesto"
+    out = {}
+    for key, fname in (("entrada", "entrada-presupuesto.schema.json"),
+                       ("salida", "salida-presupuesto.schema.json")):
+        out[key] = json.loads((base / fname).read_text(encoding="utf-8"))
+    return out
+
+
+def _pack_c5(repo: Path, familia: str, ref: dict) -> tuple[dict, Path]:
+    """Carga el pack.json de un pack C5 (criterio/banco) y devuelve (manifiesto, dir)."""
+    pack_dir = (repo / "data" / "packs" / familia
+                / str(ref.get("id")) / str(ref.get("version")))
+    return json.loads((pack_dir / "pack.json").read_text(encoding="utf-8")), pack_dir
+
+
+def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                repo: Path = DEFAULT_REPO) -> bool:
+    """C5: presupuesto trazable — modo ANCLADO (contract-first, Fase IV·h1 — ver ficha/DECISIONES).
+
+    El presupuesto esperado (`expected["presupuesto"]`) es el ORÁCULO (medición manual congelada,
+    verificada x2). El engine `engines/presupuesto` (hilo posterior) ANTEPONDRÁ el recompute (parser
+    de Qto + motor) contra este MISMO expected (costura C1/C3/C4). Modo anclado — más checks que hoy:
+
+      1. Conformidad de los 2 esquemas (entrada + salida).
+      2. Identidad por hash de las fixtures con Qto (entradas_md5 == ficheros == modelo neutro).
+      3. Packs criterio + banco anclados en versions.lock; refs de la entrada == lock.
+      4. Partidas origen=modelo ⊆ banco (precio == banco) y ⊆ criterio; origen=regla no exige banco.
+      5. importe == cantidad × precio_unitario (±importe_abs).
+      6. precio_unitario == cuadro nº1; nº1 == nº2 (Σ componentes + indirectos).
+      7. PEM == Σ importes == Σ capítulos; GG/BI/base/IVA/PEC según parametros.
+      8. trazabilidad ⊆ GUIDs del modelo (origen=modelo) / vacía (origen=regla); taxonomía cerrada.
+      9. S&S (origen=regla) == ratio del criterio × PEM medible.
+    """
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c5_schemas(contracts_dir)
+
+    entrada_path = case_dir / "entrada.json"
+    if not entrada_path.exists():
+        print_checks([("entrada.json presente", False, "no encontrado")])
+        return False
+    entrada = json.loads(entrada_path.read_text(encoding="utf-8"))
+    pres = expected.get("presupuesto", {})
+    ia = float(tol.get("importe_abs", 0.01))
+
+    def approx(a, b) -> bool:
+        try:
+            return abs(float(a) - float(b)) <= ia
+        except (TypeError, ValueError):
+            return False
+
+    # 1 · conformidad de esquemas
+    for name, inst, key in (("entrada conforma esquema", entrada, "entrada"),
+                            ("presupuesto conforma esquema", pres, "salida")):
+        ok, detail = validate_against_schema(inst, schemas[key])
+        checks.append((name, ok, detail))
+
+    # 2 · identidad por hash de las fixtures con Qto
+    entradas = expected.get("entradas_md5", {})
+    checks.append(("entradas declaradas", bool(entradas), f"{len(entradas)} fichero/s"))
+    for rel, exp_md5 in sorted(entradas.items()):
+        p = case_dir / rel
+        if not p.exists():
+            checks.append((f"identidad {rel}", False, "fichero no encontrado"))
+            continue
+        got = _md5(p)
+        checks.append((f"identidad {rel}", got == exp_md5,
+                       f"md5 {got[:12]}… (esperado {exp_md5[:12]}…)"))
+    md5_modelo = {m["fichero"]: m.get("md5")
+                  for m in entrada.get("modelo", {}).get("fuente_maestro", {}).get("modelos", [])}
+    checks.append(("md5 modelo neutro == entradas", md5_modelo == entradas,
+                   "las fixtures del modelo neutro anclan los mismos IFC con Qto"))
+
+    # 3 · packs criterio + banco anclados en versions.lock
+    crit_ref = entrada.get("criterio_ref", {})
+    banco_ref = entrada.get("banco_ref", {})
+    lock_crit = _lock_packs(repo, "criterio")
+    lock_banco = _lock_packs(repo, "banco")
+    checks.append(("criterio anclado en versions.lock",
+                   lock_crit.get("id") == crit_ref.get("id")
+                   and lock_crit.get("version") == crit_ref.get("version"),
+                   f"lock={lock_crit.get('id')}/{lock_crit.get('version')}"))
+    checks.append(("banco anclado en versions.lock",
+                   lock_banco.get("id") == banco_ref.get("id")
+                   and lock_banco.get("version") == banco_ref.get("version"),
+                   f"lock={lock_banco.get('id')}/{lock_banco.get('version')}"))
+
+    # cargar contenido de los packs (banco.json + criterio.json)
+    banco = criterio = None
+    try:
+        bman, bdir = _pack_c5(repo, "banco", banco_ref)
+        banco = json.loads((bdir / bman["contenido"]["fichero"]).read_text(encoding="utf-8"))
+        cman, cdir = _pack_c5(repo, "criterio", crit_ref)
+        criterio = json.loads((cdir / cman["contenido"]["fichero"]).read_text(encoding="utf-8"))
+        checks.append(("packs criterio + banco cargados", True,
+                       f"{len(banco.get('partidas', []))} partidas de banco"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("packs criterio + banco cargados", False, f"{type(e).__name__}: {e}"))
+
+    precio_banco = {p["codigo"]: p["precio"] for p in (banco or {}).get("partidas", [])}
+    codigos_criterio = set()
+    for regla in (criterio or {}).get("reglas_por_clase", []):
+        for p in regla.get("partidas", []):
+            codigos_criterio.add(p["codigo"])
+    codigos_sin_geo = {p["codigo"] for p in (criterio or {}).get("reglas_sin_geometria", [])}
+
+    em = pres.get("estado_mediciones", [])
+    cp1 = {c["codigo"]: c for c in pres.get("cuadro_precios_1", [])}
+    cp2 = {c["codigo"]: c for c in pres.get("cuadro_precios_2", [])}
+
+    # 4 · partidas origen=modelo ⊆ banco (precio) y ⊆ criterio; origen=regla no exige banco
+    faltan_banco = [l["codigo"] for l in em
+                    if l.get("origen") == "modelo" and l["codigo"] not in precio_banco]
+    checks.append(("partidas origen=modelo ⊆ banco", not faltan_banco,
+                   "todas con precio en el banco" if not faltan_banco
+                   else f"sin respaldo en banco: {faltan_banco}"))
+    faltan_crit = [l["codigo"] for l in em
+                   if l.get("origen") == "modelo" and l["codigo"] not in codigos_criterio]
+    checks.append(("partidas origen=modelo ⊆ criterio", not faltan_crit,
+                   "todas mapeadas por el criterio" if not faltan_crit
+                   else f"sin regla de medición: {faltan_crit}"))
+
+    # 5 · importe == cantidad × precio_unitario ; 6 · precio == cuadro nº1 == cuadro nº2
+    malos_importe, malos_p1, malos_p2 = [], [], []
+    for l in em:
+        cod = l["codigo"]
+        if not approx(l.get("importe"), float(l.get("cantidad", 0)) * float(l.get("precio_unitario", 0))):
+            malos_importe.append(cod)
+        if cod in cp1 and not approx(l.get("precio_unitario"), cp1[cod].get("precio")):
+            malos_p1.append(cod)
+        # precio del banco (solo origen=modelo)
+        if l.get("origen") == "modelo" and cod in precio_banco and not approx(l.get("precio_unitario"), precio_banco[cod]):
+            malos_p1.append(cod + "(banco)")
+    checks.append(("importe == cantidad × precio", not malos_importe,
+                   "todos" if not malos_importe else f"descuadran: {malos_importe}"))
+    checks.append(("precio_unitario == cuadro nº1 (y banco)", not malos_p1,
+                   "coherentes" if not malos_p1 else f"descuadran: {malos_p1}"))
+    for cod, c2 in cp2.items():
+        suma = sum(float(x.get("subtotal", 0)) for x in c2.get("componentes", []))
+        suma += float(c2.get("costes_indirectos", 0))
+        if not approx(c2.get("precio_total"), suma):
+            malos_p2.append(cod)
+        if cod in cp1 and not approx(c2.get("precio_total"), cp1[cod].get("precio")):
+            malos_p2.append(cod + "(!=nº1)")
+    checks.append(("cuadro nº2 == Σ componentes + indirectos == nº1", not malos_p2,
+                   "descompuesto cuadra" if not malos_p2 else f"descuadran: {malos_p2}"))
+    # todas las partidas medidas tienen cuadro nº1; las origen=modelo, cuadro nº2
+    sin_p1 = [l["codigo"] for l in em if l["codigo"] not in cp1]
+    sin_p2 = [l["codigo"] for l in em if l.get("origen") == "modelo" and l["codigo"] not in cp2]
+    checks.append(("cuadros cubren las partidas", not sin_p1 and not sin_p2,
+                   "nº1 todas, nº2 las de modelo" if not sin_p1 and not sin_p2
+                   else f"sin nº1: {sin_p1} · sin nº2: {sin_p2}"))
+
+    # 7 · PEM == Σ importes == Σ capítulos ; GG/BI/base/IVA/PEC
+    res = pres.get("resumen", {})
+    par = entrada.get("parametros", {})
+    suma_imp = sum(float(l.get("importe", 0)) for l in em)
+    PEM = float(res.get("PEM", 0))
+    checks.append(("PEM == Σ importes", approx(PEM, suma_imp),
+                   f"PEM {PEM} vs Σ {round(suma_imp, 2)}"))
+    caps = res.get("capitulos", [])
+    imp_por_cod = {l["codigo"]: float(l.get("importe", 0)) for l in em}
+    cap_ok = True
+    for c in caps:
+        suma_c = sum(imp_por_cod.get(cod, 0) for cod in c.get("partidas", []))
+        if not approx(c.get("importe"), suma_c):
+            cap_ok = False
+    checks.append(("capítulos == Σ partidas y Σ capítulos == PEM",
+                   cap_ok and approx(sum(float(c.get("importe", 0)) for c in caps), PEM),
+                   f"{len(caps)} capítulos"))
+    gg = float(par.get("gg_pct", 0)) * PEM
+    bi = float(par.get("bi_pct", 0)) * PEM
+    base = PEM + gg + bi
+    iva = float(par.get("iva_pct", 0)) * base
+    pec = base + iva
+    econ_ok = (approx(res.get("gg"), gg) and approx(res.get("bi"), bi)
+               and approx(res.get("base"), base) and approx(res.get("iva"), iva)
+               and approx(res.get("PEC"), pec))
+    checks.append(("GG/BI/base/IVA/PEC según parametros", econ_ok,
+                   f"PEC {res.get('PEC')} (esperado {round(pec, 2)})"))
+
+    # 8 · trazabilidad ⊆ GUIDs del modelo (origen=modelo) / vacía (origen=regla); taxonomía cerrada
+    guids = {o["guid"] for o in entrada.get("modelo", {}).get("objetos", [])}
+    traza_ok = True
+    origen_ok = True
+    for l in em:
+        org = l.get("origen")
+        if org not in ORIGEN_C5:
+            origen_ok = False
+        tz = set(l.get("trazabilidad", []))
+        if org == "modelo" and not (tz and tz <= guids):
+            traza_ok = False
+        if org == "regla" and tz:
+            traza_ok = False
+    checks.append(("origen taxonomía cerrada (modelo/regla/manual)", origen_ok,
+                   f"{sorted({l.get('origen') for l in em})}"))
+    checks.append(("trazabilidad ⊆ GUIDs del modelo", traza_ok,
+                   f"{len(guids)} objetos en el modelo neutro"))
+
+    # 9 · S&S (origen=regla) == ratio del criterio × PEM medible
+    pem_medible = sum(float(l.get("importe", 0)) for l in em if l.get("origen") == "modelo")
+    reglas_sg = {p["codigo"]: p for p in (criterio or {}).get("reglas_sin_geometria", [])}
+    sys_ok, sys_detail = True, "sin partidas de regla"
+    for l in em:
+        if l.get("origen") == "regla" and l["codigo"] in reglas_sg:
+            ratio = float(reglas_sg[l["codigo"]].get("ratio", 0))
+            esperado = ratio * pem_medible
+            sys_ok = approx(l.get("importe"), esperado)
+            sys_detail = f"{l['codigo']} {l.get('importe')} (esperado {round(esperado, 2)} = {ratio}×{round(pem_medible, 2)})"
+    checks.append(("partida por regla == ratio × PEM medible", sys_ok, sys_detail))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
+CASE_RUNNERS = {"C1": run_case_c1, "C4": run_case_c4, "C3": run_case_c3, "C5": run_case_c5}
 
 
 # --------------------------------------------------------------------------- #

@@ -1,0 +1,17 @@
+{
+  "id": "AQ",
+  "familia": "criterio",
+  "version": "v1",
+  "titulo": "Criterio de medición Aqyra — corte mínimo (piloto C5)",
+  "fuente": "Criterio propio del despacho (Aqyra). Corte redactado para el golden GOL-PRE-01 (Fase IV·h1). Reglas de medición por clase IFC + mapeo clase→partida(s).",
+  "vigencia": { "desde": "2026-07-03", "estado": "vigente (corte mínimo)" },
+  "metadatos": {
+    "autoria": "propia (despacho)",
+    "nota": "El criterio es el 80% del valor y de la dificultad (C5 ADR): unidad, descuento de huecos por umbral, factor de caras, un objeto→varias partidas. Familia de pack NUEVA en C5 (además de codigos/normativa/banco/ids). Consumidores: C5 (engines/presupuesto) y C7."
+  },
+  "contenido": {
+    "fichero": "criterio.json",
+    "md5_criterio": "7410ec51bba208e56960546741dde021",
+    "partidas": ["FAB010", "REV010", "PIN010", "EHL010", "EHS010", "CSZ010", "PPM010", "SYS010"]
+  }
+}

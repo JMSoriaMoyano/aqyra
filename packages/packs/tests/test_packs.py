@@ -91,3 +91,59 @@ def test_identidad_contenido_cte_golden():
     exig_file = PACKS_ROOT / "normativa/CTE/2019" / m["contenido"]["fichero"]
     md5 = hashlib.md5(exig_file.read_bytes()).hexdigest()
     assert md5 == m["contenido"]["md5_exigencias"], "exigencias.json cambió sin actualizar el manifiesto"
+
+
+# --- pack criterio/AQ/v1 (adoptado por C5, Fase IV·h1) -----------------------------------
+
+def test_manifiesto_criterio_valido():
+    m = packs.load_pack(PACKS_ROOT, "criterio", "AQ", "v1")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma
+    assert m["familia"] == "criterio" and m["version"] == "v1"
+
+
+def test_version_criterio_anclada_en_lock():
+    m = packs.load_pack(PACKS_ROOT, "criterio", "AQ", "v1")
+    anclada = packs.version_anclada(LOCK, "criterio")
+    assert anclada == m["version"], f"lock={anclada} != pack={m['version']}"
+
+
+def test_identidad_contenido_criterio_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "criterio", "AQ", "v1")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "criterio/AQ/v1/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack cambió sin actualizar la golden. "
+                        "Bump de versión + nuevo hash, nunca editar en silencio.")
+    crit_file = PACKS_ROOT / "criterio/AQ/v1" / m["contenido"]["fichero"]
+    md5 = hashlib.md5(crit_file.read_bytes()).hexdigest()
+    assert md5 == m["contenido"]["md5_criterio"], "criterio.json cambió sin actualizar el manifiesto"
+
+
+# --- pack banco/AQ-DEMO/v1 (adoptado por C5, Fase IV·h1) ---------------------------------
+
+def test_manifiesto_banco_valido():
+    m = packs.load_pack(PACKS_ROOT, "banco", "AQ-DEMO", "v1")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma
+    assert m["familia"] == "banco" and m["version"] == "v1"
+
+
+def test_version_banco_anclada_en_lock():
+    m = packs.load_pack(PACKS_ROOT, "banco", "AQ-DEMO", "v1")
+    anclada = packs.version_anclada(LOCK, "banco")
+    assert anclada == m["version"], f"lock={anclada} != pack={m['version']}"
+
+
+def test_identidad_contenido_banco_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "banco", "AQ-DEMO", "v1")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "banco/AQ-DEMO/v1/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack cambió sin actualizar la golden. "
+                        "Bump de versión + nuevo hash, nunca editar en silencio.")
+    banco_file = PACKS_ROOT / "banco/AQ-DEMO/v1" / m["contenido"]["fichero"]
+    md5 = hashlib.md5(banco_file.read_bytes()).hexdigest()
+    assert md5 == m["contenido"]["md5_banco"], "banco.json cambió sin actualizar el manifiesto"
