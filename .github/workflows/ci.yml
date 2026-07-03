@@ -39,8 +39,8 @@ jobs:
       - name: Calcular objetivos afectados (informativo)
         run: uv run python tools/affected.py --base origin/${{ github.base_ref || 'main' }} || true
 
-      - name: Paso 1 · núcleo (core) + packs + engine C1 + service C4 — comportamiento, identidad y golden de pack
-        run: uv run pytest packages/core packages/packs engines/ifc services/federacion -q
+      - name: Paso 1 · núcleo (core) + packs + engine C1 + service C4 + engine C3 — comportamiento, identidad y golden de pack
+        run: uv run pytest packages/core packages/packs engines/ifc services/federacion engines/cumplimiento -q
 
       # PR-E4: paso ÚNICO de builds (n=3 builders, criterio anclado en NUCLEO_PR-E3_cierre.md).
       # Ejecuta TODOS los tools/build_plugin_*.py: un plugin nuevo ya no toca este fichero.

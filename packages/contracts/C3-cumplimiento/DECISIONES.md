@@ -84,6 +84,77 @@ agregado según la regla D4; `uso`/`localizacion` coherentes entrada↔veredicto
 release: la Llave 2 del C3 espera al engine (como la del C4 esperó a la tarea 1.2).
 
 ---
+
+# C3·h3 — El engine vivo (`engines/cumplimiento`)
+
+> Decisiones **D6–D10**, resueltas con JM el **2026-07-03** (OK explícito) antes de tocar código.
+> Resuelven las preguntas **E1–E5** del INICIO de Fase III·h3. El engine hace vivo el C3: DA el
+> veredicto, y el runner **antepone** su recompute contra el MISMO `expected` (misma costura que
+> cerró C1 en Fase I y C4 en Fase II·h2). No reabren D1–D5.
+
+## D6 · Casa del engine — `engines/cumplimiento`, empaquetado como el service (E1)
+
+El engine vive en `engines/cumplimiento/` (taxonomía PLAN §1/§2: los motores deterministas de
+dominio van en `engines/`), pero con la **estructura de paquete de `services/federacion`**:
+`pyproject.toml` + `src/aqyra_cumplimiento/` + `tests/` + CLI, y **miembro del workspace uv**
+(`[tool.uv.workspace]`). Motivo: a diferencia de `engines/ifc` (import-de-path puro, sin versión
+de paquete, anclado por md5), el C3 debe **versionarse** (SemVer 0.1.0) y **releasearse**
+(tag `cumplimiento-v*`, Llave 2) y necesita `ifcopenshell` resuelto por `uv sync`. El runner lo
+**importa por path** (patrón `_recompute_c4`), pero el paquete existe para sync/pytest/release.
+
+## D7 · Consumo del Maestro — el engine ABRE el derivado; el runner lo REGENERA (E2)
+
+Desacople de capas honesto (PLAN §1: C3 consume lo que C4 produce, no lo re-ejecuta):
+
+- El **engine** `verificar(maestro, uso, localizacion, pack)` depende **solo de `ifcopenshell`** y
+  **abre el IFC derivado** (la vista del Maestro, D26/D30 de C4) que le señala el manifiesto +
+  `base_dir`. **No importa ni re-ejecuta `services/federacion`.**
+- La **costura del runner** regenera el Maestro (`federar_fichero(reglas.json)` + `derivar()`,
+  reutilizando el camino de `_recompute_c4`) y le entrega al engine el manifiesto + el derivado.
+
+En producción C7 federa una vez y llama a C3; en la golden el runner lo regenera para probar
+reproducibilidad. El engine queda desacoplado del service (no hay dependencia de paquete C3→C4).
+
+## D8 · Cómo evalúa — registro de evaluadores por MÉTODO declarado en el PACK (E3)
+
+Para que "el código sea un **PACK anclado, no un `if`**" (D1, PLAN §2.2), el engine tiene una
+**librería finita de primitivas deterministas** y el **pack declara** qué primitiva usa cada
+exigencia. Se **enriquece `exigencias.json`** (forward-open: se AÑADEN claves `evaluador` +
+`parametros`, sin tocar las existentes) con las **4 primitivas** que GOL-CTE-01 ejercita:
+
+| evaluador | qué mira | resultado |
+|---|---|---|
+| `presencia-tipo-ifc` | ≥1 `IfcTransportElement` con `PredefinedType=ELEVATOR` (parametrizable) | cumple / no-cumple |
+| `presencia-propiedad-pset` | propiedad (`FireRating`) en el Pset de cada elemento de las clases estructurales | cumple / no-cumple + `por_modelo` |
+| `aplica-solo-uso` | el `uso` declarado ∈ usos objetivo (industrial) | no-aplica si no rige |
+| `requiere-motor` | nada (declara la frontera) | no-verificable + `motivo` (del pack) |
+
+El engine mapea `evaluador`→función; añadir una exigencia de método conocido = **solo pack**; un
+método nuevo = **evaluador nuevo** (honesto, raro). **Consecuencia de anclaje:** al cambiar
+`exigencias.json` se re-anclan en el MISMO PR `md5_exigencias` (`pack.json`) y el `content_sha256`
+del golden de pack (`data/packs/normativa/CTE/2019/golden/expected.json`). El **`expected.json` del
+C3 (el oráculo: veredicto por exigencia) NO se toca** — el veredicto es byte a byte idéntico; solo
+gana estructura la declaración del pack, no cambia ningún resultado.
+
+## D9 · Costura del runner — recompute antepuesto contra el MISMO `expected` (E4)
+
+`run_case_c3` **antepone** el recompute: regenera el Maestro (federar+derivar con el service) →
+`engine.verificar()` → compara el veredicto recomputado contra `expected.json`, **normalizando el
+texto libre** (`evidencia`, `motivo_no_verificable`, la descripción humana `exigencia`) igual que
+`_CAMPOS_LIBRES` en C4. Se comparan literal: `id`, `documento_basico`, `referencia`, `resultado`,
+`por_modelo` (resultado + conteos), `resumen` y `veredicto`. Los **18 checks anclados del 3.2 se
+conservan íntegros** (D10 del C4: **más checks, nunca menos**). Un fallo se investiga en el
+engine, **jamás** en el `expected`.
+
+## D10 · Versionado y release — `cumplimiento-v0.1.0`, primer release del C3 (E5)
+
+`engines/cumplimiento` **0.1.0**. Primer tag FIRMADO del C3: **`cumplimiento-v0.1.0`** (Llave 2,
+patrón `federacion-v0.2.0`/D15 del C4). `release.yml` amplía su disparo en UNA línea
+(`tags: [..., "cumplimiento-v*"]`); `versions.lock [contracts.C3]` gana `engine_version = "0.1.0"`
++ estado; `ci.yml` Paso 1 añade `engines/cumplimiento` al pytest; nuevo miembro en
+`[tool.uv.workspace]`. La firma la hace JM en local (el CI nunca certifica).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad —
 si al redactar el checklist a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca
 certifica (Llave 2 = JM).*

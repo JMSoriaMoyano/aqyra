@@ -12,7 +12,7 @@
   "contenido": {
     "fichero": "exigencias.json",
     "version_cte": "2019",
-    "md5_exigencias": "6169c2ef904124c8d0ae50fac3a51f9e",
+    "md5_exigencias": "10bf233a4057fd71c337e14c2e1df0ef",
     "exigencias": ["E-SUA-ACCESO", "E-SI-RF-DECL", "E-SI-EVAC", "E-HE1-DEMANDA", "E-RSCIEI"]
   }
 }

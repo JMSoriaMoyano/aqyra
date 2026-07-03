@@ -9,8 +9,10 @@ requires-python = ">=3.10"
 package = false
 
 [tool.uv.workspace]
-members = ["packages/core", "packages/golden", "packages/packs", "services/federacion"]
-# engines/* se añaden como miembros cuando aterricen (services/federacion aterrizó en Fase II·h2).
+members = ["packages/core", "packages/golden", "packages/packs", "services/federacion", "engines/cumplimiento"]
+# engines/* se añaden como miembros cuando aterricen (services/federacion aterrizó en Fase II·h2;
+# engines/cumplimiento en Fase III·h3 — engine C3 versionado y releasable, D6). engines/ifc sigue
+# import-de-path (sin pyproject): se ancla por md5, no por versión de paquete.
 
 # Dependencias de desarrollo del workspace (uv las instala en `uv sync`).
 [dependency-groups]

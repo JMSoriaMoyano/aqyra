@@ -575,12 +575,59 @@ def _lock_packs(repo: Path, clave: str) -> dict:
     return lock.get("packs", {}).get(clave, {})
 
 
+# Casa del engine C3 (Fase III·h3, D6): engines/cumplimiento — importado por path (patrón
+# engines/ifc y _recompute_c4). El runner regenera el Maestro y el engine da el veredicto (D7).
+DEFAULT_ENGINE_C3 = DEFAULT_REPO / "engines" / "cumplimiento" / "src"
+
+# Texto libre del veredicto C3 (presentación humana): se comprueba por esquema (presencia/tipo)
+# pero NO se compara literalmente en el recompute (D9) — la semántica del contrato son ids,
+# resultados, referencias, conteos y veredicto. Ídem claves '_*'.
+_LIBRES_C3 = {"evidencia", "motivo_no_verificable", "exigencia", "detalle"}
+
+
+def _norm_c3(x):
+    if isinstance(x, dict):
+        return {k: _norm_c3(v) for k, v in x.items()
+                if not k.startswith("_") and k not in _LIBRES_C3}
+    if isinstance(x, list):
+        return [_norm_c3(v) for v in x]
+    return x
+
+
+def _recompute_c3(case_dir: Path, entrada: dict, repo: Path, tmpdir: Path) -> dict:
+    """Cierra la costura C3 (Fase III·h3, D9): regenera el Maestro con services/federacion
+    (federar+derivar — el engine NO federa, D7) y emite el veredicto con engines/cumplimiento
+    (import de path). Un fallo aquí se investiga en el ENGINE, jamás en expected.json."""
+    ps = str(repo / "services" / "federacion" / "src")
+    if ps not in sys.path:
+        sys.path.insert(0, ps)
+    pe = str(DEFAULT_ENGINE_C3)
+    if pe not in sys.path:
+        sys.path.insert(0, pe)
+    from aqyra_federacion import federar_fichero, derivar
+    from aqyra_cumplimiento import verificar
+    manifiesto = federar_fichero(case_dir / "reglas.json")
+    derivado = Path(tmpdir) / "federado.ifc"
+    manifiesto = derivar(manifiesto, case_dir, derivado)
+    pack = entrada.get("pack_normativo", {})
+    pack_dir = (repo / "data" / "packs" / "normativa"
+                / str(pack.get("id")) / str(pack.get("version")))
+    maestro = {"manifiesto": manifiesto, "base_dir": case_dir,
+               "ifc_derivado": derivado, "proyecto": entrada.get("proyecto")}
+    return verificar(maestro, entrada.get("uso", {}),
+                     entrada.get("localizacion", {}), pack_dir)
+
+
 def run_case_c3(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
-    """C3: modo ANCLADO (contract-first, D5) — el checklist esperado es el oráculo FIRMADO;
-    el engine `engines/cumplimiento` (tarea 3.3) ANTEPONDRÁ el recompute contra este MISMO
-    expected (costura C1/C4). Verifica lo verificable sin engine:
+    """C3: RECOMPUTE con el engine (Fase III·h3, D9) + checks anclados del 3.2 — ver ficha.
 
+    El engine `engines/cumplimiento` (D6) regenera el Maestro (federar+derivar con el service, D7)
+    y emite el veredicto POR EXIGENCIA; el runner lo ANTEPONE contra el MISMO expected (el checklist
+    FIRMADO que era el oráculo del modo anclado), normalizando el texto libre (D9). Conserva íntegros
+    los checks anclados del 2.1/3.2 (D10: más checks, nunca menos):
+
+      0. RECOMPUTE (costura cerrada): engine.verificar() == expected["veredicto_cumplimiento"].
       1. Conformidad de los 2 esquemas (entrada + veredicto).
       2. Identidad por hash (entradas del C4-FED-06 reutilizadas + derivado anclado; reglas
          regeneran el Maestro).
@@ -602,6 +649,24 @@ def run_case_c3(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
         return False
     entrada = json.loads(entrada_path.read_text(encoding="utf-8"))
     vc = expected.get("veredicto_cumplimiento", {})
+
+    # 0 · RECOMPUTE con el engine real (Fase III·h3, D9) — se ANTEPONE al anclado.
+    # Regenera el Maestro (federar+derivar) y emite el veredicto con engines/cumplimiento
+    # contra el MISMO expected (D10: más checks, nunca menos). Un fallo se investiga en el engine.
+    try:
+        import tempfile
+        with tempfile.TemporaryDirectory() as td:
+            got = _recompute_c3(case_dir, entrada, repo, Path(td))
+            checks.append(("engine cumplimiento verificar() ejecuta", True,
+                           "engines/cumplimiento sobre el Maestro regenerado (federar+derivar)"))
+            ok, detail = validate_against_schema(got, schemas["veredicto"])
+            checks.append(("veredicto recomputado conforma", ok, detail))
+            d_vc = _diffs(_norm_c3(vc), _norm_c3(got), 0.0, 0.0)
+            checks.append(("recompute veredicto == expected", not d_vc,
+                           f"{len(d_vc)} diff/s — {d_vc[0]}" if d_vc
+                           else "reproducido (ids, resultados, referencias, por_modelo, resumen, veredicto)"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("recompute con el engine", False, f"{type(e).__name__}: {e}"))
 
     # 1 · conformidad de esquemas
     for name, inst, key in (("entrada conforma esquema", entrada, "entrada"),
