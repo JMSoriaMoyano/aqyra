@@ -1,0 +1,52 @@
+{
+  "codigo": "CTE",
+  "version": "2019",
+  "descripcion": "Corte MÍNIMO del Código Técnico de la Edificación para el piloto: 5 exigencias que ejercitan los cuatro estados del veredicto C3 (cumple / no-cumple / no-aplica / no-verificable) sobre un edificio, derivables del IFC/Maestro SIN motor de cálculo. La inmensa mayoría de exigencias reales del CTE son NO-VERIFICABLES sin motores (C9 estructura/térmico, C10 red) y se declaran como tales — esa es la honestidad multi-código del C3. El código es un PACK anclado, no un `if`.",
+  "exigencias": [
+    {
+      "id": "E-SUA-ACCESO",
+      "documento_basico": "DB-SUA",
+      "apartado": "SUA 9 §1.1.2",
+      "exigencia": "Itinerario accesible: comunicación vertical accesible entre plantas (ascensor accesible o rampa accesible) cuando el edificio deba salvar más de una planta.",
+      "aplicabilidad": "edificio con más de una planta sobre rasante",
+      "verificable_sin_calculo": true,
+      "criterio_verificacion": "presencia en el Maestro de IfcTransportElement con PredefinedType=ELEVATOR (u otro medio accesible de comunicación vertical)"
+    },
+    {
+      "id": "E-SI-RF-DECL",
+      "documento_basico": "DB-SI",
+      "apartado": "SI6, Tabla 3.1",
+      "exigencia": "Resistencia al fuego de la estructura: cada elemento estructural declara su resistencia al fuego (R) exigida por el uso y la altura de evacuación.",
+      "aplicabilidad": "elementos estructurales (IfcColumn, IfcWall portante, IfcSlab, IfcFooting, IfcBeam)",
+      "verificable_sin_calculo": true,
+      "criterio_verificacion": "presencia de la propiedad de resistencia al fuego (FireRating) en el Pset común de cada elemento estructural. NOTA: se verifica la DECLARACIÓN del dato; el valor R exigido y su justificación por cálculo es tarea de un motor (no-verificable aparte)."
+    },
+    {
+      "id": "E-SI-EVAC",
+      "documento_basico": "DB-SI",
+      "apartado": "SI3",
+      "exigencia": "Evacuación de ocupantes: la ocupación, los recorridos de evacuación y el número/anchura de salidas cumplen los límites del DB-SI.",
+      "aplicabilidad": "todo el edificio",
+      "verificable_sin_calculo": false,
+      "criterio_verificacion": "requiere motor de evacuación: cálculo de ocupación (superficie útil por densidad de uso) + longitud de recorridos de evacuación + dimensionado de salidas. No derivable del IFC sin cálculo."
+    },
+    {
+      "id": "E-HE1-DEMANDA",
+      "documento_basico": "DB-HE",
+      "apartado": "HE1",
+      "exigencia": "Limitación de la demanda energética de la envolvente térmica según la zona climática.",
+      "aplicabilidad": "envolvente térmica del edificio",
+      "verificable_sin_calculo": false,
+      "criterio_verificacion": "requiere motor térmico: transmitancias de cerramientos, puentes térmicos y cálculo de demanda por zona climática. No derivable del IFC sin cálculo."
+    },
+    {
+      "id": "E-RSCIEI",
+      "documento_basico": "RSCIEI (normativa concurrente al CTE)",
+      "apartado": "RD 2267/2004",
+      "exigencia": "Seguridad contra incendios en establecimientos industriales (caracterización, nivel de riesgo intrínseco, sectorización industrial).",
+      "aplicabilidad": "establecimientos de uso industrial",
+      "verificable_sin_calculo": true,
+      "criterio_verificacion": "aplica sólo si el uso declarado es industrial; con uso no industrial la exigencia es no-aplica."
+    }
+  ]
+}

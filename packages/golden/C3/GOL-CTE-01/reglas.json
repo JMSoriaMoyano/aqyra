@@ -1,0 +1,49 @@
+{
+  "proyecto": "C4-FED-06 - Federacion con IFC derivado",
+  "crs_destino": {
+    "epsg": "EPSG:25830",
+    "descripcion": "ETRS89 / UTM zone 30N",
+    "datum_vertical": "EGM2008"
+  },
+  "modelos": [
+    {
+      "id": "ARQ",
+      "disciplina": "ARQ",
+      "fichero": "entrada/ARQ.ifc",
+      "md5": "653a359154112146d82ca02de0fde2ee",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 337000.0,
+        "n": 4610000.0,
+        "cota": 700.0,
+        "rotacion_deg": 0.0,
+        "declarado_por": "JM (reglas del caso golden; los IFC de entrada NO vienen georreferenciados)"
+      },
+      "estado_entrada": "S2"
+    },
+    {
+      "id": "EST",
+      "disciplina": "EST",
+      "fichero": "entrada/EST.ifc",
+      "md5": "b84cb79c4a7cf4b560148340bc8dc305",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 337012.5,
+        "n": 4609987.5,
+        "cota": 701.25,
+        "rotacion_deg": 30.0,
+        "declarado_por": "JM (reglas del caso golden; los IFC de entrada NO vienen georreferenciados)"
+      },
+      "estado_entrada": "S2"
+    }
+  ],
+  "deduplicacion": {
+    "elementos": "nunca",
+    "estructura_espacial": "unificar-por-nombre"
+  },
+  "ids_pack": {
+    "familia": "ids",
+    "id": "proyecto-piloto",
+    "version": "v1"
+  }
+}

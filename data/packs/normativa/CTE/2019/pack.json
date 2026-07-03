@@ -1,0 +1,18 @@
+{
+  "id": "CTE",
+  "familia": "normativa",
+  "version": "2019",
+  "titulo": "Código Técnico de la Edificación (CTE) — corte mínimo del piloto (subconjunto verificable sin motor de cálculo)",
+  "fuente": "Real Decreto 314/2006 y modificaciones (CTE); Documentos Básicos DB-SI, DB-SUA, DB-HE; RSCIEI (RD 2267/2004) como normativa concurrente. Corte redactado para el golden GOL-CTE-01 (Fase III·h2).",
+  "vigencia": { "desde": "2019-12-01", "estado": "vigente (corte mínimo)" },
+  "metadatos": {
+    "autoria": "propia (despacho)",
+    "nota": "Corte MÍNIMO: 5 exigencias que ejercitan los 4 estados del veredicto C3 (cumple/no-cumple/no-aplica/no-verificable) sobre el edificio del C4-FED-06, derivables del IFC/Maestro SIN motor de cálculo. La mayoría de exigencias reales del CTE son no-verificables sin C9/C10 y se declaran como tales. El código es un PACK anclado, no un `if`. Consumidores: C3 (engines/cumplimiento, tarea 3.3) y C7."
+  },
+  "contenido": {
+    "fichero": "exigencias.json",
+    "version_cte": "2019",
+    "md5_exigencias": "6169c2ef904124c8d0ae50fac3a51f9e",
+    "exigencias": ["E-SUA-ACCESO", "E-SI-RF-DECL", "E-SI-EVAC", "E-HE1-DEMANDA", "E-RSCIEI"]
+  }
+}

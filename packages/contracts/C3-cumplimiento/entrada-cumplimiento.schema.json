@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/contracts/C3/entrada-cumplimiento.schema.json",
+  "title": "C3 · entrada de cumplimiento (verificar: modelo + uso + localización + pack normativo)",
+  "description": "Entrada de C3: sobre qué modelo (el Maestro federado que produce C4), para qué uso y localización DECLARADOS (ADR: nunca adivinados del IFC), y con qué pack normativo se emite el veredicto por exigencia. Forward-open: se AÑADEN claves, nunca se cambia la semántica de las existentes.",
+  "type": "object",
+  "required": ["proyecto", "modelo", "uso", "localizacion", "pack_normativo"],
+  "additionalProperties": true,
+  "properties": {
+    "proyecto": { "type": "string", "minLength": 1 },
+    "modelo": { "$ref": "#/$defs/modelo_maestro" },
+    "uso": { "$ref": "#/$defs/uso" },
+    "localizacion": { "$ref": "#/$defs/localizacion" },
+    "pack_normativo": { "$ref": "#/$defs/pack_ref" }
+  },
+  "$defs": {
+    "modelo_maestro": {
+      "description": "El modelo a verificar es el MAESTRO federado que produce C4 (D2): manifiesto + base_dir, con el IFC derivado como VISTA (D26/D30 de C4). Reutiliza el C4-FED-06 byte a byte en la golden (patrón D14/D21).",
+      "type": "object",
+      "required": ["clase", "modelos"],
+      "additionalProperties": true,
+      "properties": {
+        "clase": {
+          "type": "string",
+          "const": "maestro-federado",
+          "$comment": "C3 consume lo que C4 produce (dependencias PLAN §1); un IFC suelto NO es la entrada de esta fase"
+        },
+        "reglas": {
+          "type": "string",
+          "$comment": "ruta (relativa al caso) al reglas.json de federación que regenera el Maestro con services/federacion (el engine de 3.3 lo consumirá)"
+        },
+        "manifiesto_ref": {
+          "type": "string",
+          "$comment": "opcional: ruta al manifiesto del Maestro (fuente de verdad, D1 de C4)"
+        },
+        "base_dir": {
+          "type": "string",
+          "$comment": "directorio base para resolver los ficheros del Maestro"
+        },
+        "ifc_derivado_md5": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{32}$",
+          "$comment": "md5 del IFC derivado (la VISTA del Maestro, D26 de C4); ancla la identidad del modelo verificado"
+        },
+        "modelos": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/modelo_fuente" },
+          "$comment": "procedencia por disciplina (preservada del Maestro, ADR de C4)"
+        }
+      }
+    },
+    "modelo_fuente": {
+      "type": "object",
+      "required": ["id", "fichero"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "disciplina": { "type": "string", "minLength": 1 },
+        "fichero": { "type": "string", "minLength": 1 },
+        "md5": { "type": "string", "pattern": "^[a-f0-9]{32}$" }
+      }
+    },
+    "uso": {
+      "description": "Uso característico DECLARADO (ADR). Determina qué exigencias aplican y cuáles quedan no-aplica.",
+      "type": "object",
+      "required": ["principal"],
+      "additionalProperties": true,
+      "properties": {
+        "principal": {
+          "type": "string",
+          "minLength": 1,
+          "$comment": "uso característico CTE (p. ej. 'Residencial Vivienda', 'Administrativo', 'Comercial', 'Docente', 'Industrial'); abierto — no enum, para no cerrar el catálogo"
+        },
+        "secundarios": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "declarado_por": { "type": "string" }
+      }
+    },
+    "localizacion": {
+      "description": "Localización DECLARADA (ADR: nunca inferida del IFC). Alimenta packs por municipio (urbanística) y parámetros por zona (p. ej. zona climática DB-HE).",
+      "type": "object",
+      "required": ["pais"],
+      "additionalProperties": true,
+      "properties": {
+        "pais": { "type": "string", "minLength": 1 },
+        "comunidad_autonoma": { "type": "string" },
+        "provincia": { "type": "string" },
+        "municipio": { "type": "string" },
+        "zona_climatica_he": {
+          "type": "string",
+          "$comment": "zona climática del CTE DB-HE (p. ej. 'C4'); parámetro de pack, no del IFC"
+        },
+        "declarado_por": { "type": "string" }
+      }
+    },
+    "pack_ref": {
+      "type": "object",
+      "required": ["id", "version"],
+      "additionalProperties": true,
+      "properties": {
+        "familia": { "type": "string", "const": "normativa" },
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

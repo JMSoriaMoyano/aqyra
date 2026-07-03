@@ -1,0 +1,78 @@
+{
+  "caso": "GOL-CTE-01",
+  "contrato": "C3-cumplimiento",
+  "_oraculo": "CUMPLIMIENTO NORMATIVO POR EXIGENCIA sobre el Maestro federado del C4-FED-06 (contract-first, modo ANCLADO: sin engine hasta 3.3). Entrada = el Maestro (manifiesto D1 + derivado como vista, md5 dcb1e144...), reutilizando ARQ.ifc + EST.ifc del 06 byte a byte (patron D14/D21). Pack CTE/2019 minimo (5 exigencias que ejercitan los 4 estados). Checklist calculado A MANO y verificado x2 con ifcopenshell 0.8.5 contra los modelos congelados: E-SUA-ACCESO=cumple (Ascensor-01 ELEVATOR presente); E-SI-RF-DECL=no-cumple ADREDE (0 de 10 elementos estructurales declaran FireRating: ARQ 3=2 muros+1 losa, EST 7=4 pilares+2 zapatas+1 losa); E-SI-EVAC y E-HE1-DEMANDA=no-verificable (motor de evacuacion / motor termico); E-RSCIEI=no-aplica (uso Residencial Vivienda, no industrial). Veredicto agregado no-conforme (hay >=1 no-cumple, D4). El engine de 3.3 antepondra el recompute contra ESTE mismo expected.",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "653a359154112146d82ca02de0fde2ee",
+    "entrada/EST.ifc": "b84cb79c4a7cf4b560148340bc8dc305"
+  },
+  "maestro": {
+    "_nota": "la VISTA del Maestro (IFC derivado) que verifica C3; identidad anclada byte a byte por C4-FED-06 (D26). Aqui solo se referencia su md5 (el modelo verificado es el mismo Maestro del 06).",
+    "ifc_derivado_md5": "dcb1e14460f3556107ce35d6dade16c3"
+  },
+  "veredicto_cumplimiento": {
+    "proyecto": "GOL-CTE-01 - Cumplimiento sobre el Maestro federado (C4-FED-06)",
+    "uso": { "principal": "Residencial Vivienda" },
+    "localizacion": {
+      "pais": "España",
+      "comunidad_autonoma": "Andalucía",
+      "provincia": "Jaén",
+      "municipio": "Jaén",
+      "zona_climatica_he": "C4"
+    },
+    "pack": { "familia": "normativa", "id": "CTE", "version": "2019", "fichero": "exigencias.json" },
+    "exigencias": [
+      {
+        "id": "E-SUA-ACCESO",
+        "exigencia": "Itinerario accesible: comunicación vertical accesible entre plantas",
+        "documento_basico": "DB-SUA",
+        "referencia": { "pack": "CTE/2019", "apartado": "DB-SUA 9 §1.1.2" },
+        "resultado": "cumple",
+        "evidencia": "El Maestro federado contiene IfcTransportElement 'Ascensor-01' (PredefinedType=ELEVATOR) que comunica las 2 plantas; itinerario accesible vertical satisfecho."
+      },
+      {
+        "id": "E-SI-RF-DECL",
+        "exigencia": "Los elementos estructurales declaran su resistencia al fuego (R)",
+        "documento_basico": "DB-SI",
+        "referencia": { "pack": "CTE/2019", "apartado": "DB-SI SI6, Tabla 3.1" },
+        "resultado": "no-cumple",
+        "evidencia": "0 de 10 elementos estructurales del Maestro declaran resistencia al fuego (propiedad FireRating en su Pset común). Fallo ADREDE documentado (patrón C4-FED-01).",
+        "por_modelo": {
+          "ARQ": { "resultado": "no-cumple", "n_comprobados": 3, "n_fallos": 3, "detalle": "IfcWall×2 + IfcSlab×1 sin FireRating" },
+          "EST": { "resultado": "no-cumple", "n_comprobados": 7, "n_fallos": 7, "detalle": "IfcColumn×4 + IfcFooting×2 + IfcSlab×1 sin FireRating" }
+        }
+      },
+      {
+        "id": "E-SI-EVAC",
+        "exigencia": "Evacuación de ocupantes: ocupación, recorridos y salidas dentro de límites",
+        "documento_basico": "DB-SI",
+        "referencia": { "pack": "CTE/2019", "apartado": "DB-SI SI3" },
+        "resultado": "no-verificable",
+        "motivo_no_verificable": "Requiere motor de evacuación (ocupación por superficie útil × densidad de uso + longitud de recorridos de evacuación + dimensionado de salidas); no derivable del IFC sin cálculo. Un engine futuro lo convierte en cumple/no-cumple sin cambiar el esquema (D4).",
+        "evidencia": "El Maestro aporta geometría y estructura espacial, pero la ocupación y los recorridos exigen cálculo no disponible en v0."
+      },
+      {
+        "id": "E-HE1-DEMANDA",
+        "exigencia": "Limitación de la demanda energética de la envolvente térmica",
+        "documento_basico": "DB-HE",
+        "referencia": { "pack": "CTE/2019", "apartado": "DB-HE HE1" },
+        "resultado": "no-verificable",
+        "motivo_no_verificable": "Requiere motor térmico (transmitancias de cerramientos, puentes térmicos, demanda por zona climática C4); no derivable del IFC sin cálculo. Un engine futuro lo cierra sin cambiar el esquema (D4).",
+        "evidencia": "Zona climática declarada C4; el cálculo de demanda exige un motor térmico no disponible en v0."
+      },
+      {
+        "id": "E-RSCIEI",
+        "exigencia": "Seguridad contra incendios en establecimientos industriales (RSCIEI)",
+        "documento_basico": "RSCIEI (normativa concurrente)",
+        "referencia": { "pack": "CTE/2019", "apartado": "RD 2267/2004" },
+        "resultado": "no-aplica",
+        "evidencia": "Uso declarado 'Residencial Vivienda'; el RSCIEI aplica a establecimientos industriales. No rige para este edificio."
+      }
+    ],
+    "resumen": {
+      "total": 5,
+      "por_resultado": { "cumple": 1, "no-cumple": 1, "no-aplica": 1, "no-verificable": 2 }
+    },
+    "veredicto": "no-conforme"
+  }
+}

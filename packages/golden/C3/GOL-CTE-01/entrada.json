@@ -1,0 +1,27 @@
+{
+  "proyecto": "GOL-CTE-01 - Cumplimiento sobre el Maestro federado (C4-FED-06)",
+  "modelo": {
+    "clase": "maestro-federado",
+    "reglas": "reglas.json",
+    "ifc_derivado_md5": "dcb1e14460f3556107ce35d6dade16c3",
+    "_nota": "El Maestro = manifiesto (D1 de C4) + IFC derivado como VISTA (D26/D30 de C4). Regenerable con services/federacion 0.5.0 (federar_fichero(reglas.json) + derivar). Reutiliza el C4-FED-06 byte a byte (patrón D14/D21): cero entradas de diseño nuevas.",
+    "modelos": [
+      { "id": "ARQ", "disciplina": "ARQ", "fichero": "entrada/ARQ.ifc", "md5": "653a359154112146d82ca02de0fde2ee" },
+      { "id": "EST", "disciplina": "EST", "fichero": "entrada/EST.ifc", "md5": "b84cb79c4a7cf4b560148340bc8dc305" }
+    ]
+  },
+  "uso": {
+    "principal": "Residencial Vivienda",
+    "secundarios": [],
+    "declarado_por": "JM (reglas del caso golden; el uso NO se infiere del IFC — ADR)"
+  },
+  "localizacion": {
+    "pais": "España",
+    "comunidad_autonoma": "Andalucía",
+    "provincia": "Jaén",
+    "municipio": "Jaén",
+    "zona_climatica_he": "C4",
+    "declarado_por": "JM (reglas del caso golden; los IFC de entrada NO traen localización — ADR: declarada, no inferida)"
+  },
+  "pack_normativo": { "familia": "normativa", "id": "CTE", "version": "2019" }
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/contracts/C3/veredicto-cumplimiento.schema.json",
+  "title": "C3 · veredicto de cumplimiento (por exigencia + resumen + veredicto global)",
+  "description": "Salida de verificar(): veredicto POR EXIGENCIA con su referencia al pack (documento básico + apartado), un resumen agregado por resultado y el veredicto global. Taxonomía de resultado CERRADA de 4 valores (D4): un engine futuro reclasifica dentro del mismo enum sin ampliarlo (forward-open honesto). Forward-open en el resto.",
+  "type": "object",
+  "required": ["proyecto", "pack", "exigencias", "resumen", "veredicto"],
+  "additionalProperties": true,
+  "properties": {
+    "proyecto": { "type": "string", "minLength": 1 },
+    "uso": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": { "principal": { "type": "string" } },
+      "$comment": "eco del uso declarado en la entrada (el runner comprueba la coherencia entrada↔veredicto)"
+    },
+    "localizacion": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "eco de la localización declarada en la entrada (coherencia entrada↔veredicto)"
+    },
+    "pack": {
+      "type": "object",
+      "required": ["id", "version"],
+      "additionalProperties": true,
+      "properties": {
+        "familia": { "type": "string", "const": "normativa" },
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "fichero": { "type": "string", "$comment": "el fichero de exigencias dentro del pack" }
+      }
+    },
+    "exigencias": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/exigencia" }
+    },
+    "resumen": {
+      "type": "object",
+      "required": ["total", "por_resultado"],
+      "additionalProperties": true,
+      "properties": {
+        "total": { "type": "integer", "minimum": 1 },
+        "por_resultado": {
+          "type": "object",
+          "required": ["cumple", "no-cumple", "no-aplica", "no-verificable"],
+          "additionalProperties": false,
+          "properties": {
+            "cumple": { "type": "integer", "minimum": 0 },
+            "no-cumple": { "type": "integer", "minimum": 0 },
+            "no-aplica": { "type": "integer", "minimum": 0 },
+            "no-verificable": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "veredicto": {
+      "type": "string",
+      "enum": ["conforme", "conforme-con-reservas", "no-conforme"],
+      "$comment": "regla agregada (D4): no-conforme si hay >=1 no-cumple; conforme-con-reservas si no hay no-cumple pero sí no-verificable; conforme si todas son cumple/no-aplica"
+    }
+  },
+  "$defs": {
+    "resultado": {
+      "type": "string",
+      "enum": ["cumple", "no-cumple", "no-aplica", "no-verificable"],
+      "$comment": "TAXONOMÍA CERRADA (D4). no-verificable = requiere motor/dato no disponible (forward-open: el engine futuro lo reclasifica dentro de este mismo enum). no-aplica = la exigencia no rige para el uso declarado."
+    },
+    "exigencia": {
+      "type": "object",
+      "required": ["id", "exigencia", "referencia", "resultado"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "$comment": "debe existir en el pack normativo (coherencia que vigila el runner)"
+        },
+        "exigencia": { "type": "string", "minLength": 1 },
+        "documento_basico": {
+          "type": "string",
+          "$comment": "DB-SI / DB-SUA / DB-HE / ... o normativa concurrente (RSCIEI/RITE/REBT)"
+        },
+        "referencia": {
+          "type": "object",
+          "required": ["pack", "apartado"],
+          "additionalProperties": true,
+          "properties": {
+            "pack": { "type": "string", "minLength": 1, "$comment": "id/version del pack (p. ej. 'CTE/2019')" },
+            "apartado": { "type": "string", "minLength": 1, "$comment": "referencia de artículo/apartado dentro del código" }
+          }
+        },
+        "resultado": { "$ref": "#/$defs/resultado" },
+        "motivo_no_verificable": {
+          "type": "string",
+          "$comment": "OBLIGATORIO cuando resultado=no-verificable (D4): qué motor o dato lo cerraría. Condicional if/then abajo."
+        },
+        "evidencia": {
+          "type": "string",
+          "$comment": "texto libre: en qué se apoya el resultado (no se compara literalmente cuando el engine recompute en 3.3)"
+        },
+        "por_modelo": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["resultado"],
+            "additionalProperties": true,
+            "properties": {
+              "resultado": { "$ref": "#/$defs/resultado" },
+              "n_comprobados": { "type": "integer", "minimum": 0 },
+              "n_fallos": { "type": "integer", "minimum": 0 },
+              "detalle": { "type": "string" }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "resultado": { "const": "no-verificable" } },
+            "required": ["resultado"]
+          },
+          "then": { "required": ["motivo_no_verificable"] }
+        }
+      ]
+    }
+  }
+}
