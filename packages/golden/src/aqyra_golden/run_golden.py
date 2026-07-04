@@ -808,6 +808,134 @@ def _pack_c5(repo: Path, familia: str, ref: dict) -> tuple[dict, Path]:
     return json.loads((pack_dir / "pack.json").read_text(encoding="utf-8")), pack_dir
 
 
+def _pack_contenido_c5(repo: Path, familia: str, ref: dict) -> dict:
+    """Contenido (criterio.json / banco.json) de un pack C5, por su manifiesto."""
+    man, pdir = _pack_c5(repo, familia, ref)
+    return json.loads((pdir / man["contenido"]["fichero"]).read_text(encoding="utf-8"))
+
+
+# Texto libre del presupuesto C5 (presentación humana): se comprueba por esquema (presencia/tipo)
+# pero NO se compara literalmente en el recompute (D9). La semántica del contrato son códigos,
+# cantidades, precios, importes, capítulos y trazabilidad; descripciones y justificaciones (incluida
+# la letra del nº1) son presentación.
+_LIBRES_C5 = {"descripcion", "criterio_aplicado", "precio_en_letra", "nota", "proyecto"}
+
+
+def _recompute_c5(case_dir: Path, entrada: dict, repo: Path) -> tuple[dict, dict]:
+    """Cierra la costura C5 (Fase IV·h2, D9): el engine engines/presupuesto MIDE desde las fixtures
+    con Qto (parser, módulo 1 — la medición NACE del modelo, D7) y PRESUPUESTA (motor). El runner lo
+    ANTEPONE contra el MISMO expected. Un fallo aquí se investiga en el ENGINE, jamás en expected."""
+    pe = str(DEFAULT_ENGINE_C5)
+    if pe not in sys.path:
+        sys.path.insert(0, pe)
+    from aqyra_presupuesto import medir, presupuestar
+    fuentes = [
+        {"id": m.get("id"), "disciplina": m.get("disciplina"),
+         "path": case_dir / m["fichero"], "fichero": m["fichero"]}
+        for m in entrada.get("modelo", {}).get("fuente_maestro", {}).get("modelos", [])
+    ]
+    modelo = medir(fuentes)
+    modelo["proyecto"] = entrada.get("proyecto")
+    criterio = _pack_contenido_c5(repo, "criterio", entrada.get("criterio_ref", {}))
+    banco = _pack_contenido_c5(repo, "banco", entrada.get("banco_ref", {}))
+    return modelo, presupuestar(modelo, criterio, banco, entrada.get("parametros", {}))
+
+
+def _diff_medicion_c5(medido: dict, entrada_modelo: dict, tol: dict) -> list[str]:
+    """El parser reproduce las cantidades que el modelo neutro declara (la medición nace del Qto)."""
+    rel = float(tol.get("cantidad_rel", 0.005))
+    got = {o.get("guid"): o for o in medido.get("objetos", [])}
+    diffs: list[str] = []
+    for obj in entrada_modelo.get("objetos", []):
+        gd = obj.get("guid")
+        if gd not in got:
+            diffs.append(f"objeto {gd} no medido por el parser")
+            continue
+        gmag = {c.get("magnitud"): c.get("valor") for c in got[gd].get("cantidades", [])}
+        for c in obj.get("cantidades", []):
+            mag = c.get("magnitud")
+            if mag == "conteo":
+                continue
+            if mag not in gmag:
+                diffs.append(f"{gd}: falta magnitud {mag}")
+            elif abs(float(gmag[mag]) - float(c.get("valor", 0))) > rel * max(1.0, abs(float(c.get("valor", 0)))):
+                diffs.append(f"{gd}.{mag} medido {gmag[mag]} != {c.get('valor')}")
+    return diffs
+
+
+def _diff_presupuesto_c5(got: dict, exp: dict, tol: dict) -> list[str]:
+    """Compara el presupuesto recomputado contra el expected (D3): cantidades ±0,5%; mapeo, precios,
+    importes y PEM…PEC EXACTOS (±0,01). Normaliza el texto libre (D9)."""
+    rel = float(tol.get("cantidad_rel", 0.005))
+    ia = float(tol.get("importe_abs", 0.01))
+    diffs: list[str] = []
+
+    def approx(a, b, t) -> bool:
+        try:
+            return abs(float(a) - float(b)) <= t
+        except (TypeError, ValueError):
+            return False
+
+    g = {p["codigo"]: p for p in got.get("estado_mediciones", [])}
+    e = {p["codigo"]: p for p in exp.get("estado_mediciones", [])}
+    if set(g) != set(e):
+        diffs.append(f"partidas: faltan {sorted(set(e) - set(g))} / sobran {sorted(set(g) - set(e))}")
+    for cod in sorted(set(e) & set(g)):
+        a, b = g[cod], e[cod]
+        for k in ("capitulo", "unidad", "origen"):
+            if a.get(k) != b.get(k):
+                diffs.append(f"{cod}.{k}: {a.get(k)} != {b.get(k)}")
+        if not approx(a.get("cantidad"), b.get("cantidad"), rel * max(1.0, abs(float(b.get("cantidad", 0))))):
+            diffs.append(f"{cod}.cantidad: {a.get('cantidad')} != {b.get('cantidad')}")
+        if not approx(a.get("precio_unitario"), b.get("precio_unitario"), ia):
+            diffs.append(f"{cod}.precio_unitario: {a.get('precio_unitario')} != {b.get('precio_unitario')}")
+        if not approx(a.get("importe"), b.get("importe"), ia):
+            diffs.append(f"{cod}.importe: {a.get('importe')} != {b.get('importe')}")
+        if set(a.get("trazabilidad", [])) != set(b.get("trazabilidad", [])):
+            diffs.append(f"{cod}.trazabilidad != expected")
+
+    g1 = {c["codigo"]: c for c in got.get("cuadro_precios_1", [])}
+    for cod, c in {c["codigo"]: c for c in exp.get("cuadro_precios_1", [])}.items():
+        if cod not in g1:
+            diffs.append(f"nº1 falta {cod}")
+        elif not approx(g1[cod].get("precio"), c.get("precio"), ia) or g1[cod].get("unidad") != c.get("unidad"):
+            diffs.append(f"nº1 {cod}: precio/unidad")
+
+    g2 = {c["codigo"]: c for c in got.get("cuadro_precios_2", [])}
+    for cod, c in {c["codigo"]: c for c in exp.get("cuadro_precios_2", [])}.items():
+        if cod not in g2:
+            diffs.append(f"nº2 falta {cod}")
+            continue
+        if not approx(g2[cod].get("precio_total"), c.get("precio_total"), ia):
+            diffs.append(f"nº2 {cod}.precio_total")
+        if not approx(g2[cod].get("costes_indirectos"), c.get("costes_indirectos"), ia):
+            diffs.append(f"nº2 {cod}.costes_indirectos")
+        gc, ec = g2[cod].get("componentes", []), c.get("componentes", [])
+        if len(gc) != len(ec):
+            diffs.append(f"nº2 {cod}.componentes: {len(gc)} != {len(ec)}")
+        else:
+            for i, (x, y) in enumerate(zip(gc, ec)):
+                if x.get("tipo") != y.get("tipo") or not approx(x.get("subtotal"), y.get("subtotal"), ia):
+                    diffs.append(f"nº2 {cod}.comp[{i}]")
+
+    gr, er = got.get("resumen", {}), exp.get("resumen", {})
+    for k in ("PEM", "gg", "bi", "base", "iva", "PEC", "gg_pct", "bi_pct", "iva_pct"):
+        if not approx(gr.get(k), er.get(k), ia):
+            diffs.append(f"resumen.{k}: {gr.get(k)} != {er.get(k)}")
+    if gr.get("moneda") != er.get("moneda"):
+        diffs.append("resumen.moneda")
+    gcp = {c["codigo"]: c for c in gr.get("capitulos", [])}
+    for cod, c in {c["codigo"]: c for c in er.get("capitulos", [])}.items():
+        if cod not in gcp:
+            diffs.append(f"capítulo falta {cod}")
+            continue
+        if not approx(gcp[cod].get("importe"), c.get("importe"), ia):
+            diffs.append(f"capítulo {cod}.importe")
+        if set(gcp[cod].get("partidas", [])) != set(c.get("partidas", [])):
+            diffs.append(f"capítulo {cod}.partidas")
+    return diffs
+
+
 def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
     """C5: presupuesto trazable — modo ANCLADO (contract-first, Fase IV·h1 — ver ficha/DECISIONES).
@@ -842,6 +970,27 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
             return abs(float(a) - float(b)) <= ia
         except (TypeError, ValueError):
             return False
+
+    # 0 · RECOMPUTE con el engine real (Fase IV·h2, D9) — se ANTEPONE al anclado.
+    # engines/presupuesto MIDE desde las fixtures con Qto (la medición nace del modelo, D7) y
+    # PRESUPUESTA; se compara contra el MISMO expected (D10 del C4: más checks, nunca menos).
+    # Un fallo se investiga en el ENGINE (parser/motor), jamás en el expected.
+    try:
+        modelo_medido, got_pres = _recompute_c5(case_dir, entrada, repo)
+        checks.append(("engine presupuesto medir()+presupuestar() ejecuta", True,
+                       "engines/presupuesto sobre las fixtures con Qto"))
+        ok, detail = validate_against_schema(got_pres, schemas["salida"])
+        checks.append(("presupuesto recomputado conforma", ok, detail))
+        d_med = _diff_medicion_c5(modelo_medido, entrada.get("modelo", {}), tol)
+        checks.append(("medición nace del modelo (parser reproduce cantidades)", not d_med,
+                       f"{len(d_med)} diff/s — {d_med[0]}" if d_med
+                       else "cantidades leídas de los Qto del IFC"))
+        d_pre = _diff_presupuesto_c5(got_pres, pres, tol)
+        checks.append(("recompute presupuesto == expected", not d_pre,
+                       f"{len(d_pre)} diff/s — {d_pre[0]}" if d_pre
+                       else "reproducido (cantidad/precio/importe/capítulos/PEM…PEC/trazabilidad)"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("recompute con el engine", False, f"{type(e).__name__}: {e}"))
 
     # 1 · conformidad de esquemas
     for name, inst, key in (("entrada conforma esquema", entrada, "entrada"),

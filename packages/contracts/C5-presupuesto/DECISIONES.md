@@ -72,6 +72,76 @@ S&S = 2% del PEM medible). **Más checks que hoy, nunca menos** (D10 del C4). **
 2 del C5 espera al engine (como la del C4 esperó a la tarea 1.2 y la del C3 a la 3.3).
 
 ---
+
+# C5 — Decisiones del ENGINE (Fase IV·h2 — `engines/presupuesto`)
+
+> Resueltas con JM el **2026-07-04** (OK explícito), antes de tocar código del engine. Numeración
+> **propia del C5**, continúa D1–D5 + D_modelo + D_scope. El engine hace VIVO el contrato del 4.1: se
+> dobla al `expected` de `GOL-PRE-01`, jamás al revés (misma puerta que cerró C1 en Fase I, C4 en
+> Fase II·h2 y C3 en Fase III·h3). ZONA ANCLADA intocable: el contrato/esquemas/`expected`, los packs
+> `criterio/AQ/v1` y `banco/AQ-DEMO/v1` (identidad por hash), las fixtures con `Qto`.
+
+## D6 · Casa y empaquetado — paquete uv en `engines/`, releaseable (espejo de `engines/cumplimiento`)
+
+`engines/presupuesto/` con la estructura de paquete de `engines/cumplimiento` (D6 del C3): `pyproject.toml`
+(hatchling, `aqyra-presupuesto` 0.1.0, dep `ifcopenshell`, script CLI) + `src/aqyra_presupuesto/` + `tests/`
++ miembro de `[tool.uv.workspace]`. El runner lo importa **por path** (patrón `engines/ifc` y
+`_recompute_c3`/`_recompute_c4`); `DEFAULT_ENGINE_C5 = engines/presupuesto/src` ya está cableado en
+`run_golden.py`. SemVer; releaseable (Llave 2, D10).
+
+## D7 · Qué consume el engine — el parser abre el IFC(+`Qto`); la magnitud NETA contabiliza los huecos
+
+El engine hace VIVO el módulo 1 (parser de medición): `medir(ifcs) → modelo` **abre las fixtures IFC
+con `Qto`** (`ARQ.ifc`/`EST.ifc`, que llevan `IfcClassificationReference` + `IfcElementQuantity` +
+estructura espacial, verificado) y produce el **modelo neutro de medición**; `presupuestar(modelo,
+criterio, banco, parametros) → presupuesto` (módulos 2–6). En el golden el runner llama a `medir()`
+sobre las fixtures congeladas (la joya: *la medición nace del modelo*) y luego `presupuestar()`. En
+producción, el Maestro federado de C4.
+
+**Huecos (matiz de JM, 2026-07-04).** Procedimiento: el engine lee la **magnitud que declara el
+criterio**; cuando `descuento_huecos:true` esa magnitud es la **neta** (`NetSideArea`), que por
+definición IFC ya es *bruto − huecos* → **los huecos quedan contabilizados por el propio `Qto`**, no por
+una re-derivación geométrica (respeta D_modelo: no adivina geometría). Y para que el hueco se tenga en
+cuenta **explícita y auditablemente**, la primitiva `leer-cantidad`: (1) usa el valor NETO como cantidad;
+(2) **detecta los huecos** del elemento (`IfcRelVoidsElement`) y con el `umbral_hueco_m2` registra el
+descuento aplicado en la justificación (p. ej. *"descuento de huecos = 2,10 m² (bruto 18,00 − neto 15,90),
+hueco > umbral 1,00 m²"*); (3) **guarda de consistencia**: si el `Qto` trae bruto y neto, verifica que el
+descuento observado (`Gross − Net`) corresponde a hueco(s) > umbral; si no cuadra, lo marca como fallo de
+dato (no lo silencia). Reproduce el golden: M-Fachada 15,90 (18,00 − 2,10>1,00) + M-Interior 18,00 (sin
+hueco) = 33,90 m² → FAB010.
+
+## D8 · Cómo aplica el criterio — registro finito de primitivas; selección ESTRUCTURAL (criterio anclado)
+
+Espíritu del registro de evaluadores del C3 (D8): librería FINITA de primitivas — `leer-cantidad` (por
+`magnitud` + `factor_caras` + descuento/umbral) y `partida-por-ratio` (`origen=regla`, `base=PEM_medible`
+× `ratio`) — y el pack es la tabla de verdad ("el código es un PACK anclado, no un `if`"). **Diferencia
+respecto al C3 (anclaje):** el pack `criterio/AQ/v1` está **anclado por hash** y **no** lleva campo
+`primitiva`/`evaluador` explícito; añadirlo obligaría a re-anclarlo (fuera de alcance). Por tanto la
+**selección de primitiva es ESTRUCTURAL** sobre el criterio tal cual está anclado: `reglas_por_clase` →
+`leer-cantidad`; `reglas_sin_geometria` → `partida-por-ratio` (y los campos presentes lo confirman:
+`magnitud` vs `ratio/base`). El registro finito existe (método nuevo = primitiva nueva, raro); la
+"declaración" del pack es su forma, no un string literal. `un objeto → varias partidas` (muro → fábrica +
+enfoscado 2 caras + pintura 2 caras) sale del criterio; el precio, del banco; el `codigo` es la junta.
+
+## D9 · Costura del runner — recompute ANTEPUESTO; los 17 checks del 4.1 íntegros
+
+`run_case_c5` antepone el **check 0 (RECOMPUTE)**: `_recompute_c5` → `medir(fixtures)` → `presupuestar(...)`
+comparado contra el MISMO `expected["presupuesto"]`, **normalizando el texto libre** (`descripcion`,
+`criterio_aplicado`, `precio_en_letra`, `nota`, claves `_*`) y comparando **literal** lo semántico
+(`codigo`/`capitulo`/`unidad`/`cantidad`/`precio_unitario`/`importe`/`origen`/`trazabilidad` + cuadros
+nº1/nº2 (estructura y números) + `resumen` PEM…PEC). **Conserva ÍNTEGROS los 17 checks anclados del 4.1**
+(D10 del C4: más checks, nunca menos). Un fallo se investiga en el ENGINE (parser/motor), **jamás** en el
+`expected`.
+
+## D10 · Versionado y release — 0.1.0; tag FIRMADO `presupuesto-v0.1.0` (Llave 2)
+
+`engines/presupuesto` 0.1.0. `versions.lock [contracts.C5]` gana `engine_version = "0.1.0"` + estado;
+`ci.yml` Paso 1 añade `engines/presupuesto` al `pytest`; nuevo miembro en `[tool.uv.workspace]` (edición
+quirúrgica). `release.yml` ya dispara `presupuesto-v*`. RELEASE: **primer tag firmado del C5**
+`presupuesto-v0.1.0` (Llave 2, firma de JM en local; el CI nunca certifica) — patrón `cumplimiento-v0.1.0`
+(D10 del C3).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*
