@@ -68,6 +68,21 @@ golden          = "GOL-PRE-01 + GOL-PRE-02"
 oraculo         = "modo ANCLADO (contract-first, sin engine): presupuesto calculado a mano y verificado ×2 sobre la medición del Maestro (geometría del C4-FED-06 + Qto inyectados en fixtures propias). run_case_c5 valida conformidad de los 2 esquemas + identidad por hash de las fixtures con Qto + coherencia interna (importe = cantidad × precio; precio == cuadro nº1 == nº2 (Σ componentes + indirectos); PEM = Σ importes = Σ capítulos; GG/BI/IVA/base/PEC según parametros; partidas origen=modelo ⊆ banco con precio == banco y ⊆ criterio; trazabilidad ⊆ GUIDs del modelo; taxonomía de origen cerrada; S&S = 2% del PEM medible). RECOMPUTE ANTEPUESTO (Fase IV·h2, D9): run_case_c5 MIDE desde las fixtures con Qto (engines/presupuesto.medir — la medición nace del modelo, D7) y PRESUPUESTA (presupuestar), comparado contra el MISMO expected (cantidades ±0,5%; mapeo/precios/importes/PEM…PEC exactos; texto libre normalizado). Conserva íntegros los 17 checks anclados del 4.1 (D10: más checks, nunca menos). PEM 7022.53 → PEC 10111.74 EUR"
 estado          = "engine v0.2 (Fase IV·h3, D11–D15): WRITE-BACK 5D — engines/presupuesto.escribir_coste escribe el modelo de coste CANÓNICO OpenBIM (IfcCostSchedule + IfcCostItem por capítulo/partida con IfcCostValue=importe y CostQuantities, asignados a los elementos por IfcRelAssignsToControl por GUID, + IfcMonetaryUnit EUR) sobre el DERIVADO FEDERADO (D13; el engine abre el derivado, no federa, D7). Golden GOL-PRE-02: el runner federa+deriva las fixtures con Qto y ancla el 5D por DETERMINISMO (escribir 2×=bytes idénticos) + SEMÁNTICA (el cost schedule casa con el presupuesto; sin md5 hardcodeado, D14 opción b). Sobre v0.1 (D6–D10, medir+presupuestar, GOL-PRE-01 intacto). Releases firmados presupuesto-v0.1.0 (Llave 2, hecho) → presupuesto-v0.2.0 (Llave 2)"
 
+# --- capa de documentos (Fase IV·doc): el Documento de Presupuesto — compositor DETERMINISTA ---
+# Decisiones D1–D5 en documentos/presupuesto/DECISIONES.md (OK JM 2026-07-04). componer_documento
+# toma el `salida-presupuesto` (autoritativo de C5) y compone el .docx firmable del despacho; NO
+# recalcula. Formato del despacho implementado in-repo (python-docx, hermético); el skill
+# memoria-calculo-despacho es la especificación de referencia. Primer ladrillo de la capa de
+# documentos que el operador C7 orquestará — NO es el operador C7 (D5).
+[documentos.presupuesto]
+nombre          = "documento-presupuesto"
+paquete         = "aqyra-documento-presupuesto"
+version         = "0.1.0"                    # primer release firmado: documento-presupuesto-v0.1.0 (Llave 2, D5)
+consume         = "salida-presupuesto (C5) — el `presupuesto` ANCLADO de GOL-PRE-01 (D4; se LEE)"
+golden          = "GOL-DOC-01"
+oraculo         = "conformidad por CONTENIDO extraído (D3, python-docx — NO OCR, NO bytes, NO píxeles): las 5 secciones (carátula·mediciones·nº1·nº2·resumen); las 8 partidas en la tabla de mediciones con importe == JSON (±0,01); Σ capítulos == PEM y cada importe de capítulo == JSON; cadena PEM→GG→BI→base→IVA→PEC == JSON; precio EN LETRA por partida (nº1) presente; y DETERMINISMO por contenido (componer 2× = texto/tablas extraídos idénticos, fecha/orden fijos)"
+estado          = "compositor v0.1 (capa de documentos, D1–D5): documentos/presupuesto vivo (componer_documento JSON→.docx del despacho) + golden GOL-DOC-01 (rama modo=documento en run_case_c5, conformidad + determinismo) VERDE; release firmado documento-presupuesto-v0.1.0 (Llave 2)"
+
 # --- apps (Fase III·h1): el visor abierto DENTRO del monorepo — el vertical TS en la Llave 1 ---
 # Re-home del corte mínimo de aqyra-entorno (ARCHIVADO 2026-07-01; árbol == frozen → el corte
 # sale del FROZEN firmado). Decisiones V1–V5 en apps/visor/DECISIONES.md. El visor CONSUME el

@@ -1,0 +1,15 @@
+{
+  "caso": "GOL-DOC-01",
+  "contrato": "C5-presupuesto",
+  "modo": "documento",
+  "_oraculo": "CONFORMIDAD DEL DOCUMENTO DE PRESUPUESTO (capa de documentos, contract-first). El compositor DETERMINISTA documentos/presupuesto.componer_documento toma el `presupuesto` ANCLADO de GOL-PRE-01 (D4: se LEE, no se re-ancla) y produce el .docx del despacho. La golden ancla ESTRUCTURA y CONTENIDO (D3), no bytes ni pixeles: las 5 secciones presentes; las 8 partidas en la tabla de mediciones con importe == JSON (+-0,01); Sigma capitulos == PEM y cada importe de capitulo == JSON; cadena PEM->GG->BI->base->IVA->PEC coherente en el documento; precio EN LETRA por partida (cuadro n1) presente; y DETERMINISMO por contenido (componer 2x = texto/tablas extraidos identicos, fecha/orden fijos). El texto (extraido con python-docx, NO OCR) es la evidencia.",
+  "fuente_presupuesto": "GOL-PRE-01",
+  "documento": {
+    "fecha": "2026-07-04",
+    "secciones": ["caratula", "estado_mediciones", "cuadro_precios_1", "cuadro_precios_2", "resumen"],
+    "n_partidas": 8,
+    "n_capitulos": 6,
+    "PEM": 7022.53,
+    "PEC": 10111.74
+  }
+}

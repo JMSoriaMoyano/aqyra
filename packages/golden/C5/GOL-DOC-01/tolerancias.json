@@ -1,0 +1,4 @@
+{
+  "importe_abs": 0.01,
+  "_nota": "Conformidad del Documento de Presupuesto (modo documento): los importes y totales extraidos del .docx deben casar con el `presupuesto` de GOL-PRE-01 a +-0,01 (redondeo a 2 decimales). Sin tolerancia de pixeles ni de bytes (D3): se ancla contenido, no forma."
+}

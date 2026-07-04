@@ -791,6 +791,11 @@ ORIGEN_C5 = {"modelo", "regla", "manual"}
 # (parser) y el motor dará el presupuesto; aquí, modo ANCLADO (oráculo congelado, sin engine).
 DEFAULT_ENGINE_C5 = DEFAULT_REPO / "engines" / "presupuesto" / "src"
 
+# Casa del compositor de documentos (capa de documentos): documentos/presupuesto — importado por
+# path (patrón engines/*). Reproduce el .docx del despacho desde el `presupuesto` ANCLADO de
+# GOL-PRE-01 (D4); el runner ancla ESTRUCTURA + CONTENIDO (D3), no bytes ni píxeles.
+DEFAULT_DOCUMENTO_C5 = DEFAULT_REPO / "documentos" / "presupuesto" / "src"
+
 
 def load_c5_schemas(contracts_dir: Path) -> dict[str, dict]:
     base = contracts_dir / "C5-presupuesto"
@@ -1097,6 +1102,170 @@ def _run_c5_5d(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict, r
     return all(ok for _, ok, _ in checks)
 
 
+# --------------------------------------------------------------------------- #
+# C5 · Documento de Presupuesto — capa de documentos (compositor DETERMINISTA)  #
+# --------------------------------------------------------------------------- #
+def _num_es(s: str):
+    """'1.234,56 EUR' → 1234.56 ; texto sin dígitos → None. Formato español del despacho."""
+    s = (s or "").replace("EUR", "").replace("€", "").strip()
+    if not any(c.isdigit() for c in s):
+        return None
+    s = s.replace(".", "").replace(",", ".")
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def _extraer_docx(path: Path) -> tuple[list[str], list]:
+    """(párrafos, tablas) del .docx con python-docx — NO OCR (D3). Cada tabla es lista de filas
+    de celdas (texto). Es la evidencia sobre la que se ancla la conformidad."""
+    from docx import Document
+    d = Document(str(path))
+    paras = [p.text for p in d.paragraphs]
+    tablas = [[[c.text for c in row.cells] for row in t.rows] for t in d.tables]
+    return paras, tablas
+
+
+def _run_c5_documento(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                      repo: Path) -> bool:
+    """C5 · Documento de Presupuesto (capa de documentos, D1–D5): el compositor DETERMINISTA
+    documentos/presupuesto reproduce el .docx del despacho desde el `presupuesto` ANCLADO de la
+    fuente (D4, GOL-PRE-01 — se LEE, no se re-ancla). Ancla ESTRUCTURA + CONTENIDO (D3), no bytes
+    ni píxeles. Un fallo se investiga en el COMPOSITOR, jamás aflojando la golden."""
+    import tempfile
+
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c5_schemas(contracts_dir)
+    ia = float(tol.get("importe_abs", 0.01))
+    doc_exp = expected.get("documento", {})
+    fecha = doc_exp.get("fecha", "-")
+
+    # 1 · cargar el `presupuesto` de la fuente anclada (D4) y comprobar que conforma el esquema
+    fuente = expected.get("fuente_presupuesto")
+    fuente_path = case_dir.parent / str(fuente) / "expected.json"
+    if not fuente_path.exists():
+        print_checks([("fuente de presupuesto presente", False, f"{fuente} no encontrada")])
+        return False
+    presupuesto = json.loads(fuente_path.read_text(encoding="utf-8")).get("presupuesto", {})
+    ok, detail = validate_against_schema(presupuesto, schemas["salida"])
+    checks.append((f"presupuesto fuente ({fuente}) conforma salida-presupuesto", ok, detail))
+
+    # 2 · componer el .docx con el compositor (import de path, patrón engines/*)
+    pd = str(DEFAULT_DOCUMENTO_C5)
+    if pd not in sys.path:
+        sys.path.insert(0, pd)
+    try:
+        import aqyra_documento_presupuesto as adp
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import del compositor documentos/presupuesto", False,
+                       f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        salida_a = adp.componer_documento(presupuesto, {"salida": tdp / "a.docx", "fecha": fecha})
+        checks.append(("compositor genera el .docx",
+                       salida_a.exists() and salida_a.stat().st_size > 0,
+                       f"{salida_a.name} ({salida_a.stat().st_size} bytes)"))
+        paras, tablas = _extraer_docx(salida_a)
+        texto = "\n".join(paras)
+
+        # 3 · las 5 secciones presentes
+        marcas = [("carátula", adp.SEC_CARATULA), ("estado_mediciones", adp.SEC_MEDICIONES),
+                  ("cuadro_precios_1", adp.SEC_CP1), ("cuadro_precios_2", adp.SEC_CP2),
+                  ("resumen", adp.SEC_RESUMEN)]
+        faltan_sec = [n for n, m in marcas if m not in texto]
+        checks.append(("las 5 secciones presentes", not faltan_sec,
+                       "carátula · mediciones · nº1 · nº2 · resumen" if not faltan_sec
+                       else f"faltan: {faltan_sec}"))
+
+        # 4 · las N partidas en la tabla de mediciones, importe == JSON (±ia)
+        em = {p["codigo"]: p for p in presupuesto.get("estado_mediciones", [])}
+        imp_doc: dict[str, float] = {}
+        for t in tablas:
+            for fila in t:
+                cod = (fila[0] or "").strip()
+                val = _num_es(fila[-1]) if fila else None
+                if cod in em and val is not None and cod not in imp_doc:
+                    imp_doc[cod] = val
+        faltan_part = [c for c in em if c not in imp_doc]
+        checks.append(("todas las partidas en la tabla de mediciones", not faltan_part,
+                       f"{len(em)} partidas" if not faltan_part else f"faltan: {faltan_part}"))
+        if "n_partidas" in doc_exp:
+            checks.append(("nº de partidas == esperado", len(em) == doc_exp["n_partidas"],
+                           f"{len(em)} (esperado {doc_exp['n_partidas']})"))
+        malos_imp = [c for c in em
+                     if c in imp_doc and abs(imp_doc[c] - float(em[c]["importe"])) > ia]
+        checks.append(("importe de partida en el documento == JSON (±0,01)", not malos_imp,
+                       "todos casan" if not malos_imp else f"descuadran: {malos_imp}"))
+
+        # 5 · Σ capítulos == PEM y cada importe de capítulo == JSON (tabla resumen por capítulos)
+        resumen = presupuesto.get("resumen", {})
+        caps = {c["codigo"]: float(c.get("importe", 0)) for c in resumen.get("capitulos", [])}
+        cap_doc: dict[str, float] = {}
+        for t in tablas:
+            cab = [c.strip() for c in t[0]] if t else []
+            if cab[:1] == ["Capítulo"]:
+                for fila in t[1:]:
+                    cod = (fila[0] or "").strip()
+                    val = _num_es(fila[-1])
+                    if cod in caps and val is not None:
+                        cap_doc[cod] = val
+        malos_cap = [c for c in caps if c not in cap_doc or abs(cap_doc[c] - caps[c]) > ia]
+        checks.append(("importe de capítulo en el documento == JSON", not malos_cap,
+                       f"{len(caps)} capítulos" if not malos_cap else f"descuadran: {malos_cap}"))
+        if "n_capitulos" in doc_exp:
+            checks.append(("nº de capítulos == esperado", len(caps) == doc_exp["n_capitulos"],
+                           f"{len(caps)} (esperado {doc_exp['n_capitulos']})"))
+        PEM = float(resumen.get("PEM", 0))
+        suma_cap = round(sum(cap_doc.values()), 2)
+        checks.append(("Σ capítulos (del documento) == PEM", abs(suma_cap - PEM) <= ia,
+                       f"Σ {suma_cap} vs PEM {PEM}"))
+
+        # 6 · cadena PEM→GG→BI→base→IVA→PEC presente y == JSON (tabla 'Concepto')
+        concep: dict[str, float] = {}
+        for t in tablas:
+            cab = [c.strip() for c in t[0]] if t else []
+            if cab[:1] == ["Concepto"]:
+                for fila in t[1:]:
+                    concep[(fila[0] or "").strip()] = _num_es(fila[-1])
+        cadena = {"PEM": "(PEM)", "gg": "Gastos generales", "bi": "Beneficio industrial",
+                  "base": "Base imponible", "iva": "IVA", "PEC": "(PEC)"}
+        malos_cad = []
+        for k, marca in cadena.items():
+            val = next((v for kk, v in concep.items() if marca in kk), None)
+            if val is None or abs(val - float(resumen.get(k, 0))) > ia:
+                malos_cad.append(k)
+        checks.append(("cadena PEM→GG→BI→base→IVA→PEC == JSON", not malos_cad,
+                       "coherente" if not malos_cad else f"descuadran: {malos_cad}"))
+
+        # 7 · precio EN LETRA por partida (cuadro nº1) presente
+        letras: dict[str, str] = {}
+        for t in tablas:
+            cab = [c.strip() for c in t[0]] if t else []
+            if "Precio en letra" in cab:
+                for fila in t[1:]:
+                    letras[(fila[0] or "").strip()] = (fila[-1] or "").strip()
+        cp1 = [c["codigo"] for c in presupuesto.get("cuadro_precios_1", [])]
+        sin_letra = [c for c in cp1 if not letras.get(c)]
+        checks.append(("precio en letra por partida (cuadro nº1)", not sin_letra,
+                       f"{len(cp1)} partidas en letra" if not sin_letra
+                       else f"sin letra: {sin_letra}"))
+
+        # 8 · DETERMINISMO por contenido (componer 2× = texto/tablas idénticos)
+        salida_b = adp.componer_documento(presupuesto, {"salida": tdp / "b.docx", "fecha": fecha})
+        contenido_b = _extraer_docx(salida_b)
+        checks.append(("documento determinista (2× = mismo contenido extraído)",
+                       (paras, tablas) == contenido_b,
+                       "texto y tablas idénticos" if (paras, tablas) == contenido_b
+                       else "el contenido difiere entre dos composiciones"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
 def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
     """C5: presupuesto trazable — modo ANCLADO (contract-first, Fase IV·h1 — ver ficha/DECISIONES).
@@ -1118,6 +1287,9 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     # Dispatch por modo (Fase IV·h3): GOL-PRE-02 (write-back 5D) tiene su propia rama.
     if expected.get("modo") == "5d" or "cost_5d" in expected:
         return _run_c5_5d(case_dir, contracts_dir, expected, tol, repo)
+    # Capa de documentos: GOL-DOC-01 (Documento de Presupuesto) — compositor determinista (D1–D5).
+    if expected.get("modo") == "documento":
+        return _run_c5_documento(case_dir, contracts_dir, expected, tol, repo)
 
     checks: list[tuple[str, bool, str]] = []
     schemas = load_c5_schemas(contracts_dir)
