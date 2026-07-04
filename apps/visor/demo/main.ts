@@ -5,7 +5,7 @@
  *  viewpoint (#5). Fondo oscuro (#7) y canvas a pantalla completa (#8) van en index.html
  *  + el ResizeObserver del Viewer. El visor solo LEE el BCF/derivado (PLAN §1). */
 import {
-  IfcLoader, Viewer, parseMarkup, parseViewpoint, bcfCameraToViewer,
+  IfcLoader, Viewer, parseMarkup, parseViewpoint, bcfCameraToViewer, costHeatColor,
 } from "@aqyra/visor";
 import type { BcfTopic, LoadedModel, SpatialNode } from "@aqyra/visor";
 
@@ -24,6 +24,13 @@ async function main(): Promise<void> {
 
   const viewer = new Viewer();
   viewer.mount($("escena"));
+
+  // V9 · modo coste 5D (por query ?5d): abre el Maestro CON el presupuesto y colorea por coste.
+  if (new URLSearchParams(window.location.search).has("5d")) {
+    await modoCoste(loader, viewer);
+    return;
+  }
+  $("btn-coste").onclick = (): void => { window.location.search = "?5d"; };
 
   const data = await textoDe("/federado.ifc");
   const m: LoadedModel = await loader.open({ name: "federado", data });
@@ -171,6 +178,52 @@ async function main(): Promise<void> {
     };
     cont.appendChild(div);
   }
+}
+
+/** V9 · Modo coste 5D: abre `federado_5d.ifc` (Maestro con IfcCostSchedule), colorea los
+ *  elementos por su coste asignado (heatmap) y muestra totales (PEM…PEC + por capítulo) y el
+ *  coste/partidas del objeto al seleccionarlo. Self-contained (recarga con ?5d, escena limpia). */
+async function modoCoste(loader: IfcLoader, viewer: Viewer): Promise<void> {
+  $("leyenda").style.display = "block";
+  const data = await textoDe("/federado_5d.ifc");
+  const m: LoadedModel = await loader.open({ name: "federado_5d", data });
+  viewer.addIfcModel(m.modelID, loader.getMeshes(m.modelID));
+
+  const coste = loader.readCost(m.modelID);
+  if (!coste) { $("estado").textContent = "El modelo no trae IfcCostSchedule (no es 5D)."; return; }
+  $("estado").textContent =
+    `Maestro 5D · ${m.elements.length} elementos · coste OpenBIM (IfcCostSchedule) · ${coste.moneda}`;
+
+  const exprPorGuid = new Map<string, number>();
+  const guidPorExpr = new Map<number, string>();
+  for (const e of m.elements) { exprPorGuid.set(e.globalId, e.expressId); guidPorExpr.set(e.expressId, e.globalId); }
+
+  const span = (coste.maxCoste - coste.minCoste) || 1;
+  const colorPorExpress = new Map<number, { r: number; g: number; b: number }>();
+  for (const [guid, ec] of coste.porElemento) {
+    const ex = exprPorGuid.get(guid);
+    if (ex !== undefined) colorPorExpress.set(ex, costHeatColor((ec.costeAsignado - coste.minCoste) / span));
+  }
+  viewer.setCostHeatmap(m.modelID, colorPorExpress);
+  viewer.frameAll();
+
+  const eur = (n: number | undefined): string => `${(n ?? 0).toFixed(2)} €`;
+  let html = `<b>PEM</b> ${eur(coste.totales.PEM)} → <b>PEC</b> ${eur(coste.totales.PEC)}<br><br>`;
+  for (const c of coste.capitulos) html += `${c.codigo} · ${c.descripcion ?? ""}: ${eur(c.importe)}<br>`;
+  $("totales").innerHTML = html;
+
+  viewer.onPick = (info): void => {
+    const guid = guidPorExpr.get(info.expressId) ?? "";
+    const ec = coste.porElemento.get(guid);
+    viewer.highlightSelection(m.modelID, [info.expressId], { accent: ACENTO });
+    $("props").textContent = ec
+      ? `${guid}\ncoste asignado: ${ec.costeAsignado.toFixed(2)} €\npartidas: ${ec.partidas.join(", ")}`
+      : `${guid}\n(elemento sin coste asignado)`;
+  };
+  $("vista-general").onclick = (): void => { viewer.frameAll(); };
+  const btn = $("btn-coste") as HTMLButtonElement;
+  btn.textContent = "Volver (BCF)";
+  btn.onclick = (): void => { window.location.search = ""; };
 }
 
 main().catch((e) => { $("estado").textContent = `ERROR: ${e}`; console.error(e); });

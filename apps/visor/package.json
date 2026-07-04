@@ -1,7 +1,7 @@
 {
   "name": "@aqyra/visor",
-  "version": "0.6.0",
-  "description": "El visor abierto de Aqyra (carga IFC, escena 3D, selección, Psets, árbol espacial interactivo, lectura BCF 3.0 con cámara). Re-home del corte mínimo de aqyra-entorno (hilo 3.1) + UX lote 1 (hilo 3.4).",
+  "version": "0.7.0",
+  "description": "El visor abierto de Aqyra (carga IFC, escena 3D, selección, Psets, árbol espacial interactivo, lectura BCF 3.0 con cámara, lectura y heatmap del coste 5D). Re-home del corte mínimo de aqyra-entorno (hilo 3.1) + UX lote 1 (hilo 3.4) + coste 5D (hilo IV·h4).",
   "type": "module",
   "license": "Apache-2.0",
   "main": "./dist/index.js",

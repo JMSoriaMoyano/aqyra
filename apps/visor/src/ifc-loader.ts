@@ -1,5 +1,7 @@
 import { IfcAPI } from "web-ifc";
 import * as WI from "web-ifc";
+import { readCostModel } from "./cost.js";
+import type { CosteModelo } from "./cost.js";
 import { deriveModel } from "./idealize.js";
 import type { DerivedModel, PhysicalElement } from "./idealize.js";
 
@@ -460,6 +462,11 @@ export class IfcLoader {
       }
     }
     return out;
+  }
+
+  /** Modelo de coste 5D (IfcCostSchedule/IfcCostItem/asignaciones), o null si el IFC no es 5D. */
+  readCost(modelID: number): CosteModelo | null {
+    return readCostModel(this.api, modelID);
   }
 
   close(modelID: number): void {
