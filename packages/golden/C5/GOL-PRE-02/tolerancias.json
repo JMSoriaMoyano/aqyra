@@ -1,0 +1,4 @@
+{
+  "importe_abs": 0.01,
+  "_nota": "Write-back 5D (D14, opcion b): la ANCLA es determinismo (bytes identicos al escribir 2x) + semantica (el cost schedule casa con el presupuesto computado). Los importes (IfcCostValue) se comparan EXACTOS (redondeo 2 decimales, ±0.01) contra el presupuesto; las asignaciones (IfcRelAssignsToControl) EXACTAS por GUID. Sin md5 hardcodeado: el sandbox no corre ifcopenshell, el gate de CI genera y verifica el 5D."
+}

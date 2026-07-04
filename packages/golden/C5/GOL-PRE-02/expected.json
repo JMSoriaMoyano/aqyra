@@ -1,0 +1,19 @@
+{
+  "caso": "GOL-PRE-02",
+  "contrato": "C5-presupuesto",
+  "modo": "5d",
+  "_oraculo": "WRITE-BACK 5D (Fase IV·h3, D11-D14): el coste vuelve al modelo. El runner federa+deriva las fixtures con Qto (reglas.json), calcula el presupuesto (medir+presupuestar, reproduce GOL-PRE-01) y escribe el cost schedule CANONICO OpenBIM sobre el derivado (engines/presupuesto.escribir_coste): IfcCostSchedule (BUDGET) > IfcCostItem por capitulo > IfcCostItem por partida (IfcCostValue=importe, CostQuantities=cantidad) asignados a los ELEMENTOS por IfcRelAssignsToControl (GUID in trazabilidad) + IfcCostItem resumen (PEM..PEC) + IfcMonetaryUnit EUR. ANCLA (opcion b, D14): DETERMINISMO (escribir 2x = bytes identicos) + SEMANTICA (el cost schedule casa con el presupuesto: importe por partida, asignaciones por GUID, Sigma=PEM, PEM..PEC). Sin md5 hardcodeado (el sandbox no corre ifcopenshell). PEM 7022.53 -> PEC 10111.74.",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "0b998513ab079b9ef0870e9a6c04ca84",
+    "entrada/EST.ifc": "0d7e7f20fc42aa42214ad58de084322e"
+  },
+  "cost_5d": {
+    "moneda": "EUR",
+    "predefined_type": "BUDGET",
+    "n_partidas": 8,
+    "n_capitulos": 6,
+    "n_partidas_con_asignacion": 7,
+    "PEM": 7022.53,
+    "PEC": 10111.74
+  }
+}

@@ -61,12 +61,12 @@ estado          = "engine v0.1 (Fase III·h3, D6–D10): engines/cumplimiento vi
 nombre          = "presupuesto"
 schema_version  = "0.1.0"              # 2 esquemas: entrada-presupuesto + salida-presupuesto (forward-open)
 engine          = "engines/presupuesto"   # engine C5 VIVO (Fase IV·h2, D6): paquete uv en engines/
-engine_version  = "0.1.0"              # primer release firmado del C5: presupuesto-v0.1.0 (Llave 2, D10)
+engine_version  = "0.2.0"              # 0.1.0 medir+presupuestar (D6-D10) + 0.2.0 write-back 5D escribir_coste (D11-D15); tags presupuesto-v0.1.0/-v0.2.0 (Llave 2)
 criterio_pack   = "criterio/AQ/v1"
 banco_pack      = "banco/AQ-DEMO/v1"
-golden          = "GOL-PRE-01"
+golden          = "GOL-PRE-01 + GOL-PRE-02"
 oraculo         = "modo ANCLADO (contract-first, sin engine): presupuesto calculado a mano y verificado ×2 sobre la medición del Maestro (geometría del C4-FED-06 + Qto inyectados en fixtures propias). run_case_c5 valida conformidad de los 2 esquemas + identidad por hash de las fixtures con Qto + coherencia interna (importe = cantidad × precio; precio == cuadro nº1 == nº2 (Σ componentes + indirectos); PEM = Σ importes = Σ capítulos; GG/BI/IVA/base/PEC según parametros; partidas origen=modelo ⊆ banco con precio == banco y ⊆ criterio; trazabilidad ⊆ GUIDs del modelo; taxonomía de origen cerrada; S&S = 2% del PEM medible). RECOMPUTE ANTEPUESTO (Fase IV·h2, D9): run_case_c5 MIDE desde las fixtures con Qto (engines/presupuesto.medir — la medición nace del modelo, D7) y PRESUPUESTA (presupuestar), comparado contra el MISMO expected (cantidades ±0,5%; mapeo/precios/importes/PEM…PEC exactos; texto libre normalizado). Conserva íntegros los 17 checks anclados del 4.1 (D10: más checks, nunca menos). PEM 7022.53 → PEC 10111.74 EUR"
-estado          = "engine v0.1 (Fase IV·h2, D6–D10): engines/presupuesto VIVO (parser Qto + mapeo por criterio + motor + justificaciones + reglas sin geometría) + costura del runner (recompute antepuesto) VERDE; catálogo de capítulos = default del engine, pack-overridable; release firmado presupuesto-v0.1.0 (Llave 2)"
+estado          = "engine v0.2 (Fase IV·h3, D11–D15): WRITE-BACK 5D — engines/presupuesto.escribir_coste escribe el modelo de coste CANÓNICO OpenBIM (IfcCostSchedule + IfcCostItem por capítulo/partida con IfcCostValue=importe y CostQuantities, asignados a los elementos por IfcRelAssignsToControl por GUID, + IfcMonetaryUnit EUR) sobre el DERIVADO FEDERADO (D13; el engine abre el derivado, no federa, D7). Golden GOL-PRE-02: el runner federa+deriva las fixtures con Qto y ancla el 5D por DETERMINISMO (escribir 2×=bytes idénticos) + SEMÁNTICA (el cost schedule casa con el presupuesto; sin md5 hardcodeado, D14 opción b). Sobre v0.1 (D6–D10, medir+presupuestar, GOL-PRE-01 intacto). Releases firmados presupuesto-v0.1.0 (Llave 2, hecho) → presupuesto-v0.2.0 (Llave 2)"
 
 # --- apps (Fase III·h1): el visor abierto DENTRO del monorepo — el vertical TS en la Llave 1 ---
 # Re-home del corte mínimo de aqyra-entorno (ARCHIVADO 2026-07-01; árbol == frozen → el corte
