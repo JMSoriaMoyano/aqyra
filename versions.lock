@@ -60,12 +60,13 @@ estado          = "engine v0.1 (Fase III·h3, D6–D10): engines/cumplimiento vi
 [contracts.C5]
 nombre          = "presupuesto"
 schema_version  = "0.1.0"              # 2 esquemas: entrada-presupuesto + salida-presupuesto (forward-open)
-engine          = "engines/presupuesto"   # aún NO existe (contract-first); llega en un hilo posterior
+engine          = "engines/presupuesto"   # engine C5 VIVO (Fase IV·h2, D6): paquete uv en engines/
+engine_version  = "0.1.0"              # primer release firmado del C5: presupuesto-v0.1.0 (Llave 2, D10)
 criterio_pack   = "criterio/AQ/v1"
 banco_pack      = "banco/AQ-DEMO/v1"
 golden          = "GOL-PRE-01"
-oraculo         = "modo ANCLADO (contract-first, sin engine): presupuesto calculado a mano y verificado ×2 sobre la medición del Maestro (geometría del C4-FED-06 + Qto inyectados en fixtures propias). run_case_c5 valida conformidad de los 2 esquemas + identidad por hash de las fixtures con Qto + coherencia interna (importe = cantidad × precio; precio == cuadro nº1 == nº2 (Σ componentes + indirectos); PEM = Σ importes = Σ capítulos; GG/BI/IVA/base/PEC según parametros; partidas origen=modelo ⊆ banco con precio == banco y ⊆ criterio; trazabilidad ⊆ GUIDs del modelo; taxonomía de origen cerrada; S&S = 2% del PEM medible). El engine antepondrá el recompute contra el MISMO expected. PEM 7022.53 → PEC 10111.74 EUR"
-estado          = "contract-first (Fase IV·h1): 2 esquemas + packs criterio/AQ/v1 + banco/AQ-DEMO/v1 + GOL-PRE-01 anclada + run_case_c5 en modo ANCLADO; SIN release (Llave 2 espera al engine engines/presupuesto). Familia de pack NUEVA 'criterio' añadida al enum de pack.schema.json (aditivo)"
+oraculo         = "modo ANCLADO (contract-first, sin engine): presupuesto calculado a mano y verificado ×2 sobre la medición del Maestro (geometría del C4-FED-06 + Qto inyectados en fixtures propias). run_case_c5 valida conformidad de los 2 esquemas + identidad por hash de las fixtures con Qto + coherencia interna (importe = cantidad × precio; precio == cuadro nº1 == nº2 (Σ componentes + indirectos); PEM = Σ importes = Σ capítulos; GG/BI/IVA/base/PEC según parametros; partidas origen=modelo ⊆ banco con precio == banco y ⊆ criterio; trazabilidad ⊆ GUIDs del modelo; taxonomía de origen cerrada; S&S = 2% del PEM medible). RECOMPUTE ANTEPUESTO (Fase IV·h2, D9): run_case_c5 MIDE desde las fixtures con Qto (engines/presupuesto.medir — la medición nace del modelo, D7) y PRESUPUESTA (presupuestar), comparado contra el MISMO expected (cantidades ±0,5%; mapeo/precios/importes/PEM…PEC exactos; texto libre normalizado). Conserva íntegros los 17 checks anclados del 4.1 (D10: más checks, nunca menos). PEM 7022.53 → PEC 10111.74 EUR"
+estado          = "engine v0.1 (Fase IV·h2, D6–D10): engines/presupuesto VIVO (parser Qto + mapeo por criterio + motor + justificaciones + reglas sin geometría) + costura del runner (recompute antepuesto) VERDE; catálogo de capítulos = default del engine, pack-overridable; release firmado presupuesto-v0.1.0 (Llave 2)"
 
 # --- apps (Fase III·h1): el visor abierto DENTRO del monorepo — el vertical TS en la Llave 1 ---
 # Re-home del corte mínimo de aqyra-entorno (ARCHIVADO 2026-07-01; árbol == frozen → el corte
