@@ -142,6 +142,60 @@ quirúrgica). `release.yml` ya dispara `presupuesto-v*`. RELEASE: **primer tag f
 (D10 del C3).
 
 ---
+
+# C5 — Decisiones del WRITE-BACK 5D (Fase IV·h3 — el coste vuelve al modelo)
+
+> Resueltas con JM el **2026-07-04** (OK explícito), antes de tocar código. Continúan la numeración
+> del C5 (D11–D15). Materializan el **módulo 6** de `C5_presupuesto.md` («partida e importe al IFC →
+> el modelo se vuelve 5D»). ZONA ANCLADA intocable: el contrato/esquemas/`expected` del presupuesto,
+> los packs, las fixtures con `Qto` (`0b998513…`/`0d7e7f20…`), el derivado C4-FED-06 (`dcb1e144…`),
+> la golden `GOL-PRE-01` (no se re-ancla: el 5D es un caso NUEVO).
+
+## D11 · Casa — módulo `escritura.py` en `engines/presupuesto` (bump 0.2.0)
+
+Nuevo módulo `escritura.py`: `escribir_coste(presupuesto, derivado, salida, fecha=None) → {fichero, md5}`.
+Consume el **presupuesto ya calculado** (`presupuestar(...)`) — no re-mide — y el **IFC derivado**
+(objetivo). Bump `engines/presupuesto` 0.1.0 → **0.2.0** (aditivo: `medir`/`presupuestar` intactos).
+
+## D12 · Qué se escribe — CANÓNICO OpenBIM (`IfcCostSchedule` + `IfcCostItem`), voto de JM
+
+No un `Pset` (la alternativa ligera): el 5D se representa con el **modelo de coste nativo de IFC**:
+`IfcCostSchedule` (PredefinedType=BUDGET) ← `IfcRelNests` ← un `IfcCostItem` **por capítulo** ←
+`IfcRelNests` ← un `IfcCostItem` **por partida** (`Identification`=código, `Name`=descripción,
+`CostValues`=[`IfcCostValue` con `AppliedValue`=`IfcMonetaryMeasure`(importe)], `CostQuantities`=[la
+cantidad medida como `IfcQuantityArea/Volume/Count`]); cada `IfcCostItem` de partida se **asigna a los
+elementos** que lo producen por `IfcRelAssignsToControl` (RelatedObjects = elementos del derivado con
+GUID en la `trazabilidad`). Moneda con `IfcMonetaryUnit` (EUR) en el `UnitAssignment`. Un `IfcCostItem`
+**resumen** lleva PEM/GG/BI/base/IVA/PEC como `IfcCostValue` categorizados. **Auditable hasta el
+elemento**, la promesa del C5. GUIDs de todo lo nuevo, deterministas (`uuid5`, patrón `derivar`).
+
+## D13 · Sobre qué modelo se escribe — el DERIVADO FEDERADO (voto de JM)
+
+El coste se escribe sobre el **derivado federado** (el Maestro que abre el visor), no sobre las fixtures
+por disciplina. Coherente con D7 (el engine **abre** el derivado, **no** federa): el **runner** federa+
+deriva las fixtures C5 (con un `reglas.json` propio de la golden) y `escribir_coste` escribe el cost
+schedule sobre ese derivado → un `.ifc` **5D** nuevo. Atribución por **GUID** (la `trazabilidad` del
+presupuesto ⊆ GUIDs del derivado). Habilita la opción C (el visor pinta el coste) sin más trabajo de
+modelo. Cabecera SPF determinista (firma fija sin versión + `time_stamp` constante, patrón `derivar`).
+
+## D14 · Anclaje — SEMÁNTICO + DETERMINISMO, sin md5 hardcodeado (voto de JM: opción b)
+
+El sandbox no puede correr ifcopenshell (disco 100%) → no se pre-calcula un md5. El runner ancla el 5D
+así: (1) **DETERMINISMO** — escribe el 5D **dos veces** y exige **bytes idénticos**; (2) **SEMÁNTICO** —
+**parsea** el 5D y comprueba que el cost schedule **casa con el presupuesto**: hay `IfcCostSchedule`; un
+`IfcCostItem` por partida con `IfcCostValue`=importe y `CostQuantities`=cantidad; las asignaciones
+(`IfcRelAssignsToControl`) apuntan a GUIDs ⊆ `trazabilidad`; Σ de importes de partida = PEM; el item
+resumen lleva PEM…PEC coherentes; `IfcMonetaryUnit`=EUR. Todo **verificable en CI** sin bootstrap manual.
+Caso NUEVO `GOL-PRE-02` (reusa fixtures+criterio+banco+params de `GOL-PRE-01`, que queda **intacto**).
+Un fallo se investiga en el ENGINE, jamás aflojando el check.
+
+## D15 · Versionado y release — 0.2.0; tag FIRMADO `presupuesto-v0.2.0` (Llave 2)
+
+`engines/presupuesto` 0.2.0; `versions.lock [contracts.C5]` sube `engine_version` a `0.2.0` + estado.
+`ci.yml` ya cubre `engines/presupuesto` (pytest) — el 5D entra por su golden. RELEASE: tag firmado
+`presupuesto-v0.2.0` (Llave 2, firma de JM; el CI nunca certifica).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*

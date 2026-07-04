@@ -1,0 +1,51 @@
+{
+  "proyecto": "GOL-PRE-02 - Maestro 5D (el coste vuelve al modelo)",
+  "crs_destino": {
+    "epsg": "EPSG:25830",
+    "descripcion": "ETRS89 / UTM zone 30N",
+    "datum_vertical": "EGM2008"
+  },
+  "modelos": [
+    {
+      "id": "ARQ",
+      "disciplina": "ARQ",
+      "fichero": "entrada/ARQ.ifc",
+      "md5": "0b998513ab079b9ef0870e9a6c04ca84",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 337000.0,
+        "n": 4610000.0,
+        "cota": 700.0,
+        "rotacion_deg": 0.0,
+        "declarado_por": "JM (reglas del caso golden; las fixtures con Qto NO vienen georreferenciadas)"
+      },
+      "estado_entrada": "S1",
+      "prioridad": 1
+    },
+    {
+      "id": "EST",
+      "disciplina": "EST",
+      "fichero": "entrada/EST.ifc",
+      "md5": "0d7e7f20fc42aa42214ad58de084322e",
+      "crs_origen": null,
+      "punto_base": {
+        "e": 337000.0,
+        "n": 4610000.0,
+        "cota": 700.0,
+        "rotacion_deg": 0.0,
+        "declarado_por": "JM (reglas del caso golden; las fixtures con Qto NO vienen georreferenciadas)"
+      },
+      "estado_entrada": "S1",
+      "prioridad": 2
+    }
+  ],
+  "deduplicacion": {
+    "elementos": "nunca",
+    "estructura_espacial": "unificar-por-nombre"
+  },
+  "ids_pack": {
+    "familia": "ids",
+    "id": "proyecto-piloto",
+    "version": "v1"
+  }
+}

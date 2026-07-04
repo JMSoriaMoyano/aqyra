@@ -14,10 +14,12 @@ geometría, D_modelo); los huecos se detectan (`IfcRelVoidsElement`) y la magnit
 descuenta. El criterio es un PACK anclado (primitivas finitas seleccionadas por la FORMA del pack,
 D8), no un `if`. El catálogo de capítulos (WBS) es un DEFAULT del engine, pack-overridable.
 """
+from .escritura import escribir_coste
 from .medicion import medir
 from .presupuesto import CAPITULOS_DEFAULT, num_a_letra, presupuestar
 from .primitivas import PRIMITIVAS
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
-__all__ = ["medir", "presupuestar", "PRIMITIVAS", "CAPITULOS_DEFAULT", "num_a_letra", "__version__"]
+__all__ = ["medir", "presupuestar", "escribir_coste", "PRIMITIVAS", "CAPITULOS_DEFAULT",
+           "num_a_letra", "__version__"]

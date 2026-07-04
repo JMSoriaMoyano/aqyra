@@ -936,6 +936,167 @@ def _diff_presupuesto_c5(got: dict, exp: dict, tol: dict) -> list[str]:
     return diffs
 
 
+def _checks_5d(f, pres: dict, cost: dict, ia: float) -> list[tuple[str, bool, str]]:
+    """Comprueba que el cost schedule del IFC 5D CASA con el presupuesto (D14, semántica)."""
+    out: list[tuple[str, bool, str]] = []
+
+    def approx(a, b) -> bool:
+        try:
+            return abs(float(a) - float(b)) <= ia
+        except (TypeError, ValueError):
+            return False
+
+    def _val(cv):
+        av = cv.AppliedValue
+        return float(getattr(av, "wrappedValue", av))
+
+    scheds = f.by_type("IfcCostSchedule")
+    out.append(("IfcCostSchedule (BUDGET) presente",
+                len(scheds) == 1 and getattr(scheds[0], "PredefinedType", None) == cost.get("predefined_type", "BUDGET"),
+                f"{len(scheds)} schedule/s"))
+    munits = f.by_type("IfcMonetaryUnit")
+    out.append(("IfcMonetaryUnit == moneda",
+                any(getattr(u, "Currency", None) == cost.get("moneda", "EUR") for u in munits),
+                f"{[getattr(u, 'Currency', None) for u in munits]}"))
+
+    items = {ci.Identification: ci for ci in f.by_type("IfcCostItem")
+             if getattr(ci, "Identification", None)}
+    em = pres.get("estado_mediciones", [])
+
+    malos = []
+    for l in em:
+        ci = items.get(l["codigo"])
+        if ci is None or not ci.CostValues or not approx(_val(ci.CostValues[0]), l["importe"]):
+            malos.append(l["codigo"])
+    out.append(("IfcCostItem por partida con IfcCostValue == importe", not malos,
+                "todas las partidas" if not malos else f"descuadran: {malos}"))
+
+    asg: dict[str, set] = {}
+    for rel in f.by_type("IfcRelAssignsToControl"):
+        cod = getattr(rel.RelatingControl, "Identification", None)
+        if not cod:
+            continue
+        guids = set()
+        for o in rel.RelatedObjects or []:
+            try:
+                guids.add(o.GlobalId)
+            except Exception:  # noqa: BLE001
+                pass
+        asg[cod] = guids
+    mal_asg, n_asg = [], 0
+    for l in em:
+        tz = set(l.get("trazabilidad", []))
+        if not tz:
+            continue
+        n_asg += 1
+        if asg.get(l["codigo"], set()) != tz:
+            mal_asg.append(l["codigo"])
+    out.append(("IfcRelAssignsToControl == trazabilidad por partida (por GUID)", not mal_asg,
+                f"{n_asg} partidas asignadas a sus elementos" if not mal_asg else f"descuadran: {mal_asg}"))
+    if "n_partidas_con_asignacion" in cost:
+        out.append(("nº de partidas con asignación", n_asg == cost["n_partidas_con_asignacion"],
+                    f"{n_asg} (esperado {cost['n_partidas_con_asignacion']})"))
+
+    suma = sum(_val(items[l["codigo"]].CostValues[0]) for l in em
+               if items.get(l["codigo"]) and items[l["codigo"]].CostValues)
+    PEM = float(pres.get("resumen", {}).get("PEM", 0))
+    out.append(("Σ IfcCostValue de partida == PEM", approx(suma, PEM),
+                f"Σ {round(suma, 2)} vs PEM {PEM}"))
+
+    res = pres.get("resumen", {})
+    res_item = items.get("RESUMEN")
+    cat = {}
+    if res_item:
+        for cv in res_item.CostValues or []:
+            cat[str(getattr(cv, "Category", None)).upper()] = _val(cv)
+    claves = {"PEM": "PEM", "GG": "gg", "BI": "bi", "BASE": "base", "IVA": "iva", "PEC": "PEC"}
+    mal_res = [k for k, rk in claves.items() if rk in res and not approx(cat.get(k), res[rk])]
+    out.append(("IfcCostItem resumen == PEM/GG/BI/base/IVA/PEC",
+                res_item is not None and not mal_res,
+                "coherente" if res_item is not None and not mal_res else f"descuadran: {mal_res}"))
+
+    n_items = len(f.by_type("IfcCostItem"))
+    if "n_partidas" in cost and "n_capitulos" in cost:
+        esperado = cost["n_partidas"] + cost["n_capitulos"] + 1
+        out.append(("nº de IfcCostItem == partidas+capítulos+resumen", n_items == esperado,
+                    f"{n_items} (esperado {esperado})"))
+    return out
+
+
+def _run_c5_5d(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict, repo: Path) -> bool:
+    """C5 write-back 5D (Fase IV·h3, D11–D14): el coste vuelve al modelo. Ancla por DETERMINISMO
+    (escribir 2× = bytes idénticos) + SEMÁNTICA (el cost schedule casa con el presupuesto). Opción b:
+    sin md5 hardcodeado — el gate genera y verifica el 5D con ifcopenshell. Un fallo se investiga en
+    el ENGINE (escritura.py), jamás aflojando el check."""
+    import tempfile
+
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c5_schemas(contracts_dir)
+    entrada = json.loads((case_dir / "entrada.json").read_text(encoding="utf-8"))
+    ia = float(tol.get("importe_abs", 0.01))
+    cost = expected.get("cost_5d", {})
+
+    # 1 · identidad por hash de las fixtures con Qto (reutilizadas del 4.1; intactas)
+    for rel, exp_md5 in sorted(expected.get("entradas_md5", {}).items()):
+        p = case_dir / rel
+        got = _md5(p) if p.exists() else None
+        checks.append((f"identidad {rel}", got == exp_md5,
+                       f"md5 {str(got)[:12]}… (esperado {exp_md5[:12]}…)"))
+
+    pe = str(DEFAULT_ENGINE_C5)
+    if pe not in sys.path:
+        sys.path.insert(0, pe)
+    ps = str(repo / "services" / "federacion" / "src")
+    if ps not in sys.path:
+        sys.path.insert(0, ps)
+    try:
+        import ifcopenshell
+
+        from aqyra_federacion import derivar, federar_fichero
+        from aqyra_presupuesto import escribir_coste, medir, presupuestar
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import engine/servicio/ifcopenshell", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    # 2 · presupuesto (reproduce GOL-PRE-01) desde la medición de las fixtures con Qto
+    fuentes = [{"id": m.get("id"), "disciplina": m.get("disciplina"),
+                "path": case_dir / m["fichero"], "fichero": m["fichero"]}
+               for m in entrada.get("modelo", {}).get("fuente_maestro", {}).get("modelos", [])]
+    modelo = medir(fuentes)
+    modelo["proyecto"] = entrada.get("proyecto")
+    criterio = _pack_contenido_c5(repo, "criterio", entrada.get("criterio_ref", {}))
+    banco = _pack_contenido_c5(repo, "banco", entrada.get("banco_ref", {}))
+    pres = presupuestar(modelo, criterio, banco, entrada.get("parametros", {}))
+    ok, detail = validate_against_schema(pres, schemas["salida"])
+    checks.append(("presupuesto (para el 5D) conforma esquema", ok, detail))
+    checks.append(("presupuesto reproduce PEM…PEC del oráculo",
+                   abs(float(pres.get("resumen", {}).get("PEM", 0)) - float(cost.get("PEM", 0))) <= ia
+                   and abs(float(pres.get("resumen", {}).get("PEC", 0)) - float(cost.get("PEC", 0))) <= ia,
+                   f"PEM {pres.get('resumen', {}).get('PEM')} PEC {pres.get('resumen', {}).get('PEC')}"))
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        # 3 · federar + derivar el Maestro (el engine ABRE el derivado, no federa — D7)
+        manifiesto = federar_fichero(case_dir / "reglas.json", base_dir=case_dir)
+        derivado = tdp / "federado.ifc"
+        derivar(manifiesto, case_dir, derivado)
+        checks.append(("federar+derivar el Maestro", derivado.exists(),
+                       "derivado federado de las fixtures con Qto"))
+        # 4 · escribir_coste 2× → DETERMINISMO (D14); mismo basename, dirs distintas
+        r1 = escribir_coste(pres, derivado, tdp / "a" / "federado_5d.ifc")
+        r2 = escribir_coste(pres, derivado, tdp / "b" / "federado_5d.ifc")
+        checks.append(("5D determinista (escribir 2× = bytes idénticos)", r1["md5"] == r2["md5"],
+                       f"md5 {r1['md5'][:12]}… (== {r2['md5'][:12]}…); {r1['n_cost_items']} cost items, "
+                       f"{r1['n_asignaciones']} asignaciones"))
+        # 5 · SEMÁNTICA — el cost schedule casa con el presupuesto
+        f = ifcopenshell.open(str(tdp / "a" / "federado_5d.ifc"))
+        checks.extend(_checks_5d(f, pres, cost, ia))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
 def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
     """C5: presupuesto trazable — modo ANCLADO (contract-first, Fase IV·h1 — ver ficha/DECISIONES).
@@ -954,6 +1115,10 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
       8. trazabilidad ⊆ GUIDs del modelo (origen=modelo) / vacía (origen=regla); taxonomía cerrada.
       9. S&S (origen=regla) == ratio del criterio × PEM medible.
     """
+    # Dispatch por modo (Fase IV·h3): GOL-PRE-02 (write-back 5D) tiene su propia rama.
+    if expected.get("modo") == "5d" or "cost_5d" in expected:
+        return _run_c5_5d(case_dir, contracts_dir, expected, tol, repo)
+
     checks: list[tuple[str, bool, str]] = []
     schemas = load_c5_schemas(contracts_dir)
 
