@@ -116,3 +116,40 @@
      `highlightSelection` con ghost atenúa lo no seleccionado; el panel lista Psets.
   3. Revisión VISUAL de la demo a ojo por JM para lo puramente visual (#7 fondo oscuro,
      #8 canvas a pantalla completa, #1 acento/ghost).
+
+## V7 · El visor pinta el coste (5D) — 2026-07-04 · Firmante: JM
+
+> El cebo enseña lo que el anzuelo produjo: el write-back 5D (C5 Fase IV·h3) metió el coste
+> en el modelo con el modelo de coste nativo de OpenBIM; el visor lo LEE y lo PINTA. La
+> demostración visible del embudo cebo-anzuelo: coste hasta el objeto, en 3D.
+
+- **V7 · Fixture 5D + anclaje.** `apps/visor/fixtures/federado_5d.ifc` = el **mismo 5D que
+  produce `GOL-PRE-02`** (federar las fixtures con `Qto` + `engines/presupuesto.escribir_coste`),
+  generado una vez con ifcopenshell y anclado por md5 **`3e302e5fac409212632ae3fcd3c816ec`**
+  (determinista). NO se deriva de `federado.ifc` (dcb1e144) porque sus GUIDs podrían no casar
+  con la trazabilidad del presupuesto; el 5D de GOL-PRE-02 ya está probado (7 asignaciones).
+  `federado.ifc` (dcb1e144) y su E2E quedan **INTACTOS** (frontera dura, U4): se AÑADE el 5D.
+
+- **V8 · Lectura del coste (dato).** `src/cost.ts` lee `IfcCostSchedule` / `IfcCostItem` /
+  `IfcRelAssignsToControl` / `IfcMonetaryUnit` con web-ifc → por elemento: las **partidas
+  asignadas** (código + importe de la partida) y un **`costeAsignado`** = Σ (importe_partida /
+  nº elementos de la partida) — reparto UNIFORME entre los elementos de la partida (v0; el
+  reparto por cantidad es mejora futura, el Qto está en el modelo). Más totales (PEM/GG/BI/
+  base/IVA/PEC del `IfcCostItem` RESUMEN + parciales por capítulo). Invariante: **Σ costeAsignado
+  = PEM medible (6884,83)**. Puro dato, **testeable headless** (como el resto del vertical).
+
+- **V9 · Visualización (opción a).** Modo "coste": **heatmap** por `costeAsignado` (rampa
+  documentada) + el coste/partidas del objeto en el panel de Selección + un panel de **totales**
+  (PEM/PEC + por capítulo). Solo render/DOM; no toca la zona anclada.
+
+- **V10 · E2E.** `test/coste-5d-e2e.test.ts` ancla el **md5** del fixture (`3e302e5f…`) + el
+  **mapa de coste** (importe por partida, `costeAsignado` por elemento, Σ = PEM medible, moneda
+  EUR, 15 `IfcCostItem`, 7 asignaciones). Estructural, sin píxeles (patrón del E2E del derivado).
+
+- **V11 · UX_BACKLOG.** El lote 1 (0.6.0, PR #26) ya cerró #1–5, #7–9 (V6/U1 los incluía
+  todos); se marcan `hecha (PR #26)`. #6 (re-base local por jitter float32) sigue **diferido**.
+  Sin nuevo trabajo de UX en este hilo.
+
+- **V12 · Versionado + sello.** `@aqyra/visor` **0.6.0 → 0.7.0** (feature 5D; sin cambio de la
+  zona anclada). `versions.lock [apps.visor].version` → 0.7.0. Al cierre, tag firmado
+  **`visor-v0.7.0`** (Llave 2, patrón `visor-v0.6.0`) si el vertical queda VERDE y JM firma.

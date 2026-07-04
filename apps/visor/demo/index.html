@@ -48,6 +48,18 @@
       border-radius: 6px; padding: 6px 10px; font: 600 12px system-ui, sans-serif;
       cursor: pointer; }
     #vista-general:hover { border-color: var(--accent); color: #fff; }
+    /* V9 — botón «Coste 5D» + leyenda del heatmap + totales */
+    #btn-coste { position: absolute; top: 46px; right: 10px; z-index: 40;
+      background: rgba(28,34,43,.9); color: var(--fg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 6px 10px; font: 600 12px system-ui, sans-serif; cursor: pointer; }
+    #btn-coste:hover { border-color: var(--accent); color: #fff; }
+    #totales { font-family: ui-monospace, monospace; font-size: 11px; color: var(--fg);
+      background: var(--panel2); border: 1px solid var(--border); border-radius: 6px; padding: 8px; }
+    #leyenda { display: none; position: absolute; bottom: 10px; left: 10px; z-index: 40;
+      background: rgba(28,34,43,.9); border: 1px solid var(--border); border-radius: 6px;
+      padding: 6px 8px; font: 11px system-ui, sans-serif; color: var(--fg-dim); }
+    #leyenda .barra { height: 10px; width: 180px; border-radius: 3px; margin: 4px 0;
+      background: linear-gradient(90deg, rgb(51,115,230), rgb(51,204,115), rgb(242,217,64), rgb(230,56,46)); }
   </style>
 </head>
 <body>
@@ -61,9 +73,13 @@
       <div id="topics"></div>
       <h2>Selección</h2>
       <div id="props">(clic en un elemento, un nodo del árbol o un topic)</div>
+      <h2>Coste 5D</h2>
+      <div id="totales">— (pulsa «Coste 5D» para abrir el Maestro con el presupuesto)</div>
     </div>
     <div id="escena">
       <button id="vista-general" title="Re-encuadra el modelo completo">Vista general</button>
+      <button id="btn-coste" title="Abre el Maestro 5D y colorea por coste">Coste 5D</button>
+      <div id="leyenda">coste por elemento<div class="barra"></div><span>menor → mayor</span></div>
     </div>
   </div>
   <script type="module" src="./main.ts"></script>
