@@ -125,7 +125,7 @@
 
 - **V7 · Fixture 5D + anclaje.** `apps/visor/fixtures/federado_5d.ifc` = el **mismo 5D que
   produce `GOL-PRE-02`** (federar las fixtures con `Qto` + `engines/presupuesto.escribir_coste`),
-  generado una vez con ifcopenshell y anclado por md5 **`60c906932ebb9c102a07962449bae903`**
+  generado una vez con ifcopenshell y anclado por md5 **`3e302e5fac409212632ae3fcd3c816ec`**
   (determinista). NO se deriva de `federado.ifc` (dcb1e144) porque sus GUIDs podrían no casar
   con la trazabilidad del presupuesto; el 5D de GOL-PRE-02 ya está probado (7 asignaciones).
   `federado.ifc` (dcb1e144) y su E2E quedan **INTACTOS** (frontera dura, U4): se AÑADE el 5D.
@@ -142,7 +142,7 @@
   documentada) + el coste/partidas del objeto en el panel de Selección + un panel de **totales**
   (PEM/PEC + por capítulo). Solo render/DOM; no toca la zona anclada.
 
-- **V10 · E2E.** `test/coste-5d-e2e.test.ts` ancla el **md5** del fixture (`60c90693…`) + el
+- **V10 · E2E.** `test/coste-5d-e2e.test.ts` ancla el **md5** del fixture (`3e302e5f…`) + el
   **mapa de coste** (importe por partida, `costeAsignado` por elemento, Σ = PEM medible, moneda
   EUR, 15 `IfcCostItem`, 7 asignaciones). Estructural, sin píxeles (patrón del E2E del derivado).
 

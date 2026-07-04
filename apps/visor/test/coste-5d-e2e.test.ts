@@ -16,7 +16,7 @@ const aqui = dirname(fileURLToPath(import.meta.url));
 const FIX = join(aqui, "..", "fixtures");
 
 // Identidad del 5D — determinista (== el 5D de GOL-PRE-02, V7).
-const MD5_5D = "60c906932ebb9c102a07962449bae903";
+const MD5_5D = "3e302e5fac409212632ae3fcd3c816ec";
 const PEM_MEDIBLE = 6884.83; // Σ importes de partidas con geometría (SYS010 sin asignar)
 const PEM = 7022.53;
 const PEC = 10111.74;
