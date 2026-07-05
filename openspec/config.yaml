@@ -1,0 +1,12 @@
+schema: spec-driven
+
+context: |
+  Proyecto: Aqyra — monorepo industrial ACE / OpenBIM (industria de arquitectura, ingeniería y
+  construcción). El diseño está cerrado aguas arriba (Aqyra-Raiz); este árbol lo construye.
+
+  Idioma: ESPAÑOL en todos los artefactos (código, comentarios, docs, contratos, golden y
+  tickets de Jira). Tokens técnicos normativos (IFC, Pset_*, ISO 19650, BCF, JSON Schema, GPG)
+  en su forma estándar.
+
+  Stack: monorepo de doble workspace.
+  - Python con uv (packages/core, packages/golden, packages/packs, services/federacion; engine
