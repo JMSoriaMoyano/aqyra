@@ -26,6 +26,8 @@ export class Viewer {
   private readonly overlay = new THREE.Group();
   /** Proxies CLICABLES de los núcleos (columna-cajón): cuadriláteros de la sección. */
   private readonly coreGroup = new THREE.Group();
+  /** Gizmo de ejes XYZ (orientación); se re-dimensiona con el modelo. */
+  private readonly axesGroup = new THREE.Group();
   /** Callback al clicar un núcleo (lo cablea embed). */
   onCorePick?: (coreId: string) => void;
   private readonly raycaster = new THREE.Raycaster();
@@ -56,13 +58,20 @@ export class Viewer {
     this.camera = new THREE.PerspectiveCamera(60, 1, 0.1, 5000);
     this.camera.position.set(15, 15, 15);
     this.camera.lookAt(0, 0, 0);
-    this.scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
-    dir.position.set(10, 20, 10);
-    this.scene.add(dir);
+    // Iluminación con profundidad: hemisférica (cielo claro / suelo oscuro) da el
+    // gradiente que lee el volumen, + luz principal y de relleno para la forma.
+    this.scene.add(new THREE.HemisphereLight(0xffffff, 0x2a3444, 0.85));
+    this.scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+    const key = new THREE.DirectionalLight(0xffffff, 0.75);
+    key.position.set(12, 22, 8);
+    this.scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.28);
+    fill.position.set(-14, 6, -10);
+    this.scene.add(fill);
     this.scene.add(this.models);
     this.scene.add(this.overlay);
     this.scene.add(this.coreGroup);
+    this.scene.add(this.axesGroup);
   }
 
   // ── Pre-proceso (V2): capa idealizada + glifos (proposal) ────────────────────
@@ -489,9 +498,20 @@ export class Viewer {
         side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(geo, mat);
-      mesh.applyMatrix4(new THREE.Matrix4().fromArray(md.matrix));
+      const world = new THREE.Matrix4().fromArray(md.matrix);
+      mesh.applyMatrix4(world);
       mesh.userData = { modelID, expressId: md.expressId, ifcType: md.ifcType, color0: { r: md.color.r, g: md.color.g, b: md.color.b }, opacity0: md.color.a };
       group.add(mesh);
+      // Aristas: definen los cantos y dan profundidad al gris plano. No son `isMesh`
+      // (los ignoran selección/ghost/heatmap/meshCount) y no reciben picking.
+      const edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(geo, 30),
+        new THREE.LineBasicMaterial({ color: 0x0a0f16, transparent: true, opacity: 0.35 }),
+      );
+      edges.applyMatrix4(world);
+      edges.raycast = () => {};
+      edges.userData = { isEdge: true, modelID };
+      group.add(edges);
     }
     this.modelGroups.set(modelID, group);
     this.models.add(group);
@@ -796,17 +816,59 @@ export class Viewer {
     if (box.isEmpty()) return;
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
-    const radius = Math.max(size.x, size.y, size.z) || 1;
-    const d = radius * 2.2;
-    this.camera.position.set(center.x + d, center.y + d, center.z + d);
+    // Encuadre iso: media diagonal + distancia por el FOV, desde un ángulo elevado.
+    // Para modelos bajos y anchos evita que la cámara caiga casi en el plano.
+    const radius = 0.5 * size.length() || 1;
+    const fov = THREE.MathUtils.degToRad(this.camera.fov);
+    const d = (radius / Math.sin(fov / 2)) * 1.35;
+    const off = new THREE.Vector3(1, 0.9, 1).normalize();
+    this.camera.position.copy(center).addScaledVector(off, d);
     this.camera.near = Math.max(0.01, radius / 500);
-    this.camera.far = radius * 200;
+    this.camera.far = radius * 500;
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(center);
     if (this.controls) {
       this.controls.target.copy(center);
       this.controls.update();
     }
+    this.updateAxes(box);
+  }
+
+  /** Gizmo de ejes XYZ (X rojo, Y verde, Z azul) con brazos de IGUAL longitud —
+   *  permite comparar visualmente la escala real en cada dirección. Se ancla en la
+   *  esquina mínima del modelo. Solo con renderer (se omite en tests headless). */
+  private updateAxes(box: THREE.Box3): void {
+    if (!this.renderer) return;
+    this.axesGroup.clear();
+    const size = box.getSize(new THREE.Vector3());
+    const len = 0.5 * Math.max(size.x, size.y, size.z) || 1;
+    // En el CENTRO del modelo (y por encima de todo con depthTest:false) para que
+    // sea siempre visible y sirva de regla de escala contra la geometría.
+    const origin = box.getCenter(new THREE.Vector3());
+    const axes = new THREE.AxesHelper(len);
+    axes.position.copy(origin);
+    (axes.material as THREE.Material).depthTest = false;
+    axes.renderOrder = 998;
+    this.axesGroup.add(axes);
+    const label = (t: string, col: string, p: THREE.Vector3): void => {
+      const c = document.createElement("canvas");
+      c.width = 128; c.height = 128;
+      const ctx = c.getContext("2d");
+      if (!ctx) return;
+      ctx.font = "bold 90px sans-serif";
+      ctx.fillStyle = col; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(t, 64, 64);
+      const spr = new THREE.Sprite(
+        new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false, transparent: true }),
+      );
+      spr.position.copy(p);
+      spr.scale.setScalar(len * 0.09);
+      spr.renderOrder = 999;
+      this.axesGroup.add(spr);
+    };
+    label("X", "#ff6a6a", origin.clone().add(new THREE.Vector3(len * 1.12, 0, 0)));
+    label("Y", "#6ad86a", origin.clone().add(new THREE.Vector3(0, len * 1.12, 0)));
+    label("Z", "#6a9dff", origin.clone().add(new THREE.Vector3(0, 0, len * 1.12)));
   }
 
   private resize(): void {

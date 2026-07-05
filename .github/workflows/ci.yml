@@ -72,8 +72,12 @@ jobs:
           cache: pnpm
       - name: Paso 4 · visor — install determinista (lockfile anclado)
         run: pnpm install --frozen-lockfile
-      - name: Paso 5 · visor — typecheck + build + tests (E2E derivado + cámara BCF)
+      - name: Paso 5 · visor — build + typecheck + tests (E2E derivado + cámara BCF)
+        # BUILD PRIMERO: `pnpm -r build` respeta el orden de dependencias del workspace
+        # (p. ej. @aqyra/visor antes que @aqyra/shell), así los consumidores del visor
+        # resuelven sus tipos desde el dist ya emitido (dist/ esta gitignorado y no viaja
+        # en el checkout). Evita el TS2307 al typechear un paquete que importa a otro.
         run: |
-          pnpm -r typecheck
           pnpm -r build
+          pnpm -r typecheck
           pnpm -r test
