@@ -9,7 +9,7 @@
 /** Color RGBA normalizado (0..1). */
 export type RGBA = { r: number; g: number; b: number; a: number };
 
-export { Viewer } from "./viewer.js";
+export { Viewer, aZup } from "./viewer.js";
 export type { PickInfo } from "./viewer.js";
 export { IfcLoader, appendStructuralPset, stripStructuralPset, AQYRA_PSET } from "./ifc-loader.js";
 export type { IfcSchema, LoadedElement, LoadedModel, PsetRecord, IfcMeshData, SpatialNode, Storey, SpatialFix, PsetEntry } from "./ifc-loader.js";
