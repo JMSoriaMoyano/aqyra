@@ -10,6 +10,21 @@ export interface PickInfo {
 }
 
 /**
+ * Convenio Z-up de la ingesta (paso 1). web-ifc entrega la geometria en su marco
+ * Y-up (swap IFC (x,y,z) -> (x, z, -y)). `aZup` DESHACE ese swap con una rotacion
+ * de +90 sobre X: (x, y, z)_yup -> (x, -z, y)_ifc, devolviendo el IFC Z-up nativo.
+ * Es el inverso EXACTO de m(v)=[x, z, -y] de bcf.ts (round-trip comprobado). La
+ * escena aplica esta MISMA rotacion al grupo del modelo en `addIfcModel`; este
+ * helper es el ancla numerica del convenio (y el que verifica el test de ingesta).
+ */
+export function aZup(v: [number, number, number]): [number, number, number] {
+  return [v[0], -v[2], v[1]];
+}
+
+/** Angulo de la rotacion de ingesta a Z-up (+90 sobre X). */
+const ZUP_ROT_X = Math.PI / 2;
+
+/**
  * Viewer — escena 3D de Aqyra (three.js).
  *
  * F0: escena vacía. F1: carga/encuadre + órbita. F2: selección por clic con
@@ -56,6 +71,9 @@ export class Viewer {
 
   constructor() {
     this.camera = new THREE.PerspectiveCamera(60, 1, 0.1, 5000);
+    // Convenio Z-up (paso 1): el «arriba» de la escena es +Z (marco IFC nativo),
+    // no +Y. Fija el polo de orbita de OrbitControls (se crea en mount()).
+    this.camera.up.set(0, 0, 1);
     this.camera.position.set(15, 15, 15);
     this.camera.lookAt(0, 0, 0);
     // Iluminación con profundidad: hemisférica (cielo claro / suelo oscuro) da el
@@ -486,6 +504,10 @@ export class Viewer {
   /** Construye y añade la malla de un modelo IFC; etiqueta y encuadra. */
   addIfcModel(modelID: number, meshes: IfcMeshData[]): void {
     const group = new THREE.Group();
+    // Convenio Z-up (paso 1): deshace el swap Y-up de web-ifc rotando +90 sobre X.
+    // Equivale a aplicar `aZup` a cada vertice del modelo (mismo mapeo (x,y,z)->(x,-z,y)),
+    // dejando la escena en el Z-up nativo del IFC.
+    group.rotation.x = ZUP_ROT_X;
     for (const md of meshes) {
       const geo = new THREE.BufferGeometry();
       geo.setAttribute("position", new THREE.BufferAttribute(md.positions, 3));
@@ -518,7 +540,7 @@ export class Viewer {
     this.fitToModels();
   }
 
-  /** Elevación (eje Y = cota IFC) del centro de cada elemento de un modelo. */
+  /** Elevación (eje Z = cota IFC en el convenio Z-up) del centro de cada elemento. */
   elementElevations(modelID: number): Map<number, number> {
     this.models.updateMatrixWorld(true);
     const group = this.modelGroups.get(modelID);
@@ -529,9 +551,10 @@ export class Viewer {
       if (!m.isMesh) return;
       const id = m.userData.expressId as number;
       const box = new THREE.Box3().setFromObject(m);
+      // Z-up (paso 1): la cota vertical es el eje Z de la escena (antes .y en Y-up).
       const a = acc.get(id) ?? { min: Infinity, max: -Infinity };
-      a.min = Math.min(a.min, box.min.y);
-      a.max = Math.max(a.max, box.max.y);
+      a.min = Math.min(a.min, box.min.z);
+      a.max = Math.max(a.max, box.max.z);
       acc.set(id, a);
     });
     const out = new Map<number, number>();
@@ -821,7 +844,8 @@ export class Viewer {
     const radius = 0.5 * size.length() || 1;
     const fov = THREE.MathUtils.degToRad(this.camera.fov);
     const d = (radius / Math.sin(fov / 2)) * 1.35;
-    const off = new THREE.Vector3(1, 0.9, 1).normalize();
+    // Z-up (paso 1): vista iso elevada con la vertical en +Z (antes en +Y).
+    const off = new THREE.Vector3(1, 1, 0.9).normalize();
     this.camera.position.copy(center).addScaledVector(off, d);
     this.camera.near = Math.max(0.01, radius / 500);
     this.camera.far = radius * 500;

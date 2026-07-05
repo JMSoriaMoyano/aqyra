@@ -153,3 +153,38 @@
 - **V12 · Versionado + sello.** `@aqyra/visor` **0.6.0 → 0.7.0** (feature 5D; sin cambio de la
   zona anclada). `versions.lock [apps.visor].version` → 0.7.0. Al cierre, tag firmado
   **`visor-v0.7.0`** (Llave 2, patrón `visor-v0.6.0`) si el vertical queda VERDE y JM firma.
+
+## V8 · Convenio Z-up del visor — paso 1: geometría en la ingesta — 2026-07-05 · Firmante: JM (pendiente de firma en el merge)
+
+> Gobernado por la spec `openspec/changes/visor-convenio-zup/` (SDD/test-first) y por
+> `docs/frontend-standards.md`. El visor está DENTRO de la Llave 1 (gate del PR). Este cambio
+> **NO requiere Llave 2** (hallazgo D29 ratificado, Q-Zup-1): el golden firmado `C4-FED-06`
+> codifica la cámara en marco IFC Z-up — el marco DESTINO — así que el cambio de convenio no
+> re-firma ningún artefacto sellado. (ADR-018 de Aqyra-Raiz se actualiza fuera de este hilo.)
+
+- **Decisión (paso 1).** La ingesta lleva la geometría al **Z-up nativo del IFC**: se deshace el
+  swap de web-ifc (Y-up, `(x,y,z)_IFC → (x,z,−y)`) con una rotación de **+90° sobre X** del grupo
+  del modelo en `viewer.addIfcModel`, que aplica el mapeo `(x,y,z) → (x,−z,y)`. El «arriba» de la
+  escena pasa a **+Z** (`camera.up=(0,0,1)`, polo de órbita de OrbitControls; encuadre de
+  `fitToModels` con la vertical en Z). Ancla numérica del convenio: el helper puro
+  **`aZup([1,2,3]) === [1,−3,2]`** (inverso exacto de `bcfCameraToViewer`), verificado por
+  `test/zup-ingesta.test.ts` (test-first, escrito antes del código) con round-trip.
+
+- **Alcance del PR (decisión de gobierno, recorrido futuro).** La frontera de un paso la define el
+  **grafo de dependencias que mantiene el gate verde**, no el número del `tasks.md`. Rotar la
+  geometría acopla **una sola** línea de fuera del paso 1: `viewer.elementElevations` pasa de leer
+  `box.*.y` a `box.*.z` (único consumidor de cota que depende del eje de la escena; `elevationMetric`
+  delega en él y `containers()` usa `IfcStorey.elevation`, dato IFC independiente del marco). Con ese
+  cambio **todo el subsistema de cota queda coherente en `main`** (sin ventana de incoherencia), por
+  lo que se incluye en el PR-1. El resto del paso 2 (revisar `elevationMetric`/`spatial-metric`,
+  corregir el comentario `cota (Y)`, confirmar re-baselines) es **verificación** y queda como su
+  propio paso. Se descartó fusionar paso 1+2 (Opción B): no arregla ninguna incoherencia real y
+  agranda el PR, en contra de baby-steps + PR-por-paso.
+
+- **Ripple verificado (Llave 1, verde por sí solo).** `saneamiento.test.ts`: con `.z` el muro sigue
+  en cota ≈4 > 3.4 → verde sin re-baseline. `spatial-tree`/`render-pipeline`/`class-control`/
+  `ifc-loader` no dependen del eje. `ux-behavior` solo comprueba cámara finita + que se mueve →
+  verde. `bcf.test.ts` (mapeo `bcfCameraToViewer`, aún permutación) y `federado-e2e.test.ts` (cámara
+  BCF cruda, IFC Z-up) quedan intactos → verdes, confirmando D29. `bcf.ts` **NO se toca** aquí (la
+  identidad `bcfCameraToViewer` es el paso 3); durante la ventana 1→3 los viewpoints BCF de la app
+  quedan desplazados respecto a la geometría Z-up — intermedio conocido y planificado.
