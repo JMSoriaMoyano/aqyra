@@ -188,3 +188,33 @@
   BCF cruda, IFC Z-up) quedan intactos → verdes, confirmando D29. `bcf.ts` **NO se toca** aquí (la
   identidad `bcfCameraToViewer` es el paso 3); durante la ventana 1→3 los viewpoints BCF de la app
   quedan desplazados respecto a la geometría Z-up — intermedio conocido y planificado.
+
+## V9 · Convenio Z-up del visor — paso 2: cota = eje Z (verificación) — 2026-07-05 · Firmante: JM (pendiente de firma en el merge)
+
+> Continúa la spec `openspec/changes/visor-convenio-zup/` (paso 2 del `tasks.md`). Dentro de la
+> Llave 1; sin Llave 2 (D29). Ver V8.
+
+- **Contexto.** El cambio de código de la cota (`viewer.elementElevations` `.y→.z`) ya entró en el
+  **paso 1** (era la única línea acoplada por la rotación; V8, Opción A). Por tanto el paso 2 no
+  reabre código de cota: es la **verificación** que V8 dejó explícitamente para su propio paso.
+
+- **Qué entra (paso 2).** (1) Test de regresión `test/zup-cota.test.ts` (headless + wasm) que ancla
+  el convenio: la cota de un elemento sale de `box.*.z` (muro con centro en IFC z≈4 y perfil en el
+  otro eje ≈0, de modo que **Z→≈4 y el eje horizontal→≈0**: el test DISTINGUE el convenio), y que
+  `elevationMetric` refleja la cota real (`positions` delega en la cota Z; `containers` usa
+  `IfcStorey.Elevation`, dato IFC marco-independiente → plantas [0,3]). (2) Corrección del comentario
+  residual `spatial-metric.ts` `cota (Y)` → `cota (eje Z, convenio Z-up)`.
+
+- **Rastreo (solo lo afectado).** `elementElevations` es el ÚNICO consumidor de cota por eje de la
+  escena; los demás usos de `.y` en `viewer.ts` son isótropos (tamaño de glifo, radio de encuadre,
+  offset simétrico de `frameElement`). `getStoreys` lee `IfcStorey.Elevation`. No hay más cota-por-`.y`
+  en `src`, `apps/aqyra-shell` ni la demo.
+
+- **Re-baseline (confirmado, no hay cambio real).** `spatial-tree.test.ts` no ancla cota por eje
+  (estructural). `saneamiento.test.ts` ya es verde con `.z` (muro cota ≈4 > 3.4). El borrador
+  `tests-first-draft.md` preveía re-baselinarlos, pero sus aserciones (`>3.4`, estructura) se cumplen
+  sin cambios: no requieren edición.
+
+- **Nota diferida (paso 5, NO aquí).** Los glifos del overlay idealizado (V2) se construyen en el
+  marco del loader (Y-up) y el overlay no se rota, así que quedan desalineados con el físico Z-up. Es
+  exactamente el paso 5 (`idealize.ts` con la geometría en Z-up); no afecta al gate ni a la cota.
