@@ -23,7 +23,7 @@ export interface SpatialMetric {
 const INFRA =
   "[Aqyra] Saneamiento de infraestructura (PK sobre IfcAlignment → IfcFacilityPart) — llega en el incremento de obra lineal. El motor ya está preparado para enchufar esta métrica.";
 
-/** Edificación: posición = cota (Y), contenedor = IfcBuildingStorey. */
+/** Edificación: posición = cota (eje Z, convenio Z-up), contenedor = IfcBuildingStorey. */
 export const elevationMetric: SpatialMetric = {
   kind: "cota",
   async containers(loader, modelID) {
