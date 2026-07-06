@@ -3,7 +3,8 @@
 // y su re-export en src/index.ts (SKINS, colorPorClase, leyendaSkin).
 // Ratificado por JM (2026-07-06): D-SK-2 (color categórico) y D-SK-4 (Diseño + Estructuras).
 import { describe, it, expect } from "vitest";
-import { SKINS, colorPorClase, leyendaSkin } from "@aqyra/visor";
+import { SKINS, colorPorClase, leyendaSkin, aplicarSkin } from "@aqyra/visor";
+import type { AplicadorSkin, ColorRGB } from "@aqyra/visor";
 
 describe("SKINS · mapa estático disciplina→skin", () => {
   it("Diseño declara acento de marca y clases de edificio", () => {
@@ -69,10 +70,53 @@ describe("leyendaSkin · intersección dominio ∩ presentes", () => {
   });
 });
 
+describe("aplicarSkin · cableado al viewer (mock, sin wasm)", () => {
+  // Doble del Viewer: registra las llamadas. El Viewer real satisface AplicadorSkin.
+  function dobleViewer(presentes: Array<{ ifcType: string; count: number }>): {
+    v: AplicadorSkin;
+    pintadas: Array<{ ifcClass: string; color: ColorRGB }>;
+    resets: () => number;
+  } {
+    const pintadas: Array<{ ifcClass: string; color: ColorRGB }> = [];
+    let resets = 0;
+    const v: AplicadorSkin = {
+      resetColors(): void {
+        resets += 1;
+      },
+      setColorByClass(ifcClass: string, color: ColorRGB): void {
+        pintadas.push({ ifcClass, color });
+      },
+      classes(): Array<{ ifcType: string; count: number }> {
+        return presentes;
+      },
+    };
+    return { v, pintadas, resets: () => resets };
+  }
+
+  it("revierte al color base y pinta cada clase del dominio presente con su color categórico", () => {
+    const d = dobleViewer([
+      { ifcType: "IFCCOLUMN", count: 2 },
+      { ifcType: "IFCWINDOW", count: 1 }, // fuera del dominio Estructuras → no se pinta
+    ]);
+    const leyenda = aplicarSkin(d.v, "estructuras");
+    expect(d.resets()).toBe(1); // revierte antes de pintar
+    expect(d.pintadas).toEqual([{ ifcClass: "IFCCOLUMN", color: colorPorClase("IFCCOLUMN") }]);
+    expect(leyenda.map((e) => e.ifcClass)).toEqual(["IFCCOLUMN"]);
+  });
+
+  it("conmutar de disciplina revierte de nuevo (operación reversible)", () => {
+    const d = dobleViewer([{ ifcType: "IFCWALL", count: 3 }]);
+    aplicarSkin(d.v, "diseno");
+    aplicarSkin(d.v, "estructuras");
+    expect(d.resets()).toBe(2); // un reset por aplicación
+  });
+});
+
 describe("superficie pública de skins", () => {
-  it("exporta SKINS, colorPorClase y leyendaSkin", () => {
+  it("exporta SKINS, colorPorClase, leyendaSkin y aplicarSkin", () => {
     expect(typeof colorPorClase).toBe("function");
     expect(typeof leyendaSkin).toBe("function");
+    expect(typeof aplicarSkin).toBe("function");
     expect(SKINS.diseno).toBeDefined();
   });
 });

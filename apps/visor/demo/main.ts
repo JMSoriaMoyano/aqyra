@@ -6,8 +6,9 @@
  *  + el ResizeObserver del Viewer. El visor solo LEE el BCF/derivado (PLAN §1). */
 import {
   IfcLoader, Viewer, parseMarkup, parseViewpoint, bcfCameraToViewer, costHeatColor,
+  SKINS, aplicarSkin,
 } from "@aqyra/visor";
-import type { BcfTopic, LoadedModel, SpatialNode } from "@aqyra/visor";
+import type { BcfTopic, LoadedModel, SpatialNode, Disciplina } from "@aqyra/visor";
 
 const ACENTO = 0xff8a3d;
 const $ = (id: string): HTMLElement => document.getElementById(id)!;
@@ -128,6 +129,45 @@ async function main(): Promise<void> {
   }
 
   pintaArbol(await loader.getSpatialTree(m.modelID), $("arbol"));
+
+  // ── Skins por disciplina (Slice 1): re-viste el modelo por dominio ────────────
+  // acento de disciplina + color CATEGÓRICO por clase (D-SK-2) sobre el MISMO IFC.
+  // `aplicarSkin` es propone puro: revierte al color base y pinta por clase; reversible.
+  function montaSkins(): void {
+    const cont = $("skins");
+    const leg = $("leyenda-skin");
+    const rgbCss = (c: { r: number; g: number; b: number }): string =>
+      `rgb(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)})`;
+    const pinta = (d: Disciplina): void => {
+      const leyenda = aplicarSkin(viewer, d);
+      const skin = SKINS[d];
+      cont.querySelectorAll("button").forEach((b) => {
+        const activo = b.dataset.disc === d;
+        b.style.borderColor = activo ? skin.acento : "var(--border)";
+        b.style.color = activo ? "#fff" : "var(--fg)";
+      });
+      const filas = leyenda
+        .map((e) =>
+          `<div style="display:flex;align-items:center;gap:6px;padding:1px 0">` +
+          `<span style="width:12px;height:12px;border-radius:3px;background:${rgbCss(e.color)};` +
+          `display:inline-block"></span>${e.ifcClass.replace("IFC", "")} · ${e.count}</div>`)
+        .join("");
+      leg.innerHTML =
+        `<div style="margin:6px 0;color:${skin.acento};font-weight:600">${skin.nombre}</div>` +
+        (filas || `<small>(ninguna clase de esta disciplina en el modelo)</small>`);
+    };
+    (["diseno", "estructuras"] as Disciplina[]).forEach((d) => {
+      const b = document.createElement("button");
+      b.textContent = SKINS[d].nombre;
+      b.dataset.disc = d;
+      b.style.cssText =
+        "margin:2px 4px 2px 0;padding:4px 10px;border:1px solid var(--border);" +
+        "border-radius:4px;background:var(--panel2);color:var(--fg);cursor:pointer";
+      b.onclick = (): void => pinta(d);
+      cont.appendChild(b);
+    });
+  }
+  montaSkins();
 
   // Clic en la escena → selecciona el elemento (sin re-encuadrar).
   viewer.onPick = (info): void => { seleccionaElemento(info.expressId, { frame: false }); };
