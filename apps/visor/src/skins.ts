@@ -145,3 +145,31 @@ export function leyendaSkin(
   }
   return salida;
 }
+
+/**
+ * Superficie mínima del `Viewer` que la aplicación de una skin necesita. Se declara como
+ * interfaz para NO acoplar three/web-ifc al dominio: el `Viewer` la satisface estructuralmente
+ * (tiene `resetColors`, `setColorByClass`, `classes`). Así `aplicarSkin` es testeable con un
+ * doble sin WASM (D-SK-3, `skins.ts` puro).
+ */
+export interface AplicadorSkin {
+  /** revierte todas las mallas a su color original (web-ifc). */
+  resetColors(): void;
+  /** tiñe todas las mallas de una clase IFC con el color dado. */
+  setColorByClass(ifcClass: string, color: ColorRGB): void;
+  /** clases IFC presentes en el modelo con su conteo. */
+  classes(): Array<{ ifcType: string; count: number }>;
+}
+
+/**
+ * Aplica la skin de una disciplina sobre el viewer: revierte al color base y pinta cada clase
+ * presente del dominio con su color categórico. Devuelve la leyenda aplicada. Operación de
+ * presentación REVERSIBLE (conmutar de disciplina = volver a llamar): no recalcula geometría ni
+ * reescribe el modelo.
+ */
+export function aplicarSkin(v: AplicadorSkin, d: Disciplina): EntradaLeyenda[] {
+  v.resetColors();
+  const leyenda = leyendaSkin(d, v.classes());
+  for (const e of leyenda) v.setColorByClass(e.ifcClass, e.color);
+  return leyenda;
+}
