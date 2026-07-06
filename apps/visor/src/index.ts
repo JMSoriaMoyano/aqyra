@@ -24,3 +24,5 @@ export { parseMarkup, parseViewpoint, bcfCameraToViewer } from "./bcf.js";
 export type { BcfVec3, BcfTopic, BcfCamera, BcfViewpoint } from "./bcf.js";
 export { readCostModel, costHeatColor } from "./cost.js";
 export type { CosteModelo, PartidaCoste, ElementoCoste, CapituloCoste, TotalesCoste } from "./cost.js";
+export { SKINS, colorPorClase, leyendaSkin } from "./skins.js";
+export type { Disciplina, SkinDisciplina, EntradaLeyenda, ColorRGB } from "./skins.js";
