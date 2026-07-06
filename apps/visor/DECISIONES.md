@@ -218,3 +218,43 @@
 - **Nota diferida (paso 5, NO aquí).** Los glifos del overlay idealizado (V2) se construyen en el
   marco del loader (Y-up) y el overlay no se rota, así que quedan desalineados con el físico Z-up. Es
   exactamente el paso 5 (`idealize.ts` con la geometría en Z-up); no afecta al gate ni a la cota.
+
+## V10 · Skins del visor por disciplina — Slice 1 — 2026-07-06 · Firmante: JM (pendiente de firma en el merge)
+
+> Gobernado por la spec `openspec/changes/visor-skins-disciplina/` (SSD/test-first) y por
+> `docs/frontend-standards.md`. El visor está DENTRO de la Llave 1 (gate del PR). Superficie
+> `apps/visor` **propone puro**: re-viste y navega, no certifica; **NO dispara la Llave 2** (sin
+> release ni tag) y la **golden del visor/`core` queda intacta** (no lee ni reescribe IFC, no toca
+> la ingesta). `versions.lock` y `pnpm-lock.yaml` **inalterados**. Ancla las decisiones D-SK del
+> hilo «visor · skins por disciplina» (brief de Aqyra-Negocio, mockup v0.6). Ver también el
+> `roadmap.md` del cambio para la secuencia de slices y sus dependencias.
+
+- **D-SK-1 · Fuente de clases = mapa estático ∩ presentes.** La lista de clases por disciplina es
+  un **mapa estático de dominio** (`SKINS` en `src/skins.ts`), intersecado con las clases
+  **realmente presentes** en el modelo (`Viewer.classes()`). No se deriva solo del modelo ni se
+  listan clases del dominio ausentes. Resuelve §6.3 del brief con la recomendación del mockup.
+
+- **D-SK-2 · Color por clase = CATEGÓRICO, no rampa. RATIFICADO.** El «color por clase» es un mapa
+  por **tipo IFC** (`colorPorClase`), color propio y estable por clase, **separado del acento** de
+  disciplina; el acento tiñe el chrome de UI (pastilla/dock) y las mallas se tiñen por clase.
+  Prevalece sobre la redacción «rampa» del §7 del brief (texto heredado del mockup) y cierra §6.7.
+  Clase no mapeada → **gris de reserva `(0.55, 0.55, 0.58)`** (el mismo «sin coste» de
+  `setCostHeatmap`, V8/coste). La **tabla de hex es PROVISIONAL** (semilla de Slice 1); la versión
+  definitiva la fija el design system (Ola 3). El test ancla el **contrato** (determinismo +
+  distinción + reserva), no los hex, para que re-teñir no rompa la spec.
+
+- **D-SK-3 · `skins.ts` es dominio puro.** Sin `three`/`web-ifc`/estado: funciones deterministas
+  unit-testables headless (`test/skins.test.ts`, sin WASM). El cableado al `Viewer`
+  (`setColorByClass`/`resetColors`, `setVisibilityByClass`) vive en la capa de UI/demo, no en el
+  módulo. Aplicar/conmutar skin es presentación reversible; no recalcula geometría.
+
+- **D-SK-4 · Alcance Slice 1 = Diseño + Estructuras.** Las dos disciplinas de modelo de edificio ya
+  soportadas por `ELEMENT_TYPES`. Acentos: Diseño `#2f6bed`, Estructuras `#e07a4f`. El
+  `type Disciplina` se amplía en slices posteriores (Instalaciones/MEP, Obras lineales, Puentes),
+  cada uno gated por la ingesta que el visor necesita antes (clases MEP; `stationMetric`/PK +
+  `IfcAlignment`) — ver `roadmap.md`.
+
+- **Cómo se prueba (sin golden de píxeles).** El núcleo (mapa, color, leyenda) por tests puros
+  headless; la aplicación de la skin al `Viewer`, por revisión VISUAL de la demo (acento + color
+  por clase + reversibilidad). El E2E estructural (`federado-e2e.test.ts`) y la zona anclada
+  (`fixtures/`, cámara D29, golden C4-FED-06) quedan **intactos**: la skin no los toca.
