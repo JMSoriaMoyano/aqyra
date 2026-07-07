@@ -158,3 +158,36 @@ patrón `federacion-v0.2.0`/D15 del C4). `release.yml` amplía su disparo en UNA
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad —
 si al redactar el checklist a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca
 certifica (Llave 2 = JM).*
+
+---
+
+## Bloque 6D · write-back del veredicto al modelo (D-6D-1..3)
+
+> Ratificadas con JM el **2026-07-07** (OK explícito), antes del código. Vertical
+> `visor-cumplimiento-6d` (épica Jira AQYRAALL-1). Análogas a las D11–D15 de C5 (write-back 5D):
+> el resultado se ESCRIBE en el derivado para que el visor lo LEA y pinte. No crean esquema de
+> contrato nuevo (Pset OpenBIM, como el 5D usó `IfcCostSchedule` canónico).
+
+### D-6D-1 · Pset de cumplimiento — `Pset_Aqyra_Cumplimiento`
+
+`engines/cumplimiento.escribir_cumplimiento(veredicto, maestro, salida)` escribe en cada elemento
+del derivado un `IfcPropertySet` **`Pset_Aqyra_Cumplimiento`** (vía `IfcRelDefinesByProperties`)
+con propiedades `IfcPropertySingleValue`: `Resultado` (IfcLabel ∈ {cumple, no-cumple, no-aplica,
+no-verificable}), `Exigencia` (id dominante), `DocumentoBasico`, `Apartado`, `Pack`,
+`MotivoNoVerificable` (IfcText, solo si Resultado=no-verificable, D4). Determinista (cabecera SPF
+fija + GUIDs `uuid5`, patrón `escribir_coste`): escribir 2× → bytes idénticos.
+
+### D-6D-2 · Granularidad — por elemento, peor caso agregado
+
+El veredicto es por exigencia con `por_modelo` (sub-modelo federado). El write-back atribuye el
+`resultado` de cada sub-modelo a **todos sus elementos** (vía `modelo.guid_a_modelo` del
+manifiesto C4). Si varias exigencias tocan un elemento, `Resultado` = **peor caso**:
+`no-cumple` ≻ `no-verificable` ≻ `cumple`; `no-aplica` es **neutro** (solo queda `no-aplica` si
+todas lo son). Invariante: todo elemento del derivado recibe exactamente un `Resultado`.
+
+### D-6D-3 · Alcance v0 — las 5 exigencias del pack `CTE/2019` de `GOL-CTE-01`
+
+El primer corte escribe solo las 5 exigencias ya ancladas en `GOL-CTE-01` (los 4 estados). El
+golden 6D ancla por **determinismo** (2×=bytes) + **semántica** (el Pset casa con el veredicto de
+`GOL-CTE-01` proyectado a elementos por la regla del peor caso), sin md5 hardcodeado si es frágil
+por EOL (patrón D14 opción b de C5). Un fallo se corrige en el código, jamás aflojando la golden.
