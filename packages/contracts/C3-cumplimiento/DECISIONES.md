@@ -155,6 +155,36 @@ patrón `federacion-v0.2.0`/D15 del C4). `release.yml` amplía su disparo en UNA
 `[tool.uv.workspace]`. La firma la hace JM en local (el CI nunca certifica).
 
 ---
+
+# 6D · Write-back del cumplimiento al modelo (D-6D-1..3)
+
+> Vertical `visor-cumplimiento-6d`. Decisiones **D-6D-1..4** resueltas con JM el **2026-07-07** (OK
+> explícito) antes de tocar código. Simétrico al 5D del C5 (write-back D11–D15 + visor): el
+> cumplimiento **vuelve al modelo** para que el visor lo pinte (6D). D-6D-4 (colores) va en
+> `apps/visor/DECISIONES.md`.
+
+El engine gana `escribir_cumplimiento(veredicto, maestro, salida)` (**v0.2.0**), que **abre el
+derivado** (no federa, D7) y escribe un Pset por elemento. Espeja `escribir_coste` (5D): cabecera SPF
+determinista + GUIDs `uuid5` → escribir 2× = **bytes idénticos**.
+
+- **D-6D-1 · Pset.** `Pset_Aqyra_Cumplimiento` por elemento: `Resultado` ∈ {`cumple`, `no-cumple`,
+  `no-aplica`, `no-verificable`} (peor caso), `Exigencia` (id dominante), `DocumentoBasico`,
+  `Apartado`, `Pack`, `MotivoNoVerificable?` (solo si `no-verificable`). El cumplimiento **no** tiene
+  entidad OpenBIM canónica (a diferencia de `IfcCostSchedule`), de ahí el Pset de marca.
+- **D-6D-2 · Granularidad por elemento (peor caso).** El veredicto es por exigencia con `por_modelo`
+  (por sub-modelo federado). El write-back reparte el resultado de cada sub-modelo a **todos sus
+  elementos** (procedencia del manifiesto C4) y agrega el **peor caso** por elemento: `no-cumple` ≻
+  `no-verificable` ≻ `cumple`; `no-aplica` neutro (empate → primera exigencia). La exigencia dominante
+  aporta los metadatos. Invariante: cada elemento del Maestro recibe un `Resultado`.
+- **D-6D-3 · Alcance v0.** Las 5 exigencias del pack `CTE/2019` de `GOL-CTE-01`.
+- **Golden.** `GOL-CTE-6D-01` (caso separado, patrón GOL-PRE-02/5D): `run_case_c3` despacha por
+  `modo:"6d"` → federa+deriva+verifica+**escribe**, y ancla por DETERMINISMO (2×=bytes) + SEMÁNTICA
+  (el Pset casa con el veredicto proyectado a elementos por peor caso, proyección **INDEPENDIENTE**
+  del runner `_proyectar_peor_caso_6d`) + conteos. Sin md5 hardcodeado (opción b, D14 del C5).
+  **`GOL-CTE-01` intacto** (más checks, nunca menos): +14 checks del write-back.
+- **Release.** `engines/cumplimiento` **0.2.0**; tag firmado **`cumplimiento-v0.2.0`** (Llave 2).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad —
 si al redactar el checklist a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca
 certifica (Llave 2 = JM).*

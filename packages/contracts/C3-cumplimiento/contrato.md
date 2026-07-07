@@ -57,6 +57,15 @@ verificar(modelo_maestro, uso, localizacion, pack_normativo) → veredicto  (por
   lógica cableada. Multi-código = multi-pack.
 - **No federa** (eso es C4) ni redacta la memoria (eso es C7).
 
+## Write-back 6D — el cumplimiento vuelve al modelo (D-6D-1..3)
+
+Además de emitir el veredicto, el engine (v0.2.0) lo **escribe de vuelta al Maestro** para que el
+visor lo pinte: `escribir_cumplimiento(veredicto, maestro, salida)` abre el **derivado** (no federa,
+D7) y deja en cada elemento un **`Pset_Aqyra_Cumplimiento`** con su `Resultado` de **peor caso**
+(reparto de `por_modelo` a los elementos vía el manifiesto C4). Determinista (espeja `escribir_coste`
+del 5D: 2× = bytes idénticos). Lo ancla la golden **`GOL-CTE-6D-01`** por determinismo + semántica;
+detalle en `DECISIONES.md` (bloque 6D). El visor lo LEE en `apps/visor/src/compliance.ts`.
+
 ## Regla de evolución (heredada de C1/C4, sagrada)
 
 *Añadir claves nuevas, nunca cambiar la semántica de las existentes.* Los dos esquemas son
