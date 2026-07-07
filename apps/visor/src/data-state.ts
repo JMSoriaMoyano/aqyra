@@ -70,3 +70,22 @@ export function stampIfcText(text: string, state: DataState): string {
   if (i === -1) return comment + text; // sin sección DATA: marca al principio
   return text.slice(0, i + "DATA;".length) + comment + text.slice(i + "DATA;".length);
 }
+
+/**
+ * Patrón de Psets de RESULTADO calculados por un motor del ecosistema (Slice 2). El naming
+ * definitivo se reconcilia en el design system (§6.1 del brief); aquí se aceptan las variantes
+ * vigentes: `Pset_AqyraStructural` y `Pset_*Resultado*` (Estructurando/Aqyra).
+ */
+const RESULTADO = /Resultado|AqyraStructural/i;
+
+/**
+ * Deriva el `DataState` de un elemento a partir de los NOMBRES de sus Psets (propone puro,
+ * D-SL2-1): un elemento con un Pset de resultado de un motor está `computed`; sin él, `proposal`.
+ * `qa-passed`/`verified-signed` NO se infieren aquí — los acuña el flujo de firma (D-021); si el
+ * dato ya porta un estado, se pasa como `explicito` y esta función lo respeta. El visor NUNCA
+ * acuña el verde: `isCertified` sigue siendo la única fuente del trato certificado.
+ */
+export function estadoDato(psetNames: readonly string[], explicito?: DataState): DataState {
+  if (explicito) return explicito;
+  return psetNames.some((n) => RESULTADO.test(n)) ? "computed" : "proposal";
+}
