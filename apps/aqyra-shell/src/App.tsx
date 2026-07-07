@@ -2,19 +2,30 @@ import { useEffect, useState } from "react";
 import { Rail } from "./components/Rail";
 import { Home } from "./components/Home";
 import { ViewerPane } from "./components/ViewerPane";
-import { DISCIPLINES, hexToInt, hexToRgba, type Discipline } from "./disciplines";
+import { Footer } from "./components/Footer";
+import { DISCIPLINES, hexToInt, type Discipline } from "./disciplines";
+import { temaDisciplina, estadoDisciplina } from "./tema";
 
 export function App() {
   const [discipline, setDiscipline] = useState<Discipline>(DISCIPLINES[0]);
   const [file, setFile] = useState<File | null>(null);
   const [thinking, setThinking] = useState(false);
 
-  // revestir el --accent de la app según la disciplina (estrategia de skin)
+  // Tematización del chrome por disciplina (D-CH-2): el acento tiñe `--acc`/`--acc-soft`.
+  // Se mantiene `--accent`/`--accent-soft` como alias para el CSS heredado del shell.
   useEffect(() => {
+    const { acc, accSoft } = temaDisciplina(discipline.id);
     const s = document.documentElement.style;
-    s.setProperty("--accent", discipline.accent);
-    s.setProperty("--accent-soft", hexToRgba(discipline.accent, 0.16));
+    s.setProperty("--acc", acc);
+    s.setProperty("--acc-soft", accSoft);
+    s.setProperty("--accent", acc);
+    s.setProperty("--accent-soft", accSoft);
   }, [discipline]);
+
+  // Sólo se conmuta a disciplinas activas; las bloqueadas por ingesta no cambian el acento.
+  function elegirDisciplina(d: Discipline) {
+    if (estadoDisciplina(d.id).estado === "activa") setDiscipline(d);
+  }
 
   // el logo «piensa» un instante mientras se abre un modelo (demo del doble uso)
   function openFile(f: File) {
@@ -27,7 +38,7 @@ export function App() {
     <div className="app">
       <Rail
         discipline={discipline}
-        onDiscipline={setDiscipline}
+        onDiscipline={elegirDisciplina}
         onLogo={() => setThinking((t) => !t)}
         onHome={() => setFile(null)}
         thinking={thinking}
@@ -54,6 +65,8 @@ export function App() {
         ) : (
           <Home onOpen={openFile} />
         )}
+
+        <Footer />
       </main>
     </div>
   );

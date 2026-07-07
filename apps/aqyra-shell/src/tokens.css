@@ -18,7 +18,10 @@
   --brand: #2f6bed;
   --brand-2: #5a8dff;
   --brand-soft: #2f6bed2a;
-  /* acento activo (lo pisa la disciplina) */
+  /* acento activo (lo pisa la disciplina) — `--acc` es la grafía del mockup v0.6;
+     `--accent` se mantiene como alias del CSS heredado. Ambos los fija App.tsx (D-CH-2). */
+  --acc: #2f6bed;
+  --acc-soft: #2f6bed2a;
   --accent: #2f6bed;
   --accent-soft: #2f6bed2a;
 }
@@ -52,6 +55,11 @@ body {
 .ri:hover .tip { opacity: 1; transform: none; }
 .ri .dot { position: absolute; right: 7px; bottom: 7px; width: 8px; height: 8px; border-radius: 3px; border: 1.5px solid var(--side); }
 .sep { width: 26px; height: 1px; background: var(--line); margin: 8px 0; }
+/* Disciplina del rail bloqueada por ingesta (D-CH-2): atenuada, no clicable. El swatch de color
+   se mantiene visible pero apagado; el tooltip explica el bloqueo. */
+.ri.disc.blocked { opacity: .4; cursor: not-allowed; }
+.ri.disc.blocked:hover { color: var(--ink-dim); background: transparent; }
+.ri.disc.blocked .dot { filter: grayscale(.5); opacity: .7; }
 .grow { flex: 1; }
 .av { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(140deg, var(--brand), #123a86); display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; cursor: pointer; margin-top: 4px; }
 
@@ -66,6 +74,11 @@ body {
 .crumb .link:hover { color: var(--ink); }
 .disc-pill { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--accent); border: 1px solid var(--line-2); padding: 5px 11px; border-radius: 20px; }
 .disc-pill .d { width: 8px; height: 8px; border-radius: 3px; background: var(--accent); }
+
+/* ===== FOOTER (chrome v0.6) ===== */
+/* La tesis del embudo en dos frases; barra fina al pie del main, no tapa la escena. */
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 20px; font-size: 11.5px; color: var(--ink-mute); border-top: 1px solid var(--line); }
+.foot b { color: var(--acc); font-weight: 500; }
 
 /* ===== HOME ===== */
 .stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 24px 8vh; }

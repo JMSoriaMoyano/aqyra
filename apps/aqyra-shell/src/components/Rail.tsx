@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { AqyraMark } from "./AqyraMark";
 import { DISCIPLINES, type Discipline } from "../disciplines";
+import { estadoDisciplina } from "../tema";
 
 function Icon({ children }: { children: ReactNode }) {
   return (
@@ -56,17 +57,25 @@ export function Rail({
 
       <div className="sep" />
 
-      {DISCIPLINES.map((d) => (
-        <div
-          key={d.id}
-          className={"ri" + (d.id === discipline.id ? " on" : "")}
-          onClick={() => onDiscipline(d)}
-        >
-          <Icon><path d="M3 21V9l9-6 9 6v12" /><path d="M9 21v-6h6v6" /></Icon>
-          <span className="dot" style={{ background: d.accent }} />
-          <span className="tip">{d.name}</span>
-        </div>
-      ))}
+      {DISCIPLINES.map((d) => {
+        const bloqueada = estadoDisciplina(d.id).estado === "bloqueada";
+        return (
+          <div
+            key={d.id}
+            className={
+              "ri disc" +
+              (d.id === discipline.id ? " on" : "") +
+              (bloqueada ? " blocked" : "")
+            }
+            onClick={() => { if (!bloqueada) onDiscipline(d); }}
+            aria-disabled={bloqueada}
+          >
+            <Icon><path d="M3 21V9l9-6 9 6v12" /><path d="M9 21v-6h6v6" /></Icon>
+            <span className="dot" style={{ background: d.accent }} />
+            <span className="tip">{d.name}{bloqueada ? " · bloqueada (ingesta)" : ""}</span>
+          </div>
+        );
+      })}
 
       <div className="grow" />
 
