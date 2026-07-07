@@ -647,6 +647,21 @@ export class Viewer {
     });
   }
 
+  /**
+   * 6D · Cumplimiento: colorea cada malla por el color de su `Resultado` (D-6D-4). Mismo mecanismo
+   * que el heatmap 5D (color por expressID); las mallas sin resultado se atenúan a gris. Reversible
+   * con `resetColors`.
+   */
+  setCumplimientoColors(modelID: number, colorByExpressId: Map<number, { r: number; g: number; b: number }>): void {
+    this.eachMesh((m) => {
+      if (m.userData.modelID !== modelID) return;
+      const mat = m.material as THREE.MeshLambertMaterial;
+      const c = colorByExpressId.get(m.userData.expressId as number);
+      if (c) mat.color.setRGB(c.r, c.g, c.b);
+      else mat.color.setRGB(0.55, 0.55, 0.58); // gris neutro: sin resultado de cumplimiento
+    });
+  }
+
   /** Aísla las mallas de un modelo cuyo expressID esté en el conjunto. */
   isolateByExpressIds(modelID: number, ids: Set<number>): void {
     this.eachMesh((m) => {

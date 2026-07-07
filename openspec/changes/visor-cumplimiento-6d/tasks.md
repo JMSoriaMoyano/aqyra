@@ -30,16 +30,21 @@
       determinista `d9b68d468ee8…`.
 
 ## Paso 3 · Visor: `compliance.ts` (test-first)
-- [ ] Test (`apps/visor/test/compliance.test.ts`, unidad pura): `leerCumplimiento` sobre la
-      fixture devuelve `porElemento` con los `resultado` esperados y `resumen` correcto.
-- [ ] Código: `apps/visor/src/compliance.ts` (lee `Pset_Aqyra_Cumplimiento` con web-ifc, como
-      `cost.ts`); exportar tipos/símbolos desde `src/index.ts`.
+- [x] Test (`apps/visor/test/compliance.test.ts`): `leerCumplimiento` sobre la fixture 6D →
+      `porElemento` (13) todos `no-cumple` + `resumen` correcto + muro con exigencia dominante
+      `E-SI-RF-DECL`; helpers de color/leyenda puros (D-6D-4); modelo base (sin Pset) → `null`.
+- [x] Código: `apps/visor/src/compliance.ts` (`leerCumplimiento` lee `Pset_Aqyra_Cumplimiento` con
+      web-ifc, como `cost.ts`; `colorPorResultado`/`leyendaCumplimiento`). Loader `readCompliance`.
+      Tipos/símbolos exportados desde `src/index.ts`.
 
 ## Paso 4 · Visor: color + demo
-- [ ] Cablear en el viewer/demo: color por `resultado` (D-6D-4), leyenda de 4 con conteo, flag
-      `?6d`; reversible (`resetColors`). NO tocar `cost.ts` ni la ingesta.
-- [ ] E2E anclado (`apps/visor/test/cumplimiento-6d-e2e.test.ts`): md5 LF de la fixture + color
-      esperado por elemento. Patrón del E2E del coste 5D.
+- [x] Cableado: `viewer.setCumplimientoColors` (mismo mecanismo que el heatmap 5D, reversible con
+      `resetColors`); demo con flag `?6d`, botón, leyenda de 4 con conteo (D-6D-4), panel de
+      selección con Resultado/Exigencia/Pack. NO se toca `cost.ts` ni la ingesta.
+- [x] E2E anclado (`apps/visor/test/cumplimiento-6d-e2e.test.ts`): md5 LF de la fixture
+      (`fffeb26f…`, raw determinista `d9b68d46…` == golden) + color por elemento (los renderables
+      reciben el rojo de `no-cumple`). Patrón del E2E del coste 5D.
+- [x] Verificado en local (host, node_modules del visor): typecheck + build + **92/92 vitest** VERDE.
 
 ## Paso 5 · Unit tests + estado (MANDATORY)
 - [ ] Engine: `uv run pytest` targeted + suite; report en

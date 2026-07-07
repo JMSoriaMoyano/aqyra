@@ -7,6 +7,7 @@
 import {
   IfcLoader, Viewer, parseMarkup, parseViewpoint, bcfCameraToViewer, costHeatColor,
   SKINS, aplicarSkin, estadoDato, dataStateStyle,
+  colorPorResultado, leyendaCumplimiento,
 } from "@aqyra/visor";
 import type { BcfTopic, LoadedModel, SpatialNode, Disciplina, DataState } from "@aqyra/visor";
 
@@ -36,7 +37,13 @@ async function main(): Promise<void> {
     await modoCoste(loader, viewer);
     return;
   }
+  // 6D · modo cumplimiento (por query ?6d): abre el Maestro CON el veredicto y colorea por resultado.
+  if (new URLSearchParams(window.location.search).has("6d")) {
+    await modoCumplimiento(loader, viewer);
+    return;
+  }
   $("btn-coste").onclick = (): void => { window.location.search = "?5d"; };
+  $("btn-6d").onclick = (): void => { window.location.search = "?6d"; };
 
   const data = await textoDe("/federado.ifc");
   const m: LoadedModel = await loader.open({ name: "federado", data });
@@ -287,6 +294,58 @@ async function modoCoste(loader: IfcLoader, viewer: Viewer): Promise<void> {
   };
   $("vista-general").onclick = (): void => { viewer.frameAll(); };
   const btn = $("btn-coste") as HTMLButtonElement;
+  btn.textContent = "Volver (BCF)";
+  btn.onclick = (): void => { window.location.search = ""; };
+}
+
+/** 6D · Modo cumplimiento: abre `federado_6d.ifc` (Maestro con Pset_Aqyra_Cumplimiento), colorea los
+ *  elementos por su `Resultado` (D-6D-4), muestra la leyenda de 4 con conteo y el veredicto del objeto
+ *  al seleccionarlo. Self-contained (recarga con ?6d, escena limpia). Reversible con «Volver». */
+async function modoCumplimiento(loader: IfcLoader, viewer: Viewer): Promise<void> {
+  const data = await textoDe("/federado_6d.ifc");
+  const m: LoadedModel = await loader.open({ name: "federado_6d", data });
+  viewer.addIfcModel(m.modelID, loader.getMeshes(m.modelID));
+
+  const cump = loader.readCompliance(m.modelID);
+  if (!cump) { $("estado").textContent = "El modelo no trae Pset_Aqyra_Cumplimiento (no es 6D)."; return; }
+  $("estado").textContent =
+    `Maestro 6D · ${m.elements.length} elementos · cumplimiento (Pset_Aqyra_Cumplimiento) · CTE/2019`;
+
+  const guidPorExpr = new Map<number, string>();
+  const exprPorGuid = new Map<string, number>();
+  for (const e of m.elements) { guidPorExpr.set(e.expressId, e.globalId); exprPorGuid.set(e.globalId, e.expressId); }
+
+  const colorPorExpress = new Map<number, { r: number; g: number; b: number }>();
+  for (const [guid, ec] of cump.porElemento) {
+    const ex = exprPorGuid.get(guid);
+    if (ex !== undefined) colorPorExpress.set(ex, colorPorResultado(ec.resultado));
+  }
+  viewer.setCumplimientoColors(m.modelID, colorPorExpress);
+  viewer.frameAll();
+
+  // Leyenda categórica de 4 (D-6D-4) con el conteo del resumen.
+  const rgbCss = (c: { r: number; g: number; b: number }): string =>
+    `rgb(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)})`;
+  const leg = $("leyenda-6d");
+  leg.style.display = "block";
+  leg.innerHTML =
+    `<div style="margin-bottom:4px;color:var(--fg-dim)">cumplimiento por elemento</div>` +
+    leyendaCumplimiento(cump)
+      .map((e) => `<div class="fila"><span class="sw" style="background:${rgbCss(e.color)}"></span>${e.etiqueta} · ${e.count}</div>`)
+      .join("");
+  $("totales").innerHTML = leyendaCumplimiento(cump).map((e) => `${e.etiqueta}: ${e.count}`).join("<br>");
+
+  viewer.onPick = (info): void => {
+    const guid = guidPorExpr.get(info.expressId) ?? "";
+    const ec = cump.porElemento.get(guid);
+    viewer.highlightSelection(m.modelID, [info.expressId], { accent: ACENTO });
+    $("props").textContent = ec
+      ? `${guid}\nResultado: ${ec.resultado}\nExigencia: ${ec.exigencia ?? "—"} (${ec.documentoBasico ?? "—"} ${ec.apartado ?? ""})` +
+        `\nPack: ${ec.pack ?? "—"}${ec.motivo ? `\nMotivo: ${ec.motivo}` : ""}`
+      : `${guid}\n(elemento sin resultado de cumplimiento)`;
+  };
+  $("vista-general").onclick = (): void => { viewer.frameAll(); };
+  const btn = $("btn-6d") as HTMLButtonElement;
   btn.textContent = "Volver (BCF)";
   btn.onclick = (): void => { window.location.search = ""; };
 }

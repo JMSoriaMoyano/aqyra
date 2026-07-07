@@ -2,6 +2,8 @@ import { IfcAPI } from "web-ifc";
 import * as WI from "web-ifc";
 import { readCostModel } from "./cost.js";
 import type { CosteModelo } from "./cost.js";
+import { leerCumplimiento } from "./compliance.js";
+import type { CumplimientoModelo } from "./compliance.js";
 import { deriveModel } from "./idealize.js";
 import type { DerivedModel, PhysicalElement } from "./idealize.js";
 
@@ -467,6 +469,11 @@ export class IfcLoader {
   /** Modelo de coste 5D (IfcCostSchedule/IfcCostItem/asignaciones), o null si el IFC no es 5D. */
   readCost(modelID: number): CosteModelo | null {
     return readCostModel(this.api, modelID);
+  }
+
+  /** Cumplimiento 6D (Pset_Aqyra_Cumplimiento por elemento), o null si el IFC no es 6D. */
+  readCompliance(modelID: number): CumplimientoModelo | null {
+    return leerCumplimiento(this.api, modelID);
   }
 
   close(modelID: number): void {
