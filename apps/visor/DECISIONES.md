@@ -258,3 +258,33 @@
   headless; la aplicación de la skin al `Viewer`, por revisión VISUAL de la demo (acento + color
   por clase + reversibilidad). El E2E estructural (`federado-e2e.test.ts`) y la zona anclada
   (`fixtures/`, cámara D29, golden C4-FED-06) quedan **intactos**: la skin no los toca.
+
+## V11 · Selección + estado de dato del elemento — Slice 2 — 2026-07-07 · Firmante: JM (pendiente de firma en el merge)
+
+> Gobernado por la spec `openspec/changes/visor-seleccion-estado/` (SSD/test-first). Superficie
+> `apps/visor` **propone puro**: no dispara la Llave 2. El visor MUESTRA el estado del dato, pero
+> **no lo certifica**: la regla dura de `isCertified` (solo `verified-signed` = verde) sigue siendo
+> la única fuente del trato certificado (D-021). Golden del visor/`core` intacta. Continúa el hilo
+> de skins (Slice 1 y su cableado ya en `main`).
+
+- **D-SL2-1 · Estado derivado de la presencia de Pset de resultado. RATIFICADO (Opción A).** La
+  función pura `estadoDato(psetNames, explicito?)` de `data-state.ts` deriva el `DataState` de un
+  elemento por los NOMBRES de sus Psets: con un Pset de resultado de un motor (`Pset_AqyraStructural`
+  / `Pset_*Resultado*`, patrón `RESULTADO`) → `computed`; sin él → `proposal`. Es la señal ya
+  disponible en el modelo hoy, granular por elemento (como el mockup). Se descartaron: una
+  propiedad concreta del Pset (Opción B — exige que el emisor la escriba, hoy inexistente; queda
+  como evolución vía el parámetro `explicito`) y un estado a nivel de modelo (Opción C — no
+  distingue elemento calculado de propuesta).
+
+- **D-SL2-2 · Chip en la barra lateral, no flotante.** El panel de Selección permanece en la barra
+  (`#props`), con el chip encima de los Psets. El panel flotante/arrastrable del mockup es pulido
+  posterior (UX backlog), no Slice 2.
+
+- **D-SL2-3 · El visor no acuña el verde.** `estadoDato` NUNCA devuelve `verified-signed` por
+  inferencia (solo si viene `explicito`); `qa-passed`/`verified-signed` los acuña el flujo de firma
+  (D-021·B). Coherente con «la IA propone, nunca certifica».
+
+- **Cómo se prueba.** El núcleo (`estadoDato`) por tests puros headless (`test/estado-dato.test.ts`:
+  computed/proposal, nunca verified-signed por inferencia, respeta `explicito`, regla de
+  `isCertified`); el chip en el panel, por revisión VISUAL de la demo (resalte ámbar `#ff8a3d`
+  existente + chip por elemento). Zona anclada (fixtures, E2E, golden) intacta.

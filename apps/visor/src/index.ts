@@ -18,7 +18,7 @@ export { elevationMetric, stationMetric } from "./spatial-metric.js";
 export type { SpatialMetric, Container } from "./spatial-metric.js";
 export { deriveModel, pcaAxisStrategy } from "./idealize.js";
 export type { DerivedModel, DerivedNode, DerivedMember, PhysicalElement, IdealizationStrategy, Vec3 } from "./idealize.js";
-export { dataStateStyle, isCertified, exportStamp, stampIfcText } from "./data-state.js";
+export { dataStateStyle, isCertified, exportStamp, stampIfcText, estadoDato } from "./data-state.js";
 export type { DataState, DataStateStyle, Iso19650Code } from "./data-state.js";
 export { parseMarkup, parseViewpoint, bcfCameraToViewer } from "./bcf.js";
 export type { BcfVec3, BcfTopic, BcfCamera, BcfViewpoint } from "./bcf.js";

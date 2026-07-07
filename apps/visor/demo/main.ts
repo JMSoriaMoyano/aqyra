@@ -6,9 +6,9 @@
  *  + el ResizeObserver del Viewer. El visor solo LEE el BCF/derivado (PLAN §1). */
 import {
   IfcLoader, Viewer, parseMarkup, parseViewpoint, bcfCameraToViewer, costHeatColor,
-  SKINS, aplicarSkin,
+  SKINS, aplicarSkin, estadoDato, dataStateStyle,
 } from "@aqyra/visor";
-import type { BcfTopic, LoadedModel, SpatialNode, Disciplina } from "@aqyra/visor";
+import type { BcfTopic, LoadedModel, SpatialNode, Disciplina, DataState } from "@aqyra/visor";
 
 const ACENTO = 0xff8a3d;
 const $ = (id: string): HTMLElement => document.getElementById(id)!;
@@ -17,6 +17,11 @@ async function textoDe(url: string): Promise<string> {
   const r = await fetch(url);
   if (!r.ok) throw new Error(`${url}: ${r.status}`);
   return r.text();
+}
+
+/** Escapa texto para inyectarlo como HTML sin romper el marcado (Psets vienen del modelo). */
+function escapaHtml(s: string): string {
+  return s.replace(/[&<>]/g, (c) => (c === "&" ? "&amp;" : c === "<" ? "&lt;" : "&gt;"));
 }
 
 async function main(): Promise<void> {
@@ -46,9 +51,11 @@ async function main(): Promise<void> {
   // Panel «Selección»: tipo/ids + PSets (#3, el gancho de valor OpenBIM).
   async function muestraElemento(expressId: number, ifcType: string, globalId: string): Promise<void> {
     let txt = `${ifcType}\nGlobalId: ${globalId}\nexpressId: ${expressId}`;
+    let estado: DataState = "proposal";
     try {
       const rec = await loader.getProperties(m.modelID, expressId, globalId);
       const nombres = Object.keys(rec.psets);
+      estado = estadoDato(nombres); // Slice 2 (D-SL2-1): computed si hay Pset de resultado
       if (nombres.length) {
         txt += "\n\nPsets:";
         for (const ps of nombres) {
@@ -63,7 +70,15 @@ async function main(): Promise<void> {
     } catch (err) {
       txt += `\n\n(Psets no disponibles: ${err})`;
     }
-    $("props").textContent = txt;
+    // Chip de estado de dato (D-021): color/etiqueta de dataStateStyle; el verde solo lo da
+    // verified-signed (isCertified). El visor MUESTRA el estado, no lo certifica.
+    const st = dataStateStyle(estado);
+    const chip =
+      `<span style="display:inline-block;padding:1px 8px;border-radius:999px;` +
+      `font:600 10px system-ui,sans-serif;color:#fff;background:${st.color}">${st.label}</span>`;
+    $("props").innerHTML =
+      `<div style="margin-bottom:6px">${chip}</div>` +
+      `<div style="white-space:pre-wrap">${escapaHtml(txt)}</div>`;
   }
 
   function marcaNodoArbol(expressId: number): void {
