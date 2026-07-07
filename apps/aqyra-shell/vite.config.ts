@@ -32,9 +32,26 @@ const servirWasmWebIfc: Plugin = {
   },
 };
 
+// Maestro federado de MUESTRA para arrancar en la vista de visor (como el mockup): sirve la
+// fixture del visor en /federado.ifc. Solo dev; NO altera la zona anclada (solo lectura).
+const fixtureVisor = resolve(aqui, "..", "visor", "fixtures", "federado.ifc");
+const servirMuestra: Plugin = {
+  name: "servir-muestra-ifc",
+  configureServer(server) {
+    server.middlewares.use("/federado.ifc", (_req, res, next) => {
+      if (existsSync(fixtureVisor)) {
+        res.setHeader("Content-Type", "application/octet-stream");
+        createReadStream(fixtureVisor).pipe(res);
+        return;
+      }
+      next();
+    });
+  },
+};
+
 export default defineConfig({
   root: aqui,
-  plugins: [react(), servirWasmWebIfc],
+  plugins: [react(), servirWasmWebIfc, servirMuestra],
   resolve: {
     // el visor se consume desde su fuente (igual que su propia demo)
     alias: { "@aqyra/visor": resolve(aqui, "..", "visor", "src", "index.ts") },

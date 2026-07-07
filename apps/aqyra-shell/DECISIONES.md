@@ -49,6 +49,25 @@ gizmo) → C (dock cableado) → D (secciones honestas-vacías) → E (barra de 
 Núcleo puro `src/tema.ts` (`temaDisciplina`, `railEstados`, `estadoDisciplina`, `DISCIPLINAS_ACTIVAS`)
 con test headless `test/tema.test.ts` (vitest en Node, sin WASM). Rail con las 5 disciplinas: 2
 activas, 3 atenuadas-bloqueadas (tooltip «bloqueada · ingesta»); pulsar una bloqueada no cambia el
-acento. Tematización del chrome vía `--acc`/`--acc-soft` (alias `--accent`). Footer del mockup. Sin
-tocar `ViewerPane` (el frame de columna única + resizer y los overlays van en commits posteriores del
-Slice A y en B–E).
+acento. Tematización del chrome vía `--acc`/`--acc-soft` (alias `--accent`). Footer del mockup.
+
+### Slice A→E · commit 2 — vista de visor casada con el mockup — 2026-07-07
+
+Reconstrucción de la **vista de visor** (con modelo abierto) para casar con
+`Mockup_Aqyra_v0.6_visor-skins.html`: paleta Pizarra fría + layout 3 columnas
+(rail 56 · sidebar 272 redimensionable · viewport) en `src/chrome.css`. Componente `VisorChrome.tsx`
+(sustituye a `ViewerPane.tsx`, borrado; `Footer.tsx` borrado, ahora inline):
+
+- **Sidebar** con secciones plegables: Estructura espacial (árbol real), Estructura funcional
+  (honesta-vacía, D-CH-4), Clases (contadores reales de `Viewer.classes()`), Clasificación
+  (honesta-vacía → bsDD por olas), bloque de dominio por disciplina (honesto-vacío).
+- **Viewport** sobre la escena three.js real: pastilla de disciplina, botones Vista general/Coste
+  5D/Cumplimiento 6D (5D/6D → toast honesto: requieren el Maestro 5D/6D), **dock** de herramientas por
+  disciplina (Color por clase real vía `aplicarSkin`; resto stub honesto), **panel de selección
+  FLOTANTE arrastrable** con tag de clase + chip de estado (`estadoDato`/`dataStateStyle`) + Psets
+  reales, **gizmo de ejes** XYZ, **barra de IA** (chips de prompts + selector de modelo; envío stub) y
+  **footer**. Rail restyle al `.db` del mockup (logo + 5 swatches).
+- **Arranque en la vista de visor** (como el mockup): vite sirve la fixture `federado.ifc` del visor
+  en `/federado.ifc` (solo dev, solo lectura, zona anclada intacta) y App la auto-carga; la Home queda
+  accesible por el logo. Tematización `--acc` por disciplina conserva el comportamiento del commit 1.
+  Sigue propone puro, Llave 1, sin Llave 2.
