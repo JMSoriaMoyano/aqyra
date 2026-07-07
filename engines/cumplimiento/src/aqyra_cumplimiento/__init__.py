@@ -18,8 +18,10 @@ procedencia del manifiesto (fuente de verdad, D1 de C4) para atribuir por modelo
 re-ejecuta services/federacion (esa es zona de C4); no adivina uso ni localización (se DECLARAN).
 """
 from .cumplimiento import verificar, cargar_maestro
+from .escritura import escribir_cumplimiento, resultado_por_elemento
 from .evaluadores import EVALUADORES, RESULTADOS
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
-__all__ = ["verificar", "cargar_maestro", "EVALUADORES", "RESULTADOS", "__version__"]
+__all__ = ["verificar", "cargar_maestro", "escribir_cumplimiento", "resultado_por_elemento",
+           "EVALUADORES", "RESULTADOS", "__version__"]
