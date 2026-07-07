@@ -102,11 +102,12 @@ function TreeRow({
 interface Sel { expressId: number; ifcType: string; globalId: string; psets: Psets; estado: DataState; }
 
 export function VisorChrome({
-  file, discipline, accentInt, onHome,
+  file, discipline, accentInt, onHome, onOpenFile,
 }: {
-  file: File; discipline: Discipline; accentInt: number; onHome: () => void;
+  file: File; discipline: Discipline; accentInt: number; onHome: () => void; onOpenFile: (f: File) => void;
 }) {
   const sceneRef = useRef<HTMLDivElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
   const loaderRef = useRef<IfcLoader | null>(null);
   const viewerRef = useRef<Viewer | null>(null);
   const modelRef = useRef<LoadedModel | null>(null);
@@ -287,9 +288,18 @@ export function VisorChrome({
       <div className="resizer" onPointerDown={onResize} role="separator" aria-orientation="vertical" />
 
       {/* ───────── VIEWPORT ───────── */}
-      <section className="vp">
+      <section
+        className="vp"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) onOpenFile(f); }}
+      >
+        <input
+          ref={fileInput} type="file" accept=".ifc" style={{ display: "none" }}
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) onOpenFile(f); }}
+        />
         <div className="vppill"><span className="d" />{discipline.name}</div>
         <div className="vpbtns">
+          <button className="vpbtn" onClick={() => fileInput.current?.click()}>Abrir IFC</button>
           <button className="vpbtn" onClick={() => viewerRef.current?.frameAll()}>Vista general</button>
           <button className="vpbtn" onClick={() => setNota("El coste 5D requiere el Maestro federado 5D (IfcCostSchedule).")}>Coste 5D</button>
           <button className="vpbtn" onClick={() => setNota("El cumplimiento 6D requiere el Maestro con Pset_Aqyra_Cumplimiento.")}>Cumplimiento 6D</button>

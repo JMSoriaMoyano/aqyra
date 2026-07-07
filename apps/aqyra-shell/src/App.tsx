@@ -62,6 +62,7 @@ export function App() {
           discipline={discipline}
           accentInt={hexToInt(discipline.accent)}
           onHome={() => setFile(null)}
+          onOpenFile={openFile}
         />
       ) : (
         <Home onOpen={openFile} />

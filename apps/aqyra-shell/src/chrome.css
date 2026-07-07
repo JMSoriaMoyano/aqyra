@@ -71,7 +71,9 @@ body {
 .row.clk { cursor: pointer; }
 .row.clk:hover { background: var(--panel); color: var(--ink); }
 .row.sel { background: var(--panel-2); color: var(--ink); }
-.row .caret { width: 12px; text-align: center; color: var(--faint); font-size: 10px; cursor: pointer; user-select: none; }
+/* caret del árbol: se anulan el fondo azul y la animación `blink` del cursor de texto de la Home
+   (tokens.css .caret) — colisión de nombre de clase. Es una flecha, no un cursor. */
+.row .caret { width: 12px; height: auto; text-align: center; color: var(--faint); font-size: 10px; cursor: pointer; user-select: none; background: none; animation: none; }
 .row .caret.leaf { visibility: hidden; }
 .row .tk { font-weight: 600; }
 .row .rs { color: var(--faint); overflow: hidden; text-overflow: ellipsis; }
