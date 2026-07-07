@@ -138,9 +138,18 @@ async function main(): Promise<void> {
     const leg = $("leyenda-skin");
     const rgbCss = (c: { r: number; g: number; b: number }): string =>
       `rgb(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)})`;
+    // Pastilla de disciplina flotante sobre la escena (acento de la skin activa), como el mockup.
+    const pastilla = document.createElement("div");
+    pastilla.style.cssText =
+      "position:absolute;top:10px;left:10px;z-index:40;padding:4px 12px;border-radius:999px;" +
+      "font:600 12px system-ui,sans-serif;background:rgba(28,34,43,.9);border:1px solid var(--border)";
+    $("escena").appendChild(pastilla);
     const pinta = (d: Disciplina): void => {
       const leyenda = aplicarSkin(viewer, d);
       const skin = SKINS[d];
+      pastilla.textContent = `● ${skin.nombre}`;
+      pastilla.style.color = skin.acento;
+      pastilla.style.borderColor = skin.acento;
       cont.querySelectorAll("button").forEach((b) => {
         const activo = b.dataset.disc === d;
         b.style.borderColor = activo ? skin.acento : "var(--border)";
@@ -166,6 +175,7 @@ async function main(): Promise<void> {
       b.onclick = (): void => pinta(d);
       cont.appendChild(b);
     });
+    pinta("diseno"); // skin por defecto al cargar: la demo entra ya coloreada (como el mockup)
   }
   montaSkins();
 
