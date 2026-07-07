@@ -21,10 +21,13 @@
       no federa.
 
 ## Paso 2 · Golden: caso 6D anclado
-- [ ] `packages/golden/C3/GOL-CTE-6D-01` (o extensión de GOL-CTE-01): fixture derivada con el Pset;
-      `run_case` federa+deriva+verifica+escribe y compara contra el MISMO expected (determinismo +
-      semántica). Conserva íntegros los checks previos (más checks, nunca menos).
-- [ ] Verificar en local (`just check` / runner de golden) VERDE antes de seguir.
+- [x] `packages/golden/C3/GOL-CTE-6D-01` (caso separado, patrón GOL-PRE-02/5D): fixtures de
+      GOL-CTE-01 byte a byte; `run_case_c3` despacha por `modo:"6d"` → `_run_c3_6d` que
+      federa+deriva+verifica+escribe y ancla por DETERMINISMO (2× = bytes) + SEMÁNTICA (proyección
+      peor caso INDEPENDIENTE del runner) + conteos. Conserva íntegros los 22 checks de GOL-CTE-01.
+- [x] Verificar en local (runner standalone, python mcp-bim) VERDE: GOL-CTE-01 (22) +
+      GOL-CTE-6D-01 (14) → VERDE. n_elementos=13 (todos no-cumple, E-SI-RF-DECL domina), md5
+      determinista `d9b68d468ee8…`.
 
 ## Paso 3 · Visor: `compliance.ts` (test-first)
 - [ ] Test (`apps/visor/test/compliance.test.ts`, unidad pura): `leerCumplimiento` sobre la
