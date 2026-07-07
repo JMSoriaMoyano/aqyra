@@ -1,0 +1,3 @@
+[submodule "sdd-aqyra"]
+	path = sdd-aqyra
+	url = https://bitbucket.org/aqyra/sdd-aqyra.git
