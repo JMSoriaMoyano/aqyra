@@ -336,7 +336,7 @@ export function VisorChrome({
         ) : null}
 
         <div className="scwrap">
-          <div className="scene" ref={sceneRef}>
+          <div className="escena" ref={sceneRef}>
             {loading ? <div className="loading"><AqyraMark size={54} thinking /></div> : null}
           </div>
           <svg className="axes" viewBox="0 0 100 100" aria-hidden="true">

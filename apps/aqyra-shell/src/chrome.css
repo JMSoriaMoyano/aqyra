@@ -118,10 +118,13 @@ body {
 .kv .v { color: var(--ink); font-family: ui-monospace, monospace; text-align: right; word-break: break-all; }
 /* escena real (three.js) */
 .scwrap { flex: 1; position: relative; min-height: 120px; }
-.scene { position: absolute; inset: 0; }
-.scene canvas { display: block; }
-.scene .loading { position: absolute; inset: 0; display: grid; place-items: center; z-index: 5; }
-.scene .loading svg { width: 54px; height: 54px; }
+/* El Viewer.mount fija `position:relative` inline en el contenedor (gana sobre el stylesheet), así
+   que NO se puede estirar con `inset:0`; se le da altura explícita para que llene `.scwrap`
+   (que ya mide el alto disponible por flex). Sin esto el lienzo colapsa a 1px y no se ve nada. */
+.escena { position: relative; width: 100%; height: 100%; min-height: 0; }
+.escena canvas { display: block; }
+.escena .loading { position: absolute; inset: 0; display: grid; place-items: center; z-index: 5; }
+.escena .loading svg { width: 54px; height: 54px; }
 .axes { position: absolute; left: 18px; bottom: 96px; width: 62px; height: 62px; z-index: 6; pointer-events: none; }
 /* barra de IA (stub) */
 .ai { margin: 0 auto 14px; width: min(760px, 94%); background: var(--panel); border: 1px solid var(--line-2); border-radius: 4px; padding: 7px; transition: .15s; }
