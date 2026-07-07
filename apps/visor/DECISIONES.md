@@ -154,6 +154,15 @@
   zona anclada). `versions.lock [apps.visor].version` → 0.7.0. Al cierre, tag firmado
   **`visor-v0.7.0`** (Llave 2, patrón `visor-v0.6.0`) si el vertical queda VERDE y JM firma.
 
+- **V13 · Cumplimiento en el visor (6D).** Ratificada con JM el **2026-07-07** (vertical
+  `visor-cumplimiento-6d`, épica Jira AQYRAALL-1). `src/compliance.ts` (módulo NUEVO, puro de
+  datos como `cost.ts`) LEE `Pset_Aqyra_Cumplimiento` (D-6D-1) con web-ifc → por elemento su
+  `resultado` + `resumen`. Visualización: color por `resultado` (**D-6D-4**: `cumple` verde
+  `#2e9e5b`, `no-cumple` rojo `#d64545`, `no-aplica` gris `#8a8f98`, `no-verificable` ámbar
+  `#e0a43a`), leyenda de 4 con conteo, flag de demo `?6d`. NO toca el 5D (`cost.ts`) ni la zona
+  anclada (`federado.ifc`/E2E). E2E `test/cumplimiento-6d-e2e.test.ts` ancla md5 LF de la fixture
+  + color por elemento (patrón V10). Versionado + tag `visor-v0.x.0` al cierre (Llave 2).
+
 ## V8 · Convenio Z-up del visor — paso 1: geometría en la ingesta — 2026-07-05 · Firmante: JM (pendiente de firma en el merge)
 
 > Gobernado por la spec `openspec/changes/visor-convenio-zup/` (SDD/test-first) y por

@@ -24,5 +24,12 @@ export { parseMarkup, parseViewpoint, bcfCameraToViewer } from "./bcf.js";
 export type { BcfVec3, BcfTopic, BcfCamera, BcfViewpoint } from "./bcf.js";
 export { readCostModel, costHeatColor } from "./cost.js";
 export type { CosteModelo, PartidaCoste, ElementoCoste, CapituloCoste, TotalesCoste } from "./cost.js";
+export {
+  leerCumplimiento, colorPorResultado, leyendaCumplimiento,
+  RESULTADOS_CUMPLIMIENTO, HEX_CUMPLIMIENTO, ETIQUETA_CUMPLIMIENTO, GRIS_SIN_DATO, PSET_CUMPLIMIENTO,
+} from "./compliance.js";
+export type {
+  CumplimientoModelo, ElementoCumplimiento, ResultadoCumplimiento, EntradaLeyendaCumplimiento,
+} from "./compliance.js";
 export { SKINS, colorPorClase, leyendaSkin, aplicarSkin } from "./skins.js";
 export type { Disciplina, SkinDisciplina, EntradaLeyenda, ColorRGB, AplicadorSkin } from "./skins.js";

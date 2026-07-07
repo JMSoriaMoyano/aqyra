@@ -618,6 +618,187 @@ def _recompute_c3(case_dir: Path, entrada: dict, repo: Path, tmpdir: Path) -> di
                      entrada.get("localizacion", {}), pack_dir)
 
 
+# --------------------------------------------------------------------------- #
+# C3 · write-back 6D — el cumplimiento vuelve al modelo (vertical visor-cumplimiento-6d)        #
+# --------------------------------------------------------------------------- #
+# Severidad del peor caso (D-6D-2) — REIMPLEMENTADA aquí para NO depender del engine: el runner
+# reproyecta el veredicto a elementos y lo casa con el Pset del IFC 6D (dos implementaciones que
+# deben coincidir, como _checks_5d casa el cost schedule con el presupuesto).
+_SEVERIDAD_6D = {"no-cumple": 3, "no-verificable": 2, "cumple": 1, "no-aplica": 0}
+
+
+def _proyectar_peor_caso_6d(veredicto: dict, guid2mod: dict) -> dict:
+    """{GlobalId → (resultado, exigencia_id)} proyectando `por_modelo` a cada elemento con la regla
+    del peor caso (D-6D-2): no-cumple≻no-verificable≻cumple; no-aplica neutro; empate → primera."""
+    exigencias = veredicto.get("exigencias", [])
+    por_modelo: dict[str, tuple] = {}
+    for m in set(guid2mod.values()):
+        best = None  # (severidad, -orden, exig_id, resultado)
+        for orden, e in enumerate(exigencias):
+            pm = e.get("por_modelo")
+            if pm is not None:
+                if m not in pm:
+                    continue
+                r = pm[m].get("resultado")
+            else:
+                r = e.get("resultado")
+            if r is None:
+                continue
+            cand = (_SEVERIDAD_6D.get(r, 0), -orden, e.get("id"), r)
+            if best is None or cand[:2] > best[:2]:
+                best = cand
+        if best is not None:
+            por_modelo[m] = (best[3], best[2])
+    return {g: por_modelo[m] for g, m in guid2mod.items() if m in por_modelo}
+
+
+def _checks_6d(f, veredicto: dict, guid2mod: dict, exp6d: dict, r1: dict) -> list[tuple[str, bool, str]]:
+    """SEMÁNTICA 6D (D-6D-2): el `Pset_Aqyra_Cumplimiento` del IFC casa con el veredicto proyectado a
+    elementos por peor caso (proyección INDEPENDIENTE del runner). Ancla conteos contra el expected."""
+    from collections import Counter
+
+    import ifcopenshell.util.element as _ue
+
+    out: list[tuple[str, bool, str]] = []
+    pset_name = exp6d.get("pset", "Pset_Aqyra_Cumplimiento")
+    proy = _proyectar_peor_caso_6d(veredicto, guid2mod)  # {guid: (resultado, exig)}
+
+    elems = {el.GlobalId: el for el in f.by_type("IfcElement")}
+    mapeados = set(elems) & set(guid2mod)  # elementos del derivado con procedencia (D1)
+    leido: dict[str, dict] = {}
+    for g in mapeados:
+        try:
+            ps = _ue.get_psets(elems[g]) or {}
+        except Exception:  # noqa: BLE001
+            ps = {}
+        if pset_name in ps:
+            leido[g] = ps[pset_name]
+
+    # 1 · cobertura total (invariante D-6D-2: cada elemento del Maestro recibe un Resultado)
+    sin_pset = mapeados - set(leido)
+    out.append((f"{pset_name} en cada elemento del Maestro", not sin_pset,
+                f"{len(leido)}/{len(mapeados)} elementos con Pset" if not sin_pset
+                else f"sin Pset: {len(sin_pset)}"))
+    out.append(("n_elementos (write-back) == elementos del derivado",
+                r1["n_elementos"] == len(mapeados),
+                f"{r1['n_elementos']} escritos (== {len(mapeados)} mapeados)"))
+
+    # 2 · taxonomía cerrada del Resultado (D4)
+    resultados = [str(v.get("Resultado")) for v in leido.values()]
+    out.append(("taxonomía de Resultado cerrada (D4)",
+                bool(resultados) and all(r in RESULTADOS_C3 for r in resultados),
+                f"{sorted(set(resultados))}"))
+
+    # 3 · SEMÁNTICA — Resultado (y Exigencia dominante) del Pset == peor caso proyectado
+    malos = [g for g in leido if g in proy and str(leido[g].get("Resultado")) != proy[g][0]]
+    out.append(("Resultado del Pset == veredicto por peor caso", not malos,
+                "todos los elementos casan" if not malos else f"descuadran: {len(malos)}"))
+    mal_exig = [g for g in leido if g in proy and str(leido[g].get("Exigencia")) != str(proy[g][1])]
+    out.append(("Exigencia dominante del Pset == proyección", not mal_exig,
+                "exigencia dominante coherente" if not mal_exig else f"descuadran: {len(mal_exig)}"))
+
+    # 4 · conteos == expected (ancla) y == proyección independiente
+    # La proyección se restringe a los elementos ESCRITOS (IfcElement): guid2mod mapea todo
+    # IfcProduct con procedencia (incl. estructura espacial), pero el engine escribe el Pset solo
+    # en IfcElement — el conteo relevante del write-back es el de esos elementos.
+    cnt = Counter(resultados)
+    cnt_proy = Counter(proy[g][0] for g in leido if g in proy)
+    exp_por = exp6d.get("por_resultado", {})
+    conteo_ok = (all(cnt.get(k, 0) == exp_por.get(k, 0) for k in RESULTADOS_C3)
+                 and all(cnt.get(k, 0) == cnt_proy.get(k, 0) for k in RESULTADOS_C3))
+    out.append(("por_resultado (IFC) == expected == proyección", conteo_ok, f"{dict(cnt)}"))
+    if "n_elementos" in exp6d:
+        out.append(("nº de elementos con Pset == esperado", len(leido) == exp6d["n_elementos"],
+                    f"{len(leido)} (esperado {exp6d['n_elementos']})"))
+
+    # 5 · veredicto agregado (cross-check con el veredicto del engine)
+    if "veredicto_agregado" in exp6d:
+        out.append(("veredicto agregado == esperado",
+                    veredicto.get("veredicto") == exp6d["veredicto_agregado"],
+                    f"{veredicto.get('veredicto')}"))
+    return out
+
+
+def _run_c3_6d(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+               repo: Path = DEFAULT_REPO) -> bool:
+    """C3 write-back 6D (vertical visor-cumplimiento-6d, D-6D-1..4): el cumplimiento vuelve al modelo.
+
+    El runner federa+deriva el Maestro (fixtures de GOL-CTE-01/C4-FED-06), VERIFICA con el engine C3
+    y ESCRIBE `Pset_Aqyra_Cumplimiento` por elemento (engines/cumplimiento.escribir_cumplimiento).
+    ANCLA (opción b, patrón 5D D14 — sin md5 hardcodeado, EOL-frágil):
+      - DETERMINISMO: escribir el 6D 2× → bytes idénticos (cabecera SPF fija + GUIDs uuid5).
+      - SEMÁNTICA: el Pset casa con el veredicto proyectado a elementos por peor caso (proyección
+        INDEPENDIENTE del runner) + conteos anclados en el expected.
+    Un fallo se investiga en el ENGINE (escritura.py), jamás aflojando el check. GOL-CTE-01 (el
+    oráculo anclado del veredicto) queda intacto — este caso ancla el WRITE-BACK."""
+    import tempfile
+
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c3_schemas(contracts_dir)
+    entrada = json.loads((case_dir / "entrada.json").read_text(encoding="utf-8"))
+    exp6d = expected.get("cumplimiento_6d", {})
+
+    # 1 · identidad por hash de las fixtures (reutilizadas de GOL-CTE-01, intactas)
+    entradas = expected.get("entradas_md5", {})
+    checks.append(("entradas declaradas", bool(entradas), f"{len(entradas)} fichero/s"))
+    for rel, exp_md5 in sorted(entradas.items()):
+        p = case_dir / rel
+        got = _md5(p) if p.exists() else None
+        checks.append((f"identidad {rel}", got == exp_md5,
+                       f"md5 {str(got)[:12]}… (esperado {exp_md5[:12]}…)"))
+
+    ps = str(repo / "services" / "federacion" / "src")
+    if ps not in sys.path:
+        sys.path.insert(0, ps)
+    pe = str(DEFAULT_ENGINE_C3)
+    if pe not in sys.path:
+        sys.path.insert(0, pe)
+    try:
+        import ifcopenshell
+
+        from aqyra_cumplimiento import escribir_cumplimiento, verificar
+        from aqyra_cumplimiento import modelo as _CM
+        from aqyra_federacion import derivar, federar_fichero
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import engine/servicio/ifcopenshell", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        # 2 · federar + derivar el Maestro (el engine ABRE el derivado, no federa — D7)
+        manifiesto = federar_fichero(case_dir / "reglas.json")
+        derivado = tdp / "federado.ifc"
+        derivar(manifiesto, case_dir, derivado)
+        checks.append(("federar+derivar el Maestro", derivado.exists(),
+                       "derivado federado de las fixtures de GOL-CTE-01"))
+
+        # 3 · verificar (engine C3) → veredicto ; conforma esquema
+        pack = entrada.get("pack_normativo", {})
+        pack_dir = (repo / "data" / "packs" / "normativa"
+                    / str(pack.get("id")) / str(pack.get("version")))
+        maestro = {"manifiesto": manifiesto, "base_dir": case_dir,
+                   "ifc_derivado": derivado, "proyecto": entrada.get("proyecto")}
+        veredicto = verificar(maestro, entrada.get("uso", {}),
+                              entrada.get("localizacion", {}), pack_dir)
+        ok, detail = validate_against_schema(veredicto, schemas["veredicto"])
+        checks.append(("veredicto (para el 6D) conforma esquema", ok, detail))
+
+        # 4 · escribir_cumplimiento 2× → DETERMINISMO (D-6D-2, opción b D14)
+        guid2mod = _CM.guid_a_modelo(manifiesto, case_dir)
+        r1 = escribir_cumplimiento(veredicto, maestro, tdp / "a" / "federado_6d.ifc", guid2mod=guid2mod)
+        r2 = escribir_cumplimiento(veredicto, maestro, tdp / "b" / "federado_6d.ifc", guid2mod=guid2mod)
+        checks.append(("6D determinista (escribir 2× = bytes idénticos)", r1["md5"] == r2["md5"],
+                       f"md5 {r1['md5'][:12]}… (== {r2['md5'][:12]}…); {r1['n_elementos']} elementos"))
+
+        # 5 · SEMÁNTICA — el Pset casa con el veredicto proyectado por peor caso
+        f = ifcopenshell.open(str(tdp / "a" / "federado_6d.ifc"))
+        checks.extend(_checks_6d(f, veredicto, guid2mod, exp6d, r1))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
 def run_case_c3(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
     """C3: RECOMPUTE con el engine (Fase III·h3, D9) + checks anclados del 3.2 — ver ficha.
@@ -638,6 +819,10 @@ def run_case_c3(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
       7. uso/localización coherentes entrada↔veredicto.
       8. por_modelo ⊆ modelos de la entrada.
     """
+    # Dispatch por modo (vertical 6D): GOL-CTE-6D-01 (write-back del cumplimiento) tiene su rama.
+    if expected.get("modo") == "6d" or "cumplimiento_6d" in expected:
+        return _run_c3_6d(case_dir, contracts_dir, expected, tol, repo)
+
     from collections import Counter
 
     checks: list[tuple[str, bool, str]] = []

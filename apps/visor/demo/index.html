@@ -53,6 +53,16 @@
       background: rgba(28,34,43,.9); color: var(--fg); border: 1px solid var(--border);
       border-radius: 6px; padding: 6px 10px; font: 600 12px system-ui, sans-serif; cursor: pointer; }
     #btn-coste:hover { border-color: var(--accent); color: #fff; }
+    /* 6D — botón «Cumplimiento» + leyenda categórica de 4 (D-6D-4) */
+    #btn-6d { position: absolute; top: 82px; right: 10px; z-index: 40;
+      background: rgba(28,34,43,.9); color: var(--fg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 6px 10px; font: 600 12px system-ui, sans-serif; cursor: pointer; }
+    #btn-6d:hover { border-color: var(--accent); color: #fff; }
+    #leyenda-6d { display: none; position: absolute; bottom: 10px; left: 10px; z-index: 40;
+      background: rgba(28,34,43,.9); border: 1px solid var(--border); border-radius: 6px;
+      padding: 6px 8px; font: 11px system-ui, sans-serif; color: var(--fg); }
+    #leyenda-6d .fila { display: flex; align-items: center; gap: 6px; padding: 1px 0; }
+    #leyenda-6d .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
     #totales { font-family: ui-monospace, monospace; font-size: 11px; color: var(--fg);
       background: var(--panel2); border: 1px solid var(--border); border-radius: 6px; padding: 8px; }
     #leyenda { display: none; position: absolute; bottom: 10px; left: 10px; z-index: 40;
@@ -82,7 +92,9 @@
     <div id="escena">
       <button id="vista-general" title="Re-encuadra el modelo completo">Vista general</button>
       <button id="btn-coste" title="Abre el Maestro 5D y colorea por coste">Coste 5D</button>
+      <button id="btn-6d" title="Abre el Maestro 6D y colorea por cumplimiento">Cumplimiento 6D</button>
       <div id="leyenda">coste por elemento<div class="barra"></div><span>menor → mayor</span></div>
+      <div id="leyenda-6d">cumplimiento por elemento</div>
     </div>
   </div>
   <script type="module" src="./main.ts"></script>

@@ -1,0 +1,18 @@
+{
+  "caso": "GOL-CTE-6D-01",
+  "contrato": "C3-cumplimiento",
+  "modo": "6d",
+  "_oraculo": "WRITE-BACK 6D (vertical visor-cumplimiento-6d, D-6D-1..4): el cumplimiento vuelve al modelo. El runner federa+deriva las fixtures de GOL-CTE-01/C4-FED-06 (reglas.json), VERIFICA con el engine C3 (pack CTE/2019, 5 exigencias de GOL-CTE-01) y escribe Pset_Aqyra_Cumplimiento por elemento (engines/cumplimiento.escribir_cumplimiento): Resultado (peor caso), Exigencia dominante, DocumentoBasico, Apartado, Pack, MotivoNoVerificable? ANCLA (opcion b, D14 — sin md5 hardcodeado, EOL-fragil): DETERMINISMO (escribir 2x = bytes identicos) + SEMANTICA (el Pset casa con el veredicto de GOL-CTE-01 proyectado a elementos por peor caso, proyeccion INDEPENDIENTE del runner). El veredicto de GOL-CTE-01 hace que E-SI-RF-DECL (no-cumple, por_modelo ARQ+EST) domine el peor caso en TODOS los elementos de ambos submodelos => todos no-cumple; veredicto agregado no-conforme (D4). GOL-CTE-01 (oraculo anclado del veredicto) queda intacto. Un fallo se investiga en el ENGINE (escritura.py), jamas aflojando el check.",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "653a359154112146d82ca02de0fde2ee",
+    "entrada/EST.ifc": "b84cb79c4a7cf4b560148340bc8dc305"
+  },
+  "cumplimiento_6d": {
+    "pset": "Pset_Aqyra_Cumplimiento",
+    "n_elementos": 13,
+    "por_resultado": { "cumple": 0, "no-cumple": 13, "no-aplica": 0, "no-verificable": 0 },
+    "resultado_dominante": "no-cumple",
+    "exigencia_dominante": "E-SI-RF-DECL",
+    "veredicto_agregado": "no-conforme"
+  }
+}

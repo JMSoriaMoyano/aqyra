@@ -155,6 +155,69 @@ patrón `federacion-v0.2.0`/D15 del C4). `release.yml` amplía su disparo en UNA
 `[tool.uv.workspace]`. La firma la hace JM en local (el CI nunca certifica).
 
 ---
+
+# 6D · Write-back del cumplimiento al modelo (D-6D-1..3)
+
+> Vertical `visor-cumplimiento-6d`. Decisiones **D-6D-1..4** resueltas con JM el **2026-07-07** (OK
+> explícito) antes de tocar código. Simétrico al 5D del C5 (write-back D11–D15 + visor): el
+> cumplimiento **vuelve al modelo** para que el visor lo pinte (6D). D-6D-4 (colores) va en
+> `apps/visor/DECISIONES.md`.
+
+El engine gana `escribir_cumplimiento(veredicto, maestro, salida)` (**v0.2.0**), que **abre el
+derivado** (no federa, D7) y escribe un Pset por elemento. Espeja `escribir_coste` (5D): cabecera SPF
+determinista + GUIDs `uuid5` → escribir 2× = **bytes idénticos**.
+
+- **D-6D-1 · Pset.** `Pset_Aqyra_Cumplimiento` por elemento: `Resultado` ∈ {`cumple`, `no-cumple`,
+  `no-aplica`, `no-verificable`} (peor caso), `Exigencia` (id dominante), `DocumentoBasico`,
+  `Apartado`, `Pack`, `MotivoNoVerificable?` (solo si `no-verificable`). El cumplimiento **no** tiene
+  entidad OpenBIM canónica (a diferencia de `IfcCostSchedule`), de ahí el Pset de marca.
+- **D-6D-2 · Granularidad por elemento (peor caso).** El veredicto es por exigencia con `por_modelo`
+  (por sub-modelo federado). El write-back reparte el resultado de cada sub-modelo a **todos sus
+  elementos** (procedencia del manifiesto C4) y agrega el **peor caso** por elemento: `no-cumple` ≻
+  `no-verificable` ≻ `cumple`; `no-aplica` neutro (empate → primera exigencia). La exigencia dominante
+  aporta los metadatos. Invariante: cada elemento del Maestro recibe un `Resultado`.
+- **D-6D-3 · Alcance v0.** Las 5 exigencias del pack `CTE/2019` de `GOL-CTE-01`.
+- **Golden.** `GOL-CTE-6D-01` (caso separado, patrón GOL-PRE-02/5D): `run_case_c3` despacha por
+  `modo:"6d"` → federa+deriva+verifica+**escribe**, y ancla por DETERMINISMO (2×=bytes) + SEMÁNTICA
+  (el Pset casa con el veredicto proyectado a elementos por peor caso, proyección **INDEPENDIENTE**
+  del runner `_proyectar_peor_caso_6d`) + conteos. Sin md5 hardcodeado (opción b, D14 del C5).
+  **`GOL-CTE-01` intacto** (más checks, nunca menos): +14 checks del write-back.
+- **Release.** `engines/cumplimiento` **0.2.0**; tag firmado **`cumplimiento-v0.2.0`** (Llave 2).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad —
 si al redactar el checklist a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca
 certifica (Llave 2 = JM).*
+
+---
+
+## Bloque 6D · write-back del veredicto al modelo (D-6D-1..3)
+
+> Ratificadas con JM el **2026-07-07** (OK explícito), antes del código. Vertical
+> `visor-cumplimiento-6d` (épica Jira AQYRAALL-1). Análogas a las D11–D15 de C5 (write-back 5D):
+> el resultado se ESCRIBE en el derivado para que el visor lo LEA y pinte. No crean esquema de
+> contrato nuevo (Pset OpenBIM, como el 5D usó `IfcCostSchedule` canónico).
+
+### D-6D-1 · Pset de cumplimiento — `Pset_Aqyra_Cumplimiento`
+
+`engines/cumplimiento.escribir_cumplimiento(veredicto, maestro, salida)` escribe en cada elemento
+del derivado un `IfcPropertySet` **`Pset_Aqyra_Cumplimiento`** (vía `IfcRelDefinesByProperties`)
+con propiedades `IfcPropertySingleValue`: `Resultado` (IfcLabel ∈ {cumple, no-cumple, no-aplica,
+no-verificable}), `Exigencia` (id dominante), `DocumentoBasico`, `Apartado`, `Pack`,
+`MotivoNoVerificable` (IfcText, solo si Resultado=no-verificable, D4). Determinista (cabecera SPF
+fija + GUIDs `uuid5`, patrón `escribir_coste`): escribir 2× → bytes idénticos.
+
+### D-6D-2 · Granularidad — por elemento, peor caso agregado
+
+El veredicto es por exigencia con `por_modelo` (sub-modelo federado). El write-back atribuye el
+`resultado` de cada sub-modelo a **todos sus elementos** (vía `modelo.guid_a_modelo` del
+manifiesto C4). Si varias exigencias tocan un elemento, `Resultado` = **peor caso**:
+`no-cumple` ≻ `no-verificable` ≻ `cumple`; `no-aplica` es **neutro** (solo queda `no-aplica` si
+todas lo son). Invariante: todo elemento del derivado recibe exactamente un `Resultado`.
+
+### D-6D-3 · Alcance v0 — las 5 exigencias del pack `CTE/2019` de `GOL-CTE-01`
+
+El primer corte escribe solo las 5 exigencias ya ancladas en `GOL-CTE-01` (los 4 estados). El
+golden 6D ancla por **determinismo** (2×=bytes) + **semántica** (el Pset casa con el veredicto de
+`GOL-CTE-01` proyectado a elementos por la regla del peor caso), sin md5 hardcodeado si es frágil
+por EOL (patrón D14 opción b de C5). Un fallo se corrige en el código, jamás aflojando la golden.
