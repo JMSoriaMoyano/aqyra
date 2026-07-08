@@ -196,6 +196,43 @@ Un fallo se investiga en el ENGINE, jamás aflojando el check.
 `presupuesto-v0.2.0` (Llave 2, firma de JM; el CI nunca certifica).
 
 ---
+
+# C5 — Decisiones del MOTOR DE VALORACIÓN MULTI-EJE (Ola 1·E1.1 — `valores{}` en la salida)
+
+> Resueltas con JM el **2026-07-08** (OK explícito vía ratificación), antes de tocar código. Numeración
+> **propia del C5**, continúa D1–D15. Materializan **E1.1** del handoff negocio→desarrollo
+> (`Aqyra-Negocio/BACKLOG_motor-valoracion_para-Aqyra-Raiz.md`) y son coherentes con **D-025** del
+> registro del ecosistema (carbono = extensión forward-open de C5, no contrato nuevo). Change SDD:
+> `openspec/changes/c5-salida-valores-multieje/`. ZONA ANCLADA intocable: el eje coste
+> (`precio_unitario`/`importe`), los packs, las fixtures con `Qto`, la golden `GOL-PRE-01`
+> (byte-idéntica; `valores` es opcional y no aparece en su `expected`).
+
+## D16 · El eje coste NO se duplica — `valores{}` es el canal de los ejes NO-coste
+
+El eje **coste** canónico permanece **exclusivamente** en `precio_unitario` / `importe` (fuente de
+verdad). La nueva propiedad **opcional** `valores{}` de `partida_medida` (mapa `id-de-eje → valor_eje`)
+**no** obliga a contener `coste`; se reserva para los ejes que llegan después (carbono, agua,
+energía embebida…). Un productor **puede** reflejar `valores.coste` como espejo informativo, pero el
+golden **no** lo exige y el engine (E1.2) **no** lo emite por defecto → `GOL-PRE-01` sigue **verde y
+byte-idéntica** (PEM 7 022,53 → PEC 10 111,74), su `expected` sin editar. Se **rechaza** la alternativa
+de mover el coste dentro de `valores` (rompería la golden y la compatibilidad de C7).
+
+## D17 · `id de eje` = string libre con convención, NO enum cerrado
+
+La clave de `valores{}` es un `string` **libre** (convención: `coste`, `carbono`, `agua`,
+`energia_embebida`, …). **No** se cierra en enum: añadir un eje nuevo **no** debe re-anclar el contrato
+ni su golden — a diferencia de `origen` (enum cerrado, D5, taxonomía semántica fija). La disciplina de
+nombres reservados se documenta en `contrato.md`; la gobierna el pack/criterio, no el esquema.
+
+## D18 · `etapas` (EN 15978) = objeto opcional `clave→número`, invariante Σ etapas = total
+
+El desglose por ciclo de vida es un objeto **opcional** dentro de cada `valor_eje`, con claves
+convencionales `A1A3`, `A4A5`, `B`, `C`, `D` (EN 15978). Cuando se declaran etapas, la suma de las
+presentes **debe** igualar el `total` del eje (invariante que el engine y el golden de carbono
+comprobarán en la Ola 2; en E1.1 solo se fija la **forma**). Se admite desglose **parcial** (p. ej.
+solo `A1A3`+`A4A5`) sin exigir el ciclo completo.
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*

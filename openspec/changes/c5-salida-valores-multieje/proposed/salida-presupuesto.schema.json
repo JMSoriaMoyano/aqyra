@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aqyra.dev/contracts/C5/salida-presupuesto.schema.json",
   "title": "C5 · salida de presupuesto (estado de mediciones + cuadros de precios 1 y 2 + resumen PEM/PEC)",
-  "description": "Salida AUTORITATIVA de presupuestar() (D1): el estado de mediciones (justificación trazable al objeto), el cuadro de precios nº1 (en letra), el cuadro de precios nº2 (descompuesto MO/mat/maq/indirectos, justificación) y el resumen PEM→GG→BI→base→IVA→PEC. El Documento de Presupuesto (PDF/Word) lo compone C7 aparte. Forward-open. Determinista dado criterio + banco. E1.1 (D16-D18): la partida gana un objeto opcional 'valores' (eje de valor multi-eje), sin tocar el eje coste canónico (precio_unitario/importe).",
+  "description": "Salida AUTORITATIVA de presupuestar() (D1): el estado de mediciones (justificación trazable al objeto), el cuadro de precios nº1 (en letra), el cuadro de precios nº2 (descompuesto MO/mat/maq/indirectos, justificación) y el resumen PEM→GG→BI→base→IVA→PEC. El Documento de Presupuesto (PDF/Word) lo compone C7 aparte. Forward-open. Determinista dado criterio + banco. E1.1: la partida gana un objeto opcional 'valores' (eje de valor multi-eje), sin tocar el eje coste canónico (precio_unitario/importe).",
   "type": "object",
   "required": ["proyecto", "estado_mediciones", "cuadro_precios_1", "cuadro_precios_2", "resumen"],
   "additionalProperties": true,
