@@ -62,6 +62,16 @@ def mul2(a, b) -> float:
     return float((_d(a) * _d(b)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 
+def _valor_eje(unitario, total, unidad, banco_ref, origen) -> dict:
+    """Valor de UN eje para UNA partida (E1.2, D19): unitario × cantidad = total, en su unidad,
+    con el banco de origen (ausente para origen=regla). Conforma `$defs.valor_eje` del contrato C5."""
+    v: dict = {"unitario": unitario, "total": total, "unidad": unidad}
+    if banco_ref:
+        v["banco"] = banco_ref
+    v["origen"] = origen
+    return v
+
+
 # --------------------------------------------------------------------------- #
 # Número → letra (español, mayúsculas) para el cuadro de precios nº1.                             #
 # --------------------------------------------------------------------------- #
@@ -113,6 +123,16 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
 
     Determinista: mismo modelo + mismo criterio + mismo banco → mismo presupuesto. La salida
     conforma `salida-presupuesto.schema.json`.
+
+    Eje de valor multi-eje (E1.2, D16-D19). `parametros.eje` (default ``"coste"``) selecciona el
+    eje que representa el `banco` (cuyo valor unitario no es forzosamente €). El **mapeo
+    clase→partida del criterio no cambia entre ejes**: se mide una vez y se valora en el eje pedido.
+    - ``eje == "coste"`` (default): el coste vive en ``precio_unitario`` / ``importe`` (fuente de
+      verdad canónica, D16); **no** se emite ``valores`` → salida byte-idéntica al C5 previo
+      (GOL-PRE-01 intacta).
+    - ``eje != "coste"``: además del cálculo, cada partida gana ``valores[eje]`` — el valor del eje
+      ETIQUETADO con su unidad y su banco (D19, espejo + valor etiquetado). La unidad del eje la
+      declara el banco (``unidad_eje``; fallback ``moneda``); su ref anclada, ``banco.ref``/``banco``.
     """
     objetos = modelo.get("objetos", [])
     reglas_clase = {r["clase"]: r.get("partidas", []) for r in criterio.get("reglas_por_clase", [])}
@@ -120,6 +140,13 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
 
     banco_partida = {p["codigo"]: p for p in banco.get("partidas", [])}
     precio_banco = {c: p["precio"] for c, p in banco_partida.items()}
+
+    # --- eje de valor (E1.2, D19). El eje coste (default) NO toca nada de lo de abajo: su rama es
+    # el código C5 previo, byte a byte. Un eje NO-coste refleja el valor etiquetado en valores[eje].
+    eje = str(parametros.get("eje", "coste"))
+    es_coste = eje == "coste"
+    unidad_eje = banco.get("unidad_eje") or banco.get("moneda") or parametros.get("moneda", "EUR")
+    banco_ref = banco.get("ref") or banco.get("banco")
 
     catalogo = _catalogo(criterio)
     cap_de_codigo: dict[str, str] = {}
@@ -168,7 +195,7 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
         crit = a["criterio_aplicado"]
         if a["detalle"]:
             crit = f"{crit} ({' + '.join(a['detalle'])})"
-        partidas_modelo.append({
+        p = {
             "codigo": cod,
             "capitulo": cap_de_codigo.get(cod, _CAP_OTROS[0]),
             "descripcion": banco_partida[cod].get("descripcion", cod),
@@ -179,7 +206,10 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
             "criterio_aplicado": crit,
             "origen": "modelo",
             "trazabilidad": a["trazabilidad"],
-        })
+        }
+        if not es_coste:  # eje NO-coste: valor etiquetado (D19). El coste (default) no lo emite.
+            p["valores"] = {eje: _valor_eje(precio, importe, unidad_eje, banco_ref, "modelo")}
+        partidas_modelo.append(p)
 
     pem_medible = r2(sum(_d(p["importe"]) for p in partidas_modelo))
 
@@ -188,7 +218,7 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
     for pdef in reglas_sg:
         res = PRIMITIVAS["partida-por-ratio"](pem_medible, pdef)
         importe = r2(res["importe"])
-        partidas_regla.append({
+        p = {
             "codigo": pdef["codigo"],
             "capitulo": cap_de_codigo.get(pdef["codigo"], _CAP_OTROS[0]),
             "descripcion": pdef.get("descripcion", "Seguridad y salud (partida alzada)"),
@@ -199,7 +229,10 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
             "criterio_aplicado": res["criterio_aplicado"],
             "origen": "regla",
             "trazabilidad": [],
-        })
+        }
+        if not es_coste:  # partida sin geometría: valor etiquetado del eje, sin banco (origen=regla).
+            p["valores"] = {eje: _valor_eje(importe, importe, unidad_eje, None, "regla")}
+        partidas_regla.append(p)
 
     # --- estado de mediciones ordenado por el catálogo (capítulo → orden de partida) ---
     todas = partidas_modelo + partidas_regla
