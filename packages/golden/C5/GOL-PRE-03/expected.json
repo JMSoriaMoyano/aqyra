@@ -1,0 +1,103 @@
+{
+  "modo": "proyeccion",
+  "_nota": "GOL-PRE-03 (E2.2, D24-D29). Ancla la proyección proyectar(eje,corte) por DETERMINISMO + SEMÁNTICA + INVARIANTE (D28). Fixtures aumentadas de GOL-PRE-01 (md5 propios). criterio/AQ/v2 anclado por su content_sha256. GOL-PRE-01/02 intactas.",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "19a272a59a605953f55e2af71390d838",
+    "entrada/EST.ifc": "f1d25192ee805f7af343665bdff6e1b0"
+  },
+  "cost": {
+    "PEM": 7022.53,
+    "PEC": 10111.74
+  },
+  "vistas": [
+    {
+      "id": "i-planta",
+      "eje": "coste",
+      "corte": "espacial",
+      "suma": 7022.53,
+      "grupos": [
+        {
+          "grupo": "Emplazamiento/Edificio/Nivel 00",
+          "valor_total": 566.65,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Emplazamiento/Edificio/Planta Baja",
+          "valor_total": 3815.28,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Emplazamiento/Edificio/Nivel 01",
+          "valor_total": 2502.9,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 137.7,
+          "fuente": "regla"
+        }
+      ]
+    },
+    {
+      "id": "ii-uniclass",
+      "eje": "coste",
+      "corte": "uniclass",
+      "suma": 7022.53,
+      "grupos": [
+        {
+          "grupo": "(sin clasificar)",
+          "valor_total": 6884.83,
+          "fuente": "—"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 137.7,
+          "fuente": "regla"
+        }
+      ]
+    },
+    {
+      "id": "iii-v-funcional",
+      "eje": "coste",
+      "corte": "funcional",
+      "suma": 7022.53,
+      "grupos": [
+        {
+          "grupo": "Cimentación",
+          "valor_total": 22.81,
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "Sys-Portico",
+          "valor_total": 543.84,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Estructura",
+          "valor_total": 3754.35,
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "Aulas",
+          "valor_total": 1820.66,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Admin",
+          "valor_total": 557.77,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Carpintería",
+          "valor_total": 185.4,
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 137.7,
+          "fuente": "regla"
+        }
+      ]
+    }
+  ]
+}

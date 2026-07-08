@@ -89,7 +89,23 @@
           "additionalProperties": { "$ref": "#/$defs/valor_eje" },
           "propertyNames": { "type": "string", "minLength": 1 },
           "$comment": "clave = id de eje (string libre, convención: 'coste', 'carbono', 'agua', 'energia_embebida', ...). Enum NO cerrado a propósito (D17): añadir un eje NO debe re-anclar el contrato."
+        },
+        "traza_cantidades": {
+          "description": "DESGLOSE POR OBJETO de la cantidad de la partida (aditivo, forward-open, E2.2 / D26). Lista {guid, cantidad}: la contribución de cada objeto a la cantidad de esta partida. Habilita el reparto por magnitud EXACTA de la proyección (proyectar) SIN re-medir. La Σ de 'cantidad' == 'cantidad' de la partida. SÓLO en partidas origen=modelo (las origen=regla no tienen geometría). OPCIONAL: GOL-PRE-01 conforma sin editar.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/traza_cantidad" },
+          "$comment": "el reparto de cantidad = reparto de valor para cualquier eje (el precio unitario es uniforme dentro de la partida)."
         }
+      }
+    },
+    "traza_cantidad": {
+      "description": "E2.2 (D26). Contribución de UN objeto a la cantidad de UNA partida.",
+      "type": "object",
+      "required": ["guid", "cantidad"],
+      "additionalProperties": true,
+      "properties": {
+        "guid": { "type": "string", "minLength": 1, "$comment": "GlobalId del objeto (⊆ trazabilidad de la partida)" },
+        "cantidad": { "type": "number", "minimum": 0, "$comment": "cantidad medida que este objeto aporta a la partida" }
       }
     },
     "precio_1": {

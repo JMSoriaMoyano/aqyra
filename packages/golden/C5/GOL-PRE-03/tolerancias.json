@@ -1,0 +1,4 @@
+{
+  "_nota": "GOL-PRE-03 (vista/proyección, E2.2). El invariante Σ y los valores por grupo se comparan en importe con tolerancia absoluta (redondeo a 2 decimales del reparto). El anclaje es DETERMINISMO + SEMÁNTICA + INVARIANTE (D28), sin md5 de salida.",
+  "importe_abs": 0.01
+}
