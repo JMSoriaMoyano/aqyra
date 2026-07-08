@@ -1,0 +1,29 @@
+{
+  "id": "AQ",
+  "familia": "criterio",
+  "version": "v2",
+  "titulo": "Criterio de medición Aqyra — corte mínimo + cortes funcionales (E2.1)",
+  "fuente": "Criterio propio del despacho (Aqyra). v2 = v1 + tabla reglas_sistema (fallback funcional por jerarquía de tipos IFC, N-06/D22). Mapeo clase→partida idéntico a v1.",
+  "vigencia": {
+    "desde": "2026-07-08",
+    "estado": "vigente (corte mínimo + cortes)"
+  },
+  "metadatos": {
+    "autoria": "propia (despacho)",
+    "nota": "Superset forward de criterio/AQ/v1 (D22): v1 intacto y anclado; v2 añade reglas_sistema (fallback por supertipo: ~10 familias de dominio cubren el centenar de clases IFC). Consumidores: C5 (engines/presupuesto, cortes) y la golden de vista GOL-PRE-03 (E2.2). GOL-PRE-01/02 siguen en v1."
+  },
+  "contenido": {
+    "fichero": "criterio.json",
+    "md5_criterio": "4e0f56e4539490dd0ddda589e85deaaa",
+    "partidas": [
+      "FAB010",
+      "REV010",
+      "PIN010",
+      "EHL010",
+      "EHS010",
+      "CSZ010",
+      "PPM010",
+      "SYS010"
+    ]
+  }
+}

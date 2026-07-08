@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aqyra.dev/contracts/C5/entrada-presupuesto.schema.json",
   "title": "C5 · entrada de presupuesto (presupuestar: modelo neutro de medición + criterio + banco + parámetros)",
-  "description": "Entrada de C5: el MODELO NEUTRO DE MEDICIÓN (cantidades por objeto, extraídas de los Qto + la clasificación del modelo — 'la medición nace del modelo, no se teclea'), más el pack de CRITERIO de medición, el pack de BANCO de precios y los parámetros económicos. Forward-open: se AÑADEN claves, nunca se cambia la semántica de las existentes. La extracción IFC(+Qto)→modelo neutro es el módulo 1 del engine (aguas arriba); aquí se declara ya extraída.",
+  "description": "Entrada de C5: el MODELO NEUTRO DE MEDICIÓN (cantidades por objeto, extraídas de los Qto + la clasificación del modelo — 'la medición nace del modelo, no se teclea'), más el pack de CRITERIO de medición, el pack de BANCO de precios y los parámetros económicos. Forward-open: se AÑADEN claves, nunca se cambia la semántica de las existentes. La extracción IFC(+Qto)→modelo neutro es el módulo 1 del engine (aguas arriba); aquí se declara ya extraída. E2.1 añade `cortes` por objeto (agrupaciones nativas del IFC).",
   "type": "object",
   "required": ["proyecto", "modelo", "criterio_ref", "banco_ref", "parametros"],
   "additionalProperties": true,
@@ -64,7 +64,7 @@
       }
     },
     "objeto_medicion": {
-      "description": "Un objeto medible del modelo: su GUID (traza), su clase IFC, su doble clasificación (que conecta objeto→partida), sus cantidades (de los Qto) y sus CORTES (atribución a grupos por los cuatro ejes de agrupación nativos del IFC; E2.1, N-06).",
+      "description": "Un objeto medible del modelo: su GUID (traza), su clase IFC, su doble clasificación (que conecta objeto→partida), sus cantidades (de los Qto) y sus CORTES (atribución a grupos por los cuatro ejes de agrupación nativos del IFC; E2.1).",
       "type": "object",
       "required": ["guid", "clase", "cantidades"],
       "additionalProperties": true,

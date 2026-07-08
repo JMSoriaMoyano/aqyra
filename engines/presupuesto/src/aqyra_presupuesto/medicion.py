@@ -23,7 +23,7 @@ CLASES_MEDIBLES = (
 )
 
 
-def _objeto_neutro(elemento, disciplina: str | None) -> dict:
+def _objeto_neutro(elemento, disciplina: str | None, criterio: dict | None = None) -> dict:
     guid = M.guid_de(elemento)
     clase = elemento.is_a()
     cantidades = M.cantidades_qto(elemento)
@@ -38,17 +38,27 @@ def _objeto_neutro(elemento, disciplina: str | None) -> dict:
         "cantidades": cantidades,
         "ubicacion": M.ubicacion_de(elemento, disciplina),
     }
+    # E2.1 (N-06): atribución a grupos por los cuatro ejes de corte (agrupaciones nativas del IFC).
+    # Aditivo y opcional: si no hay agrupación conocida en un eje, se omite (nunca error). El coste
+    # (estado_mediciones) NO depende de los cortes → GOL-PRE-01 byte-idéntica.
+    cortes = M.cortes_de(elemento, criterio)
+    if cortes:
+        obj["cortes"] = cortes
     huecos = M.huecos_de(elemento)
     if huecos:
         obj["_huecos"] = len(huecos)
     return obj
 
 
-def medir(fuentes: list[dict]) -> dict:
+def medir(fuentes: list[dict], criterio: dict | None = None) -> dict:
     """Modelo neutro de medición a partir de las fuentes IFC(+Qto).
 
     `fuentes`: [{"id", "disciplina"?, "path"}] — orden significativo (procedencia y traza). El
     modelo neutro preserva el orden de las fuentes y, dentro de cada IFC, el orden de declaración.
+    `criterio` (opcional): pack de criterio; si se pasa, alimenta el *fallback* del eje funcional de
+    los cortes (`reglas_sistema`, N-06/D22) cuando el modelo no declara IfcSystem ni IfcZone. Sin
+    criterio, los cortes salen sólo de las agrupaciones nativas (comportamiento por defecto: el runner
+    de GOL-PRE-01 llama `medir(fuentes)` sin criterio → sin fallback, cortes no afectan la medición).
     """
     objetos: list[dict] = []
     modelos_fuente: list[dict] = []
@@ -67,7 +77,7 @@ def medir(fuentes: list[dict]) -> dict:
                 if g in vistos:
                     continue
                 vistos.add(g)
-                objetos.append(_objeto_neutro(e, disciplina))
+                objetos.append(_objeto_neutro(e, disciplina, criterio))
         modelos_fuente.append({
             "id": f.get("id"),
             "disciplina": disciplina,
