@@ -18,9 +18,19 @@ del coste al IFC vía **C1** (5D). C5 **no redacta** el documento (D1) ni federa
 
 **Entra.** Ver `entrada-presupuesto.schema.json`:
 - **modelo** = **modelo neutro de medición** (por objeto: `{guid, clase, clasificacion(uniclass/bsDD),
-  cantidades{tipo: m2|m3|ml|ud, valor, fuente_qto}, ubicacion}`), la vista de medición del Maestro (C1
-  en modo cantidades). La medición LEE `Qto` (precondición de conformidad: el QA/IDS de C4 garantiza
-  su presencia aguas arriba — D_modelo).
+  cantidades{tipo: m2|m3|ml|ud, valor, fuente_qto}, ubicacion, cortes}`), la vista de medición del
+  Maestro (C1 en modo cantidades). La medición LEE `Qto` (precondición de conformidad: el QA/IDS de C4
+  garantiza su presencia aguas arriba — D_modelo).
+  - **cortes{}** (E2.1 / D20–D22, N-06, OPCIONAL, aditivo) — atribución del objeto a grupos por los
+    cuatro ejes de agrupación: `espacial` (árbol `IfcSpatialStructure`, IFC 4.3 incl.
+    `IfcFacility`/`IfcFacilityPart`), `funcional` (`IfcSystem` y/o `IfcZone`), `uniclass`, `gubim`. Cada
+    eje es una **lista de pertenencias** `{grupo, fraccion, fuente ∈ {ifc, criterio}}`; la suma de
+    `fraccion` de un objeto atribuido a un eje es **1.0** (invariante que `proyectar` usa para
+    `Σ == total`). El reparto de frontera **50/50** (tabique entre dos zonas) se resuelve **aquí**, al
+    construir el modelo neutro (no en la proyección: el corte es CONSULTA). El eje `funcional` sigue la
+    prioridad `IfcSystem` > `IfcZone` > *fallback* del criterio (`reglas_sistema`, `fuente=criterio`).
+    Un eje sin agrupación conocida → **ausente**, nunca error. El coste (`estado_mediciones`) **no**
+    depende de `cortes`.
 - **criterio_ref** — pack `criterio/<id>/<version>` (reglas de medición + mapeo clase→partida).
 - **banco_ref** — pack `banco/<id>/<version>` (precios descompuestos).
 - **parametros** — `{moneda, iva_pct, gg_pct, bi_pct}`.

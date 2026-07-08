@@ -1,0 +1,251 @@
+{
+  "criterio": "AQ/v2",
+  "titulo": "Criterio de medición Aqyra — corte mínimo + cortes funcionales (E2.1)",
+  "descripcion": "v2 = v1 (mapeo clase→partida IDÉNTICO) + tabla reglas_sistema (fallback funcional de los cortes, N-06/D22). El fallback casa POR JERARQUÍA de tipos IFC (clase o cualquier supertipo), de modo que ~10 familias por dominio cubren el centenar de clases del estándar. Solo se aplica cuando el modelo NO declara IfcSystem/IfcZone nativos. El mapeo de medición no cambia entre v1 y v2.",
+  "reglas_por_clase": [
+    {
+      "clase": "IfcWall",
+      "partidas": [
+        {
+          "codigo": "FAB010",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 1,
+          "nota": "Fábrica: área de una cara, con descuento de huecos de superficie > 1,00 m²"
+        },
+        {
+          "codigo": "REV010",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 2,
+          "nota": "Enfoscado: dos caras (factor 2) sobre el área neta con descuento de huecos"
+        },
+        {
+          "codigo": "PIN010",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 2,
+          "nota": "Pintura: dos caras (factor 2) sobre el área neta"
+        }
+      ]
+    },
+    {
+      "clase": "IfcSlab",
+      "partidas": [
+        {
+          "codigo": "EHL010",
+          "unidad": "m3",
+          "magnitud": "NetVolume",
+          "nota": "Losa/forjado: volumen neto de hormigón"
+        }
+      ]
+    },
+    {
+      "clase": "IfcColumn",
+      "partidas": [
+        {
+          "codigo": "EHS010",
+          "unidad": "m3",
+          "magnitud": "NetVolume",
+          "nota": "Pilar: volumen neto de hormigón"
+        }
+      ]
+    },
+    {
+      "clase": "IfcFooting",
+      "partidas": [
+        {
+          "codigo": "CSZ010",
+          "unidad": "m3",
+          "magnitud": "NetVolume",
+          "nota": "Zapata: volumen neto de hormigón"
+        }
+      ]
+    },
+    {
+      "clase": "IfcDoor",
+      "partidas": [
+        {
+          "codigo": "PPM010",
+          "unidad": "ud",
+          "magnitud": "conteo",
+          "nota": "Puerta de paso: por unidad"
+        }
+      ]
+    }
+  ],
+  "reglas_sin_geometria": [
+    {
+      "codigo": "SYS010",
+      "unidad": "PA",
+      "origen": "regla",
+      "base": "PEM_medible",
+      "ratio": 0.02,
+      "nota": "Seguridad y salud: partida alzada por ratio (2% del PEM de las partidas medibles). Fija la forma de las partidas sin geometría (D5); el grueso (ayudas, PA, residuos) llega con el engine."
+    }
+  ],
+  "reglas_sistema": [
+    {
+      "clase": "IfcWall",
+      "condicion": {
+        "is_external": true
+      },
+      "sistema": "Envolvente",
+      "codigo_ss": "Ss_25_10",
+      "titulo": "Cerramiento exterior"
+    },
+    {
+      "clase": "IfcWall",
+      "condicion": {
+        "is_external": false
+      },
+      "sistema": "Particiones",
+      "codigo_ss": "Ss_25_30",
+      "titulo": "Partición interior"
+    },
+    {
+      "clase": "IfcWall",
+      "sistema": "Particiones",
+      "codigo_ss": "Ss_25_30",
+      "titulo": "Partición interior (por defecto si IsExternal no se declara)"
+    },
+    {
+      "clase": "IfcCurtainWall",
+      "sistema": "Envolvente",
+      "codigo_ss": "Ss_25_10",
+      "titulo": "Muro cortina / fachada ligera"
+    },
+    {
+      "clase": "IfcRoof",
+      "sistema": "Envolvente",
+      "codigo_ss": "Ss_25_15",
+      "titulo": "Cubierta"
+    },
+    {
+      "clase": "IfcDoor",
+      "sistema": "Carpintería",
+      "codigo_ss": "Ss_25_30_20",
+      "titulo": "Puertas y huecos de paso"
+    },
+    {
+      "clase": "IfcWindow",
+      "sistema": "Carpintería",
+      "codigo_ss": "Ss_25_30_95",
+      "titulo": "Ventanas y huecos de fachada"
+    },
+    {
+      "clase": "IfcCovering",
+      "sistema": "Acabados",
+      "codigo_ss": "Ss_30_10",
+      "titulo": "Revestimientos y acabados"
+    },
+    {
+      "clase": "IfcFurnishingElement",
+      "sistema": "Mobiliario y equipamiento",
+      "codigo_ss": null,
+      "titulo": "Mobiliario y equipamiento fijo"
+    },
+    {
+      "clase": "IfcDistributionElement",
+      "sistema": "Instalaciones",
+      "codigo_ss": "Ss_60",
+      "titulo": "Instalaciones (MEP): SUPERTIPO de conductos, tuberías, terminales, equipos y control"
+    },
+    {
+      "clase": "IfcFooting",
+      "sistema": "Cimentación",
+      "codigo_ss": "Ss_20_05_15",
+      "titulo": "Cimentación superficial"
+    },
+    {
+      "clase": "IfcPile",
+      "sistema": "Cimentación",
+      "codigo_ss": "Ss_20_05_65",
+      "titulo": "Cimentación profunda (pilotes)"
+    },
+    {
+      "clase": "IfcColumn",
+      "sistema": "Estructura",
+      "codigo_ss": "Ss_20",
+      "titulo": "Estructura (soportes)"
+    },
+    {
+      "clase": "IfcBeam",
+      "sistema": "Estructura",
+      "codigo_ss": "Ss_20",
+      "titulo": "Estructura (vigas)"
+    },
+    {
+      "clase": "IfcMember",
+      "sistema": "Estructura",
+      "codigo_ss": "Ss_20",
+      "titulo": "Estructura (barras)"
+    },
+    {
+      "clase": "IfcSlab",
+      "sistema": "Estructura",
+      "codigo_ss": "Ss_20",
+      "titulo": "Estructura (forjados/losas)"
+    },
+    {
+      "clase": "IfcPlate",
+      "sistema": "Estructura",
+      "codigo_ss": "Ss_20",
+      "titulo": "Estructura (placas)"
+    },
+    {
+      "clase": "IfcStair",
+      "sistema": "Estructura",
+      "codigo_ss": "Ss_20_30",
+      "titulo": "Escaleras"
+    },
+    {
+      "clase": "IfcRamp",
+      "sistema": "Estructura",
+      "codigo_ss": "Ss_20_30",
+      "titulo": "Rampas"
+    },
+    {
+      "clase": "IfcPavement",
+      "sistema": "Urbanización",
+      "codigo_ss": "Ss_37",
+      "titulo": "Urbanización y obra civil (firmes)"
+    },
+    {
+      "clase": "IfcCivilElement",
+      "sistema": "Urbanización",
+      "codigo_ss": "Ss_37",
+      "titulo": "Urbanización y obra civil (SUPERTIPO)"
+    },
+    {
+      "clase": "IfcGeographicElement",
+      "sistema": "Urbanización",
+      "codigo_ss": "Ss_37",
+      "titulo": "Elementos del terreno / entorno"
+    },
+    {
+      "clase": "IfcBuiltElement",
+      "sistema": "Elementos constructivos",
+      "codigo_ss": null,
+      "titulo": "Elemento constructivo general (IFC 4.3): catch-all por supertipo antes del default"
+    },
+    {
+      "clase": "IfcBuildingElement",
+      "sistema": "Elementos constructivos",
+      "codigo_ss": null,
+      "titulo": "Elemento constructivo general (IFC4): catch-all por supertipo antes del default"
+    }
+  ],
+  "reglas_sistema_default": {
+    "sistema": "Sin clasificar",
+    "codigo_ss": null,
+    "titulo": "Elemento sin sistema funcional nativo ni regla de fallback"
+  },
+  "reglas_sistema_nota": "Fallback funcional degradado (N-06/D22), POR JERARQUÍA de tipos IFC: una regla casa si su `clase` es la clase del elemento O cualquiera de sus SUPERTIPOS (p. ej. IfcDistributionElement cubre toda la MEP; IfcBuiltElement/IfcBuildingElement es el catch-all constructivo). Orden = precedencia (específico→general): gana la primera regla que casa por tipo y, si trae `condicion` (p. ej. is_external), por atributos; si ninguna, reglas_sistema_default. Taxonomía del sistema: Uniclass Systems (Ss). Solo se aplica cuando el modelo NO declara IfcSystem ni IfcZone/espacios para el elemento (fuente=criterio); las agrupaciones nativas del modelo (fuente=ifc) tienen prioridad y no dependen de esta tabla."
+}

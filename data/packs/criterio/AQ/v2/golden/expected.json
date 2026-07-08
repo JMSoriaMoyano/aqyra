@@ -1,0 +1,5 @@
+{
+  "pack": "criterio/AQ/v2",
+  "content_sha256": "079c28e923a5a88a5ff4f7604c5835077c24aae8e31f12fb8b7574878147d22b",
+  "_nota": "Golden de pack: identidad del contenido por hash (md5 de criterio.json + partidas). v2 = v1 + reglas_sistema (fallback por jerarquía)."
+}

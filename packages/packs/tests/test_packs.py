@@ -121,6 +121,40 @@ def test_identidad_contenido_criterio_golden():
     assert md5 == m["contenido"]["md5_criterio"], "criterio.json cambió sin actualizar el manifiesto"
 
 
+# --- pack criterio/AQ/v2 (superset E2.1: v1 + reglas_sistema, D22) -----------------------
+# v2 NO re-ancla v1 ni la familia en versions.lock (sigue en v1 para GOL-PRE-01); v2 se ancla por
+# su propio content_sha256. El mapeo clase→partida de v2 es IDÉNTICO a v1 (mide igual); v2 sólo
+# añade la tabla reglas_sistema del fallback funcional. Lo adopta la golden de vista GOL-PRE-03 (E2.2).
+
+def test_manifiesto_criterio_v2_valido():
+    m = packs.load_pack(PACKS_ROOT, "criterio", "AQ", "v2")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma
+    assert m["familia"] == "criterio" and m["version"] == "v2"
+
+
+def test_identidad_contenido_criterio_v2_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "criterio", "AQ", "v2")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "criterio/AQ/v2/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack cambió sin actualizar la golden. "
+                        "Bump de versión + nuevo hash, nunca editar en silencio.")
+    crit_file = PACKS_ROOT / "criterio/AQ/v2" / m["contenido"]["fichero"]
+    md5 = hashlib.md5(crit_file.read_bytes()).hexdigest()
+    assert md5 == m["contenido"]["md5_criterio"], "criterio.json v2 cambió sin actualizar el manifiesto"
+
+
+def test_criterio_v2_es_superset_de_v1():
+    """v2 = v1 (mapeo IDÉNTICO) + reglas_sistema. v1 queda intacto (D22)."""
+    v1 = json.loads((PACKS_ROOT / "criterio/AQ/v1/criterio.json").read_text(encoding="utf-8"))
+    v2 = json.loads((PACKS_ROOT / "criterio/AQ/v2/criterio.json").read_text(encoding="utf-8"))
+    assert v2["reglas_por_clase"] == v1["reglas_por_clase"], "el mapeo clase→partida NO debe cambiar entre ejes"
+    assert v2["reglas_sin_geometria"] == v1["reglas_sin_geometria"]
+    assert "reglas_sistema" not in v1 and "reglas_sistema" in v2, "reglas_sistema es la única novedad de v2"
+
+
 # --- pack banco/AQ-DEMO/v1 (adoptado por C5, Fase IV·h1) ---------------------------------
 
 def test_manifiesto_banco_valido():

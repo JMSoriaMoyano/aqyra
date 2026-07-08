@@ -270,6 +270,74 @@ decida JM. `engines/presupuesto` sube a **0.3.0** (aditivo: `medir`/`presupuesta
 intactos para el coste).
 
 ---
+
+# C5 — Decisiones de los CORTES (Ola 1·E2.1 — los cortes nacen del IFC)
+
+> Ratificadas con JM el **2026-07-08** (OK explícito vía la pregunta de arranque), antes de tocar
+> código. Numeración **propia del C5**, continúan D1–D19. Materializan **E2.1** del handoff
+> negocio→desarrollo (`Aqyra-Negocio/BACKLOG_motor-valoracion_para-Aqyra-Raiz.md` §2·E2) y hacen
+> ejecutable la decisión de negocio **N-06 / D-028** (cortes = agrupaciones nativas del IFC; frontera
+> 50/50; criterio como *fallback*). Change SDD: `openspec/changes/c5-cortes-agrupaciones-nativas/`.
+> ZONA ANCLADA intocable: el eje coste (`precio_unitario`/`importe`), el pack `criterio/AQ/v1` y su
+> hash, el pack `banco/AQ-DEMO/v1`, las fixtures con `Qto` de `GOL-PRE-01` (`0b998513…`/`0d7e7f20…`),
+> la golden `GOL-PRE-01` (byte-idéntica; su medición no mira `cortes`).
+
+## D20 · Forma de `cortes{}` — **lista de pertenencias**, no string
+
+Cada `objeto_medicion` gana la propiedad **opcional** `cortes` (aditiva, forward-open). Cada eje
+(`espacial`, `funcional`, `uniclass`, `gubim`) es una **lista de pertenencias**
+`[{grupo, fraccion, fuente}]`, **no** un string único. Justificación: solo la lista con `fraccion`
+puede representar (i) el **reparto 50/50** ratificado (N-06) de un elemento de frontera compartido, y
+(ii) la **pertenencia múltiple** (un objeto en varios `IfcSystem`/`IfcZone`). La suma de `fraccion`
+de un objeto atribuido a un eje es **1.0** (invariante que E2.2 usa para `Σ proyección == Σ
+estado_mediciones`). Un eje sin agrupación conocida se **omite** (nunca error). **Rechazada** (por
+JM) la alternativa «string simple + mapa de fracciones aparte» por asimétrica.
+
+## D21 · Reparto de frontera — **50/50 fijo, materializado en el parser**
+
+No reabre N-06 (que ya firmó el 50/50, opción b); ancla su **materialización** a nivel C5: el reparto
+se resuelve **al construir el modelo neutro** (en el parser), **no** en `proyectar` (el corte sigue
+siendo consulta). **Regla de atribución** espacio→elemento vía `IfcRelSpaceBoundary`: un elemento que
+delimita `N` espacios distintos recibe `fraccion = 1/N` a cada espacio, **agregada por zona** (tabique
+entre 2 aulas → 0,5/0,5; frontera de 1 solo espacio → 1,0; 2 espacios de la misma zona → 1,0). El
+refinamiento (c) «por superficie de frontera» queda como **gancho forward**, sin implementar en v0
+(el objetivo es valoración *rápida*: 50/50 es barato, determinista y golden-able). Precondición de
+calidad del modelo (espacios+zonas+fronteras) = competencia del **QA/IDS de C4** aguas arriba.
+
+## D22 · *Fallback* funcional — **`criterio/AQ/v2` nuevo** (no re-anclar v1)
+
+Cuando el modelo no declara agrupación funcional nativa (ni `IfcSystem` ni `IfcZone`/espacios), el eje
+`funcional` se deriva de la tabla **`reglas_sistema`** (clase/uso → sistema grueso) con
+`fuente = "criterio"`. Como `reglas_sistema` no existe y `criterio/AQ/v1` está **anclado por hash**
+(lo referencian `GOL-PRE-01/02`), se materializa como **nueva versión anclada `criterio/AQ/v2`** =
+`v1` + `reglas_sistema` (mapeo clase→partida **idéntico** a v1; v2 solo añade la tabla de *fallback*).
+`v1` y sus goldens quedan **intactos** (precedente de la inyección de `Qto`, D_modelo: no se edita lo
+anclado, se crea nuevo con su propia ancla). Taxonomía del sistema grueso anclada a la tabla *Systems*
+de **Uniclass (`Ss`)** (residual N-06). **Rechazadas** (por JM): re-anclar `v1` in situ; y diferir el
+*fallback* (incumpliría el criterio de aceptación de E2.1).
+
+**Refinamiento ratificado por JM (2026-07-08): el *fallback* casa POR JERARQUÍA de tipos IFC.** Una
+regla de `reglas_sistema` casa si su `clase` es la clase del elemento **o cualquiera de sus
+SUPERTIPOS** (el parser pasa la ascendencia de tipos IFC del elemento). Así **~10 familias por
+dominio** —Estructura, Envolvente, Particiones, Instalaciones, Carpintería, Acabados, Cimentación,
+Urbanización, Mobiliario y equipamiento, + catch-all «Elementos constructivos»— cubren el **centenar
+de clases** del estándar **sin enumerarlas una a una** (p. ej. una sola regla `IfcDistributionElement`
+cubre toda la MEP; una clase no listada como `IfcPipeSegment` casa por ese supertipo). El orden de la
+tabla es la precedencia (específico→general); `reglas_sistema_default` = «Sin clasificar» cubre lo no
+mapeado (nunca error). Nota honesta: el *fallback* solo aplica a objetos **medidos** (los que llevan
+partida); su universo real es el conjunto que el criterio mide, no las 100+ clases IFC.
+
+## D23 · Fixtures y golden — **aumentar las de `GOL-PRE-01`** + caso NUEVO en E2.2
+
+Las fixtures de cortes se obtienen **aumentando** las de `GOL-PRE-01` (copias de `ARQ.ifc`/`EST.ifc`
+con `IfcSystem` + `IfcZone`+espacios+`IfcRelSpaceBoundary` + árbol 4.3 **inyectados**), con **md5
+propios** (patrón de la inyección de `Qto`); las originales ancladas (`0b998513…`/`0d7e7f20…`) quedan
+**intactas**. E2.1 entrega un **test de parser** que verifica los cortes completos, el *fallback* por
+criterio (`fuente=criterio`) y el **50/50 en un tabique compartido**. La **golden de vista**
+(invariante `Σ`, 5 vistas) es un caso **NUEVO `GOL-PRE-03`** (patrón `GOL-PRE-02`) y se entrega en
+**E2.2**, nunca editando `GOL-PRE-01`. **Sin release** (los cortes son consulta).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*
