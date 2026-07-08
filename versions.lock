@@ -59,7 +59,7 @@ estado          = "engine v0.2 (write-back 6D, vertical visor-cumplimiento-6d, D
 # posterior) ANTEPONDRÁ el recompute (parser Qto + motor) contra el MISMO expected (costura C1/C3/C4).
 [contracts.C5]
 nombre          = "presupuesto"
-schema_version  = "0.1.0"              # 2 esquemas: entrada-presupuesto + salida-presupuesto (forward-open)
+schema_version  = "0.2.0"              # 2 esquemas: entrada-presupuesto + salida-presupuesto (forward-open). 0.2.0 (E1.1/D16-D18): salida gana partida.valores{} OPCIONAL (eje de valor multi-eje; coste sigue en precio_unitario/importe, D16). Aditivo: GOL-PRE-01 byte-idéntica
 engine          = "engines/presupuesto"   # engine C5 VIVO (Fase IV·h2, D6): paquete uv en engines/
 engine_version  = "0.2.0"              # 0.1.0 medir+presupuestar (D6-D10) + 0.2.0 write-back 5D escribir_coste (D11-D15); tags presupuesto-v0.1.0/-v0.2.0 (Llave 2)
 criterio_pack   = "criterio/AQ/v1"

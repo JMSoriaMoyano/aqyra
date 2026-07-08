@@ -29,6 +29,11 @@ del coste al IFC vía **C1** (5D). C5 **no redacta** el documento (D1) ni federa
 - **estado_mediciones[]** — por partida `{codigo, descripcion, unidad, cantidad, precio_unitario,
   importe, criterio_aplicado, origen ∈ {modelo, regla, manual}, trazabilidad:[guids]}`. Cada cantidad
   se justifica hasta los GUIDs que la producen.
+  - **valores{}** (E1.1 / D16–D18, OPCIONAL, aditivo) — eje de valor **multi-eje**: mapa
+    `id-de-eje → {unitario, total, unidad, banco?, etapas?}`. El eje **coste** canónico **no** vive
+    aquí (D16): sigue en `precio_unitario`/`importe`; `valores` abre la partida a otros ejes
+    (`carbono`, `agua`, …) sin duplicar ni cambiar el coste. Un eje sin banco para la partida → su
+    clave **ausente**, nunca error. `etapas` = desglose EN 15978 (`A1A3`, `A4A5`, …) con Σ = `total`.
 - **cuadro_precios_1[]** — precio unitario en cifra y en letra.
 - **cuadro_precios_2[]** — descompuesto (MO + materiales + maquinaria + costes indirectos), justificación.
 - **resumen** — parciales por capítulo → **PEM** → (+GG +BI) → base → (+IVA) → **PEC**.
@@ -67,7 +72,9 @@ presupuestar(modelo_medicion, criterio, banco, parametros) → presupuesto
 
 *Añadir claves nuevas, nunca cambiar la semántica de las existentes.* Los dos esquemas son
 *forward-open*. La taxonomía de `origen` es un enum **cerrado** de 3 valores (`modelo`/`regla`/`manual`,
-D5): un origen futuro se reclasifica dentro del mismo enum, no lo amplía.
+D5): un origen futuro se reclasifica dentro del mismo enum, no lo amplía. En cambio, el **id de eje**
+de `valores{}` es un `string` **abierto** por convención (D17): añadir un eje nuevo (carbono, agua…)
+**no** re-ancla el contrato — la disciplina de nombres es de pack/criterio, no del esquema.
 
 ---
 *La ficha es el diseño; los esquemas + la golden + los packs son el contrato ejecutable.*
