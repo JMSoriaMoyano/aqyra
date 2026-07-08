@@ -39,6 +39,11 @@ jobs:
       - name: Calcular objetivos afectados (informativo)
         run: uv run python tools/affected.py --base origin/${{ github.base_ref || 'main' }} || true
 
+      - name: Conformidad SDD (proceso · openspec/changes obligatorio)
+        env:
+          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: python3 tools/check_sdd_conformance.py --base origin/${{ github.base_ref || 'main' }}
+
       - name: Paso 1 · núcleo (core) + packs + engine C1 + service C4 + engine C3 + engine C5 + compositor documentos — comportamiento, identidad y golden de pack
         run: uv run pytest packages/core packages/packs engines/ifc services/federacion engines/cumplimiento engines/presupuesto documentos/presupuesto -q
 
