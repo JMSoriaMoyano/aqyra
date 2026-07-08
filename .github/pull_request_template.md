@@ -14,6 +14,8 @@
 
 ## Checklist (definición de hecho)
 
+- [ ] **Proceso SDD**: trae su `openspec/changes/<x>/` (o va etiquetado `sin-spec` con justificación). Ver `docs/PROCESO_SDD.md`.
+- [ ] Decisiones ratificadas por JM antes del código (ancladas en `DECISIONES.md`), si aplica.
 - [ ] La golden pasa en local (`just check`) y en CI (Llave 1).
 - [ ] Si toco un esquema: es *forward-open* (solo añadir claves, no cambiar semántica).
 - [ ] **Un fallo se corrige en el código, NUNCA aflojando la golden.**

@@ -15,6 +15,10 @@ alwaysApply: true
 - **Spec-Driven Development (SSD)**: cada cambio se define por completo antes de escribir
   código. La documentación (contrato + esquema + golden) es la fuente de verdad; el código
   la implementa, no al revés.
+- **Proceso obligatorio (SDD)**: toda funcionalidad va por el flujo de `docs/PROCESO_SDD.md`
+  (enrich-us → opsx:propose → ratificar decisiones → opsx:apply → adversarial-review →
+  opsx:archive → commit). No hay código de feature sin su `openspec/changes/<x>/`; el CI lo
+  exige (`tools/check_sdd_conformance.py`).
 - **Pasos pequeños, de uno en uno**: baby steps. No adelantar más de un paso.
 - **La frontera son los contratos**: `packages/contracts/` define qué entra y sale de cada
   capacidad (Cn). No se cruza esa frontera sin PR aprobado.
