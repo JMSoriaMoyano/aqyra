@@ -171,12 +171,17 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
             if a is None:
                 a = {"codigo": cod, "unidad": pdef.get("unidad"), "cantidad": Decimal("0"),
                      "trazabilidad": [], "criterio_aplicado": res["criterio_aplicado"],
-                     "detalle": []}
+                     "detalle": [], "contrib": OrderedDict()}
                 acc[cod] = a
             a["cantidad"] += _d(res["cantidad"])
             g = obj.get("guid")
             if g and g not in a["trazabilidad"]:
                 a["trazabilidad"].append(g)
+            # E2.2 (D26): contribución de CANTIDAD por objeto a esta partida — habilita el reparto por
+            # magnitud EXACTA de proyectar() sin re-medir. Se acumula por GUID (un objeto puede entrar
+            # más de una vez en la misma partida) y se emite como `traza_cantidades` (origen=modelo).
+            if g:
+                a["contrib"][g] = a["contrib"].get(g, Decimal("0")) + _d(res["cantidad"])
             nombre = obj.get("nombre")
             if res.get("cantidad"):
                 a["detalle"].append(f"{nombre} {res['cantidad']:.2f}" if nombre
@@ -207,6 +212,11 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
             "origen": "modelo",
             "trazabilidad": a["trazabilidad"],
         }
+        # E2.2 (D26): desglose de cantidad por objeto (aditivo, forward-open). Habilita el reparto por
+        # magnitud EXACTA de la proyección; Σ traza_cantidades == cantidad de la partida. GOL-PRE-01
+        # sigue verde (el recompute compara claves nombradas — esta clave nueva le es invisible).
+        if a.get("contrib"):
+            p["traza_cantidades"] = [{"guid": gg, "cantidad": r4(c)} for gg, c in a["contrib"].items()]
         if not es_coste:  # eje NO-coste: valor etiquetado (D19). El coste (default) no lo emite.
             p["valores"] = {eje: _valor_eje(precio, importe, unidad_eje, banco_ref, "modelo")}
         partidas_modelo.append(p)

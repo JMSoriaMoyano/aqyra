@@ -338,6 +338,82 @@ criterio (`fuente=criterio`) y el **50/50 en un tabique compartido**. La **golde
 **E2.2**, nunca editando `GOL-PRE-01`. **Sin release** (los cortes son consulta).
 
 ---
+
+# C5 — Decisiones de la PROYECCIÓN (Ola 1·E2.2 — `proyectar(presupuesto, modelo, eje, corte)`)
+
+> Ratificadas con JM el **2026-07-08** (OK explícito vía la pregunta de arranque), antes de tocar
+> código. Numeración **propia del C5**, continúan D1–D23. Materializan **E2.2** del handoff
+> negocio→desarrollo (`Aqyra-Negocio/BACKLOG_motor-valoracion_para-Aqyra-Raiz.md` §2·E2) y cierran, junto
+> a E2.1 (`cortes`), la pieza «valor a tiempo real por clasificación». Change SDD:
+> `openspec/changes/c5-proyeccion-vista/`. **La proyección es consulta, no cálculo**: `proyectar` AGRUPA
+> lo que ya existe (el reparto 50/50 lo resolvió el parser en E2.1). ZONA ANCLADA intocable: el eje coste
+> (`precio_unitario`/`importe`), los packs, las fixtures con `Qto` de `GOL-PRE-01` (`0b998513…`/
+> `0d7e7f20…`), las goldens `GOL-PRE-01`/`GOL-PRE-02`/`GOL-DOC-01` (byte-idénticas).
+
+## D24 · Firma de `proyectar` — recibe el presupuesto **y el modelo**
+
+`proyectar(presupuesto, modelo, eje, corte) → [{grupo, valor_total, unidad, n_partidas, guids[],
+fuente}]`. Recibe **el modelo además del presupuesto**: el valor vive por partida
+(`estado_mediciones[]`), pero los `cortes` viven por objeto (`modelo.objetos[].cortes`, E2.1) → hay que
+leerlos del modelo. `corte ∈ {espacial, funcional, uniclass, gubim}`; `eje` = string libre (D17). Salida
+ordenada por **primera aparición** del grupo (determinista); `fuente` del grupo = la de sus pertenencias
+(un grupo alimentado por `ifc` y `criterio` declara `criterio`, traza honesta del *fallback*).
+**Group-by puro:** no re-mide ni re-valora.
+
+## D25 · Lectura del eje — coste = `importe`; no-coste = `valores[eje].total`
+
+El valor de una partida es **`importe`** cuando `eje == "coste"` (canónico, D16), con `unidad` = la
+`moneda` del `resumen` (EUR); y **`valores[eje].total`** en otro caso, con `unidad` = `valores[eje].unidad`
+(una partida sin `valores[eje]` en ese run aporta **0**, forward-open). La `unidad` de salida es
+**homogénea** en una proyección (todo EUR o todo kgCO₂e…): el valor proyectado es dinero/magnitud del eje,
+no la unidad de medición (m²/m³) de la partida.
+
+## D26 · Atribución partida→objeto — **por magnitud EXACTA** (el engine emite el desglose)
+
+El valor de una partida se reparte entre sus objetos **en proporción a la magnitud realmente medida** de
+cada uno en esa partida: `share_O = cantidad_O / Σ cantidad_O`. Como el precio unitario es **uniforme
+dentro de la partida**, el reparto de cantidad = reparto de valor para **cualquier** eje. Para que
+`proyectar` no re-mida (sigue siendo consulta), **el motor emite** `traza_cantidades:[{guid, cantidad}]`
+por partida `origen=modelo` (la contribución que ya computa en su bucle). Un objeto aporta a varias
+partidas con cantidades distintas (muro → fábrica m², enfoscado/pintura m²×2caras): cada partida guarda
+la contribución a ELLA. `Σ cantidad_O == 0` → degrada a equitativo `1/n`. **Alternativas rechazadas por
+JM:** *proxy del modelo* (peso = cantidad que casa la unidad; coincide con la exacta salvo factor de caras
+no uniforme, pero es aproximación) y *equitativa por nº de objetos* (reparto por cabezas, desvía en
+partidas con objetos de tamaños dispares). La exacta es fiel y honesta con «no recálculo» (lee lo que el
+motor ya calculó); coste = una clave aditiva (bump 0.4.0; `GOL-PRE-01` verde, el recompute compara claves
+nombradas). El *proxy* queda como nota, no como gancho (la exacta lo cubre).
+
+## D27 · Conservación de Σ — residuales deterministas
+
+`Σ proyección == Σ estado_mediciones` es **EXACTO** (salvo redondeo declarado): nada se pierde. Una
+partida sin `trazabilidad` (`origen=regla`, p. ej. S&S `SYS010` al 2 %) va entera al grupo
+**`"(sin geometría)"`** (`fuente="regla"`); un objeto sin el eje de corte pedido (o GUID ausente del
+modelo) va al grupo **`"(sin clasificar)"`** (`fuente="—"`). Los residuales son grupos como cualquier
+otro (auditables) e integran el invariante.
+
+## D28 · Anclaje de `GOL-PRE-03` — DETERMINISMO + SEMÁNTICA + INVARIANTE (patrón D14)
+
+El sandbox no corre ifcopenshell → **sin md5 de salida hardcodeado** (voto de JM, opción b de D14).
+`_run_c5_proyeccion` ancla: (1) **identidad** por md5 de las fixtures aumentadas (`entradas_md5`); (2)
+**DETERMINISMO** — `proyectar` 2× = misma salida; (3) **INVARIANTE** — `Σ valor_total == Σ
+estado_mediciones[eje]` (±`importe_abs`) por cada `(eje, corte)`; (4) **SEMÁNTICA** — las CINCO vistas del
+`expected` casan con la proyección recomputada: (i) por planta, (ii) por `IfcFacilityPart` 4.3, (iii) por
+`IfcSystem`, (iv) por `IfcZone` 50/50 (atribución fraccionaria → Σ por zonas == total), (v) *fallback*
+criterio (`fuente=criterio`). Caso **NUEVO** `GOL-PRE-03` (reusa banco/params de `GOL-PRE-01`, que queda
+intacto). Un fallo se investiga en el ENGINE, jamás aflojando el check.
+
+## D29 · Fixtures aumentadas + `criterio/AQ/v2`
+
+Las fixtures de vista se obtienen **aumentando** las de `GOL-PRE-01`: `gen_fixtures.py` (conda `mcp-bim`)
+inyecta de forma determinista un **árbol 4.3** (`IfcFacility`/`IfcFacilityPart`), `IfcSpace`+
+`IfcRelSpaceBoundary` (para el 50/50 de un tabique entre dos zonas), `IfcZone` (2 zonas) e `IfcSystem`,
+con **md5 propios**; las ancladas (`0b998513…`/`0d7e7f20…`) quedan **intactas** (precedente de la inyección
+de `Qto`, D_modelo). `GOL-PRE-03` usa **`criterio/AQ/v2`** (v1 + `reglas_sistema`, D22) para la vista
+*fallback*; `v1` y `GOL-PRE-01` intactos. La rama `proyeccion` ancla `v2` por su `content_sha256`
+(`079c28e9…`, golden de pack de E2.1), **no** por `[packs.criterio]` (que sigue en `v1`). **Sin release**
+(la proyección es consulta).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*

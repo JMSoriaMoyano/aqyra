@@ -1451,6 +1451,113 @@ def _run_c5_documento(case_dir: Path, contracts_dir: Path, expected: dict, tol: 
     return all(ok for _, ok, _ in checks)
 
 
+def _run_c5_proyeccion(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                       repo: Path = DEFAULT_REPO) -> bool:
+    """C5 · proyección (E2.2, D24–D29): la vista `proyectar(eje, corte)` — GOL-PRE-03.
+
+    El corte es CONSULTA, no cálculo: se mide y presupuesta como GOL-PRE-01 (con `criterio/AQ/v2`
+    para el *fallback* funcional) y se PROYECTA por eje/corte. ANCLA (patrón GOL-PRE-02/D14, sin md5
+    de salida hardcodeado):
+      1. Identidad por md5 de las fixtures aumentadas (entradas_md5).
+      2. `criterio/AQ/v2` anclado por su content_sha256 (golden de pack de E2.1); banco == v1.
+      3. DETERMINISMO: proyectar 2× por vista → misma salida.
+      4. INVARIANTE: Σ valor_total == Σ estado_mediciones del eje (== PEM en coste), ±importe_abs.
+      5. SEMÁNTICA: las CINCO vistas del expected (grupos, valor_total, fuente) casan con la proyección.
+    Un fallo se investiga en el ENGINE (proyeccion.py/presupuesto.py), jamás aflojando el check."""
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c5_schemas(contracts_dir)
+    entrada = json.loads((case_dir / "entrada.json").read_text(encoding="utf-8"))
+    ia = float(tol.get("importe_abs", 0.01))
+    cost = expected.get("cost", {})
+    vistas = expected.get("vistas", [])
+
+    # 1 · identidad por hash de las fixtures aumentadas (nuevas; GOL-PRE-01 intacta)
+    for rel, exp_md5 in sorted(expected.get("entradas_md5", {}).items()):
+        p = case_dir / rel
+        got = _md5(p) if p.exists() else None
+        checks.append((f"identidad {rel}", got == exp_md5,
+                       f"md5 {str(got)[:12]}… (esperado {str(exp_md5)[:12]}…)"))
+
+    # 2 · criterio/AQ/v2 anclado por su content_sha256 (E2.1); banco AQ-DEMO/v1
+    crit_ref = entrada.get("criterio_ref", {})
+    checks.append(("criterio_ref == AQ/v2", crit_ref.get("id") == "AQ" and crit_ref.get("version") == "v2",
+                   f"{crit_ref.get('id')}/{crit_ref.get('version')}"))
+    pp = str(repo / "packages" / "packs" / "src")
+    if pp not in sys.path:
+        sys.path.insert(0, pp)
+    try:
+        import aqyra_packs as _packs
+        man_v2 = _packs.load_pack(repo / "data" / "packs", "criterio", "AQ", "v2")
+        got_hash = _packs.content_hash(man_v2)
+        exp_hash = json.loads((repo / "data" / "packs" / "criterio" / "AQ" / "v2"
+                               / "golden" / "expected.json").read_text(encoding="utf-8"))["content_sha256"]
+        checks.append(("criterio/AQ/v2 anclado (content_sha256)", got_hash == exp_hash,
+                       f"{got_hash[:12]}… (esperado {exp_hash[:12]}…)"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("criterio/AQ/v2 anclado (content_sha256)", False, f"{type(e).__name__}: {e}"))
+
+    pe = str(DEFAULT_ENGINE_C5)
+    if pe not in sys.path:
+        sys.path.insert(0, pe)
+    try:
+        from aqyra_presupuesto import medir, presupuestar, proyectar, suma_proyeccion
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import engine (medir/presupuestar/proyectar)", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    # 3 · medir (con criterio para el fallback funcional) + presupuestar
+    fuentes = [{"id": m.get("id"), "disciplina": m.get("disciplina"),
+                "path": case_dir / m["fichero"], "fichero": m["fichero"]}
+               for m in entrada.get("modelo", {}).get("fuente_maestro", {}).get("modelos", [])]
+    criterio = _pack_contenido_c5(repo, "criterio", crit_ref)
+    banco = _pack_contenido_c5(repo, "banco", entrada.get("banco_ref", {}))
+    modelo = medir(fuentes, criterio)
+    modelo["proyecto"] = entrada.get("proyecto")
+    pres = presupuestar(modelo, criterio, banco, entrada.get("parametros", {}))
+    ok, detail = validate_against_schema(pres, schemas["salida"])
+    checks.append(("presupuesto (para la vista) conforma esquema", ok, detail))
+    pem = float(pres.get("resumen", {}).get("PEM", 0))
+    pec = float(pres.get("resumen", {}).get("PEC", 0))
+    checks.append(("presupuesto reproduce PEM…PEC de referencia",
+                   abs(pem - float(cost.get("PEM", 0))) <= ia and abs(pec - float(cost.get("PEC", 0))) <= ia,
+                   f"PEM {pem} PEC {pec}"))
+
+    # 4+5 · por cada vista: DETERMINISMO + INVARIANTE + SEMÁNTICA
+    checks.append(("vistas declaradas", len(vistas) >= 3,
+                   f"{len(vistas)} vista/s (≥3 proyecciones distintas: espacial + uniclass + funcional; "
+                   f"funcional engloba IfcSystem + IfcZone 50/50 + fallback)"))
+    for v in vistas:
+        vid = v.get("id", f"{v.get('eje')}×{v.get('corte')}")
+        eje, corte = v.get("eje", "coste"), v.get("corte")
+        f1 = proyectar(pres, modelo, eje, corte)
+        f2 = proyectar(pres, modelo, eje, corte)
+        checks.append((f"[{vid}] determinista", f1 == f2, "proyectar 2× = misma salida"))
+        suma_exp = float(v.get("suma", cost.get("PEM", 0)))
+        checks.append((f"[{vid}] invariante Σ == total", abs(suma_proyeccion(f1) - suma_exp) <= ia,
+                       f"Σ {suma_proyeccion(f1)} (esperado {suma_exp})"))
+        got_g = {r["grupo"]: r for r in f1}
+        exp_g = {g["grupo"]: g for g in v.get("grupos", [])}
+        set_ok = set(got_g) == set(exp_g)
+        checks.append((f"[{vid}] grupos == expected", set_ok,
+                       f"{sorted(got_g)}" if set_ok
+                       else f"faltan {sorted(set(exp_g) - set(got_g))} / sobran {sorted(set(got_g) - set(exp_g))}"))
+        malos = []
+        for grupo, ge in exp_g.items():
+            gg = got_g.get(grupo)
+            if gg is None:
+                continue
+            if abs(float(gg["valor_total"]) - float(ge["valor_total"])) > ia:
+                malos.append(f"{grupo}:{gg['valor_total']}≠{ge['valor_total']}")
+            elif "fuente" in ge and gg.get("fuente") != ge["fuente"]:
+                malos.append(f"{grupo}:fuente {gg.get('fuente')}≠{ge['fuente']}")
+        checks.append((f"[{vid}] valor_total + fuente por grupo", not malos,
+                       "todos casan" if not malos else f"{len(malos)} — {malos[0]}"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
 def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
     """C5: presupuesto trazable — modo ANCLADO (contract-first, Fase IV·h1 — ver ficha/DECISIONES).
@@ -1475,6 +1582,9 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     # Capa de documentos: GOL-DOC-01 (Documento de Presupuesto) — compositor determinista (D1–D5).
     if expected.get("modo") == "documento":
         return _run_c5_documento(case_dir, contracts_dir, expected, tol, repo)
+    # Proyección (E2.2, D24–D29): GOL-PRE-03 (vista por eje/corte) — group-by determinista.
+    if expected.get("modo") == "proyeccion":
+        return _run_c5_proyeccion(case_dir, contracts_dir, expected, tol, repo)
 
     checks: list[tuple[str, bool, str]] = []
     schemas = load_c5_schemas(contracts_dir)

@@ -1,0 +1,40 @@
+{
+  "proyecto": "GOL-PRE-03 - Proyección (vista) sobre la medición del Maestro aumentado",
+  "modelo": {
+    "clase": "modelo-neutro-medicion",
+    "fuente_maestro": {
+      "modelos": [
+        {
+          "id": "ARQ",
+          "disciplina": "ARQ",
+          "fichero": "entrada/ARQ.ifc",
+          "md5": "19a272a59a605953f55e2af71390d838",
+          "qto_declarados": true
+        },
+        {
+          "id": "EST",
+          "disciplina": "EST",
+          "fichero": "entrada/EST.ifc",
+          "md5": "f1d25192ee805f7af343665bdff6e1b0",
+          "qto_declarados": true
+        }
+      ]
+    }
+  },
+  "criterio_ref": {
+    "familia": "criterio",
+    "id": "AQ",
+    "version": "v2"
+  },
+  "banco_ref": {
+    "familia": "banco",
+    "id": "AQ-DEMO",
+    "version": "v1"
+  },
+  "parametros": {
+    "moneda": "EUR",
+    "iva_pct": 0.21,
+    "gg_pct": 0.13,
+    "bi_pct": 0.06
+  }
+}
