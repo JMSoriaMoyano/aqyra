@@ -233,6 +233,43 @@ comprobarán en la Ola 2; en E1.1 solo se fija la **forma**). Se admite desglose
 solo `A1A3`+`A4A5`) sin exigir el ciclo completo.
 
 ---
+
+# C5 — Decisión del ENGINE GENERALIZADO A UN EJE (Ola 1·E1.2 — `parametros.eje`)
+
+> Ratificada con JM el **2026-07-08** (OK explícito vía la pregunta de arranque), antes de tocar código.
+> Numeración **propia del C5**, continúa D1–D18. Materializa **E1.2** del handoff negocio→desarrollo
+> (`Aqyra-Negocio/BACKLOG_motor-valoracion_para-Aqyra-Raiz.md` §2·E1) y hace VIVO el `valores{}` que
+> abrió E1.1 (D16–D18). Change SDD: `openspec/changes/c5-engine-eje-generalizado/`. ZONA ANCLADA
+> intocable: el esquema, los packs, las fixtures con `Qto`, la golden `GOL-PRE-01` (byte-idéntica; el
+> eje coste sigue en `precio_unitario`/`importe` y **no** emite `valores`).
+
+## D19 · Un run con eje NO-coste: espejo + `valores[eje]` etiquetado
+
+`presupuestar(modelo, criterio, banco, parametros)` gana `parametros.eje` (default `"coste"`). El
+**mapeo clase→partida del criterio NO cambia entre ejes** (se mide una vez, se valora en el eje
+pedido). Dos ramas:
+
+- **`eje == "coste"` (default):** rama del C5 previo **byte a byte** — el coste vive
+  **exclusivamente** en `precio_unitario` / `importe` (D16) y **no** se emite `valores` →
+  `GOL-PRE-01` intacta (PEM 7 022,53 → PEC 10 111,74), su `expected` sin editar.
+- **`eje != "coste"`:** cada partida gana `valores[eje]` — el valor del eje **etiquetado** con su
+  `unidad` (la declara el banco: `unidad_eje`, *fallback* `moneda`), su `banco` de origen
+  (`banco.ref`/`banco`; ausente en `origen=regla`) y su `origen`. Los campos requeridos por esquema
+  `precio_unitario` / `importe` **reflejan la magnitud del eje** (espejo), de modo que la verdad
+  etiquetada del eje es `valores[eje]` (con unidad y banco) y el `resumen` totaliza el eje. D16 se
+  mantiene: en el run de coste esos campos son coste; en un run no-coste no hay coste, y el hueco lo
+  ocupa —espejado— la única magnitud que el run computa.
+
+**Alternativa rechazada (por JM):** dejar `precio_unitario=0`/`importe=0` en el run no-coste (D16
+literal, coste a cero). Se descarta por dar un `resumen` en cero y romper la simetría con el
+presupuesto de coste; el espejo es más útil (resumen del eje) y de un solo camino de código (mínimo
+riesgo de regresión para `GOL-PRE-01`).
+
+**Sin release:** la salida multi-eje se libera cuando el eje carbono aporte valor (Ola 2), o según
+decida JM. `engines/presupuesto` sube a **0.3.0** (aditivo: `medir`/`presupuestar`/`escribir_coste`
+intactos para el coste).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*
