@@ -4,14 +4,30 @@ Capacidad de **frontera** (C1/C5): interoperabilidad con el formato del despacho
 licitación pública española, **FIEBDC-3/2024** (`.bc3`). «OpenBIM, sin cautividad»: un banco real
 (o del cliente) entra como pack anclado, y el presupuesto de Aqyra sale a Presto/Arquímedes/TCQ.
 
-Traducción **determinista** (no cálculo): el mismo `.bc3` produce el mismo `banco.json` byte a byte.
+Traducción **determinista** (no cálculo): el mismo `.bc3` produce el mismo `banco.json` byte a byte, y
+la misma `salida-presupuesto` produce el mismo `.bc3` (salvo el sello de fecha del `~V`).
 
 ## Direcciones
 
-- **E0.1 · ingesta** (v0, este paquete): `ingerir_bc3(path) → banco.json` — materializa un pack
-  `banco/<id>/vN` con el **mismo esquema** que `data/packs/banco/AQ-DEMO/v1`.
-- **E0.2 · emisión** (siguiente change del hilo): `emitir_bc3(salida) → .bc3` — exporta el
-  `salida-presupuesto` (C5) a FIEBDC-3 (mediciones + cuadros + textos), con golden de round-trip.
+- **E0.1 · ingesta**: `ingerir_bc3(path) → banco.json` — materializa un pack `banco/<id>/vN` con el
+  **mismo esquema** que `data/packs/banco/AQ-DEMO/v1`.
+- **E0.2 · emisión**: `emitir_bc3(salida) → .bc3` — exporta la `salida-presupuesto` (C5) a
+  FIEBDC-3/2024 (`~V/~C/~D/~M/~T`), y `leer_bc3_presupuesto(origen) → {estado_mediciones}` la re-lee
+  (round-trip). Con E0.2 cierra la Ola 1: el presupuesto **entra y sale** del formato del despacho.
+
+## Emisión y round-trip (E0.2 · D34–D38)
+
+- `emitir_bc3(salida, *, fecha=None, charset="utf-8", …)` — subset emitido `~V/~C/~D/~M/~T`. Las
+  **mediciones `~M`** se desglosan **por objeto** desde `traza_cantidades` (el GUID en el comentario), o
+  una línea única con la cantidad total cuando no hay traza (p. ej. `origen=regla`). Salida en **UTF-8**
+  por defecto (parametrizable a ANSI/cp1252). El **sello de fecha** del `~V` es el único no-determinismo
+  (parámetro `fecha`, valor por defecto determinista — nunca `date.today()`). El `~T` es un pliego mínimo
+  (la descripción de la partida; gancho E4-pliego).
+- `leer_bc3_presupuesto(origen)` — reconstruye `estado_mediciones` (cantidad de las `~M`, precio del
+  `~C`, `importe = cantidad × precio_unitario`, trazabilidad de GUIDs). NO recalcula el precio.
+- **Golden de round-trip** (`tests/test_emision.py`): consume la `salida-presupuesto` ANCLADA de
+  `GOL-PRE-01`, emite → re-lee → **identidad de importes** (±0,01) + cantidades (±0,5%), PEM 7 022,53.
+  Ancla **semántica**, NO `md5` del `.bc3` (lleva sello de fecha). Texto puro → corre en CI y sandbox.
 
 ## Subset FIEBDC-3 v0 (D31)
 
@@ -33,6 +49,7 @@ compuesto debe casar (±0,01) con el precio declarado en el `~C`; si no, aviso a
 
 ```
 aqyra-bc3 ingerir data/packs/banco/AQ-BC3-DEMO/v1/fuente/muestra.bc3 --banco AQ-BC3-DEMO/v1
+aqyra-bc3 emitir  packages/golden/C5/GOL-PRE-01/expected.json --salida presupuesto.bc3 [--charset cp1252] [--fecha 20260709]
 ```
 
 ## Golden y dos llaves

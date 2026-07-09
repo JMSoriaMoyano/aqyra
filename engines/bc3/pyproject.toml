@@ -1,7 +1,7 @@
 [project]
 name = "aqyra-bc3"
-version = "0.1.0"
-description = "Adaptador de interoperabilidad FIEBDC-3/2024 (.bc3) <-> Aqyra (capacidad de frontera C1/C5). E0.1 (ingesta): ingerir_bc3(path) -> pack banco (esquema AQ-DEMO), traduccion determinista .bc3 -> banco.json. E0.2 (emision): emitir_bc3(salida) -> .bc3 (gancho forward). Texto puro (stdlib): corre en CI/sandbox sin ifcopenshell. Releaseable (tag = Llave 2); v0 SIN release."
+version = "0.2.0"
+description = "Adaptador de interoperabilidad FIEBDC-3/2024 (.bc3) <-> Aqyra (capacidad de frontera C1/C5). E0.1 (ingesta): ingerir_bc3(path) -> pack banco (esquema AQ-DEMO). E0.2 (emision): emitir_bc3(salida) -> .bc3 (FIEBDC-3/2024, ~V/~C/~D/~M/~T) + leer_bc3_presupuesto (round-trip). Traduccion determinista. Texto puro (stdlib): corre en CI/sandbox sin ifcopenshell. Releaseable (tag = Llave 2); v0 SIN release."
 requires-python = ">=3.10"
 dependencies = []
 
