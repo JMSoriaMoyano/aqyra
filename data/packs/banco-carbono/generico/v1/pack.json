@@ -1,0 +1,32 @@
+{
+  "id": "generico",
+  "familia": "banco-carbono",
+  "version": "v1",
+  "titulo": "Banco de carbono Aqyra generico v0 - PROPIO/sintetico (piloto E3)",
+  "fuente": "Banco de carbono PROPIO del despacho (Aqyra), de DEMOSTRACION, SINTETICO (D-026). Factores kgCO2e por partida alineados en FORMA con EN 15804 / Level(s) (A1-A3 + A4-A5); NO derivan de Okobaudat/INIES/EC3 ni de EPD verificadas. Las semillas reales entran como pack tras la verificacion de licencia por JM (E5.2). Factores de demostracion, no de referencia.",
+  "vigencia": {
+    "desde": "2026-07-09",
+    "estado": "vigente (demo, carbono generico v0)"
+  },
+  "metadatos": {
+    "autoria": "propia (despacho)",
+    "eje": "carbono",
+    "nota": "Familia de pack NUEVA banco-carbono (E3.2, N-03 Opcion A). Factor por codigo de partida (misma junta que el precio del banco de coste); etapas por unidad A1A3/A4A5 (Σ = precio, guarda ±0,01). El motor reparte etapa_total = factor_etapa × cantidad con la ultima etapa como residuo -> Σ etapas = total (D40). Consumidores: C5 (engines/presupuesto, eje carbono) y la golden GOL-CAR-01 (E3.3). EPD verificadas = banco-carbono/epd/vN (capa premium posterior, N-05)."
+  },
+  "contenido": {
+    "fichero": "banco.json",
+    "md5_banco": "47fb478796e3571f6dccf3426999de11",
+    "eje": "carbono",
+    "unidad_eje": "kgCO2e",
+    "costes_indirectos_pct": 0,
+    "partidas": [
+      "FAB010",
+      "REV010",
+      "PIN010",
+      "EHL010",
+      "EHS010",
+      "CSZ010",
+      "PPM010"
+    ]
+  }
+}

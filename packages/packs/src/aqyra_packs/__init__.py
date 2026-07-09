@@ -19,7 +19,7 @@ except ModuleNotFoundError:  # 3.10
 
 __version__ = "0.1.0"
 
-FAMILIAS = {"codigos", "normativa", "banco", "criterio", "ids"}
+FAMILIAS = {"codigos", "normativa", "banco", "banco-carbono", "criterio", "ids"}
 
 
 def pack_path(root, familia, ident, version) -> Path:

@@ -1,0 +1,5 @@
+{
+  "pack": "banco-carbono/generico/v1",
+  "content_sha256": "44d0cd3fd38986806710d5b0b085a240c31a0454684005e3954cf2d462878496",
+  "_nota": "Golden de pack: identidad del contenido por hash (sha256 del contenido + md5 de banco.json). Banco de carbono PROPIO/sintetico v0 (D-026); factores kgCO2e por partida con etapas EN 15978."
+}

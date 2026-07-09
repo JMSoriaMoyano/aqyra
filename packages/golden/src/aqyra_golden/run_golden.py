@@ -1585,6 +1585,9 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     # Proyección (E2.2, D24–D29): GOL-PRE-03 (vista por eje/corte) — group-by determinista.
     if expected.get("modo") == "proyeccion":
         return _run_c5_proyeccion(case_dir, contracts_dir, expected, tol, repo)
+    # Eje CARBONO (E3.3, D39–D44): GOL-CAR-01 (valoración carbono + etapas + proyección de carbono).
+    if expected.get("modo") == "carbono":
+        return _run_c5_carbono(case_dir, contracts_dir, expected, tol, repo)
 
     checks: list[tuple[str, bool, str]] = []
     schemas = load_c5_schemas(contracts_dir)
@@ -1783,6 +1786,156 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
             sys_ok = approx(l.get("importe"), esperado)
             sys_detail = f"{l['codigo']} {l.get('importe')} (esperado {round(esperado, 2)} = {ratio}×{round(pem_medible, 2)})"
     checks.append(("partida por regla == ratio × PEM medible", sys_ok, sys_detail))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
+def _run_c5_carbono(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                    repo: Path = DEFAULT_REPO) -> bool:
+    """C5 · eje CARBONO (E3.3, D39-D44): valora la medicion de GOL-PRE-01 en carbono — GOL-CAR-01.
+
+    Reusa las fixtures AUMENTADAS de GOL-PRE-03 (mismos md5) + criterio/AQ/v2 (D44). El carbono es
+    traduccion determinista: el kgCO2e sale del factor del banco-carbono anclado (convencion, no verdad
+    fisica). ANCLA (patron D14/D28, sin md5 de salida):
+      1. Identidad por md5 de las fixtures aumentadas (entradas_md5).
+      2. criterio/AQ/v2 + banco-carbono/generico/v1 anclados por su content_sha256.
+      3. Conformidad del esquema de salida (el carbono conforma SIN tocar el esquema).
+      4. RECOMPUTE: medir(fixtures, v2) + presupuestar(..., banco-carbono, eje="carbono").
+      5. SEMANTICA carbono: por partida valores.carbono {unitario x cantidad = total, unidad kgCO2e,
+         banco, etapas A1A3/A4A5, Sigma etapas = total}; resumen del eje == Sigma totales.
+      6. DETERMINISMO + INVARIANTE de proyeccion: proyectar 2x igual; Sigma == PEM eje; grupos/valores.
+    Un fallo se investiga en el ENGINE (presupuesto.py), jamas aflojando el check."""
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c5_schemas(contracts_dir)
+    entrada = json.loads((case_dir / "entrada.json").read_text(encoding="utf-8"))
+    ia = float(tol.get("importe_abs", 0.01))
+    eje_exp = expected.get("eje", {})
+    estado_exp = {e["codigo"]: e for e in expected.get("estado_carbono", [])}
+    vistas = expected.get("vistas", [])
+
+    # 1 · identidad de las fixtures aumentadas (las de GOL-PRE-03; GOL-PRE-01 intacta)
+    for rel, exp_md5 in sorted(expected.get("entradas_md5", {}).items()):
+        p = case_dir / rel
+        got = _md5(p) if p.exists() else None
+        checks.append((f"identidad {rel}", got == exp_md5,
+                       f"md5 {str(got)[:12]}… (esperado {str(exp_md5)[:12]}…)"))
+
+    # 2 · packs anclados (criterio/AQ/v2 + banco-carbono/generico/v1) por content_sha256
+    crit_ref = entrada.get("criterio_ref", {})
+    banco_ref = entrada.get("banco_ref", {})
+    checks.append(("criterio_ref == AQ/v2", crit_ref.get("id") == "AQ" and crit_ref.get("version") == "v2",
+                   f"{crit_ref.get('id')}/{crit_ref.get('version')}"))
+    checks.append(("banco_ref == banco-carbono/generico/v1",
+                   banco_ref.get("familia") == "banco-carbono" and banco_ref.get("id") == "generico"
+                   and banco_ref.get("version") == "v1",
+                   f"{banco_ref.get('familia')}/{banco_ref.get('id')}/{banco_ref.get('version')}"))
+    pp = str(repo / "packages" / "packs" / "src")
+    if pp not in sys.path:
+        sys.path.insert(0, pp)
+    try:
+        import aqyra_packs as _packs
+        for fam, rid, rver, clave in (("criterio", "AQ", "v2", "criterio/AQ/v2"),
+                                      ("banco-carbono", "generico", "v1", "banco-carbono/generico/v1")):
+            man = _packs.load_pack(repo / "data" / "packs", fam, rid, rver)
+            got_h = _packs.content_hash(man)
+            exp_h = json.loads((repo / "data" / "packs" / fam / rid / rver / "golden"
+                                / "expected.json").read_text(encoding="utf-8"))["content_sha256"]
+            checks.append((f"{clave} anclado (content_sha256)", got_h == exp_h,
+                           f"{got_h[:12]}… (esperado {exp_h[:12]}…)"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("packs anclados (content_sha256)", False, f"{type(e).__name__}: {e}"))
+
+    pe = str(DEFAULT_ENGINE_C5)
+    if pe not in sys.path:
+        sys.path.insert(0, pe)
+    try:
+        from aqyra_presupuesto import medir, presupuestar, proyectar, suma_proyeccion
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import engine (medir/presupuestar/proyectar)", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    # 3 · recompute del eje carbono
+    fuentes = [{"id": m.get("id"), "disciplina": m.get("disciplina"),
+                "path": case_dir / m["fichero"], "fichero": m["fichero"]}
+               for m in entrada.get("modelo", {}).get("fuente_maestro", {}).get("modelos", [])]
+    criterio = _pack_contenido_c5(repo, crit_ref.get("familia", "criterio"), crit_ref)
+    banco = _pack_contenido_c5(repo, banco_ref.get("familia", "banco-carbono"), banco_ref)
+    modelo = medir(fuentes, criterio)
+    modelo["proyecto"] = entrada.get("proyecto")
+    pres = presupuestar(modelo, criterio, banco, entrada.get("parametros", {}))
+    ok, detail = validate_against_schema(pres, schemas["salida"])
+    checks.append(("presupuesto de carbono conforma esquema (sin tocarlo)", ok, detail))
+
+    # 4 · semantica del eje por partida (valores.carbono + etapas + Sigma etapas = total)
+    got = {p["codigo"]: p for p in pres.get("estado_mediciones", [])}
+    malos: list[str] = []
+    for cod, e in estado_exp.items():
+        p = got.get(cod)
+        if p is None:
+            malos.append(f"{cod}: no recomputada")
+            continue
+        v = (p.get("valores") or {}).get("carbono")
+        if not v:
+            malos.append(f"{cod}: sin valores.carbono")
+            continue
+        if v.get("unidad") != "kgCO2e":
+            malos.append(f"{cod}: unidad {v.get('unidad')}")
+        if abs(float(v.get("total", 0)) - float(e["total"])) > ia:
+            malos.append(f"{cod}: total {v.get('total')} != {e['total']}")
+        if abs(float(v.get("unitario", 0)) - float(e["unitario"])) > ia:
+            malos.append(f"{cod}: unitario {v.get('unitario')} != {e['unitario']}")
+        if abs(float(v.get("total", 0)) - float(p.get("importe", 0))) > ia:
+            malos.append(f"{cod}: espejo total != importe")
+        et_e = e.get("etapas")
+        if et_e:
+            et = v.get("etapas") or {}
+            if set(et) != set(et_e):
+                malos.append(f"{cod}: etapas {sorted(et)} != {sorted(et_e)}")
+            else:
+                if abs(sum(float(et[k]) for k in et) - float(v.get("total", 0))) > ia:
+                    malos.append(f"{cod}: Sigma etapas != total")
+                for k in et_e:
+                    if abs(float(et[k]) - float(et_e[k])) > ia:
+                        malos.append(f"{cod}.etapas.{k}")
+            if v.get("banco") != "banco-carbono/generico/v1":
+                malos.append(f"{cod}: banco {v.get('banco')}")
+        elif "etapas" in v:
+            malos.append(f"{cod}: no deberia tener etapas (origen=regla)")
+    checks.append(("valores.carbono por partida (total/unitario/etapas, Sigma etapas = total)", not malos,
+                   "todas casan" if not malos else f"{len(malos)} — {malos[0]}"))
+    pem_car = float(pres.get("resumen", {}).get("PEM", 0))
+    checks.append(("resumen PEM del eje carbono", abs(pem_car - float(eje_exp.get("PEM", 0))) <= ia,
+                   f"PEM {pem_car} kgCO2e (esperado {eje_exp.get('PEM')})"))
+
+    # 5 · proyeccion de carbono: DETERMINISMO + INVARIANTE + SEMANTICA
+    for v in vistas:
+        vid = v.get("id", f"{v.get('eje')}×{v.get('corte')}")
+        eje, corte = v.get("eje", "carbono"), v.get("corte")
+        f1 = proyectar(pres, modelo, eje, corte)
+        f2 = proyectar(pres, modelo, eje, corte)
+        checks.append((f"[{vid}] determinista", f1 == f2, "proyectar 2× = misma salida"))
+        suma_exp = float(v.get("suma", eje_exp.get("PEM", 0)))
+        checks.append((f"[{vid}] invariante Σ == PEM eje", abs(suma_proyeccion(f1) - suma_exp) <= ia,
+                       f"Σ {suma_proyeccion(f1)} (esperado {suma_exp})"))
+        got_g = {r["grupo"]: r for r in f1}
+        exp_g = {g["grupo"]: g for g in v.get("grupos", [])}
+        set_ok = set(got_g) == set(exp_g)
+        checks.append((f"[{vid}] grupos == expected", set_ok,
+                       f"{sorted(got_g)}" if set_ok
+                       else f"faltan {sorted(set(exp_g) - set(got_g))} / sobran {sorted(set(got_g) - set(exp_g))}"))
+        mg = []
+        for grupo, ge in exp_g.items():
+            gg = got_g.get(grupo)
+            if gg is None:
+                continue
+            if abs(float(gg["valor_total"]) - float(ge["valor_total"])) > ia:
+                mg.append(f"{grupo}:{gg['valor_total']}≠{ge['valor_total']}")
+            elif "fuente" in ge and gg.get("fuente") != ge["fuente"]:
+                mg.append(f"{grupo}:fuente {gg.get('fuente')}≠{ge['fuente']}")
+        checks.append((f"[{vid}] valor_total + fuente por grupo", not mg,
+                       "todos casan" if not mg else f"{len(mg)} — {mg[0]}"))
 
     print_checks(checks)
     return all(ok for _, ok, _ in checks)

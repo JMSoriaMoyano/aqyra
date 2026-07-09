@@ -1,0 +1,166 @@
+{
+  "banco": "generico/v1",
+  "ref": "banco-carbono/generico/v1",
+  "eje": "carbono",
+  "titulo": "Banco de carbono Aqyra generico v0 - PROPIO/sintetico (piloto E3)",
+  "descripcion": "Factores de carbono embebido (kgCO2e) por partida con desglose por etapas EN 15978 (A1-A3 producto + A4-A5 construccion). PROPIO/SINTETICO de demostracion (D-026): alineado en FORMA con EN 15804 / Level(s), NO copiado de Okobaudat/INIES/EC3 (eso es E5.2, tras verificacion de licencia por JM). kgCO2e = convencion banco+criterio, no verdad fisica (estatuto del PEM).",
+  "unidad_eje": "kgCO2e",
+  "moneda": "kgCO2e",
+  "costes_indirectos_pct": 0,
+  "partidas": [
+    {
+      "codigo": "FAB010",
+      "unidad": "m2",
+      "descripcion": "Fabrica de ladrillo ceramico perforado 1/2 pie - factor de carbono embebido (generico)",
+      "clasificacion_uniclass": [],
+      "precio": 46.3,
+      "etapas": {
+        "A1A3": 42.1,
+        "A4A5": 4.2
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor generico embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 46.3,
+          "subtotal": 46.3
+        }
+      ],
+      "costes_indirectos": 0
+    },
+    {
+      "codigo": "REV010",
+      "unidad": "m2",
+      "descripcion": "Enfoscado de cemento a buena vista - factor de carbono embebido (generico)",
+      "clasificacion_uniclass": [],
+      "precio": 8.75,
+      "etapas": {
+        "A1A3": 7.9,
+        "A4A5": 0.85
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor generico embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 8.75,
+          "subtotal": 8.75
+        }
+      ],
+      "costes_indirectos": 0
+    },
+    {
+      "codigo": "PIN010",
+      "unidad": "m2",
+      "descripcion": "Pintura plastica lisa - factor de carbono embebido (generico)",
+      "clasificacion_uniclass": [],
+      "precio": 2.4,
+      "etapas": {
+        "A1A3": 2.15,
+        "A4A5": 0.25
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor generico embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 2.4,
+          "subtotal": 2.4
+        }
+      ],
+      "costes_indirectos": 0
+    },
+    {
+      "codigo": "EHL010",
+      "unidad": "m3",
+      "descripcion": "Losa/forjado de hormigon armado HA-25 - factor de carbono embebido (generico)",
+      "clasificacion_uniclass": [],
+      "precio": 300.0,
+      "etapas": {
+        "A1A3": 287.4,
+        "A4A5": 12.6
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor generico embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 300.0,
+          "subtotal": 300.0
+        }
+      ],
+      "costes_indirectos": 0
+    },
+    {
+      "codigo": "EHS010",
+      "unidad": "m3",
+      "descripcion": "Pilar de hormigon armado HA-25 - factor de carbono embebido (generico)",
+      "clasificacion_uniclass": [],
+      "precio": 312.5,
+      "etapas": {
+        "A1A3": 299.0,
+        "A4A5": 13.5
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor generico embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 312.5,
+          "subtotal": 312.5
+        }
+      ],
+      "costes_indirectos": 0
+    },
+    {
+      "codigo": "CSZ010",
+      "unidad": "m3",
+      "descripcion": "Zapata de cimentacion de hormigon armado HA-25 - factor de carbono embebido (generico)",
+      "clasificacion_uniclass": [],
+      "precio": 245.0,
+      "etapas": {
+        "A1A3": 233.0,
+        "A4A5": 12.0
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor generico embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 245.0,
+          "subtotal": 245.0
+        }
+      ],
+      "costes_indirectos": 0
+    },
+    {
+      "codigo": "PPM010",
+      "unidad": "ud",
+      "descripcion": "Puerta de paso interior, hoja lisa - factor de carbono embebido (generico)",
+      "clasificacion_uniclass": [],
+      "precio": 58.0,
+      "etapas": {
+        "A1A3": 54.0,
+        "A4A5": 4.0
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor generico embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 58.0,
+          "subtotal": 58.0
+        }
+      ],
+      "costes_indirectos": 0
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "cantidad_rel": 0.005,
+  "importe_abs": 0.01,
+  "_nota": "carbono: totales/etapas/proyeccion EXACTOS del banco-carbono anclado (±0,01 kgCO2e); cantidades ±0,5% (recompute del parser, D3). Invariante Σ etapas = total y Σ proyeccion = PEM del eje."
+}

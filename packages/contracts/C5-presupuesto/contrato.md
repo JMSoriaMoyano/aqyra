@@ -49,6 +49,12 @@ del coste al IFC vía **C1** (5D). C5 **no redacta** el documento (D1) ni federa
     aquí (D16): sigue en `precio_unitario`/`importe`; `valores` abre la partida a otros ejes
     (`carbono`, `agua`, …) sin duplicar ni cambiar el coste. Un eje sin banco para la partida → su
     clave **ausente**, nunca error. `etapas` = desglose EN 15978 (`A1A3`, `A4A5`, …) con Σ = `total`.
+    - **eje `carbono`** (E3 / D39–D44, Ola 2) — primer eje NO-coste: `valores.carbono` con
+      `unidad=kgCO2e` y `etapas` A1A3/A4A5 (Σ = `total`, EN 15978), alimentado por la familia de pack
+      **`banco-carbono`** (`banco-carbono/generico/v1`, PROPIO/sintético v0, D-026). El motor lo emite con
+      `parametros.eje="carbono"` (0.5.0); golden `GOL-CAR-01`. El origen del factor (`generico`/`epd`) lo
+      traza el `banco` ref (D42). `banco_ref` puede ser de familia `banco-carbono`. El esquema de salida
+      **no cambia** (la forma ya cabe, D18).
 - **cuadro_precios_1[]** — precio unitario en cifra y en letra.
 - **cuadro_precios_2[]** — descompuesto (MO + materiales + maquinaria + costes indirectos), justificación.
 - **resumen** — parciales por capítulo → **PEM** → (+GG +BI) → base → (+IVA) → **PEC**.
