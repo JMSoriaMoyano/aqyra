@@ -35,7 +35,9 @@ del coste al IFC vía **C1** (5D). C5 **no redacta** el documento (D1) ni federa
 - **banco_ref** — pack `banco/<id>/<version>` (precios descompuestos). Un pack `banco` puede
   materializarse por **ingesta FIEBDC-3/2024** (`.bc3`) con el adaptador de frontera `engines/bc3`
   (`aqyra_bc3.ingerir_bc3`, E0.1): traducción determinista `.bc3 → banco.json` con este mismo esquema.
-  Aditivo; no cambia la semántica del contrato. La emisión inversa (`salida-presupuesto → .bc3`) es E0.2.
+  Aditivo; no cambia la semántica del contrato. La **emisión inversa** (`salida-presupuesto → .bc3`
+  FIEBDC-3/2024) es `engines/bc3.emitir_bc3` (E0.2) — con re-lector `leer_bc3_presupuesto` y golden de
+  round-trip por identidad de importes; también LEE la salida tal cual (no recalcula).
 - **parametros** — `{moneda, iva_pct, gg_pct, bi_pct}`.
 
 **Sale.** Ver `salida-presupuesto.schema.json` (artefacto AUTORITATIVO, D1):

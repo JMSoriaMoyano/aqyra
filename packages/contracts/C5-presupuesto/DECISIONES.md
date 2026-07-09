@@ -477,6 +477,69 @@ mejor con su fila propia). **Sin release** (la ingesta es interop; el tag de `aq
 JM lo decida, probablemente al cerrar E0.2).
 
 ---
+
+# C5 — Decisiones de la EMISIÓN BC3 (Ola 1·E0.2 — `salida-presupuesto` → FIEBDC-3/2024 `.bc3`)
+
+> Ratificadas con JM el **2026-07-09** (OK explícito por opciones), antes de tocar código. Numeración
+> **propia del C5**, continúan D1–D33. Materializan **E0.2** del handoff negocio→desarrollo
+> (`Aqyra-Negocio/BACKLOG_motor-valoracion_para-Aqyra-Raiz.md` §2·E0) y **cierran la Ola 1** (coste
+> conectado). Change SDD: `openspec/changes/c5-bc3-emision/`. **La emisión es traducción determinista, no
+> cálculo:** la misma `salida-presupuesto` → el mismo `.bc3` salvo el sello de fecha del `~V`. **ADITIVA**
+> sobre `engines/bc3` (E0.1); **NO toca ningún esquema de contrato** (LEE `salida-presupuesto`). ZONA
+> ANCLADA intocable: el eje coste, los packs `criterio/AQ/v1`+`v2`, `banco/AQ-DEMO/v1` y `banco/AQ-BC3-DEMO/v1`
+> (identidad por hash), las golden `GOL-PRE-01/02/03` y `GOL-DOC-01` (byte-idénticas; `GOL-PRE-01` se
+> **consume** como entrada del round-trip, no se re-ancla), y `ingerir_bc3` (intacto).
+
+## D34 · Emisión: API `emitir_bc3` + re-lector `leer_bc3_presupuesto` en `aqyra_bc3` (la de mayor recorrido)
+
+La emisión es ADITIVA sobre `engines/bc3` (D30), la dirección inversa de la ingesta.
+`emitir_bc3(salida, *, fecha=None, charset="utf-8", programa="AQYRA", autor="Aqyra", titulo=None) → str`
+devuelve el texto `.bc3` (simétrico de `serializar_banco`); el CLI lo escribe con el `charset`. El
+**re-lector del round-trip** `leer_bc3_presupuesto(origen) → {"estado_mediciones": […]}` vive **en el
+paquete** (no en el test): reconstruye `estado_mediciones` (cantidad de las `~M`, precio del `~C`,
+`importe = cantidad × precio_unitario`, trazabilidad de GUIDs) y es capacidad reutilizable (E5/importación
+lo reusan). `ingerir_bc3` **no se toca**. **Rechazada por JM (menor recorrido):** el re-lector como función
+privada del test.
+
+## D35 · Subset EMITIDO v0 `~V/~C/~D/~M/~T`; las `~M` por DESGLOSE POR OBJETO
+
+Se emiten `~V` (cabecera + charset + sello de fecha), `~C` (partidas `tipo 0` + componentes del cuadro nº2
+con naturaleza `1`/`2`/`3`; el hijo se codifica `⟨codigo⟩.⟨n⟩`, determinista), `~D` (descomposiciones:
+`hijo\factor(=1)\rendimiento`, tal que `precio_hijo × 1 × rendimiento = subtotal`), `~M` (mediciones) y `~T`
+(§D38). Las líneas de `~M` van por **desglose por objeto** desde `traza_cantidades` (una línea por objeto,
+con el **GUID en el comentario** — preserva la trazabilidad, la joya) y por **línea única** con la cantidad
+total cuando la partida no tiene `traza_cantidades` (p. ej. `origen=regla` como S&S, o las partidas de
+`GOL-PRE-01`, que llevan `trazabilidad` pero no `traza_cantidades`). El total del `~M` = Σ de las líneas.
+**Rechazada por JM:** una sola línea con la cantidad total siempre (perdería el desglose por objeto/GUID).
+
+## D36 · Codificación de salida UTF-8 (parametrizable) + sello de fecha determinista del `~V`
+
+Salida en **UTF-8** por defecto (FIEBDC-3/2024 lo admite; sin pérdida de acentos; el `~V` declara `UTF-8`),
+**parametrizable a ANSI/cp1252** (`--charset cp1252` → token `ANSI`) para destinos legacy
+(Presto/Arquímedes/TCQ). El **sello de fecha** del `~V` es el parámetro `fecha` (AAAAMMDD), con valor por
+defecto **determinista y documentado** (`_FECHA_DEFAULT`), **nunca** `date.today()`: es el ÚNICO
+no-determinismo del emisor (misma salida + mismo `fecha` → mismos bytes). El sello sella también la fecha de
+precio de cada `~C` (comportamiento FIEBDC); toda diferencia entre dos emisiones se explica por sustitución
+del sello. **Rechazada por JM:** ANSI por defecto.
+
+## D37 · Anclaje del round-trip por IDENTIDAD DE IMPORTES (semántico), NO md5 del `.bc3`
+
+El golden vive como pytest en `engines/bc3/tests/test_emision.py` (texto puro → CI + sandbox) que **consume**
+la `salida-presupuesto` ANCLADA de `GOL-PRE-01` (`expected.json → presupuesto`; se LEE, no se recalcula —
+D4). Ancla **SEMÁNTICA**: el `.bc3` emitido, REIMPORTADO por `leer_bc3_presupuesto`, reproduce cada
+`importe` (**±0,01**) y `cantidad` (**±0,5%**, D3) del `estado_mediciones`, y la Σ casa con el **PEM
+7 022,53**. **NO** por `md5` del `.bc3` (el sello de fecha lo haría inestable) — patrón semántico heredado
+(D14/D28). `packages/golden` **no se toca** (GOL-PRE-01 se consume como entrada, no se re-ancla).
+
+## D38 · Pliego `~T` mínimo desde la descripción (gancho E4-pliego)
+
+Se emite un `~T` por partida con **su descripción** como pliego mínimo. La `salida-presupuesto` v0 no porta
+un pliego estructurado; el `~T` mínimo deja el `.bc3` más completo para el receptor y es el **gancho** para
+**E4-pliego** (cuando el pliego real entre en la salida o se resuelva del banco/criterio, el `~T` se
+enriquece). El re-lector **ignora** el `~T` para los importes (no afecta al round-trip). **Rechazada por
+JM:** no emitir `~T` en v0.
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*
