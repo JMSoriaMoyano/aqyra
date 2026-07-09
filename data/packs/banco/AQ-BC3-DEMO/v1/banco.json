@@ -1,0 +1,111 @@
+{
+  "banco": "AQ-BC3-DEMO/v1",
+  "titulo": "Banco de muestra Aqyra (sintetico)",
+  "descripcion": "Banco ingerido de un .bc3 FIEBDC-3/2024 de muestra (PROPIO, sintético). Traducción determinista .bc3 -> pack banco; precios de demostración, no de mercado.",
+  "moneda": "EUR",
+  "costes_indirectos_pct": 0.03,
+  "partidas": [
+    {
+      "codigo": "FAB010",
+      "unidad": "m2",
+      "descripcion": "Fábrica de ladrillo cerámico perforado 1/2 pie, para revestir",
+      "clasificacion_uniclass": [],
+      "componentes": [
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial 1ª construcción",
+          "unidad": "h",
+          "rendimiento": 0.4,
+          "precio": 24.0,
+          "subtotal": 9.6
+        },
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Peón ordinario construcción",
+          "unidad": "h",
+          "rendimiento": 0.42,
+          "precio": 20.0,
+          "subtotal": 8.4
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Ladrillo cerámico perforado y mortero",
+          "unidad": "m2",
+          "rendimiento": 1.0,
+          "precio": 12.5,
+          "subtotal": 12.5
+        }
+      ],
+      "costes_indirectos": 0.92,
+      "precio": 31.42
+    },
+    {
+      "codigo": "REV010",
+      "unidad": "m2",
+      "descripcion": "Enfoscado de cemento a buena vista sobre paramento vertical",
+      "clasificacion_uniclass": [],
+      "componentes": [
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial 1ª construcción",
+          "unidad": "h",
+          "rendimiento": 0.35,
+          "precio": 24.0,
+          "subtotal": 8.4
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Mortero de cemento M-5",
+          "unidad": "m2",
+          "rendimiento": 1.0,
+          "precio": 3.2,
+          "subtotal": 3.2
+        },
+        {
+          "tipo": "maquinaria",
+          "descripcion": "Hormigonera",
+          "unidad": "h",
+          "rendimiento": 0.02,
+          "precio": 5.0,
+          "subtotal": 0.1
+        }
+      ],
+      "costes_indirectos": 0.35,
+      "precio": 12.05
+    },
+    {
+      "codigo": "EHL010",
+      "unidad": "m3",
+      "descripcion": "Losa de hormigón armado HA-25, incluso encofrado y acero B500S",
+      "clasificacion_uniclass": [],
+      "componentes": [
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial 1ª construcción",
+          "unidad": "h",
+          "rendimiento": 3.5,
+          "precio": 24.0,
+          "subtotal": 84.0
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Hormigón HA-25, acero B500S y encofrado",
+          "unidad": "m3",
+          "rendimiento": 1.0,
+          "precio": 110.0,
+          "subtotal": 110.0
+        },
+        {
+          "tipo": "maquinaria",
+          "descripcion": "Bomba de hormigón y vibrador",
+          "unidad": "h",
+          "rendimiento": 0.5,
+          "precio": 40.0,
+          "subtotal": 20.0
+        }
+      ],
+      "costes_indirectos": 6.42,
+      "precio": 220.42
+    }
+  ]
+}

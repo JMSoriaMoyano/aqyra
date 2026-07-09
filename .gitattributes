@@ -10,3 +10,7 @@ packages/golden/**/*.json  -text
 
 # Windows scripts en CRLF
 *.bat text eol=crlf
+
+# Muestra BC3 (Ola 1·E0.1): byte-sensible (CRLF + ANSI/cp1252). El md5 (md5_bc3) la ancla;
+# git NO debe normalizarla (EOL ni nada). Cubre futuras muestras/semillas BC3.
+data/packs/banco/**/fuente/*.bc3  -text

@@ -414,6 +414,69 @@ de `Qto`, D_modelo). `GOL-PRE-03` usa **`criterio/AQ/v2`** (v1 + `reglas_sistema
 (la proyección es consulta).
 
 ---
+
+# C5 — Decisiones de la INGESTA BC3 (Ola 1·E0.1 — FIEBDC-3/2024 `.bc3` → pack `banco`)
+
+> Ratificadas con JM el **2026-07-08** (OK explícito por delegación: «elige las opciones con mayor
+> recorrido futuro»), antes de tocar código. Numeración **propia del C5**, continúan D1–D29.
+> Materializan **E0.1** del handoff negocio→desarrollo
+> (`Aqyra-Negocio/BACKLOG_motor-valoracion_para-Aqyra-Raiz.md` §2·E0) y hacen ejecutable la decisión de
+> negocio **N-04 / D-026** (política de datos 3+2; el `.bc3` de muestra es PROPIO; redistribuir bases
+> públicas espera a la verificación de licencia por JM). Change SDD: `openspec/changes/c5-bc3-ingesta/`.
+> **La ingesta es traducción determinista, no cálculo:** el mismo `.bc3` → el mismo `banco.json` byte a
+> byte. **NO toca ningún esquema de contrato** (reutiliza el esquema de banco tal cual). ZONA ANCLADA
+> intocable: el eje coste, los packs `criterio/AQ/v1`+`v2` y `banco/AQ-DEMO/v1` (identidad por hash), las
+> golden `GOL-PRE-01/02/03` y `GOL-DOC-01` (byte-idénticas).
+
+## D30 · Casa y API — `engines/bc3` releaseable (la de mayor recorrido futuro)
+
+El adaptador vive en `engines/bc3/` como **paquete uv `aqyra-bc3`** (espejo estructural de
+`engines/presupuesto`, D6): `pyproject.toml` (hatchling, **sin dependencias** — stdlib pura) +
+`src/aqyra_bc3/` + `tests/` + miembro de `[tool.uv.workspace]`. Hogar cohesivo para las **dos**
+direcciones de la frontera: `ingerir_bc3(path, *, banco, titulo=None, costes_indirectos_pct="0.03") →
+dict` (E0.1) y `emitir_bc3(salida) → .bc3` (E0.2, gancho forward). Releaseable (tag `aqyra-bc3-v*` =
+Llave 2 de JM) cuando la interoperabilidad cierre; **v0 SIN release** (como `presupuesto` 0.3/0.4).
+Texto puro → **corre en CI y en el sandbox** (no necesita ifcopenshell). **Rechazadas por JM (menor
+recorrido):** `packages/packs` (módulo `aqyra_packs.bc3`, más mínimo pero mezcla ingesta con el cargador
+y no da hogar releaseable a la emisión); `tools/bc3` CLI (exento de la guardia SDD y **fuera** del pytest
+de CI → el golden no correría en la Llave 1).
+
+## D31 · Subset FIEBDC-3 v0 — `~V/~C/~D/~T`; charset del `~V` → UTF-8
+
+Subset soportado en v0: **`~V`** (cabecera + **juego de caracteres**: `ANSI`→cp1252 por defecto,
+`850`/`437`, `UTF-8`, `ISO-8859-1`; se normaliza a **UTF-8**; separador campo `|`, subcampo `\`, decimal
+`.`), **`~C`** (conceptos: `codigo`, `unidad`, `resumen`→`descripcion`, `precio`, `tipo`→naturaleza
+`1`=`mano_obra`/`2`=`maquinaria`/`3`=`material`, `0`/vacío=partida), **`~D`** (descomposiciones: tripletes
+`hijo\factor\rendimiento` → `componentes`), **`~T`** (texto de pliego: **se parsea** pero **NO se emite**
+al banco v0 — el esquema de banco no lo lleva; gancho forward E4-pliego/E0.2, sin añadir clave nueva:
+forward-open). El **`~M`** (mediciones) queda **fuera de v0**: pertenece a un presupuesto/obra, es del
+flujo de E0.2 (emisión/round-trip); se ignora si aparece.
+
+## D32 · Precio de partida y costes indirectos — Σsub + CI(3% param) con guarda ±0,01 vs el `~C`
+
+`subtotal = precio_hijo × factor × rendimiento` (**Decimal**, `ROUND_HALF_UP`, 2 decimales — dinero sin
+float); `costes_indirectos = Σ subtotales × costes_indirectos_pct`; `precio = Σ subtotales +
+costes_indirectos`. `costes_indirectos_pct` **v0 = 3%** (parámetro; **gancho forward** para leerlo de los
+coeficientes del propio BC3, que varían entre emisores — se difiere para no abrir superficie de parser).
+**Guarda de consistencia:** el precio compuesto debe casar (**±0,01**) con el precio declarado en el `~C`;
+si no, aviso auditable (`_avisos_ingesta`), **nunca se silencia** (espíritu de D7, la guarda de huecos).
+**Rechazadas por JM:** precio del `~C` literal con CI residual (rompe la homogeneidad de
+`costes_indirectos_pct` global del banco); leer el `%CI` del BC3 ya en v0 (superficie heterogénea).
+
+## D33 · Anclaje del pack de muestra — `banco/AQ-BC3-DEMO/v1` + `[packs.banco_bc3]`, doble golden
+
+Pack **`banco/AQ-BC3-DEMO/v1`** con `fuente/muestra.bc3` como **provenance** auditable (el `.bc3`
+PROPIO/sintético que lo produce, D-026). Sección NUEVA **`[packs.banco_bc3]`** en `versions.lock`
+(espejo de `[packs.banco]`); `[packs.banco]=AQ-DEMO/v1` **intacto**. **Doble golden** contra el drift:
+(1) golden **de pack** (`packages/packs/tests/test_packs.py`): `content_sha256` del `contenido` +
+`md5(banco.json)` + `md5(muestra.bc3)`; (2) golden **del parser** (`engines/bc3/tests/test_bc3.py`):
+`ingerir_bc3(fuente/muestra.bc3)` **reproduce** el `banco.json` anclado byte a byte (determinismo del
+adaptador). Un fallo se corrige en el **código**, jamás editando el banco anclado. **Rechazada por JM:**
+anclar solo por golden de pack sin fila en `versions.lock` (menor recorrido; un banco «adoptable» encaja
+mejor con su fila propia). **Sin release** (la ingesta es interop; el tag de `aqyra-bc3` = Llave 2 cuando
+JM lo decida, probablemente al cerrar E0.2).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*

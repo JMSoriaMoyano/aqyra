@@ -200,3 +200,13 @@ tags_firmados   = ["c1-golden-2026-06-28"]
 origen          = "Aqyra-Raiz (github.com/JMSoriaMoyano/aqyra-raiz)"
 prefijo         = "_import/aqyra-raiz"
 tags_firmados   = []
+
+# pack banco BC3 (Ola 1·E0.1): materializado por INGESTA de un .bc3 FIEBDC-3/2024 de muestra
+# (fuente/muestra.bc3, PROPIO/sintético — D-026) con engines/bc3 (aqyra_bc3.ingerir_bc3). NO mueve
+# [packs.banco]=AQ-DEMO/v1. Golden de pack por content_sha256 + md5(banco.json) + md5(.bc3). D30–D33.
+[packs.banco_bc3]
+id              = "AQ-BC3-DEMO"
+familia         = "banco"
+version         = "v1"
+golden          = "identidad de contenido (hash: sha256 del contenido + md5 de banco.json + md5 de muestra.bc3)"
+estado          = "adoptado por C5 (interop BC3, E0.1): banco PROPIO de demostración ingerido de un .bc3 FIEBDC-3/2024 sintético (subset v0 ~V/~C/~D/~T, D31); 3 partidas descompuestas (MO/mat/maq + CI 3%, D32). El adaptador vive en engines/bc3 (aqyra-bc3 0.1.0, releaseable, SIN release en v0). El banco real (BCCA/Extremadura) entra igual, tras verificación de licencia por JM (D-026, E5.1)"

@@ -181,3 +181,43 @@ def test_identidad_contenido_banco_golden():
     banco_file = PACKS_ROOT / "banco/AQ-DEMO/v1" / m["contenido"]["fichero"]
     md5 = hashlib.md5(banco_file.read_bytes()).hexdigest()
     assert md5 == m["contenido"]["md5_banco"], "banco.json cambió sin actualizar el manifiesto"
+
+
+# --- pack banco/AQ-BC3-DEMO/v1 (E0.1: ingerido de un .bc3 FIEBDC-3/2024, engines/bc3) -----
+# Banco de muestra PROPIO (D-026) materializado por aqyra_bc3.ingerir_bc3 desde fuente/muestra.bc3.
+# NO re-mueve [packs.banco]=AQ-DEMO/v1 (se ancla por su propia clave [packs.banco_bc3]). Golden de
+# pack por content_sha256 + md5(banco.json) + md5(muestra.bc3). El golden del PARSER (reproduce el
+# banco.json desde el .bc3) vive en engines/bc3/tests/test_bc3.py.
+
+def test_manifiesto_banco_bc3_valido():
+    m = packs.load_pack(PACKS_ROOT, "banco", "AQ-BC3-DEMO", "v1")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma
+    assert m["familia"] == "banco" and m["version"] == "v1"
+
+
+def test_version_banco_bc3_anclada_en_lock():
+    m = packs.load_pack(PACKS_ROOT, "banco", "AQ-BC3-DEMO", "v1")
+    anclada = packs.version_anclada(LOCK, "banco_bc3")
+    assert anclada == m["version"], f"lock={anclada} != pack={m['version']}"
+
+
+def test_identidad_contenido_banco_bc3_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "banco", "AQ-BC3-DEMO", "v1")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "banco/AQ-BC3-DEMO/v1/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack cambió sin actualizar la golden. "
+                        "Bump de versión + nuevo hash, nunca editar en silencio.")
+    banco_file = PACKS_ROOT / "banco/AQ-BC3-DEMO/v1" / m["contenido"]["fichero"]
+    md5 = hashlib.md5(banco_file.read_bytes()).hexdigest()
+    assert md5 == m["contenido"]["md5_banco"], "banco.json cambió sin actualizar el manifiesto"
+    bc3_file = PACKS_ROOT / "banco/AQ-BC3-DEMO/v1" / m["contenido"]["fuente_bc3"]
+    md5_bc3 = hashlib.md5(bc3_file.read_bytes()).hexdigest()
+    assert md5_bc3 == m["contenido"]["md5_bc3"], "muestra.bc3 cambió sin actualizar el manifiesto"
+
+
+def test_banco_bc3_no_toca_aq_demo():
+    # el pack de muestra BC3 es NUEVO; [packs.banco] sigue en AQ-DEMO/v1 (zona anclada intacta)
+    assert packs.version_anclada(LOCK, "banco") == "v1"
