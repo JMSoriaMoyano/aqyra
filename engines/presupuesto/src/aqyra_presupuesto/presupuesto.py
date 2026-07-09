@@ -62,13 +62,41 @@ def mul2(a, b) -> float:
     return float((_d(a) * _d(b)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 
-def _valor_eje(unitario, total, unidad, banco_ref, origen) -> dict:
-    """Valor de UN eje para UNA partida (E1.2, D19): unitario × cantidad = total, en su unidad,
-    con el banco de origen (ausente para origen=regla). Conforma `$defs.valor_eje` del contrato C5."""
+# Orden canónico de etapas del ciclo de vida (EN 15978) para el reparto determinista (E3/D40).
+ETAPAS_ORDEN = ("A1A3", "A4A5", "B", "C", "D")
+
+
+def _etapas_eje(bp: dict, cantidad, total) -> dict | None:
+    """E3 (D39/D40). Reparte el total del eje en etapas del ciclo de vida (EN 15978) a partir de los
+    factores POR ETAPA que declara el banco por unidad (`bp["etapas"]`, p. ej. carbono A1A3/A4A5).
+    etapa_total = factor_etapa × cantidad (redondeo 2 dec); la ÚLTIMA etapa presente ABSORBE el
+    residuo de redondeo -> invariante Σ etapas = total EXACTO (D18). Sin factores -> None (sin etapas,
+    forward-open: p. ej. origen=regla). Orden determinista: ETAPAS_ORDEN + claves extra ordenadas."""
+    fac = bp.get("etapas") if bp else None
+    if not fac:
+        return None
+    presentes = [k for k in ETAPAS_ORDEN if k in fac] + sorted(k for k in fac if k not in ETAPAS_ORDEN)
+    if not presentes:
+        return None
+    et: dict = {}
+    acc = Decimal("0")
+    for k in presentes[:-1]:
+        et[k] = mul2(fac[k], cantidad)
+        acc += _d(et[k])
+    et[presentes[-1]] = r2(_d(total) - acc)   # residuo -> Σ etapas = total exacto (D18)
+    return et
+
+
+def _valor_eje(unitario, total, unidad, banco_ref, origen, etapas=None) -> dict:
+    """Valor de UN eje para UNA partida (E1.2, D19; E3/D40 etapas): unitario × cantidad = total, en su
+    unidad, con el banco de origen (ausente para origen=regla) y, si el banco declara factores por
+    etapa, el desglose `etapas` (EN 15978) con Σ etapas = total. Conforma `$defs.valor_eje` del C5."""
     v: dict = {"unitario": unitario, "total": total, "unidad": unidad}
     if banco_ref:
         v["banco"] = banco_ref
     v["origen"] = origen
+    if etapas:
+        v["etapas"] = etapas
     return v
 
 
@@ -217,8 +245,9 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
         # sigue verde (el recompute compara claves nombradas — esta clave nueva le es invisible).
         if a.get("contrib"):
             p["traza_cantidades"] = [{"guid": gg, "cantidad": r4(c)} for gg, c in a["contrib"].items()]
-        if not es_coste:  # eje NO-coste: valor etiquetado (D19). El coste (default) no lo emite.
-            p["valores"] = {eje: _valor_eje(precio, importe, unidad_eje, banco_ref, "modelo")}
+        if not es_coste:  # eje NO-coste: valor etiquetado (D19) + etapas del banco (E3/D40).
+            et = _etapas_eje(banco_partida[cod], cantidad, importe)
+            p["valores"] = {eje: _valor_eje(precio, importe, unidad_eje, banco_ref, "modelo", et)}
         partidas_modelo.append(p)
 
     pem_medible = r2(sum(_d(p["importe"]) for p in partidas_modelo))

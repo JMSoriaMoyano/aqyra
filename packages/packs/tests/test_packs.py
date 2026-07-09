@@ -221,3 +221,40 @@ def test_identidad_contenido_banco_bc3_golden():
 def test_banco_bc3_no_toca_aq_demo():
     # el pack de muestra BC3 es NUEVO; [packs.banco] sigue en AQ-DEMO/v1 (zona anclada intacta)
     assert packs.version_anclada(LOCK, "banco") == "v1"
+
+
+# --- pack banco-carbono/generico/v1 (E3.2: eje carbono, FAMILIA NUEVA banco-carbono) -----
+# Banco de carbono PROPIO/sintetico v0 (D-026): factores kgCO2e por partida con etapas EN 15978
+# (A1A3/A4A5). Familia NUEVA banco-carbono (aditiva al enum). NO re-mueve [packs.banco]=AQ-DEMO/v1 ni
+# [packs.criterio]=v1 (se ancla por su propia clave [packs.banco_carbono]). Consumidor: GOL-CAR-01 (E3.3).
+
+def test_manifiesto_banco_carbono_valido():
+    m = packs.load_pack(PACKS_ROOT, "banco-carbono", "generico", "v1")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma (familia banco-carbono en el enum)
+    assert m["familia"] == "banco-carbono" and m["version"] == "v1"
+
+
+def test_version_banco_carbono_anclada_en_lock():
+    m = packs.load_pack(PACKS_ROOT, "banco-carbono", "generico", "v1")
+    anclada = packs.version_anclada(LOCK, "banco_carbono")
+    assert anclada == m["version"], f"lock={anclada} != pack={m['version']}"
+
+
+def test_identidad_contenido_banco_carbono_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "banco-carbono", "generico", "v1")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "banco-carbono/generico/v1/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack cambió sin actualizar la golden. "
+                        "Bump de versión + nuevo hash, nunca editar en silencio.")
+    banco_file = PACKS_ROOT / "banco-carbono/generico/v1" / m["contenido"]["fichero"]
+    md5 = hashlib.md5(banco_file.read_bytes()).hexdigest()
+    assert md5 == m["contenido"]["md5_banco"], "banco.json (carbono) cambió sin actualizar el manifiesto"
+
+
+def test_banco_carbono_no_toca_zona_anclada():
+    # el pack de carbono es NUEVO; [packs.banco] sigue en AQ-DEMO/v1 y [packs.criterio] en v1 (intacto)
+    assert packs.version_anclada(LOCK, "banco") == "v1"
+    assert packs.version_anclada(LOCK, "criterio") == "v1"

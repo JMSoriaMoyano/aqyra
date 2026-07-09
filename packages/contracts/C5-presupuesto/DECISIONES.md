@@ -540,6 +540,89 @@ enriquece). El re-lector **ignora** el `~T` para los importes (no afecta al roun
 JM:** no emitir `~T` en v0.
 
 ---
+
+# C5 — Decisiones del EJE CARBONO (Ola 2·E3 — `valores.carbono` + etapas + `banco-carbono` + `GOL-CAR-01`)
+
+> Ratificadas con JM el **2026-07-09** (OK explícito por opciones, A/A/A/A), antes de tocar código.
+> Numeración **propia del C5**, continúan D1–D38. Materializan **E3.1+E3.2+E3.3** del handoff
+> negocio→desarrollo (`Aqyra-Negocio/BACKLOG_motor-valoracion_para-Aqyra-Raiz.md` §2·E3) y **abren la Ola 2**
+> (carbono). Hacen ejecutable **D-025/N-03** (carbono = extensión forward-open de C5, Opción A),
+> **D-027/N-05** (genéricos v0 + EPD premium) y **D-026/N-04** (el banco-carbono v0 es PROPIO/sintético;
+> las semillas reales esperan a la verificación de licencia por JM = E5.2). Change SDD:
+> `openspec/changes/c5-eje-carbono/`. **La valoración de carbono es traducción determinista, no cálculo:**
+> el kgCO₂e sale del factor del banco-carbono anclado (convención banco+criterio, no verdad física,
+> estatuto del PEM). **NO toca el esquema de SALIDA C5** (E1.1/D16–D18 ya fijaron `valores`+`etapas`). ZONA
+> ANCLADA intocable: el eje coste (`precio_unitario`/`importe`), los packs `criterio/AQ/v1`+`v2`,
+> `banco/AQ-DEMO/v1`, `banco/AQ-BC3-DEMO/v1` (identidad por hash), las golden `GOL-PRE-01/02/03` y
+> `GOL-DOC-01` (byte-idénticas; E3 sólo AÑADE `GOL-CAR-01`).
+
+## D39 · Pack `banco-carbono` — factor por CÓDIGO de partida + factores por etapa (Opción A)
+
+Familia de pack **NUEVA `banco-carbono`** (aditiva al enum `codigos/normativa/banco/criterio/ids` de
+`pack.schema.json`; `aqyra_packs.FAMILIAS` la gana). El factor se ancla **por código de partida** (la misma
+junta que el precio en el banco de coste; el mapeo clase→partida del criterio no cambia entre ejes, D19).
+Cada partida del `banco-carbono` declara: `precio` = factor **unitario** total (kgCO₂e por unidad de
+medición), `etapas` = factores **por etapa por unidad** (EN 15978: `A1A3` producto, `A4A5` construcción)
+cuya suma = `precio` (guarda de consistencia ±0,01, estilo D32; si no casa, aviso auditable). **Hallazgo de
+diseño:** como el esquema de salida exige `cuadro_precios_2[].componentes` con `minItems:1` y el motor emite
+el cuadro nº2 en todo run, cada partida del `banco-carbono` declara **un** `componente` `tipo:"material"`
+(el factor embebido) para que la salida de carbono conforme **sin tocar el esquema**; el desglose real vive
+en `valores.carbono.etapas`. **Rechazadas por JM:** C (factor por material del componente — es la capa
+EPD-premium por producto, N-05, no el genérico v0). El pack `banco-carbono/generico/v1` es **PROPIO/
+sintético** (D-026): factores alineados en **forma** con EN 15804 / Level(s), NO copiados de Ökobaudat/
+INIES/EC3.
+
+## D40 · Reparto de etapas en el motor — última etapa = residuo → Σ etapas = total EXACTO (Opción A)
+
+`presupuestar(..., eje="carbono")` emite, por partida `origen=modelo`, `valores.carbono.etapas`:
+`etapa_total = factor_etapa × cantidad` (redondeo 2 dec, `ROUND_HALF_UP`); la **última etapa presente**
+(orden canónico `A1A3`, `A4A5`, `B`, `C`, `D`) **absorbe el residuo de redondeo** → invariante **Σ etapas =
+total** exacto (D18), verificado en las 7 partidas de la medición de `GOL-PRE-01`. El eje **coste** (default)
+sigue **sin** emitir `valores` (D16/D19) → `GOL-PRE-01` byte-idéntica. Una partida sin factor de banco
+(`origen=regla`, S&S) lleva `valores.carbono` etiquetado **sin** `etapas` (forward-open). `engines/presupuesto`
+sube **0.4.0 → 0.5.0** (aditivo; `medir`/`presupuestar` coste/`escribir_coste`/`proyectar` intactos).
+**Rechazada por JM:** B (factor total + reparto por ratio fijo — inventaría el reparto en vez de leerlo del
+dato por etapa).
+
+## D41 · Convención del eje — `id="carbono"`, `unidad="kgCO2e"`, etapas mínimas A1A3+A4A5; esquema de salida intacto
+
+El eje se identifica `carbono` (string libre, D17), unidad `kgCO2e`, etapas mínimas `A1A3` (producto) +
+`A4A5` (construcción) con Σ etapas = total (D18). **El esquema de SALIDA C5 no cambia** (la forma de
+`valores`/`etapas` ya la fijó E1.1). El delta del contrato en E3 es sólo el enum de familia de
+`pack.schema.json` (D39) + esta anclada + la nota de `contrato.md`. Verificado: la salida de carbono
+**conforma `salida-presupuesto.schema.json` sin editarlo**.
+
+## D42 · Trazabilidad del origen del factor (`epd`/`generico`) — DIFERIDA (Opción A)
+
+No se añade clave en v0. El campo `banco` de cada `valores.carbono` ya dice `banco-carbono/generico/v1` (y
+dirá `.../epd/vN` cuando exista el pack premium), así que el origen del factor **ya es trazable sin tocar el
+esquema de salida**. La clave dedicada `origen_factor` se materializa cuando el motor mezcle EPD+genérico
+(N-05, capa premium posterior). **Rechazada por JM:** B (añadir ya la clave aditiva `origen_factor` en
+`valor_eje`).
+
+## D43 · Runner del golden — rama de modo `_run_c5_carbono` bajo `run_case_c5` (Opción A)
+
+Nueva rama `expected.modo == "carbono"` → `_run_c5_carbono(...)`, igual que las ramas `5d`/`documento`/
+`proyeccion`. El contrato sigue siendo `"C5"` en `CASE_RUNNERS` (sin entrada nueva). **Rechazada por JM:** B
+(`run_case_car` nuevo en `CASE_RUNNERS` — duplica el andamiaje de despacho y se aparta del patrón de
+`GOL-PRE-02/03`/`GOL-DOC-01`).
+
+## D44 · Anclaje de `GOL-CAR-01` — fixtures aumentadas de `GOL-PRE-03` + `criterio/AQ/v2`; determinismo+semántica+invariante (Opción A)
+
+`GOL-CAR-01` valora la MISMA medición anclada de `GOL-PRE-01` en carbono, reusando las **fixtures
+aumentadas** de `GOL-PRE-03` (misma medición + cortes `IfcSystem`/`IfcZone`/árbol 4.3 inyectados, md5 ya
+anclados `19a272a5…`/`f1d25192…`) + `criterio/AQ/v2` → valoración carbono por partida + etapas **y** una
+proyección de carbono **real** por planta (`proyectar`, invariante Σ). **Modo anclado (D14/D28, sin md5 de
+salida):** el sandbox no corre ifcopenshell → el recompute del golden corre en el conda `mcp-bim` de JM.
+Anclaje por DETERMINISMO (presupuestar/proyectar 2× idéntico) + SEMÁNTICA (`valores.carbono` por partida:
+unitario×cantidad=total, unidad kgCO₂e, banco, etapas A1A3/A4A5, Σ etapas=total; resumen del eje) +
+INVARIANTE (Σ proyección == PEM del eje). Oráculo del eje calculado a mano y verificado ×2 (PEM eje **8 032,40
+kgCO₂e** = A1A3 7 422,36 + A4A5 452,54 + S&S 157,50; proyección espacial Nivel 00 631,36 · Planta Baja
+4 003,54 · Nivel 01 3 240,00 · sin geometría 157,50). `GOL-PRE-01/02/03`/`GOL-DOC-01` byte-idénticas. Un
+fallo se investiga en el ENGINE, jamás aflojando el check. **Rechazada por JM:** B (fixtures llanas de
+`GOL-PRE-01` + `criterio/AQ/v1`, autocontenido pero con proyección trivial en residuales).
+
+---
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*
