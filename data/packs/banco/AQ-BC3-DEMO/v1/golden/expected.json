@@ -1,0 +1,5 @@
+{
+  "pack": "banco/AQ-BC3-DEMO/v1",
+  "content_sha256": "9a7e462719bffbc08502d68fd72840d586d991dd76e70ba0799fa4c2f38b7cf6",
+  "_nota": "Golden de pack: identidad del contenido por hash (md5 de banco.json + md5 del .bc3 fuente + lista de partidas). El banco.json se REPRODUCE de fuente/muestra.bc3 con aqyra_bc3.ingerir_bc3 (determinismo del parser, test en engines/bc3). Cambiar el .bc3 o el banco.json sin bump de versión + nuevo hash rompe el test — no hay drift silencioso."
+}

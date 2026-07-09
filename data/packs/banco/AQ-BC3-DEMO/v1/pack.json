@@ -1,0 +1,29 @@
+{
+  "id": "AQ-BC3-DEMO",
+  "familia": "banco",
+  "version": "v1",
+  "titulo": "Banco de precios Aqyra BC3-DEMO — ingerido de un .bc3 (piloto E0.1)",
+  "fuente": "Banco PROPIO del despacho (Aqyra), de DEMOSTRACIÓN, materializado por INGESTA de un .bc3 FIEBDC-3/2024 de MUESTRA sintético (fuente/muestra.bc3). NO deriva de ninguna base pública (BCCA/Extremadura) ni licenciada (BEDEC/CYPE/PREOC) — D-026. Precios de demostración.",
+  "vigencia": {
+    "desde": "2026-07-08",
+    "estado": "vigente (demo, ingesta BC3)"
+  },
+  "metadatos": {
+    "autoria": "propia (despacho)",
+    "adaptador": "engines/bc3 (aqyra_bc3.ingerir_bc3) — FIEBDC-3/2024, subset v0 ~V/~C/~D/~T (D31)",
+    "nota": "Traducción determinista .bc3 -> banco (mismo esquema que AQ-DEMO). costes_indirectos_pct v0 = 3% (D32); precio = Σ subtotales + CI, con guarda de consistencia ±0,01 vs el ~C. Consumidores: C5 (engines/presupuesto) y C7."
+  },
+  "contenido": {
+    "fichero": "banco.json",
+    "fuente_bc3": "fuente/muestra.bc3",
+    "md5_banco": "3d6c79494560ba9547e14a5a72b6d264",
+    "md5_bc3": "a63b456d0d1bf0b8d7bcedb91a6d0db9",
+    "moneda": "EUR",
+    "costes_indirectos_pct": 0.03,
+    "partidas": [
+      "FAB010",
+      "REV010",
+      "EHL010"
+    ]
+  }
+}
