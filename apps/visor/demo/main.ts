@@ -8,8 +8,11 @@ import {
   IfcLoader, Viewer, parseMarkup, parseViewpoint, bcfCameraToViewer, costHeatColor,
   SKINS, aplicarSkin, estadoDato, dataStateStyle,
   colorPorResultado, leyendaCumplimiento,
+  modeloVista, vistaDe, ejesDe, cortesDe, guidsDeGrupo, ESTADO_PROYECCION,
 } from "@aqyra/visor";
-import type { BcfTopic, LoadedModel, SpatialNode, Disciplina, DataState } from "@aqyra/visor";
+import type {
+  BcfTopic, LoadedModel, SpatialNode, Disciplina, DataState, IndiceProyeccion, FuenteValor,
+} from "@aqyra/visor";
 
 const ACENTO = 0xff8a3d;
 const $ = (id: string): HTMLElement => document.getElementById(id)!;
@@ -42,8 +45,15 @@ async function main(): Promise<void> {
     await modoCumplimiento(loader, viewer);
     return;
   }
+  // E6.1 · dashboard de valor (por query ?valor): panel de la proyección precomputada (tabla +
+  // gráfica + Σ + chip de fuente); seleccionar un grupo resalta sus GUIDs en el maestro 3D.
+  if (new URLSearchParams(window.location.search).has("valor")) {
+    await modoValor(loader, viewer);
+    return;
+  }
   $("btn-coste").onclick = (): void => { window.location.search = "?5d"; };
   $("btn-6d").onclick = (): void => { window.location.search = "?6d"; };
+  $("btn-valor").onclick = (): void => { window.location.search = "?valor"; };
 
   const data = await textoDe("/federado.ifc");
   const m: LoadedModel = await loader.open({ name: "federado", data });
@@ -346,6 +356,98 @@ async function modoCumplimiento(loader: IfcLoader, viewer: Viewer): Promise<void
   };
   $("vista-general").onclick = (): void => { viewer.frameAll(); };
   const btn = $("btn-6d") as HTMLButtonElement;
+  btn.textContent = "Volver (BCF)";
+  btn.onclick = (): void => { window.location.search = ""; };
+}
+
+/** E6.1 · Dashboard de valor: la skin de proyección. Lee el índice PRECOMPUTADO
+ *  (`/proyeccion_valor.json`, emitido por `tools/emitir_proyeccion_visor.py`) y presenta la vista
+ *  `proyectar(eje, corte)`: selectores eje×corte, tabla + gráfica de barras, pastilla del invariante
+ *  Σ y chip de fuente. Al seleccionar un grupo, resalta sus `guids[]` en el maestro 3D (reutiliza la
+ *  selección del `Viewer`; NO reescribe geometría). CONSULTA, no cálculo (N-06): el cliente NO
+ *  re-mide/re-valora/re-proyecta — lee el índice. «Propone», no certifica (ESTADO_PROYECCION →
+ *  isCertified false, D-DV-5/D-021). El export firmable (dos llaves) = forward. */
+async function modoValor(loader: IfcLoader, viewer: Viewer): Promise<void> {
+  // Maestro 3D de contexto para el resaltado de la selección → GUIDs (reutiliza la selección del
+  // Viewer). La fixture reproduce GOL-PRE-03 (acceptance); del grupo se resaltan los GUIDs presentes.
+  const data = await textoDe("/federado.ifc");
+  const m: LoadedModel = await loader.open({ name: "federado", data });
+  viewer.addIfcModel(m.modelID, loader.getMeshes(m.modelID));
+  viewer.frameAll();
+  const exprPorGuid = new Map<string, number>();
+  for (const e of m.elements) exprPorGuid.set(e.globalId, e.expressId);
+
+  const indice: IndiceProyeccion = JSON.parse(await textoDe("/proyeccion_valor.json"));
+  $("estado").textContent =
+    `Dashboard de valor (E6.1) · proyección precomputada · presupuesto ${indice.presupuesto}`;
+
+  // Semilla de color por fuente (traza honesta del fallback). Definitivo = design system (Ola 3).
+  const COLOR_FUENTE: Record<FuenteValor, string> = {
+    ifc: "#2f6bed", criterio: "#d98a00", regla: "#8b93a0", "—": "#5b6472",
+  };
+  const chipFuente = (f: FuenteValor): string =>
+    `<span style="display:inline-block;padding:0 6px;border-radius:999px;font:600 9px system-ui;` +
+    `color:#fff;background:${COLOR_FUENTE[f] ?? "#5b6472"}">${f}</span>`;
+  const num = (n: number): string => n.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const cont = $("valor");
+  const ejes = ejesDe(indice);
+  let ejeSel = ejes[0]!;
+  let corteSel = cortesDe(indice, ejeSel)[0]!;
+
+  function resalta(grupo: string): void {
+    const vista = vistaDe(indice, ejeSel, corteSel)!;
+    const guids = guidsDeGrupo(vista, grupo);
+    const ids: number[] = [];
+    for (const g of guids) { const ex = exprPorGuid.get(g); if (ex !== undefined) ids.push(ex); }
+    viewer.highlightSelection(m.modelID, ids, { accent: ACENTO });
+    $("props").textContent =
+      `${grupo}\nGUIDs del grupo: ${guids.length}\nresaltados en la escena: ${ids.length}` +
+      `${ids.length < guids.length ? "\n(el resto del grupo no está en el modelo de la demo)" : ""}`;
+  }
+
+  function render(): void {
+    const vista = vistaDe(indice, ejeSel, corteSel)!;
+    const mv = modeloVista(vista);
+    const st = dataStateStyle(ESTADO_PROYECCION); // «propone»: el visor MUESTRA, no certifica
+    const selEje = ejes.map((e) =>
+      `<button data-eje="${e}" style="margin:0 4px 0 0;padding:3px 10px;border:1px solid ${e === ejeSel ? "var(--accent)" : "var(--border)"};border-radius:4px;background:var(--panel2);color:var(--fg);cursor:pointer">${e}</button>`).join("");
+    const selCorte = cortesDe(indice, ejeSel).map((c) =>
+      `<button data-corte="${c}" style="margin:0 4px 0 0;padding:3px 10px;border:1px solid ${c === corteSel ? "var(--accent)" : "var(--border)"};border-radius:4px;background:var(--panel2);color:var(--fg);cursor:pointer">${c}</button>`).join("");
+    const pastilla =
+      `<span style="display:inline-block;padding:1px 8px;border-radius:999px;font:600 10px system-ui;color:#fff;` +
+      `background:${mv.invarianteOk ? "#1f9d55" : "#be2832"}">Σ = ${num(mv.suma)} ${mv.unidad}${mv.invarianteOk ? " ✓" : " ✗"}</span>`;
+    const chipEstado =
+      `<span style="display:inline-block;padding:1px 8px;border-radius:999px;font:600 10px system-ui;color:#fff;background:${st.color}">${st.label}</span>`;
+    const filas = mv.filas.map((f) =>
+      `<div class="fila-valor" data-grupo="${escapaHtml(f.grupo)}" title="clic: resaltar en 3D" ` +
+      `style="cursor:pointer;padding:3px 4px;border-radius:4px">` +
+      `<div style="display:flex;justify-content:space-between;gap:6px;align-items:center">` +
+      `<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapaHtml(f.grupo)} ${chipFuente(f.fuente)}</span>` +
+      `<span style="color:var(--fg-dim);font-variant-numeric:tabular-nums">${num(f.valor)}</span></div>` +
+      `<div style="height:8px;border-radius:3px;margin-top:2px;background:${COLOR_FUENTE[f.fuente] ?? "#5b6472"};width:${Math.max(2, f.escala * 100)}%"></div></div>`).join("");
+    cont.innerHTML =
+      `<div style="margin-bottom:6px">Eje: ${selEje}</div>` +
+      `<div style="margin-bottom:8px">Corte: ${selCorte}</div>` +
+      `<div style="display:flex;gap:6px;margin-bottom:8px">${pastilla} ${chipEstado}</div>` +
+      `<div style="margin-bottom:6px;color:var(--fg-dim)">${mv.filas.length} grupos · unidad ${mv.unidad}</div>` +
+      filas +
+      `<div style="margin-top:10px;color:var(--fg-dim);font-size:11px;border-top:1px solid var(--border);padding-top:6px">` +
+      `El motor proyecta · se siente gratis · el muro de cobro es el export firmable (dos llaves) — llega.</div>`;
+    cont.querySelectorAll<HTMLButtonElement>("button[data-eje]").forEach((b) => {
+      b.onclick = (): void => { ejeSel = b.dataset.eje!; corteSel = cortesDe(indice, ejeSel)[0]!; render(); };
+    });
+    cont.querySelectorAll<HTMLButtonElement>("button[data-corte]").forEach((b) => {
+      b.onclick = (): void => { corteSel = b.dataset.corte!; render(); };
+    });
+    cont.querySelectorAll<HTMLElement>(".fila-valor").forEach((row) => {
+      row.onclick = (): void => { resalta(row.dataset.grupo!); };
+    });
+  }
+  render();
+
+  $("vista-general").onclick = (): void => { viewer.clearSelectionAccent(); viewer.frameAll(); };
+  const btn = $("btn-valor") as HTMLButtonElement;
   btn.textContent = "Volver (BCF)";
   btn.onclick = (): void => { window.location.search = ""; };
 }

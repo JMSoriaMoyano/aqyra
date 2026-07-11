@@ -1,0 +1,368 @@
+{
+  "_meta": {
+    "descripcion": "Índice de proyección precomputado para la skin del visor (E6.1, D-DV-3). Salida de proyectar() serializada; el visor lo LEE (sin cálculo en cliente, N-06).",
+    "emisor": "tools/emitir_proyeccion_visor.py",
+    "caso": "GOL-PRE-03",
+    "criterio": "criterio/AQ/v2",
+    "bancos": {
+      "coste": "banco/AQ-DEMO/v1",
+      "carbono": "banco-carbono/generico/v2"
+    },
+    "ancla": "reproduce GOL-PRE-03 (coste, 3 cortes); carbono por invariante Σ."
+  },
+  "presupuesto": "GOL-PRE-03",
+  "presupuesto_md5": {
+    "entrada/ARQ.ifc": "19a272a59a605953f55e2af71390d838",
+    "entrada/EST.ifc": "f1d25192ee805f7af343665bdff6e1b0"
+  },
+  "totales": {
+    "coste": {
+      "valor": 7022.53,
+      "unidad": "EUR"
+    },
+    "carbono": {
+      "valor": 7117.69,
+      "unidad": "kgCO2e"
+    }
+  },
+  "vistas": [
+    {
+      "eje": "coste",
+      "corte": "espacial",
+      "suma": 7022.53,
+      "grupos": [
+        {
+          "grupo": "Emplazamiento/Edificio/Nivel 00",
+          "valor_total": 566.65,
+          "unidad": "EUR",
+          "n_partidas": 2,
+          "guids": [
+            "24Jmt2jgjAZwRs2QxmguJ2",
+            "3MEEe_PHvAROisLgr9UDFJ",
+            "25L7QaZYvArhgaHyvmI_g5",
+            "3HilqY$ZvBIA0bWeM4O$iP",
+            "2FLDv$sybEvf81jmxyrRbq",
+            "2FiwRIQJf8xBQigE4ZzGkN"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Emplazamiento/Edificio/Planta Baja",
+          "valor_total": 3815.28,
+          "unidad": "EUR",
+          "n_partidas": 5,
+          "guids": [
+            "1Q0B8PGvD5jewwsbxyzt8T",
+            "0EAm14JNX7Hu9QtYUgOaK4",
+            "2VyfKvXd12bOJLg7j2fUpO",
+            "2cLOPCBwP0_uO$i8nSy_cu"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Emplazamiento/Edificio/Nivel 01",
+          "valor_total": 2502.9,
+          "unidad": "EUR",
+          "n_partidas": 1,
+          "guids": [
+            "28XHZj7n5DN9W6GSGXXm8A"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 137.7,
+          "unidad": "EUR",
+          "n_partidas": 1,
+          "guids": [],
+          "fuente": "regla"
+        }
+      ]
+    },
+    {
+      "eje": "coste",
+      "corte": "funcional",
+      "suma": 7022.53,
+      "grupos": [
+        {
+          "grupo": "Cimentación",
+          "valor_total": 22.81,
+          "unidad": "EUR",
+          "n_partidas": 1,
+          "guids": [
+            "24Jmt2jgjAZwRs2QxmguJ2",
+            "3MEEe_PHvAROisLgr9UDFJ"
+          ],
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "Sys-Portico",
+          "valor_total": 543.84,
+          "unidad": "EUR",
+          "n_partidas": 1,
+          "guids": [
+            "25L7QaZYvArhgaHyvmI_g5",
+            "3HilqY$ZvBIA0bWeM4O$iP",
+            "2FLDv$sybEvf81jmxyrRbq",
+            "2FiwRIQJf8xBQigE4ZzGkN"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Estructura",
+          "valor_total": 3754.35,
+          "unidad": "EUR",
+          "n_partidas": 1,
+          "guids": [
+            "1Q0B8PGvD5jewwsbxyzt8T",
+            "28XHZj7n5DN9W6GSGXXm8A"
+          ],
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "Aulas",
+          "valor_total": 1820.66,
+          "unidad": "EUR",
+          "n_partidas": 3,
+          "guids": [
+            "0EAm14JNX7Hu9QtYUgOaK4",
+            "2VyfKvXd12bOJLg7j2fUpO"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Admin",
+          "valor_total": 557.77,
+          "unidad": "EUR",
+          "n_partidas": 3,
+          "guids": [
+            "0EAm14JNX7Hu9QtYUgOaK4"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Carpintería",
+          "valor_total": 185.4,
+          "unidad": "EUR",
+          "n_partidas": 1,
+          "guids": [
+            "2cLOPCBwP0_uO$i8nSy_cu"
+          ],
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 137.7,
+          "unidad": "EUR",
+          "n_partidas": 1,
+          "guids": [],
+          "fuente": "regla"
+        }
+      ]
+    },
+    {
+      "eje": "coste",
+      "corte": "uniclass",
+      "suma": 7022.53,
+      "grupos": [
+        {
+          "grupo": "(sin clasificar)",
+          "valor_total": 6884.83,
+          "unidad": "EUR",
+          "n_partidas": 7,
+          "guids": [
+            "24Jmt2jgjAZwRs2QxmguJ2",
+            "3MEEe_PHvAROisLgr9UDFJ",
+            "25L7QaZYvArhgaHyvmI_g5",
+            "3HilqY$ZvBIA0bWeM4O$iP",
+            "2FLDv$sybEvf81jmxyrRbq",
+            "2FiwRIQJf8xBQigE4ZzGkN",
+            "1Q0B8PGvD5jewwsbxyzt8T",
+            "28XHZj7n5DN9W6GSGXXm8A",
+            "0EAm14JNX7Hu9QtYUgOaK4",
+            "2VyfKvXd12bOJLg7j2fUpO",
+            "2cLOPCBwP0_uO$i8nSy_cu"
+          ],
+          "fuente": "—"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 137.7,
+          "unidad": "EUR",
+          "n_partidas": 1,
+          "guids": [],
+          "fuente": "regla"
+        }
+      ]
+    },
+    {
+      "eje": "carbono",
+      "corte": "espacial",
+      "suma": 7117.69,
+      "grupos": [
+        {
+          "grupo": "Emplazamiento/Edificio/Nivel 00",
+          "valor_total": 731.1,
+          "unidad": "kgCO2e",
+          "n_partidas": 2,
+          "guids": [
+            "24Jmt2jgjAZwRs2QxmguJ2",
+            "3MEEe_PHvAROisLgr9UDFJ",
+            "25L7QaZYvArhgaHyvmI_g5",
+            "3HilqY$ZvBIA0bWeM4O$iP",
+            "2FLDv$sybEvf81jmxyrRbq",
+            "2FiwRIQJf8xBQigE4ZzGkN"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Emplazamiento/Edificio/Planta Baja",
+          "valor_total": 2938.66,
+          "unidad": "kgCO2e",
+          "n_partidas": 5,
+          "guids": [
+            "1Q0B8PGvD5jewwsbxyzt8T",
+            "0EAm14JNX7Hu9QtYUgOaK4",
+            "2VyfKvXd12bOJLg7j2fUpO",
+            "2cLOPCBwP0_uO$i8nSy_cu"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Emplazamiento/Edificio/Nivel 01",
+          "valor_total": 3308.37,
+          "unidad": "kgCO2e",
+          "n_partidas": 1,
+          "guids": [
+            "28XHZj7n5DN9W6GSGXXm8A"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 139.56,
+          "unidad": "kgCO2e",
+          "n_partidas": 1,
+          "guids": [],
+          "fuente": "regla"
+        }
+      ]
+    },
+    {
+      "eje": "carbono",
+      "corte": "funcional",
+      "suma": 7117.69,
+      "grupos": [
+        {
+          "grupo": "Cimentación",
+          "valor_total": 34.39,
+          "unidad": "kgCO2e",
+          "n_partidas": 1,
+          "guids": [
+            "24Jmt2jgjAZwRs2QxmguJ2",
+            "3MEEe_PHvAROisLgr9UDFJ"
+          ],
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "Sys-Portico",
+          "valor_total": 696.71,
+          "unidad": "kgCO2e",
+          "n_partidas": 1,
+          "guids": [
+            "25L7QaZYvArhgaHyvmI_g5",
+            "3HilqY$ZvBIA0bWeM4O$iP",
+            "2FLDv$sybEvf81jmxyrRbq",
+            "2FiwRIQJf8xBQigE4ZzGkN"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Estructura",
+          "valor_total": 4962.55,
+          "unidad": "kgCO2e",
+          "n_partidas": 1,
+          "guids": [
+            "1Q0B8PGvD5jewwsbxyzt8T",
+            "28XHZj7n5DN9W6GSGXXm8A"
+          ],
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "Aulas",
+          "valor_total": 982.46,
+          "unidad": "kgCO2e",
+          "n_partidas": 3,
+          "guids": [
+            "0EAm14JNX7Hu9QtYUgOaK4",
+            "2VyfKvXd12bOJLg7j2fUpO"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Admin",
+          "valor_total": 300.99,
+          "unidad": "kgCO2e",
+          "n_partidas": 3,
+          "guids": [
+            "0EAm14JNX7Hu9QtYUgOaK4"
+          ],
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Carpintería",
+          "valor_total": 1.03,
+          "unidad": "kgCO2e",
+          "n_partidas": 1,
+          "guids": [
+            "2cLOPCBwP0_uO$i8nSy_cu"
+          ],
+          "fuente": "criterio"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 139.56,
+          "unidad": "kgCO2e",
+          "n_partidas": 1,
+          "guids": [],
+          "fuente": "regla"
+        }
+      ]
+    },
+    {
+      "eje": "carbono",
+      "corte": "uniclass",
+      "suma": 7117.69,
+      "grupos": [
+        {
+          "grupo": "(sin clasificar)",
+          "valor_total": 6978.13,
+          "unidad": "kgCO2e",
+          "n_partidas": 7,
+          "guids": [
+            "24Jmt2jgjAZwRs2QxmguJ2",
+            "3MEEe_PHvAROisLgr9UDFJ",
+            "25L7QaZYvArhgaHyvmI_g5",
+            "3HilqY$ZvBIA0bWeM4O$iP",
+            "2FLDv$sybEvf81jmxyrRbq",
+            "2FiwRIQJf8xBQigE4ZzGkN",
+            "1Q0B8PGvD5jewwsbxyzt8T",
+            "28XHZj7n5DN9W6GSGXXm8A",
+            "0EAm14JNX7Hu9QtYUgOaK4",
+            "2VyfKvXd12bOJLg7j2fUpO",
+            "2cLOPCBwP0_uO$i8nSy_cu"
+          ],
+          "fuente": "—"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 139.56,
+          "unidad": "kgCO2e",
+          "n_partidas": 1,
+          "guids": [],
+          "fuente": "regla"
+        }
+      ]
+    }
+  ]
+}
