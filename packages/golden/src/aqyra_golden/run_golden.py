@@ -1562,7 +1562,10 @@ def _run_c5_pliego(case_dir: Path, contracts_dir: Path, expected: dict, tol: dic
         malos_cant, malos_imp = [], []
         for c, p in em.items():
             f = fichas.get(c, {})
-            vc = _num_es(f.get("Cantidad medida", ""))
+            # 'Cantidad medida' = "0,128 m3": tomar el token numerico inicial (la unidad, p.ej.
+            # 'm3', lleva digito y no se puede limpiar con _num_es); el importe acaba en EUR (lo pela).
+            cant_tok = (f.get("Cantidad medida", "") or "").split()
+            vc = _num_es(cant_tok[0]) if cant_tok else None
             vi = _num_es(f.get("Importe (coste)", ""))
             if vc is None or abs(vc - float(p["cantidad"])) > ca:
                 malos_cant.append(c)
