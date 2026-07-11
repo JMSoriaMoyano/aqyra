@@ -211,13 +211,16 @@ version         = "v1"
 golden          = "identidad de contenido (hash: sha256 del contenido + md5 de banco.json + md5 de muestra.bc3)"
 estado          = "adoptado por C5 (interop BC3, E0.1): banco PROPIO de demostración ingerido de un .bc3 FIEBDC-3/2024 sintético (subset v0 ~V/~C/~D/~T, D31); 3 partidas descompuestas (MO/mat/maq + CI 3%, D32). El adaptador vive en engines/bc3 (aqyra-bc3 0.1.0, releaseable, SIN release en v0). El banco real (BCCA/Extremadura) entra igual, tras verificación de licencia por JM (D-026, E5.1)"
 
-# pack banco-carbono (Ola 2·E3.2): FAMILIA NUEVA banco-carbono (N-03 Opcion A). Factores kgCO2e por
-# partida con etapas EN 15978 (A1A3/A4A5). PROPIO/SINTETICO v0 (D-026): alineado en FORMA con EN 15804/
-# Level(s), NO derivado de Okobaudat/INIES (eso es E5.2, tras licencia). NO re-mueve [packs.banco]=AQ-DEMO/v1
-# ni [packs.criterio]=v1. Golden de pack por content_sha256 + md5(banco.json). Consumidor: GOL-CAR-01 (E3.3).
+# pack banco-carbono (Ola 2): FAMILIA banco-carbono (N-03 Opcion A). Factores kgCO2e por partida con etapas
+# EN 15978 (A1A3/A4A5). El POINTER de produccion es v2 (E5.2, D46 Opcion A): banco REAL derivado por Aqyra de
+# fuentes ABIERTAS ratificadas (ADEME Licence Ouverte 2.0, ProBas dl-de/by-2.0, UK OGL v3.0). NO deriva de
+# Okobaudat/INIES/EC3/ICE (via limpia, N-04/D-026). generico/v1 (SINTETICO, E3) coexiste INTACTO (lo ancla
+# GOL-CAR-01 por su content_sha256 44d0cd3f... + md5 47fb4787...) y su golden de pack sigue. NO re-mueve
+# [packs.banco]=AQ-DEMO/v1 ni [packs.criterio]=v1. Golden de pack por content_sha256 + md5(banco.json).
+# Consumidor v2: GOL-CAR-02 (E5.2/D48). Registro de licencias: Aqyra-Negocio/RECONCILIACION_licencias-carbono.md.
 [packs.banco_carbono]
 id              = "generico"
 familia         = "banco-carbono"
-version         = "v1"
+version         = "v2"
 golden          = "identidad de contenido (hash: sha256 del contenido + md5 de banco.json)"
-estado          = "adoptado por C5 (eje carbono, E3): banco de carbono PROPIO/sintetico v0 (D-026), 7 partidas con factor kgCO2e + etapas A1A3/A4A5 alineadas en FORMA con EN 15804. Las semillas reales (Okobaudat/INIES/EC3) entran igual tras verificacion de licencia por JM (E5.2). EPD verificadas = banco-carbono/epd/vN (premium, N-05)"
+estado          = "adoptado por C5 (eje carbono): v2 = banco REAL v0 (E5.2, D45-D48), 7 partidas con factor kgCO2e + etapas A1A3/A4A5 DERIVADAS de fuentes abiertas ratificadas (ADEME LO2.0 + ProBas dl-de/by-2.0 + UK OGL), trazables por partida en banco.json>provenance. Sustituye en calidad al v1 sintetico (E3), que queda INTACTO y anclado por GOL-CAR-01. EPD verificadas = banco-carbono/epd/vN (premium, N-05)"

@@ -235,9 +235,11 @@ def test_manifiesto_banco_carbono_valido():
 
 
 def test_version_banco_carbono_anclada_en_lock():
-    m = packs.load_pack(PACKS_ROOT, "banco-carbono", "generico", "v1")
+    # E5.2/D46: el pointer de produccion pasa a v2 (banco REAL). v1 (sintetico) coexiste anclado por su
+    # propio content_sha256 (test de v1 mas abajo) y consumido explicitamente por GOL-CAR-01.
+    m = packs.load_pack(PACKS_ROOT, "banco-carbono", "generico", "v2")
     anclada = packs.version_anclada(LOCK, "banco_carbono")
-    assert anclada == m["version"], f"lock={anclada} != pack={m['version']}"
+    assert anclada == m["version"] == "v2", f"lock={anclada} != pack={m['version']}"
 
 
 def test_identidad_contenido_banco_carbono_golden():
@@ -258,3 +260,38 @@ def test_banco_carbono_no_toca_zona_anclada():
     # el pack de carbono es NUEVO; [packs.banco] sigue en AQ-DEMO/v1 y [packs.criterio] en v1 (intacto)
     assert packs.version_anclada(LOCK, "banco") == "v1"
     assert packs.version_anclada(LOCK, "criterio") == "v1"
+
+
+# --- pack banco-carbono/generico/v2 (E5.2: banco REAL derivado de fuentes ABIERTAS ratificadas) --------
+# v2 = ADEME (Licence Ouverte 2.0) + ProBas (dl-de/by-2.0) + UK GHG (OGL v3.0), trazable por partida en
+# banco.json>provenance. Es el POINTER de produccion en versions.lock ([packs.banco_carbono]=v2, D46). NO
+# re-mueve [packs.banco]=AQ-DEMO/v1 ni [packs.criterio]=v1. Consumidor: GOL-CAR-02 (D48). generico/v1
+# (sintetico) queda INTACTO (guarda mas abajo). NO deriva de Okobaudat/INIES/EC3/ICE (via limpia, N-04/D-026).
+
+def test_manifiesto_banco_carbono_v2_valido():
+    m = packs.load_pack(PACKS_ROOT, "banco-carbono", "generico", "v2")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma (familia banco-carbono en el enum)
+    assert m["familia"] == "banco-carbono" and m["version"] == "v2"
+
+
+def test_identidad_contenido_banco_carbono_v2_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "banco-carbono", "generico", "v2")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "banco-carbono/generico/v2/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack v2 cambio sin actualizar la golden. "
+                        "Bump de version + nuevo hash, nunca editar en silencio.")
+    banco_file = PACKS_ROOT / "banco-carbono/generico/v2" / m["contenido"]["fichero"]
+    md5 = hashlib.md5(banco_file.read_bytes()).hexdigest()
+    assert md5 == m["contenido"]["md5_banco"], "banco.json (carbono v2) cambio sin actualizar el manifiesto"
+
+
+def test_banco_carbono_v1_intacto():
+    # E5.2 solo ANADE v2; el v1 sintetico (que ancla GOL-CAR-01) queda INTACTO por hash.
+    import hashlib
+    m1 = packs.load_pack(PACKS_ROOT, "banco-carbono", "generico", "v1")
+    assert packs.content_hash(m1) == "44d0cd3fd38986806710d5b0b085a240c31a0454684005e3954cf2d462878496"
+    banco1 = PACKS_ROOT / "banco-carbono/generico/v1" / m1["contenido"]["fichero"]
+    assert hashlib.md5(banco1.read_bytes()).hexdigest() == "47fb478796e3571f6dccf3426999de11"

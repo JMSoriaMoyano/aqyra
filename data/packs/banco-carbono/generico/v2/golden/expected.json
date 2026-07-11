@@ -1,0 +1,5 @@
+{
+  "pack": "banco-carbono/generico/v2",
+  "content_sha256": "0e54d730791fba614b876c00f5d5ba233a3a66da47de4b2c144899d086439659",
+  "_nota": "Golden de pack: identidad del contenido por hash (sha256 del contenido + md5 de banco.json). Banco de carbono REAL v2 (E5.2), derivado de fuentes abiertas ratificadas; factores kgCO2e por partida con etapas EN 15978."
+}

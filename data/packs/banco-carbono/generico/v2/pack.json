@@ -1,0 +1,33 @@
+{
+  "id": "generico",
+  "familia": "banco-carbono",
+  "version": "v2",
+  "titulo": "Banco de carbono Aqyra generico v2 - REAL (semilla abierta, E5.2)",
+  "fuente": "Banco de carbono PROPIO del despacho (Aqyra): factores kgCO2e por partida DERIVADOS por Aqyra de fuentes con licencia EXPLICITAMENTE ABIERTA y ratificadas por JM (2026-07-10): ADEME Base Carbone (Licence Ouverte 2.0), ProBas/Umweltbundesamt (dl-de/by-2.0), UK GHG Conversion Factors (OGL v3.0). Alineado en FORMA con EN 15804/EN 15978 (A1-A3 + A4-A5). V\u00eda limpia (N-04/D-026): NO deriva de Okobaudat/INIES/EC3/ICE. Sustituye en calidad al v1 sintetico (que queda INTACTO por GOL-CAR-01). Trazabilidad por partida en banco.json > provenance. EPD verificadas = banco-carbono/epd/vN (premium, N-05).",
+  "vigencia": {
+    "desde": "2026-07-10",
+    "estado": "vigente (carbono generico v0 REAL, derivado de fuentes abiertas)"
+  },
+  "metadatos": {
+    "autoria": "propia (despacho), derivacion de dato abierto",
+    "eje": "carbono",
+    "registro_licencias": "Aqyra-Negocio/RECONCILIACION_licencias-carbono.md",
+    "nota": "E5.2 (Ola 2). Misma forma que generico/v1 (factor por codigo de partida + etapas A1A3/A4A5, Sigma=precio; un componente tipo:material). El motor (engines/presupuesto 0.5.0) NO se toca. NO re-mueve generico/v1 (intacto por GOL-CAR-01). Consumidor: GOL-CAR-02 (E5.2/D48)."
+  },
+  "contenido": {
+    "fichero": "banco.json",
+    "md5_banco": "d57e7ef5cfdf88e0365dd4a1d44cf5b8",
+    "eje": "carbono",
+    "unidad_eje": "kgCO2e",
+    "costes_indirectos_pct": 0,
+    "partidas": [
+      "FAB010",
+      "REV010",
+      "PIN010",
+      "EHL010",
+      "EHS010",
+      "CSZ010",
+      "PPM010"
+    ]
+  }
+}

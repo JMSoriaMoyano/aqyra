@@ -626,3 +626,54 @@ fallo se investiga en el ENGINE, jamás aflojando el check. **Rechazada por JM:*
 *Regla de oro heredada: un fallo NO se arregla aflojando la golden. Contract-first de verdad — si al
 calcular el presupuesto a mano el esquema cojea, se corrige el esquema AHORA. El CI nunca certifica
 (Llave 2 = JM).*
+
+
+## D45 · Fuentes abiertas ratificadas + atribucion (E5.2, via limpia) (ratificada por JM 2026-07-10)
+
+Para derivar la semilla REAL de carbono (E5.2), JM ratifica cuatro fuentes con licencia EXPLICITAMENTE ABIERTA
+(uso comercial + obra derivada + redistribucion con atribucion): **ADEME Base Carbone** (Licence Ouverte/Etalab
+2.0), **ProBas/Umweltbundesamt** (dl-de/by-2.0), **UK GHG Conversion Factors** (OGL v3.0) como primarias/
+complemento, y **USLCI/NREL** (dominio publico probable, **licencia por confirmar dataset a dataset antes de
+anclar**) como secundaria. **Excluidas** (permiso escrito, verificado 2026-07-09/10): Okobaudat, INIES, EC3, ICE
+(Bath). Registro de verificacion: `Aqyra-Negocio/RECONCILIACION_licencias-carbono.md`. Atribucion arrastrada al
+pack (`banco.json>atribucion` y `>provenance`) y, cuando proceda, a la salida: ADEME->"Licence Ouverte 2.0";
+ProBas->"dl-de/by-2.0, modificado por Aqyra" + URI (la licencia alemana exige marcar el cambio); UK->"Open
+Government Licence v3.0 (Crown copyright)". **La IA propuso; JM firmo.**
+
+## D46 · id/version del pack real — `generico/v2`, `v1` coexiste demo (Opcion A ratificada)
+
+El pack REAL es `banco-carbono/generico/v2` (NUEVO). `generico/v1` (sintetico, E3) es INTOCABLE (lo ancla
+`GOL-CAR-01` por su `content_sha256 44d0cd3f...` + `md5_banco 47fb4787...`) y **coexiste** marcado como demo (la
+marca vive en la doc/`fuente`/DECISIONES, sin editar el fichero anclado). El pointer de produccion en
+`versions.lock [packs.banco_carbono]` pasa a **v2** (patron `criterio/AQ v1->v2`); `GOL-CAR-01` referencia `v1`
+por su `content_sha256` explicito (repuntar el lock a v2 no la rompe; verificado en el recompute). **Rechazadas
+por JM:** B (id nuevo `abierto/v1`) y C (marcar `v1` deprecado).
+
+## D47 · Metodo de derivacion — material x factor x cantidad + `provenance` por partida (Opcion A ratificada)
+
+Cada factor por partida se DERIVA (EN 15804 modular / EN 15978): `A1A3 = Sum_material (masa_material_por_unidad x
+factor_A1A3_material)` de fuente abierta; `A4A5 = transporte` (masa x 50 km x 0,086 kgCO2e/t.km, UK GHG, OGL) +
+residuo A5 (0 en v0); `precio = A1A3 + A4A5` (Sum etapas = precio, guarda +-0,01, D39). Cada partida lleva un
+bloque **`provenance`** aditivo (composicion de material por unidad = hipotesis de despacho documentada; fuente +
+licencia + URI + calculo por material). El motor solo lee `precio`/`etapas`/`componentes` -> `provenance` es
+documentacion inerte para el engine (esquema de salida intacto). Factores anclados (v2): hormigon 0,088 (ADEME
+20719), acero reciclado 0,938 (ADEME 26730), ladrillo 0,20 (ProBas2 f472c5b1), cemento 0,866 (ADEME 20723) ->
+mortero 0,173 (20% cemento), pintura 1,51 (ADEME 24255, proxy barniz acrilico), madera 0,0367 (ADEME 20721, neto
+biogenico -> PPM010 candidato a refinar en v3/epd). **Rechazada por JM:** B (factor por partida sin composicion,
+menos trazable). **Cada factor es DERIVABLE y TRAZABLE; el kgCO2e no se inventa** (convencion banco+criterio).
+
+## D48 · Golden — golden de pack + `GOL-CAR-02` (Opcion A ratificada)
+
+E5.2 ancla (i) el **golden de pack** de v2 (identidad de contenido: `content_sha256` + `md5_banco`, en
+`test_packs.py`) y (ii) **`GOL-CAR-02`**: valora la MISMA medicion anclada de `GOL-PRE-01` con el banco REAL v2
+por el runner `_run_c5_carbono` (D43), **generalizado** para leer la version del `banco_ref` del caso (sirve v1+v2; unico fichero de codigo tocado en E5.2, GOL-CAR-01 sigue verde), reusando las fixtures de
+`GOL-CAR-01`/`GOL-PRE-03` (mismos md5 `19a272a5...`/`f1d25192...`) + `criterio/AQ/v2`. Anclaje por DETERMINISMO +
+SEMANTICA + INVARIANTE (patron D14/D28/D44, sin md5 de salida): por partida `origen=modelo` `valores.carbono`
+(unitario x cantidad = total, unidad kgCO2e, banco `banco-carbono/generico/v2`, etapas A1A3/A4A5, Sum etapas =
+total); S&S (`origen=regla`) etiquetado sin etapas; proyeccion espacial con `Sum proyeccion == PEM del eje`.
+**Oraculo del eje calculado a mano y verificado x2: PEM carbono = 7 117,69 kgCO2e** (Sum modelo 6 978,13 + S&S 2%
+139,56; proyeccion Nivel 00 731,10 + Planta Baja 2 938,66 + Nivel 01 3 308,37 + sin geometria 139,56). El
+recompute pasa por `medir()` (ifcopenshell) -> corre en el conda `mcp-bim` de JM (como `GOL-CAR-01`), NO en el
+sandbox. `GOL-CAR-01` (sintetico v1) y `GOL-PRE-01/02/03` y `GOL-DOC-01` INTACTAS. **Rechazada por JM:** B (solo
+golden de pack, sin ejercitar el banco end-to-end). El MOTOR no se toca (`engines/presupuesto` 0.5.0 ya emite
+etapas); el esquema de salida C5 no se toca.

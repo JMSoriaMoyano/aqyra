@@ -1,0 +1,406 @@
+{
+  "banco": "generico/v2",
+  "ref": "banco-carbono/generico/v2",
+  "eje": "carbono",
+  "titulo": "Banco de carbono Aqyra generico v2 - REAL, derivado de fuentes abiertas (E5.2)",
+  "descripcion": "Factores de carbono embebido (kgCO2e) por partida con etapas EN 15978 (A1-A3 producto + A4-A5 construccion), DERIVADOS por Aqyra de fuentes con licencia explicitamente abierta y RATIFICADAS por JM (2026-07-10): ADEME Base Carbone (Licence Ouverte 2.0), ProBas/Umweltbundesamt (dl-de/by-2.0), UK GHG Conversion Factors (OGL v3.0). Sustituye la calidad del banco sintetico v1 (que queda intacto por GOL-CAR-01). Cada factor es DERIVABLE y TRAZABLE via el bloque provenance por partida (composicion x factor x cantidad; fuente + licencia + URI + calculo). NO deriva de Okobaudat/INIES/EC3/ICE (excluidas por licencia). kgCO2e = convencion banco+criterio, no verdad fisica (estatuto del PEM). Metodologia EN 15804/EN 15978/Level(s) = referencia de forma. Registro de licencias: Aqyra-Negocio/RECONCILIACION_licencias-carbono.md.",
+  "unidad_eje": "kgCO2e",
+  "moneda": "kgCO2e",
+  "costes_indirectos_pct": 0,
+  "atribucion": {
+    "ADEME": "Derivado de ADEME Base Empreinte/Base Carbone - Licence Ouverte 2.0",
+    "ProBas": "Derivado de ProBas (Umweltbundesamt) - dl-de/by-2.0 - modificado por Aqyra",
+    "UK": "Contiene informacion del sector publico bajo Open Government Licence v3.0 (Crown copyright)"
+  },
+  "partidas": [
+    {
+      "codigo": "FAB010",
+      "unidad": "m2",
+      "descripcion": "Fabrica de ladrillo ceramico perforado 1/2 pie - factor de carbono embebido (real, derivado de fuentes abiertas)",
+      "clasificacion_uniclass": [],
+      "precio": 26.3,
+      "etapas": {
+        "A1A3": 25.73,
+        "A4A5": 0.57
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor derivado embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 26.3,
+          "subtotal": 26.3
+        }
+      ],
+      "costes_indirectos": 0,
+      "provenance": {
+        "unidad_partida": "m2",
+        "composicion": [
+          {
+            "material": "ladrillo",
+            "cantidad": 107.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.2,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ProBas2 (Umweltbundesamt)",
+            "licencia": "dl-de/by-2.0",
+            "ref": "uuid f472c5b1-bcfa-46d9-8d24-917e70b6f029 (Ziegel-Mauer-DE)",
+            "modificado_por_Aqyra": false
+          },
+          {
+            "material": "mortero",
+            "cantidad": 25.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.1732,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "derivado de id 20723 (Ciment Portland 0.866) x 0.20 fraccion masica de cemento",
+            "modificado_por_Aqyra": true
+          }
+        ],
+        "A4A5": {
+          "masa_kg": 132.0,
+          "distancia_km": 50,
+          "factor_flete": 0.086,
+          "unidad_factor": "kgCO2e/t.km",
+          "fuente_transporte": "UK GHG Conversion Factors 2026",
+          "licencia": "Open Government Licence v3.0",
+          "residuo_pct": 0.0
+        },
+        "calculo": "A1A3 = ladrillo: 107.0 kg x 0.2 = 21.4 ; mortero: 25.0 kg x 0.1732 = 4.33 = 25.73 ; A4A5 = 132.0 kg x 0.0043 = 0.57 ; total = 26.3",
+        "nota": "Cantidades de material por unidad de partida = hipotesis de despacho documentada (no medicion del modelo). kgCO2e = convencion banco+criterio, no verdad fisica."
+      }
+    },
+    {
+      "codigo": "REV010",
+      "unidad": "m2",
+      "descripcion": "Enfoscado de cemento a buena vista - factor de carbono embebido (real, derivado de fuentes abiertas)",
+      "clasificacion_uniclass": [],
+      "precio": 5.33,
+      "etapas": {
+        "A1A3": 5.2,
+        "A4A5": 0.13
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor derivado embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 5.33,
+          "subtotal": 5.33
+        }
+      ],
+      "costes_indirectos": 0,
+      "provenance": {
+        "unidad_partida": "m2",
+        "composicion": [
+          {
+            "material": "mortero",
+            "cantidad": 30.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.1732,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "derivado de id 20723 (Ciment Portland 0.866) x 0.20 fraccion masica de cemento",
+            "modificado_por_Aqyra": true
+          }
+        ],
+        "A4A5": {
+          "masa_kg": 30.0,
+          "distancia_km": 50,
+          "factor_flete": 0.086,
+          "unidad_factor": "kgCO2e/t.km",
+          "fuente_transporte": "UK GHG Conversion Factors 2026",
+          "licencia": "Open Government Licence v3.0",
+          "residuo_pct": 0.0
+        },
+        "calculo": "A1A3 = mortero: 30.0 kg x 0.1732 = 5.2 = 5.2 ; A4A5 = 30.0 kg x 0.0043 = 0.13 ; total = 5.33",
+        "nota": "Cantidades de material por unidad de partida = hipotesis de despacho documentada (no medicion del modelo). kgCO2e = convencion banco+criterio, no verdad fisica."
+      }
+    },
+    {
+      "codigo": "PIN010",
+      "unidad": "m2",
+      "descripcion": "Pintura plastica lisa - factor de carbono embebido (real, derivado de fuentes abiertas)",
+      "clasificacion_uniclass": [],
+      "precio": 0.45,
+      "etapas": {
+        "A1A3": 0.45,
+        "A4A5": 0.0
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor derivado embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 0.45,
+          "subtotal": 0.45
+        }
+      ],
+      "costes_indirectos": 0,
+      "provenance": {
+        "unidad_partida": "m2",
+        "composicion": [
+          {
+            "material": "pintura",
+            "cantidad": 0.3,
+            "unidad": "kg",
+            "factor_A1A3": 1.51,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "id 24255 (Vernis acrylique) usado como proxy de pintura plastica",
+            "modificado_por_Aqyra": false
+          }
+        ],
+        "A4A5": {
+          "masa_kg": 0.3,
+          "distancia_km": 50,
+          "factor_flete": 0.086,
+          "unidad_factor": "kgCO2e/t.km",
+          "fuente_transporte": "UK GHG Conversion Factors 2026",
+          "licencia": "Open Government Licence v3.0",
+          "residuo_pct": 0.0
+        },
+        "calculo": "A1A3 = pintura: 0.3 kg x 1.51 = 0.45 = 0.45 ; A4A5 = 0.3 kg x 0.0043 = 0.0 ; total = 0.45",
+        "nota": "Cantidades de material por unidad de partida = hipotesis de despacho documentada (no medicion del modelo). kgCO2e = convencion banco+criterio, no verdad fisica.",
+        "aviso": "Barniz acrilico ADEME usado como proxy abierto (no hay emulsion mural en Base Carbone)."
+      }
+    },
+    {
+      "codigo": "EHL010",
+      "unidad": "m3",
+      "descripcion": "Losa/forjado de hormigon armado HA-25 - factor de carbono embebido (real, derivado de fuentes abiertas)",
+      "clasificacion_uniclass": [],
+      "precio": 306.33,
+      "etapas": {
+        "A1A3": 295.62,
+        "A4A5": 10.71
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor derivado embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 306.33,
+          "subtotal": 306.33
+        }
+      ],
+      "costes_indirectos": 0,
+      "provenance": {
+        "unidad_partida": "m3",
+        "composicion": [
+          {
+            "material": "hormigon",
+            "cantidad": 2400.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.088,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "id 20719 (Beton C25/30 CEM II)",
+            "modificado_por_Aqyra": false
+          },
+          {
+            "material": "acero",
+            "cantidad": 90.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.938,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "id 26730 (Acier ou fer blanc, recycle)",
+            "modificado_por_Aqyra": false
+          }
+        ],
+        "A4A5": {
+          "masa_kg": 2490.0,
+          "distancia_km": 50,
+          "factor_flete": 0.086,
+          "unidad_factor": "kgCO2e/t.km",
+          "fuente_transporte": "UK GHG Conversion Factors 2026",
+          "licencia": "Open Government Licence v3.0",
+          "residuo_pct": 0.0
+        },
+        "calculo": "A1A3 = hormigon: 2400.0 kg x 0.088 = 211.2 ; acero: 90.0 kg x 0.938 = 84.42 = 295.62 ; A4A5 = 2490.0 kg x 0.0043 = 10.71 ; total = 306.33",
+        "nota": "Cantidades de material por unidad de partida = hipotesis de despacho documentada (no medicion del modelo). kgCO2e = convencion banco+criterio, no verdad fisica."
+      }
+    },
+    {
+      "codigo": "EHS010",
+      "unidad": "m3",
+      "descripcion": "Pilar de hormigon armado HA-25 - factor de carbono embebido (real, derivado de fuentes abiertas)",
+      "clasificacion_uniclass": [],
+      "precio": 362.87,
+      "etapas": {
+        "A1A3": 351.9,
+        "A4A5": 10.97
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor derivado embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 362.87,
+          "subtotal": 362.87
+        }
+      ],
+      "costes_indirectos": 0,
+      "provenance": {
+        "unidad_partida": "m3",
+        "composicion": [
+          {
+            "material": "hormigon",
+            "cantidad": 2400.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.088,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "id 20719 (Beton C25/30 CEM II)",
+            "modificado_por_Aqyra": false
+          },
+          {
+            "material": "acero",
+            "cantidad": 150.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.938,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "id 26730 (Acier ou fer blanc, recycle)",
+            "modificado_por_Aqyra": false
+          }
+        ],
+        "A4A5": {
+          "masa_kg": 2550.0,
+          "distancia_km": 50,
+          "factor_flete": 0.086,
+          "unidad_factor": "kgCO2e/t.km",
+          "fuente_transporte": "UK GHG Conversion Factors 2026",
+          "licencia": "Open Government Licence v3.0",
+          "residuo_pct": 0.0
+        },
+        "calculo": "A1A3 = hormigon: 2400.0 kg x 0.088 = 211.2 ; acero: 150.0 kg x 0.938 = 140.7 = 351.9 ; A4A5 = 2550.0 kg x 0.0043 = 10.97 ; total = 362.87",
+        "nota": "Cantidades de material por unidad de partida = hipotesis de despacho documentada (no medicion del modelo). kgCO2e = convencion banco+criterio, no verdad fisica."
+      }
+    },
+    {
+      "codigo": "CSZ010",
+      "unidad": "m3",
+      "descripcion": "Zapata de cimentacion de hormigon armado HA-25 - factor de carbono embebido (real, derivado de fuentes abiertas)",
+      "clasificacion_uniclass": [],
+      "precio": 268.64,
+      "etapas": {
+        "A1A3": 258.1,
+        "A4A5": 10.54
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor derivado embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 268.64,
+          "subtotal": 268.64
+        }
+      ],
+      "costes_indirectos": 0,
+      "provenance": {
+        "unidad_partida": "m3",
+        "composicion": [
+          {
+            "material": "hormigon",
+            "cantidad": 2400.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.088,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "id 20719 (Beton C25/30 CEM II)",
+            "modificado_por_Aqyra": false
+          },
+          {
+            "material": "acero",
+            "cantidad": 50.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.938,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "id 26730 (Acier ou fer blanc, recycle)",
+            "modificado_por_Aqyra": false
+          }
+        ],
+        "A4A5": {
+          "masa_kg": 2450.0,
+          "distancia_km": 50,
+          "factor_flete": 0.086,
+          "unidad_factor": "kgCO2e/t.km",
+          "fuente_transporte": "UK GHG Conversion Factors 2026",
+          "licencia": "Open Government Licence v3.0",
+          "residuo_pct": 0.0
+        },
+        "calculo": "A1A3 = hormigon: 2400.0 kg x 0.088 = 211.2 ; acero: 50.0 kg x 0.938 = 46.9 = 258.1 ; A4A5 = 2450.0 kg x 0.0043 = 10.54 ; total = 268.64",
+        "nota": "Cantidades de material por unidad de partida = hipotesis de despacho documentada (no medicion del modelo). kgCO2e = convencion banco+criterio, no verdad fisica."
+      }
+    },
+    {
+      "codigo": "PPM010",
+      "unidad": "ud",
+      "descripcion": "Puerta de paso interior, hoja lisa - factor de carbono embebido (real, derivado de fuentes abiertas)",
+      "clasificacion_uniclass": [],
+      "precio": 1.03,
+      "etapas": {
+        "A1A3": 0.92,
+        "A4A5": 0.11
+      },
+      "componentes": [
+        {
+          "tipo": "material",
+          "descripcion": "Factor derivado embebido (A1-A3 + A4-A5)",
+          "unidad": "kgCO2e",
+          "rendimiento": 1.0,
+          "precio": 1.03,
+          "subtotal": 1.03
+        }
+      ],
+      "costes_indirectos": 0,
+      "provenance": {
+        "unidad_partida": "ud",
+        "composicion": [
+          {
+            "material": "madera",
+            "cantidad": 25.0,
+            "unidad": "kg",
+            "factor_A1A3": 0.0367,
+            "unidad_factor": "kgCO2e/kg",
+            "fuente": "ADEME Base Carbone",
+            "licencia": "Licence Ouverte 2.0",
+            "ref": "id 20721 (Bois d'oeuvre construction, NETO de biogenico)",
+            "modificado_por_Aqyra": false
+          }
+        ],
+        "A4A5": {
+          "masa_kg": 25.0,
+          "distancia_km": 50,
+          "factor_flete": 0.086,
+          "unidad_factor": "kgCO2e/t.km",
+          "fuente_transporte": "UK GHG Conversion Factors 2026",
+          "licencia": "Open Government Licence v3.0",
+          "residuo_pct": 0.0
+        },
+        "calculo": "A1A3 = madera: 25.0 kg x 0.0367 = 0.92 = 0.92 ; A4A5 = 25.0 kg x 0.0043 = 0.11 ; total = 1.03",
+        "nota": "Cantidades de material por unidad de partida = hipotesis de despacho documentada (no medicion del modelo). kgCO2e = convencion banco+criterio, no verdad fisica.",
+        "aviso": "Madera ADEME neta de biogenico -> infravalora una puerta real; candidato a refinar en v3 o via FDES en la capa premium banco-carbono/epd/vN (N-05)."
+      }
+    }
+  ]
+}

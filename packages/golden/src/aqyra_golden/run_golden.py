@@ -1799,7 +1799,7 @@ def _run_c5_carbono(case_dir: Path, contracts_dir: Path, expected: dict, tol: di
     traduccion determinista: el kgCO2e sale del factor del banco-carbono anclado (convencion, no verdad
     fisica). ANCLA (patron D14/D28, sin md5 de salida):
       1. Identidad por md5 de las fixtures aumentadas (entradas_md5).
-      2. criterio/AQ/v2 + banco-carbono/generico/v1 anclados por su content_sha256.
+      2. criterio/AQ/v2 + banco-carbono/generico/<version del caso> anclados por su content_sha256.
       3. Conformidad del esquema de salida (el carbono conforma SIN tocar el esquema).
       4. RECOMPUTE: medir(fixtures, v2) + presupuestar(..., banco-carbono, eje="carbono").
       5. SEMANTICA carbono: por partida valores.carbono {unitario x cantidad = total, unidad kgCO2e,
@@ -1826,17 +1826,19 @@ def _run_c5_carbono(case_dir: Path, contracts_dir: Path, expected: dict, tol: di
     banco_ref = entrada.get("banco_ref", {})
     checks.append(("criterio_ref == AQ/v2", crit_ref.get("id") == "AQ" and crit_ref.get("version") == "v2",
                    f"{crit_ref.get('id')}/{crit_ref.get('version')}"))
-    checks.append(("banco_ref == banco-carbono/generico/v1",
+    banco_ref_str = f"{banco_ref.get('familia')}/{banco_ref.get('id')}/{banco_ref.get('version')}"
+    checks.append((f"banco_ref == banco-carbono/generico/{banco_ref.get('version')}",
                    banco_ref.get("familia") == "banco-carbono" and banco_ref.get("id") == "generico"
-                   and banco_ref.get("version") == "v1",
-                   f"{banco_ref.get('familia')}/{banco_ref.get('id')}/{banco_ref.get('version')}"))
+                   and banco_ref.get("version") in ("v1", "v2"),
+                   banco_ref_str))
     pp = str(repo / "packages" / "packs" / "src")
     if pp not in sys.path:
         sys.path.insert(0, pp)
     try:
         import aqyra_packs as _packs
         for fam, rid, rver, clave in (("criterio", "AQ", "v2", "criterio/AQ/v2"),
-                                      ("banco-carbono", "generico", "v1", "banco-carbono/generico/v1")):
+                                      (banco_ref.get("familia"), banco_ref.get("id"),
+                                       banco_ref.get("version"), banco_ref_str)):
             man = _packs.load_pack(repo / "data" / "packs", fam, rid, rver)
             got_h = _packs.content_hash(man)
             exp_h = json.loads((repo / "data" / "packs" / fam / rid / rver / "golden"
@@ -1899,7 +1901,7 @@ def _run_c5_carbono(case_dir: Path, contracts_dir: Path, expected: dict, tol: di
                 for k in et_e:
                     if abs(float(et[k]) - float(et_e[k])) > ia:
                         malos.append(f"{cod}.etapas.{k}")
-            if v.get("banco") != "banco-carbono/generico/v1":
+            if v.get("banco") != banco_ref_str:
                 malos.append(f"{cod}: banco {v.get('banco')}")
         elif "etapas" in v:
             malos.append(f"{cod}: no deberia tener etapas (origen=regla)")
