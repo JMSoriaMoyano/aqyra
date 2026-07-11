@@ -1,0 +1,34 @@
+{
+  "id": "AQ-DEMO",
+  "familia": "pliego-textos",
+  "version": "v1",
+  "titulo": "Textos de prescripcion Aqyra DEMO - propios, minimos (piloto E4.1 pliego)",
+  "fuente": "Textos de prescripcion tecnica PROPIOS del despacho (Aqyra), de DEMOSTRACION. NO PG-3/PG-4 ni CTE DB (fuentes normativas publicas con puerta de licencia N-04, pendientes de verificacion). Redactados para el golden GOL-PLI-01 (E4.1); no son texto de proyecto. El texto normativo REAL entra despues por la via limpia (RECONCILIACION_licencias-pliego.md).",
+  "vigencia": {
+    "desde": "2026-07-11",
+    "estado": "vigente (demo)"
+  },
+  "metadatos": {
+    "autoria": "propia (despacho)",
+    "eje": "prescripcion (pliego)",
+    "marca_demo": true,
+    "registro_licencias": "Aqyra-Negocio/RECONCILIACION_licencias-pliego.md (E5.3 real, pendiente N-04)",
+    "nota": "E4.1 (Ola 3). Prescripcion por partida/tipo de unidad. Consumidor: documentos/pliego (componer_pliego) y GOL-PLI-01. Los bancos reales (BEDEC/CYPE) llevan su propio texto por partida (tiene prioridad en la cadena D4); este pack es la semilla base."
+  },
+  "contenido": {
+    "fichero": "textos.json",
+    "md5_textos": "48498cead28f8acb5fee1d49415311b0",
+    "clave": "codigo_partida",
+    "familia_eje": "prescripcion",
+    "partidas": [
+      "FAB010",
+      "REV010",
+      "PIN010",
+      "EHL010",
+      "EHS010",
+      "CSZ010",
+      "PPM010",
+      "SYS010"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "caso": "GOL-PLI-01",
+  "contrato": "C5-presupuesto",
+  "modo": "pliego",
+  "_oraculo": "CONFORMIDAD DEL PLIEGO DE CONDICIONES TECNICAS (capa de documentos, contract-first). El compositor DETERMINISTA documentos/pliego.componer_pliego toma el `presupuesto` ANCLADO de GOL-PRE-01 (D6: se LEE, no se re-ancla), el criterio AQ/v2 (mapeo partida->sistema) y el pack de textos PROPIO pliego-textos/AQ-DEMO/v1, y produce el .docx del despacho. La golden ancla ESTRUCTURA y CONTENIDO (patron GOL-DOC-01/D3), no bytes ni pixeles: las secciones presentes (caratula, condiciones generales, prescripciones tecnicas particulares, cuadro de trazabilidad); las 8 partidas cada una con su PRESCRIPCION (texto base no vacio, sin caer al fallback), su MEDICION (cantidad == JSON +-0,001) y su COSTE (importe == JSON +-0,01); la TRAZABILIDAD (los GUIDs de cada partida origen=modelo presentes en el pliego); el CARBONO forward-open (si el presupuesto trae valores.carbono, sus etapas presentes; si no, ausencia sin error); y DETERMINISMO por contenido (componer 2x = texto/tablas extraidos identicos, fecha/orden fijos). El texto (extraido con python-docx, NO OCR) es la evidencia. Cierra el trio coste + carbono + prescripcion sobre la misma medicion.",
+  "fuente_presupuesto": "GOL-PRE-01",
+  "criterio": "AQ/v2",
+  "pack_textos": "pliego-textos/AQ-DEMO/v1",
+  "documento": {
+    "fecha": "2026-07-11",
+    "secciones": ["caratula", "condiciones_generales", "prescripciones_particulares", "trazabilidad"],
+    "n_partidas": 8,
+    "n_capitulos": 6
+  }
+}

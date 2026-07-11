@@ -1,0 +1,5 @@
+{
+  "importe_abs": 0.01,
+  "cantidad_abs": 0.001,
+  "_nota": "Conformidad del Pliego (modo pliego): los importes extraidos del .docx casan con el `presupuesto` de GOL-PRE-01 a +-0,01 (redondeo a 2 decimales) y las cantidades a +-0,001. Sin tolerancia de pixeles ni de bytes (D6, patron GOL-DOC-01/D3): se ancla contenido, no forma."
+}

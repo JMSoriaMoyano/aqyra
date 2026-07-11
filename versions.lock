@@ -224,3 +224,29 @@ familia         = "banco-carbono"
 version         = "v2"
 golden          = "identidad de contenido (hash: sha256 del contenido + md5 de banco.json)"
 estado          = "adoptado por C5 (eje carbono): v2 = banco REAL v0 (E5.2, D45-D48), 7 partidas con factor kgCO2e + etapas A1A3/A4A5 DERIVADAS de fuentes abiertas ratificadas (ADEME LO2.0 + ProBas dl-de/by-2.0 + UK OGL), trazables por partida en banco.json>provenance. Sustituye en calidad al v1 sintetico (E3), que queda INTACTO y anclado por GOL-CAR-01. EPD verificadas = banco-carbono/epd/vN (premium, N-05)"
+
+# --- capa de documentos (Ola 3): el Pliego de Condiciones Tecnicas — compositor DETERMINISTA ---
+# Decisiones D1-D7 en documentos/pliego/DECISIONES.md (OK JM 2026-07-11). componer_pliego toma el
+# `salida-presupuesto` (autoritativo de C5) + el criterio (mapeo partida->sistema) + el pack de textos,
+# y compone el .docx firmable del despacho; NO recalcula. formato.py ESPEJADO in-repo (no importa el
+# paquete firmado documentos/presupuesto). Segundo ladrillo de la capa de documentos (C7); cierra el
+# trio coste + carbono + prescripcion sobre la misma medicion.
+[documentos.pliego]
+nombre          = "documento-pliego"
+paquete         = "aqyra-documento-pliego"
+version         = "0.1.0"                    # tag firmado documento-pliego-v0.1.0 (Llave 2, D7) — SIN release salvo decision JM
+consume         = "salida-presupuesto (C5) — el `presupuesto` ANCLADO de GOL-PRE-01 (D6; se LEE) + criterio/AQ/v2 + pliego-textos/AQ-DEMO/v1"
+golden          = "GOL-PLI-01"
+oraculo         = "conformidad por CONTENIDO extraido (D6, patron GOL-DOC-01/D3, python-docx — NO OCR/bytes/pixeles): las secciones (caratula, generales, particulares, trazabilidad); las 8 partidas con prescripcion (sin fallback), medicion (cantidad +-0,001) y coste (importe +-0,01); trazabilidad (GUIDs) por partida; carbono forward-open; y DETERMINISMO por contenido (componer 2x = texto/tablas identicos)"
+estado          = "compositor v0.1 (capa de documentos, D1-D7): documentos/pliego vivo (componer_pliego JSON+criterio+textos -> .docx del despacho) + golden GOL-PLI-01 (rama modo=pliego en run_case_c5) VERDE en sandbox; SIN release (Llave 2 espera decision JM)"
+
+# pack pliego-textos (Ola 3): FAMILIA NUEVA pliego-textos (E5.3). Textos de prescripcion por partida/tipo de
+# unidad. El POINTER es AQ-DEMO/v1 = semilla PROPIA (texto de Aqyra, demo). El texto normativo REAL (PG-3/CTE)
+# entra como pliego-textos/<fuente>/vN tras verificar licencia (N-04, RECONCILIACION_licencias-pliego.md).
+# Golden de pack por content_sha256 + md5(textos.json). Consumidor: documentos/pliego (componer_pliego) + GOL-PLI-01.
+[packs.pliego_textos]
+id              = "AQ-DEMO"
+familia         = "pliego-textos"
+version         = "v1"
+golden          = "identidad de contenido (hash: sha256 del contenido + md5 de textos.json)"
+estado          = "adoptado por documentos/pliego (E4.1): textos de prescripcion PROPIOS (Aqyra, demo), 7 partidas medibles + S&S, con condiciones de material/ejecucion/control/medicion y abono + clausulas generales. El texto normativo REAL (PG-3/PG-4, CTE DB) entra por la via limpia, licencia verificada por JM (N-04, E5.3)"

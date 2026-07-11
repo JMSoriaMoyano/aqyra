@@ -981,6 +981,11 @@ DEFAULT_ENGINE_C5 = DEFAULT_REPO / "engines" / "presupuesto" / "src"
 # GOL-PRE-01 (D4); el runner ancla ESTRUCTURA + CONTENIDO (D3), no bytes ni píxeles.
 DEFAULT_DOCUMENTO_C5 = DEFAULT_REPO / "documentos" / "presupuesto" / "src"
 
+# Casa del compositor de pliego (capa de documentos, Ola 3): documentos/pliego — importado por
+# path (patron engines/*). Reproduce el .docx del pliego desde el `presupuesto` ANCLADO de
+# GOL-PRE-01 (D6) + criterio + pack de textos; ancla ESTRUCTURA + CONTENIDO (patron GOL-DOC-01/D3).
+DEFAULT_PLIEGO_C5 = DEFAULT_REPO / "documentos" / "pliego" / "src"
+
 
 def load_c5_schemas(contracts_dir: Path) -> dict[str, dict]:
     base = contracts_dir / "C5-presupuesto"
@@ -1451,6 +1456,155 @@ def _run_c5_documento(case_dir: Path, contracts_dir: Path, expected: dict, tol: 
     return all(ok for _, ok, _ in checks)
 
 
+def _cargar_pack_criterio(repo: Path, ref: str) -> dict:
+    """`AQ/v2` -> data/packs/criterio/AQ/v2/criterio.json (dict) o {} si no esta."""
+    ident, _, version = (ref or "").partition("/")
+    p = repo / "data" / "packs" / "criterio" / ident / version / "criterio.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+
+def _cargar_pack_textos(repo: Path, ref: str) -> dict:
+    """`pliego-textos/AQ-DEMO/v1` -> data/packs/pliego-textos/AQ-DEMO/v1/textos.json (dict) o {}."""
+    p = repo / "data" / "packs" / str(ref) / "textos.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+
+def _run_c5_pliego(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                   repo: Path = DEFAULT_REPO) -> bool:
+    """C5 · Pliego de Condiciones Tecnicas (capa de documentos, E4.1): el compositor DETERMINISTA
+    documentos/pliego reproduce el .docx del despacho desde el `presupuesto` ANCLADO de la fuente
+    (D6, GOL-PRE-01 — se LEE, no se re-ancla), el criterio (mapeo partida->sistema) y el pack de
+    textos de prescripcion. Ancla ESTRUCTURA + CONTENIDO (patron GOL-DOC-01/D3), no bytes ni pixeles.
+    Cierra el trio coste + carbono + prescripcion. Un fallo se investiga en el COMPOSITOR, jamas
+    aflojando la golden."""
+    import tempfile
+
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c5_schemas(contracts_dir)
+    ia = float(tol.get("importe_abs", 0.01))
+    ca = float(tol.get("cantidad_abs", 0.001))
+    doc_exp = expected.get("documento", {})
+    fecha = doc_exp.get("fecha", "-")
+
+    # 1 · presupuesto de la fuente anclada (D6) + conformidad de esquema
+    fuente = expected.get("fuente_presupuesto")
+    fuente_path = case_dir.parent / str(fuente) / "expected.json"
+    if not fuente_path.exists():
+        print_checks([("fuente de presupuesto presente", False, f"{fuente} no encontrada")])
+        return False
+    presupuesto = json.loads(fuente_path.read_text(encoding="utf-8")).get("presupuesto", {})
+    ok, detail = validate_against_schema(presupuesto, schemas["salida"])
+    checks.append((f"presupuesto fuente ({fuente}) conforma salida-presupuesto", ok, detail))
+
+    # criterio + pack de textos declarados por el caso
+    criterio = _cargar_pack_criterio(repo, expected.get("criterio", ""))
+    textos = _cargar_pack_textos(repo, expected.get("pack_textos", ""))
+    checks.append(("criterio + pack de textos cargados",
+                   bool(criterio) and bool(textos.get("por_partida")),
+                   f"criterio={expected.get('criterio')} textos={expected.get('pack_textos')}"))
+
+    # 2 · componer el .docx (import por path, patron engines/*)
+    pp = str(DEFAULT_PLIEGO_C5)
+    if pp not in sys.path:
+        sys.path.insert(0, pp)
+    try:
+        import aqyra_documento_pliego as apl
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import del compositor documentos/pliego", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        par = {"salida": tdp / "a.docx", "fecha": fecha, "pack_textos": textos}
+        salida_a = apl.componer_pliego(presupuesto, criterio, par)
+        checks.append(("compositor genera el .docx",
+                       salida_a.exists() and salida_a.stat().st_size > 0,
+                       f"{salida_a.name} ({salida_a.stat().st_size} bytes)"))
+        paras, tablas = _extraer_docx(salida_a)
+        texto = "\n".join(paras)
+
+        # 3 · secciones presentes
+        marcas = [("caratula", apl.SEC_CARATULA), ("condiciones_generales", apl.SEC_GENERALES),
+                  ("prescripciones_particulares", apl.SEC_PARTICULARES), ("trazabilidad", apl.SEC_TRAZA)]
+        faltan_sec = [n for n, m in marcas if m not in texto]
+        checks.append(("las secciones presentes", not faltan_sec,
+                       "caratula · generales · particulares · trazabilidad" if not faltan_sec
+                       else f"faltan: {faltan_sec}"))
+
+        # fichas por partida (tablas Concepto/Valor con fila 'Partida')
+        em = {p["codigo"]: p for p in presupuesto.get("estado_mediciones", [])}
+        fichas: dict[str, dict] = {}
+        for t in tablas:
+            cab = [c.strip() for c in t[0]] if t else []
+            if cab[:2] != ["Concepto", "Valor"]:
+                continue
+            d = {(f[0] or "").strip(): (f[1] or "").strip() for f in t[1:]}
+            cod = d.get("Partida")
+            if cod:
+                fichas[cod] = d
+
+        # 4 · todas las partidas presentes con prescripcion (sin fallback)
+        faltan_part = [c for c in em if c not in fichas]
+        checks.append(("todas las partidas en el pliego", not faltan_part,
+                       f"{len(em)} partidas" if not faltan_part else f"faltan: {faltan_part}"))
+        if "n_partidas" in doc_exp:
+            checks.append(("nº de partidas == esperado", len(em) == doc_exp["n_partidas"],
+                           f"{len(em)} (esperado {doc_exp['n_partidas']})"))
+        pres_lineas = [x for x in paras if x.startswith("Prescripcion.")]
+        con_fallback = [x for x in pres_lineas if "pendiente de completar" in x]
+        checks.append(("prescripcion por partida (texto base, sin fallback)",
+                       len(pres_lineas) >= len(em) and not con_fallback,
+                       f"{len(pres_lineas)} prescripciones" if not con_fallback
+                       else f"{len(con_fallback)} cayeron al fallback"))
+
+        # 5 · medicion (cantidad) y 6 · coste (importe) por partida
+        malos_cant, malos_imp = [], []
+        for c, p in em.items():
+            f = fichas.get(c, {})
+            # 'Cantidad medida' = "0,128 m3": tomar el token numerico inicial (la unidad, p.ej.
+            # 'm3', lleva digito y no se puede limpiar con _num_es); el importe acaba en EUR (lo pela).
+            cant_tok = (f.get("Cantidad medida", "") or "").split()
+            vc = _num_es(cant_tok[0]) if cant_tok else None
+            vi = _num_es(f.get("Importe (coste)", ""))
+            if vc is None or abs(vc - float(p["cantidad"])) > ca:
+                malos_cant.append(c)
+            if vi is None or abs(vi - float(p["importe"])) > ia:
+                malos_imp.append(c)
+        checks.append(("cantidad de partida en el pliego == JSON (±0,001)", not malos_cant,
+                       "todas casan" if not malos_cant else f"descuadran: {malos_cant}"))
+        checks.append(("importe de partida en el pliego == JSON (±0,01)", not malos_imp,
+                       "todos casan" if not malos_imp else f"descuadran: {malos_imp}"))
+
+        # 7 · trazabilidad: GUIDs de cada partida origen=modelo presentes
+        blob = texto + "\n" + "\n".join(" ".join(c for fila in t for c in fila) for t in tablas)
+        sin_guid = []
+        for c, p in em.items():
+            for g in p.get("trazabilidad", []):
+                if g not in blob:
+                    sin_guid.append((c, g))
+        checks.append(("trazabilidad (GUIDs) al modelo por partida", not sin_guid,
+                       "GUIDs presentes" if not sin_guid else f"faltan: {sin_guid[:3]}"))
+
+        # 8 · carbono forward-open: coherente con lo que traiga el presupuesto fuente
+        trae_carbono = any((p.get("valores") or {}).get("carbono") for p in em.values())
+        hay_huella = "Huella de carbono" in blob
+        checks.append(("carbono forward-open (presente sii el presupuesto lo trae)",
+                       trae_carbono == hay_huella,
+                       f"presupuesto={'con' if trae_carbono else 'sin'} carbono · pliego={'con' if hay_huella else 'sin'} huella"))
+
+        # 9 · DETERMINISMO por contenido (componer 2× = idem)
+        par_b = {"salida": tdp / "b.docx", "fecha": fecha, "pack_textos": textos}
+        contenido_b = _extraer_docx(apl.componer_pliego(presupuesto, criterio, par_b))
+        checks.append(("pliego determinista (2× = mismo contenido extraido)",
+                       (paras, tablas) == contenido_b,
+                       "texto y tablas identicos" if (paras, tablas) == contenido_b
+                       else "el contenido difiere entre dos composiciones"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
 def _run_c5_proyeccion(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                        repo: Path = DEFAULT_REPO) -> bool:
     """C5 · proyección (E2.2, D24–D29): la vista `proyectar(eje, corte)` — GOL-PRE-03.
@@ -1588,6 +1742,9 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     # Eje CARBONO (E3.3, D39–D44): GOL-CAR-01 (valoración carbono + etapas + proyección de carbono).
     if expected.get("modo") == "carbono":
         return _run_c5_carbono(case_dir, contracts_dir, expected, tol, repo)
+    # Capa de documentos: GOL-PLI-01 (Pliego de Condiciones Tecnicas) — compositor determinista (E4.1).
+    if expected.get("modo") == "pliego":
+        return _run_c5_pliego(case_dir, contracts_dir, expected, tol, repo)
 
     checks: list[tuple[str, bool, str]] = []
     schemas = load_c5_schemas(contracts_dir)
