@@ -1,0 +1,144 @@
+{
+  "modo": "carbono",
+  "_nota": "GOL-CAR-02 (E5.2, Ola 2). Valora la MISMA medicion de GOL-PRE-01 en el eje CARBONO con el banco REAL banco-carbono/generico/v2 (factores derivados de fuentes ABIERTAS ratificadas: ADEME LO2.0, ProBas dl-de/by-2.0, UK OGL). Anclaje por DETERMINISMO + SEMANTICA + INVARIANTE (D14/D28, sin md5 de salida). Reusa las fixtures de GOL-CAR-01/GOL-PRE-03 (mismos md5) + criterio/AQ/v2 (D44/D48). Oraculo del eje calculado a mano y verificado x2. kgCO2e = convencion banco+criterio, no verdad fisica. GOL-CAR-01 (sintetico v1) y GOL-PRE-01/02/03 y GOL-DOC-01 INTACTAS (E5.2 solo ANADE este caso).",
+  "entradas_md5": {
+    "entrada/ARQ.ifc": "19a272a59a605953f55e2af71390d838",
+    "entrada/EST.ifc": "f1d25192ee805f7af343665bdff6e1b0"
+  },
+  "eje": {
+    "id": "carbono",
+    "unidad": "kgCO2e",
+    "PEM": 7117.69
+  },
+  "estado_carbono": [
+    {
+      "codigo": "CSZ010",
+      "origen": "modelo",
+      "cantidad": 0.128,
+      "unitario": 268.64,
+      "total": 34.39,
+      "unidad": "kgCO2e",
+      "etapas": {
+        "A1A3": 33.04,
+        "A4A5": 1.35
+      },
+      "banco": "banco-carbono/generico/v2"
+    },
+    {
+      "codigo": "EHS010",
+      "origen": "modelo",
+      "cantidad": 1.92,
+      "unitario": 362.87,
+      "total": 696.71,
+      "unidad": "kgCO2e",
+      "etapas": {
+        "A1A3": 675.65,
+        "A4A5": 21.06
+      },
+      "banco": "banco-carbono/generico/v2"
+    },
+    {
+      "codigo": "EHL010",
+      "origen": "modelo",
+      "cantidad": 16.2,
+      "unitario": 306.33,
+      "total": 4962.55,
+      "unidad": "kgCO2e",
+      "etapas": {
+        "A1A3": 4789.04,
+        "A4A5": 173.51
+      },
+      "banco": "banco-carbono/generico/v2"
+    },
+    {
+      "codigo": "FAB010",
+      "origen": "modelo",
+      "cantidad": 33.9,
+      "unitario": 26.3,
+      "total": 891.57,
+      "unidad": "kgCO2e",
+      "etapas": {
+        "A1A3": 872.25,
+        "A4A5": 19.32
+      },
+      "banco": "banco-carbono/generico/v2"
+    },
+    {
+      "codigo": "REV010",
+      "origen": "modelo",
+      "cantidad": 67.8,
+      "unitario": 5.33,
+      "total": 361.37,
+      "unidad": "kgCO2e",
+      "etapas": {
+        "A1A3": 352.56,
+        "A4A5": 8.81
+      },
+      "banco": "banco-carbono/generico/v2"
+    },
+    {
+      "codigo": "PIN010",
+      "origen": "modelo",
+      "cantidad": 67.8,
+      "unitario": 0.45,
+      "total": 30.51,
+      "unidad": "kgCO2e",
+      "etapas": {
+        "A1A3": 30.51,
+        "A4A5": 0.0
+      },
+      "banco": "banco-carbono/generico/v2"
+    },
+    {
+      "codigo": "PPM010",
+      "origen": "modelo",
+      "cantidad": 1.0,
+      "unitario": 1.03,
+      "total": 1.03,
+      "unidad": "kgCO2e",
+      "etapas": {
+        "A1A3": 0.92,
+        "A4A5": 0.11
+      },
+      "banco": "banco-carbono/generico/v2"
+    },
+    {
+      "codigo": "SYS010",
+      "origen": "regla",
+      "cantidad": 1,
+      "unitario": 139.56,
+      "total": 139.56,
+      "unidad": "kgCO2e"
+    }
+  ],
+  "vistas": [
+    {
+      "id": "i-carbono-planta",
+      "eje": "carbono",
+      "corte": "espacial",
+      "suma": 7117.69,
+      "grupos": [
+        {
+          "grupo": "Emplazamiento/Edificio/Nivel 00",
+          "valor_total": 731.1,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Emplazamiento/Edificio/Planta Baja",
+          "valor_total": 2938.66,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "Emplazamiento/Edificio/Nivel 01",
+          "valor_total": 3308.37,
+          "fuente": "ifc"
+        },
+        {
+          "grupo": "(sin geometría)",
+          "valor_total": 139.56,
+          "fuente": "regla"
+        }
+      ]
+    }
+  ]
+}
