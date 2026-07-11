@@ -1,0 +1,5 @@
+{
+  "pack": "pliego-textos/AQ-DEMO/v1",
+  "content_sha256": "a834770e5cf762a3d2b1359c75494bdd2732d88d29ba6c4eca4a91a29c915acd",
+  "_nota": "Golden de pack: identidad del contenido por hash (sha256 del bloque contenido + md5 de textos.json). Textos de prescripcion PROPIOS (demo, E4.1); el texto normativo real (PG-3/CTE) entra por la via limpia con licencia verificada."
+}

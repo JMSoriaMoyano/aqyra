@@ -1,0 +1,18 @@
+[project]
+name = "aqyra-documento-pliego"
+version = "0.1.0"
+description = "Capa de documentos C5 — compositor DETERMINISTA del Pliego de Condiciones Tecnicas: componer_pliego(presupuesto, criterio, parametros?) → .docx del despacho (caratula + condiciones generales + prescripciones tecnicas particulares por capitulo/sistema con prescripcion + medicion trazable + coste + carbono forward-open + cuadro de trazabilidad). Consume el `salida-presupuesto` JSON + el criterio + un pack de textos de prescripcion (NO recalcula). Cierra el trio coste + carbono + prescripcion sobre la misma medicion. Formato del despacho ESPEJADO in-repo (python-docx); segundo ladrillo de la capa de documentos que C7 orquestara (no es el operador C7)."
+requires-python = ">=3.10"
+dependencies = [
+  "python-docx>=1.1",
+]
+
+[project.scripts]
+aqyra-documento-pliego = "aqyra_documento_pliego.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aqyra_documento_pliego"]

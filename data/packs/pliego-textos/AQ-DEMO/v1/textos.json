@@ -1,0 +1,55 @@
+{
+  "pack": "pliego-textos/AQ-DEMO/v1",
+  "familia": "pliego-textos",
+  "titulo": "Textos de prescripcion Aqyra DEMO - propios, minimos (piloto E4.1 pliego)",
+  "descripcion": "Textos de prescripcion tecnica PROPIOS de Aqyra (redactados por Aqyra, NO PG-3/CTE, que son fuentes normativas con puerta de licencia N-04). Semilla DEMO para el compositor documentos/pliego y su golden GOL-PLI-01. Cada partida lleva condiciones de material, ejecucion, control y criterio de medicion y abono. El texto normativo REAL (PG-3/PG-4, CTE DB) entra despues por la via limpia, con licencia verificada. Textos de demostracion, no de proyecto.",
+  "marca_demo": true,
+  "clave": "codigo de partida (tipo de unidad de obra); fallback por clasificacion Uniclass Ss",
+  "generales": [
+    "El presente pliego de condiciones tecnicas particulares establece las prescripciones que rigen la ejecucion, control y abono de las unidades de obra del proyecto, complementando la normativa de obligado cumplimiento aplicable. En caso de contradiccion, prevalece la condicion mas exigente y, en su defecto, el criterio de la Direccion Facultativa.",
+    "Todos los materiales cumpliran las especificaciones tecnicas, marcado CE y declaraciones de prestaciones que les sean de aplicacion. La Direccion Facultativa podra rechazar los materiales que no acrediten su idoneidad o no se ajusten a lo prescrito.",
+    "La ejecucion se ajustara a las buenas practicas constructivas, a las instrucciones del fabricante y a la reglamentacion vigente. Toda unidad se somete a control de recepcion; las no conformidades se subsanan a cargo del contratista antes de su abono.",
+    "La medicion y abono de cada unidad se realiza conforme al criterio declarado en su prescripcion particular, sobre la medicion trazable al modelo. No seran de abono las unidades ejecutadas en exceso sobre lo definido en proyecto sin autorizacion expresa."
+  ],
+  "por_partida": {
+    "FAB010": {
+      "clasificacion_uniclass": "EF_25_10",
+      "prescripcion": "Fabrica de ladrillo ceramico perforado para revestir, tomada con mortero de cemento. Material: ladrillo ceramico perforado conforme a UNE-EN 771-1, con marcado CE, y mortero de cemento para fabrica de categoria conforme a UNE-EN 998-2. Ejecucion: aparejo a soga, juntas horizontales y verticales llenas de 1 cm, llagueado uniforme, aplomado y nivelado por hiladas; se dispondran los enjarjes y arriostramientos necesarios. Control: se comprobara la planeidad (regla de 2 m), el aplomado y la traba; se rechazaran piezas fisuradas o con desconchados. Medicion y abono: por metro cuadrado (m2) de una cara realmente ejecutada, con descuento de huecos de superficie mayor de 1,00 m2, incluidos medios auxiliares y parte proporcional de piezas especiales."
+    },
+    "REV010": {
+      "clasificacion_uniclass": "EF_25_10",
+      "prescripcion": "Enfoscado de mortero de cemento a buena vista sobre paramento vertical. Material: mortero de cemento para revoco/enlucido conforme a UNE-EN 998-1, dosificacion adecuada al soporte. Ejecucion: aplicacion sobre soporte limpio y humedecido, maestreado, fratasado a buena vista, con espesor medio y juntas de despiece cuando proceda; curado por humedecido en las primeras edades. Control: adherencia al soporte, planeidad con regla de 2 m y ausencia de fisuras y coqueras. Medicion y abono: por metro cuadrado (m2) de superficie realmente revestida, medida por dos caras (factor 2) sobre el area neta del paramento, incluidos maestras, aristas y medios auxiliares."
+    },
+    "PIN010": {
+      "clasificacion_uniclass": "EF_25_10",
+      "prescripcion": "Pintura plastica lisa sobre paramento vertical enfoscado, incluida imprimacion. Material: imprimacion selladora y pintura plastica conforme a las especificaciones del fabricante, aplicadas segun ficha tecnica. Ejecucion: lijado y limpieza del soporte, aplicacion de una mano de imprimacion y dos manos de acabado hasta cubrir uniformemente, respetando los tiempos de secado entre manos. Control: uniformidad de color y acabado, adherencia y ausencia de descuelgues. Medicion y abono: por metro cuadrado (m2) de superficie realmente pintada, medida por dos caras (factor 2) sobre el area neta del paramento, incluidos preparacion del soporte y medios auxiliares."
+    },
+    "EHL010": {
+      "clasificacion_uniclass": "EF_30_20",
+      "prescripcion": "Losa o forjado de hormigon armado HA-25, incluido encofrado y acero B500S. Material: hormigon HA-25/B/20/IIa conforme al Codigo Estructural, acero corrugado B500S conforme a UNE-EN 10080 y sistema de encofrado que garantice geometria y acabado. Ejecucion: montaje de encofrado y apeos, colocacion de armaduras con recubrimientos y separadores, hormigonado, compactacion por vibrado y curado; el desencofrado y descimbrado se realizaran cuando el hormigon alcance la resistencia requerida. Control: control estadistico del hormigon (resistencia, consistencia), comprobacion de armaduras (diametros, disposicion, recubrimientos) y de la geometria. Medicion y abono: por metro cubico (m3) de volumen neto de hormigon realmente ejecutado, incluidos encofrado, armadura, vibrado y curado."
+    },
+    "EHS010": {
+      "clasificacion_uniclass": "EF_20_10_30",
+      "prescripcion": "Pilar de hormigon armado HA-25, incluido encofrado y acero B500S. Material: hormigon HA-25/B/20/IIa conforme al Codigo Estructural, acero corrugado B500S conforme a UNE-EN 10080, encofrado de pilar. Ejecucion: replanteo y aplomado, ferralla armada con estribado y recubrimientos, encofrado estanco, hormigonado por tongadas con vibrado y curado; se cuidara la continuidad de armaduras con los elementos concurrentes. Control: aplomado y seccion, control del hormigon y de la armadura (diametros, numero de estribos, separacion), recubrimientos. Medicion y abono: por metro cubico (m3) de volumen neto de hormigon realmente ejecutado, incluidos encofrado, armadura, vibrado y curado."
+    },
+    "CSZ010": {
+      "clasificacion_uniclass": "EF_20_05_30",
+      "prescripcion": "Zapata de cimentacion de hormigon armado HA-25. Material: hormigon HA-25/B/20/IIa sobre hormigon de limpieza, acero corrugado B500S conforme a UNE-EN 10080. Ejecucion: excavacion refinada, vertido de hormigon de limpieza, colocacion de la parrilla de armado con separadores que garanticen el recubrimiento, hormigonado, vibrado y curado; se respetaran las esperas de arranque de pilares. Control: comprobacion del plano de apoyo y de la cota, recubrimientos, resistencia del hormigon y disposicion de armaduras. Medicion y abono: por metro cubico (m3) de volumen neto de hormigon realmente ejecutado, incluidos hormigon de limpieza, armadura y medios auxiliares."
+    },
+    "PPM010": {
+      "clasificacion_uniclass": "EF_25_30",
+      "prescripcion": "Puerta de paso interior de hoja lisa, incluidos herrajes y colocacion. Material: hoja lisa, cerco y tapajuntas, con herrajes de colgar y de seguridad conforme a las especificaciones del fabricante. Ejecucion: recibido del cerco a la fabrica, aplomado y nivelado, colgado de la hoja, ajuste de holguras y colocacion de herrajes; se garantizara el correcto funcionamiento y cierre. Control: aplomado, holguras uniformes, funcionamiento de herrajes y acabado. Medicion y abono: por unidad (ud) de puerta completamente colocada y en funcionamiento, incluidos herrajes, ajuste y medios auxiliares."
+    },
+    "SYS010": {
+      "clasificacion_uniclass": null,
+      "prescripcion": "Seguridad y salud: conjunto de medidas y protecciones, colectivas e individuales, para la ejecucion de la obra conforme al estudio o estudio basico de seguridad y salud y su plan aprobado. Ejecucion: implantacion, mantenimiento y retirada de las protecciones a lo largo de la obra segun la evaluacion de riesgos. Control: adecuacion al plan de seguridad y salud aprobado por el coordinador. Medicion y abono: partida alzada, abonada conforme al plan aprobado; no admite exceso sobre lo previsto sin autorizacion."
+    }
+  },
+  "por_clasificacion_uniclass": {
+    "EF_25_10": "Unidad de albanileria/revestimiento vertical: los materiales dispondran de marcado CE; la ejecucion cuidara planeidad, aplomado y adherencia; medicion por m2 realmente ejecutado con el criterio de la partida.",
+    "EF_30_20": "Unidad de estructura horizontal de hormigon: hormigon y acero conformes al Codigo Estructural; control del hormigon y de armaduras; medicion por m3 de volumen neto.",
+    "EF_20_10_30": "Unidad de estructura vertical de hormigon: hormigon y acero conformes al Codigo Estructural; control de aplomado y armado; medicion por m3 de volumen neto.",
+    "EF_20_05_30": "Unidad de cimentacion de hormigon: control del plano de apoyo y recubrimientos; medicion por m3 de volumen neto.",
+    "EF_25_30": "Unidad de carpinteria de paso: herrajes y colocacion conformes; medicion por unidad completamente colocada."
+  }
+}

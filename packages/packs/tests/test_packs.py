@@ -295,3 +295,33 @@ def test_banco_carbono_v1_intacto():
     assert packs.content_hash(m1) == "44d0cd3fd38986806710d5b0b085a240c31a0454684005e3954cf2d462878496"
     banco1 = PACKS_ROOT / "banco-carbono/generico/v1" / m1["contenido"]["fichero"]
     assert hashlib.md5(banco1.read_bytes()).hexdigest() == "47fb478796e3571f6dccf3426999de11"
+
+
+# --- pack pliego-textos/AQ-DEMO/v1 (E4.1/E5.3: textos de prescripcion, FAMILIA NUEVA pliego-textos) ----
+# Textos de prescripcion por partida/tipo de unidad. Familia NUEVA pliego-textos (aditiva al enum). Semilla
+# PROPIA (Aqyra, demo); el texto normativo REAL (PG-3/CTE) entra por la via limpia (N-04). NO re-mueve ningun
+# pack anclado (se ancla por su clave [packs.pliego_textos]). Consumidor: documentos/pliego + GOL-PLI-01.
+def test_manifiesto_pliego_textos_valido():
+    m = packs.load_pack(PACKS_ROOT, "pliego-textos", "AQ-DEMO", "v1")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma (familia pliego-textos en el enum)
+    assert m["familia"] == "pliego-textos" and m["version"] == "v1"
+
+
+def test_version_pliego_textos_anclada_en_lock():
+    m = packs.load_pack(PACKS_ROOT, "pliego-textos", "AQ-DEMO", "v1")
+    anclada = packs.version_anclada(LOCK, "pliego_textos")
+    assert anclada == m["version"]
+
+
+def test_identidad_contenido_pliego_textos_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "pliego-textos", "AQ-DEMO", "v1")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "pliego-textos/AQ-DEMO/v1/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack pliego-textos cambio sin actualizar la golden. "
+                        "Bump de version + nuevo hash, nunca editar en silencio.")
+    textos_file = PACKS_ROOT / "pliego-textos/AQ-DEMO/v1" / m["contenido"]["fichero"]
+    md5 = hashlib.md5(textos_file.read_bytes()).hexdigest()
+    assert md5 == m["contenido"]["md5_textos"], "textos.json cambio sin actualizar el manifiesto"
