@@ -1938,11 +1938,19 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     checks.append(("capítulos == Σ partidas y Σ capítulos == PEM",
                    cap_ok and approx(sum(float(c.get("importe", 0)) for c in caps), PEM),
                    f"{len(caps)} capítulos"))
-    gg = float(par.get("gg_pct", 0)) * PEM
-    bi = float(par.get("bi_pct", 0)) * PEM
-    base = PEM + gg + bi
-    iva = float(par.get("iva_pct", 0)) * base
-    pec = base + iva
+    # Espeja el redondeo POR PASOS del engine (mul2/r2, HALF_UP 2 dec): el presupuesto es
+    # traduccion determinista, no aritmetica en crudo. Un recompute en crudo (sin redondeo
+    # intermedio) puede divergir del engine >0,01 por acumulacion (GOL-PRE-05: PEC 14389.50 del
+    # engine vs 14389.51 en crudo) -> falso negativo. El engine es la fuente de verdad; este check
+    # valida SU aritmetica (D9: se investiga el emisor, no se afloja el oraculo).
+    from decimal import Decimal as _Dec, ROUND_HALF_UP as _HU
+    def _r2c(x): return float(_Dec(str(x)).quantize(_Dec("0.01"), rounding=_HU))
+    def _m2c(a, b): return float((_Dec(str(a)) * _Dec(str(b))).quantize(_Dec("0.01"), rounding=_HU))
+    gg = _m2c(par.get("gg_pct", 0), PEM)
+    bi = _m2c(par.get("bi_pct", 0), PEM)
+    base = _r2c(_Dec(str(PEM)) + _Dec(str(gg)) + _Dec(str(bi)))
+    iva = _m2c(par.get("iva_pct", 0), base)
+    pec = _r2c(_Dec(str(base)) + _Dec(str(iva)))
     econ_ok = (approx(res.get("gg"), gg) and approx(res.get("bi"), bi)
                and approx(res.get("base"), base) and approx(res.get("iva"), iva)
                and approx(res.get("PEC"), pec))
