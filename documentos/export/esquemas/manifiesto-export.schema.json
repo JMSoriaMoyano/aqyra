@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aqyra.dev/schemas/documentos/manifiesto-export.schema.json",
+  "title": "Manifiesto de procedencia del export firmable (forward-open)",
+  "description": "Liga el bundle al artefacto autoritativo por su huella canonica y ancla la procedencia. Determinista. La firma GPG de JM (Llave 2) se aplica sobre este manifiesto en el release; el gate (Llave 1) verifica su integridad.",
+  "type": "object",
+  "required": ["esquema", "generador", "version_generador", "sello_tiempo", "artefacto", "versiones_ancladas", "formatos"],
+  "additionalProperties": true,
+  "properties": {
+    "esquema": {"type": "string", "const": "manifiesto-export/v0"},
+    "generador": {"type": "string"},
+    "version_generador": {"type": "string"},
+    "sello_tiempo": {"type": "string"},
+    "artefacto": {
+      "type": "object",
+      "required": ["tipo", "content_sha256"],
+      "additionalProperties": true,
+      "properties": {
+        "tipo": {"type": "string"},
+        "id": {"type": "string"},
+        "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "modelo_md5": {"type": "object", "additionalProperties": {"type": "string"}},
+    "versiones_ancladas": {"type": "object", "additionalProperties": {"type": "string"}},
+    "seleccion": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {"eje": {"type": ["string", "null"]}, "corte": {"type": ["string", "null"]}}
+    },
+    "invariante": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {"suma_declarada": {"type": "number"}, "n_vistas": {"type": "integer"}}
+    },
+    "formatos": {"type": "array", "items": {"type": "string"}}
+  }
+}

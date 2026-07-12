@@ -1017,6 +1017,9 @@ DEFAULT_DOCUMENTO_C5 = DEFAULT_REPO / "documentos" / "presupuesto" / "src"
 # path (patron engines/*). Reproduce el .docx del pliego desde el `presupuesto` ANCLADO de
 # GOL-PRE-01 (D6) + criterio + pack de textos; ancla ESTRUCTURA + CONTENIDO (patron GOL-DOC-01/D3).
 DEFAULT_PLIEGO_C5 = DEFAULT_REPO / "documentos" / "pliego" / "src"
+DEFAULT_EXPORT_C5 = DEFAULT_REPO / "documentos" / "export" / "src"      # E6.2 · export firmable
+DEFAULT_COMUN_DOC = DEFAULT_REPO / "documentos" / "comun" / "src"       # formato compartido (D-EX-1)
+DEFAULT_EXPORT_ESQUEMAS = DEFAULT_REPO / "documentos" / "export" / "esquemas"
 
 
 def load_c5_schemas(contracts_dir: Path) -> dict[str, dict]:
@@ -1347,6 +1350,38 @@ def _extraer_docx(path: Path) -> tuple[list[str], list]:
     paras = [p.text for p in d.paragraphs]
     tablas = [[[c.text for c in row.cells] for row in t.rows] for t in d.tables]
     return paras, tablas
+
+
+def _fmt_es(x, dec: int = 2) -> str:
+    """1234.5 -> '1.234,50' (miles '.', decimales ',') — identico a formato.fmt_num del despacho."""
+    s = f"{float(x):,.{dec}f}"
+    return s.replace(",", "\x00").replace(".", ",").replace("\x00", ".")
+
+
+def _xlsx_numeros(path: Path) -> list:
+    """Todos los valores numericos de todas las hojas (para comprobar cifras)."""
+    from openpyxl import load_workbook
+    wb = load_workbook(str(path), read_only=True, data_only=True)
+    out = []
+    for ws in wb.worksheets:
+        for row in ws.iter_rows(values_only=True):
+            for c in row:
+                if isinstance(c, (int, float)):
+                    out.append(float(c))
+    return out
+
+
+def _xlsx_celdas(path: Path):
+    """Contenido (por hoja) del xlsx para comparar determinismo."""
+    from openpyxl import load_workbook
+    wb = load_workbook(str(path), read_only=True, data_only=True)
+    return {ws.title: [list(r) for r in ws.iter_rows(values_only=True)] for ws in wb.worksheets}
+
+
+def _pdf_texto(path: Path) -> str:
+    """Texto extraido del PDF (pypdf, NO OCR) — la evidencia del sellado (sin pixeles)."""
+    from pypdf import PdfReader
+    return "\n".join((pg.extract_text() or "") for pg in PdfReader(str(path)).pages)
 
 
 def _run_c5_documento(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
@@ -1744,6 +1779,303 @@ def _run_c5_proyeccion(case_dir: Path, contracts_dir: Path, expected: dict, tol:
     return all(ok for _, ok, _ in checks)
 
 
+def _run_c5_export(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                   repo: Path = DEFAULT_REPO) -> bool:
+    """C5 · Export firmable (capa transversal documentos/export, E6.2): despacha por CONSUMIDOR. El
+    PRIMARIO es CONTRACTUAL (presupuesto-obra); proyeccion-valor es export de gestion (secundario)."""
+    consumidor = expected.get("consumidor") or ("presupuesto-obra" if expected.get("fuente_presupuesto")
+                                                else "proyeccion-valor")
+    if consumidor == "presupuesto-obra":
+        return _run_export_presupuesto(case_dir, contracts_dir, expected, tol, repo)
+    return _run_export_proyeccion(case_dir, contracts_dir, expected, tol, repo)
+
+
+def _run_export_presupuesto(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                            repo: Path = DEFAULT_REPO) -> bool:
+    """C5 · Export firmable del PRESUPUESTO CONTRACTUAL (consumidor primario, E6.2). El nucleo envuelve
+    los compositores que ya existen: Word=componer_documento, BC3=emitir_bc3, y anade el PDF sellado +
+    manifiesto. Artefacto autoritativo = el `salida-presupuesto` ANCLADO de GOL-PRE-01 (se LEE). Ancla
+    por CONTENIDO (patron GOL-DOC-01/D3), no bytes ni pixeles. Corre SIN ifcopenshell. Justificacion de
+    medicion v0 = cantidad + criterio + origen + GUIDs. Un fallo se investiga en el NUCLEO/compositor."""
+    import tempfile
+
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c5_schemas(contracts_dir)
+    ia = float(tol.get("importe_abs", 0.01))
+    exp_export = expected.get("export", {})
+
+    # 1 · salida-presupuesto anclado (se LEE) + conforma esquema
+    fuente = expected.get("fuente_presupuesto")
+    fuente_path = case_dir.parent / str(fuente) / "expected.json"
+    if not fuente_path.exists():
+        print_checks([("fuente de presupuesto presente", False, f"{fuente} no encontrada")])
+        return False
+    presupuesto = json.loads(fuente_path.read_text(encoding="utf-8")).get("presupuesto", {})
+    ok, detail = validate_against_schema(presupuesto, schemas["salida"])
+    checks.append((f"presupuesto fuente ({fuente}) conforma salida-presupuesto", ok, detail))
+    descriptor = dict(expected.get("descriptor") or {})
+
+    # 2 · import del nucleo (comun + export + presupuesto + bc3)
+    for pth in (DEFAULT_COMUN_DOC, DEFAULT_EXPORT_C5, DEFAULT_DOCUMENTO_C5,
+                repo / "engines" / "bc3" / "src"):
+        if str(pth) not in sys.path:
+            sys.path.insert(0, str(pth))
+    try:
+        import aqyra_documento_export as adx
+        from aqyra_documento_export import manifiesto as _man
+        from aqyra_documento_export import firma as _firma
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import del nucleo documentos/export", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    # 3 · contract-first: descriptor conforma su esquema
+    man_schema = None
+    try:
+        import jsonschema
+        desc_schema = json.loads((DEFAULT_EXPORT_ESQUEMAS / "descriptor-export.schema.json").read_text(encoding="utf-8"))
+        man_schema = json.loads((DEFAULT_EXPORT_ESQUEMAS / "manifiesto-export.schema.json").read_text(encoding="utf-8"))
+        jsonschema.validate(descriptor, desc_schema)
+        checks.append(("descriptor conforma descriptor-export.schema.json", True, "forward-open"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("descriptor conforma descriptor-export.schema.json", False, f"{type(e).__name__}: {e}"))
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        bundle_a = adx.componer_export(presupuesto, descriptor, {"salida": tdp / "a"})
+        man = json.loads((bundle_a / adx.NOMBRE_MANIFIESTO).read_text(encoding="utf-8"))
+        if man_schema is not None:
+            try:
+                import jsonschema
+                jsonschema.validate(man, man_schema)
+                checks.append(("manifiesto conforma manifiesto-export.schema.json", True, "forward-open"))
+            except Exception as e:  # noqa: BLE001
+                checks.append(("manifiesto conforma manifiesto-export.schema.json", False, f"{type(e).__name__}: {e}"))
+
+        fmap = adx.consumidor_de("presupuesto-obra") or {}
+        formatos = list(descriptor.get("formatos") or list(fmap))
+        # 4 · bundle: formatos declarados + manifiesto
+        faltan = [f for f in formatos if f in fmap and not (bundle_a / fmap[f][0]).exists()]
+        faltan_man = not (bundle_a / adx.NOMBRE_MANIFIESTO).exists()
+        checks.append(("bundle con los formatos declarados + manifiesto", not faltan and not faltan_man,
+                       f"{sorted(q.name for q in bundle_a.iterdir())}" if not faltan and not faltan_man
+                       else f"faltan: {faltan}{' + manifiesto' if faltan_man else ''}"))
+
+        em = {p["codigo"]: p for p in presupuesto.get("estado_mediciones", [])}
+        resumen = presupuesto.get("resumen", {})
+        pec_txt = _fmt_es(resumen.get("PEC", 0))
+
+        # 5 · Word CONTRACTUAL (envuelve componer_documento): partidas + PEC
+        if "word" in fmap:
+            paras, tablas = _extraer_docx(bundle_a / fmap["word"][0])
+            blob_w = "\n".join(paras) + "\n" + "\n".join(" ".join(c for f in t for c in f) for t in tablas)
+            falt_pw = [c for c in em if c not in blob_w]
+            checks.append(("Word contractual: partidas + PEC", not falt_pw and pec_txt in blob_w,
+                           f"{len(em)} partidas, PEC {pec_txt}" if not falt_pw and pec_txt in blob_w
+                           else f"faltan partidas {falt_pw[:3]} / PEC {'ok' if pec_txt in blob_w else 'no'}"))
+            if "n_partidas" in exp_export:
+                checks.append(("n de partidas == esperado", len(em) == exp_export["n_partidas"],
+                               f"{len(em)} (esperado {exp_export['n_partidas']})"))
+
+        # 6 · PDF firmable: partidas + PEC + JUSTIFICACION (criterio + GUID) + content_sha256
+        if "pdf" in fmap:
+            pdf_txt = _pdf_texto(bundle_a / fmap["pdf"][0])
+            sha = (man.get("artefacto") or {}).get("content_sha256", "")
+            falt_pp = [c for c in em if c not in pdf_txt]
+            criterios = {p.get("criterio_aplicado", "") for p in em.values() if p.get("criterio_aplicado")}
+            crit_ok = all(cr.split()[0] in pdf_txt for cr in criterios) if criterios else True
+            guids = [g for p in em.values() for g in p.get("trazabilidad", [])]
+            guid_ok = all(g in pdf_txt for g in guids) if guids else True
+            ok_pdf = not falt_pp and pec_txt in pdf_txt and crit_ok and guid_ok and bool(sha) and sha in pdf_txt
+            checks.append(("PDF firmable: partidas + PEC + justificacion (criterio+GUIDs) + sha256", ok_pdf,
+                           "presentes" if ok_pdf else
+                           f"partidas {'ok' if not falt_pp else falt_pp[:2]} PEC {pec_txt in pdf_txt} crit {crit_ok} guid {guid_ok} sha {sha in pdf_txt}"))
+
+        # 7 · BC3 (licitacion): codigos de partida presentes
+        if "bc3" in fmap:
+            bc3_txt = (bundle_a / fmap["bc3"][0]).read_text(encoding="utf-8")
+            falt_bc3 = [c for c in em if c not in bc3_txt]
+            checks.append(("BC3 (FIEBDC-3) con los codigos de partida", not falt_bc3,
+                           f"{len(em)} codigos + ~V/~C/~M" if not falt_bc3 else f"faltan: {falt_bc3[:3]}"))
+
+        # 8 · XLSX mediciones: cantidades presentes
+        if "xlsx" in fmap:
+            nums = _xlsx_numeros(bundle_a / fmap["xlsx"][0])
+            cants = [round(float(p.get("cantidad", 0)), 3) for p in em.values()]
+            falt_x = [c for c in cants if not any(abs(c - n) <= 0.001 for n in nums)]
+            checks.append(("XLSX mediciones: cantidades por partida", not falt_x,
+                           f"{len(nums)} celdas" if not falt_x else f"faltan {len(falt_x)}"))
+
+        # 9 · manifiesto INTEGRO (Llave 1)
+        ok_int, det_int = _man.integridad(man, presupuesto)
+        checks.append(("manifiesto integro (content_sha256 + versiones ancladas)", ok_int, det_int))
+
+        # 10 · isCertified: bundle SIN firmar NO es verified-signed; hook Llave 2 presente
+        cert = adx.es_certificado(bundle_a)
+        estado = _firma.estado_firmable(bundle_a)
+        checks.append(("isCertified: bundle sin firmar NO es verified-signed",
+                       (not cert) and estado == "computed", f"estado={estado}, certificado={cert}"))
+        checks.append(("hook de firma Llave 2 presente (release-time, NO ejecutado en el gate)",
+                       callable(getattr(_firma, "firmar_detached", None)), "firmar_detached disponible"))
+
+        # 11 · DETERMINISMO por contenido (componer 2x): word/pdf/bc3/xlsx/manifiesto
+        bundle_b = adx.componer_export(presupuesto, descriptor, {"salida": tdp / "b"})
+        det = True
+        for f in formatos:
+            if f not in fmap:
+                continue
+            fa, fb = bundle_a / fmap[f][0], bundle_b / fmap[f][0]
+            if f == "word":
+                det = det and _extraer_docx(fa) == _extraer_docx(fb)
+            elif f == "xlsx":
+                det = det and _xlsx_celdas(fa) == _xlsx_celdas(fb)
+            elif f == "pdf":
+                det = det and _pdf_texto(fa) == _pdf_texto(fb)
+            else:
+                det = det and fa.read_bytes() == fb.read_bytes()
+        det = det and (bundle_a / adx.NOMBRE_MANIFIESTO).read_bytes() == (bundle_b / adx.NOMBRE_MANIFIESTO).read_bytes()
+        checks.append(("export determinista (2x = Word/PDF/BC3/XLSX/manifiesto identicos)", det,
+                       "contenido identico" if det else "difiere entre dos composiciones"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
+def _run_export_proyeccion(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                           repo: Path = DEFAULT_REPO) -> bool:
+    """C5 · Export firmable de la proyeccion (SECUNDARIO/gestion, documentos/export). El nucleo
+    DETERMINISTA componer_export toma el artefacto de proyeccion ANCLADO (GOL-PRE-03 — se LEE, no se
+    re-ancla) + un descriptor y produce el bundle firmable (Word + XLSX + PDF sellado + manifiesto).
+    Ancla ESTRUCTURA + CONTENIDO (patron GOL-DOC-01/GOL-PLI-01/D3), no bytes ni pixeles. Dos llaves:
+    INTEGRIDAD en el gate (Llave 1); firma GPG de JM en el release (Llave 2, hook NO ejecutado aqui).
+    Corre SIN ifcopenshell (lee la proyeccion anclada, no re-mide). Un fallo se investiga en el NUCLEO."""
+    import tempfile
+
+    checks: list[tuple[str, bool, str]] = []
+    ia = float(tol.get("importe_abs", 0.01))
+    exp_export = expected.get("export", {})
+
+    # 1 · artefacto de proyeccion anclado (se LEE)
+    fuente = expected.get("fuente_proyeccion")
+    fuente_path = case_dir.parent / str(fuente) / "expected.json"
+    if not fuente_path.exists():
+        print_checks([("fuente de proyeccion presente", False, f"{fuente} no encontrada")])
+        return False
+    artefacto = json.loads(fuente_path.read_text(encoding="utf-8"))
+    vistas = artefacto.get("vistas") or []
+    checks.append((f"artefacto de proyeccion ({fuente}) con vistas", len(vistas) >= 1,
+                   f"{len(vistas)} vista/s"))
+    descriptor = dict(expected.get("descriptor") or {})
+
+    # 2 · import del nucleo (comun + export), patron engines/*
+    for pth in (DEFAULT_COMUN_DOC, DEFAULT_EXPORT_C5):
+        if str(pth) not in sys.path:
+            sys.path.insert(0, str(pth))
+    try:
+        import aqyra_documento_export as adx
+        from aqyra_documento_export import manifiesto as _man
+        from aqyra_documento_export import firma as _firma
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import del nucleo documentos/export", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    # 3 · contract-first: descriptor conforma su esquema (el manifiesto, tras componer)
+    man_schema = None
+    try:
+        import jsonschema
+        desc_schema = json.loads((DEFAULT_EXPORT_ESQUEMAS / "descriptor-export.schema.json").read_text(encoding="utf-8"))
+        man_schema = json.loads((DEFAULT_EXPORT_ESQUEMAS / "manifiesto-export.schema.json").read_text(encoding="utf-8"))
+        jsonschema.validate(descriptor, desc_schema)
+        checks.append(("descriptor conforma descriptor-export.schema.json", True, "forward-open"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("descriptor conforma descriptor-export.schema.json", False, f"{type(e).__name__}: {e}"))
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        bundle_a = adx.componer_export(artefacto, descriptor, {"salida": tdp / "a"})
+        man = json.loads((bundle_a / adx.NOMBRE_MANIFIESTO).read_text(encoding="utf-8"))
+        if man_schema is not None:
+            try:
+                import jsonschema
+                jsonschema.validate(man, man_schema)
+                checks.append(("manifiesto conforma manifiesto-export.schema.json", True, "forward-open"))
+            except Exception as e:  # noqa: BLE001
+                checks.append(("manifiesto conforma manifiesto-export.schema.json", False, f"{type(e).__name__}: {e}"))
+
+        # 4 · bundle: formatos declarados + manifiesto.json
+        formatos = list(descriptor.get("formatos") or [])
+        nombre = {f: v[0] for f, v in (adx.consumidor_de("proyeccion-valor") or {}).items()}
+        faltan = [f for f in formatos if f in nombre and not (bundle_a / nombre[f]).exists()]
+        faltan_man = not (bundle_a / adx.NOMBRE_MANIFIESTO).exists()
+        checks.append(("bundle con los formatos declarados + manifiesto", not faltan and not faltan_man,
+                       f"{sorted(q.name for q in bundle_a.iterdir())}" if not faltan and not faltan_man
+                       else f"faltan: {faltan}{' + manifiesto' if faltan_man else ''}"))
+
+        # cifras esperadas: grupos + Sigma de todas las vistas
+        cifras = []
+        for v in vistas:
+            cifras.append(round(float(v.get("suma", 0)), 2))
+            for g in v.get("grupos", []):
+                cifras.append(round(float(g.get("valor_total", 0)), 2))
+
+        # 5 · Word: cifras presentes (formato ES)
+        paras, tablas = _extraer_docx(bundle_a / nombre["word"])
+        blob_w = "\n".join(paras) + "\n" + "\n".join(" ".join(c for f in t for c in f) for t in tablas)
+        faltan_w = [c for c in cifras if _fmt_es(c) not in blob_w]
+        checks.append(("cifras de la proyeccion en el Word (grupos + Sigma)", not faltan_w,
+                       f"{len(cifras)} cifras" if not faltan_w else f"faltan {len(faltan_w)}: {faltan_w[:3]}"))
+        if "n_vistas" in exp_export:
+            checks.append(("n de vistas == esperado", len(vistas) == exp_export["n_vistas"],
+                           f"{len(vistas)} (esperado {exp_export['n_vistas']})"))
+
+        # 6 · XLSX: cifras numericas presentes
+        nums = _xlsx_numeros(bundle_a / nombre["xlsx"])
+        faltan_x = [c for c in cifras if not any(abs(c - n) <= ia for n in nums)]
+        checks.append(("cifras de la proyeccion en el XLSX", not faltan_x,
+                       f"{len(nums)} celdas numericas" if not faltan_x else f"faltan {len(faltan_x)}: {faltan_x[:3]}"))
+
+        # 7 · PDF: Sigma de cada vista + content_sha256 en el texto extraido
+        pdf_txt = _pdf_texto(bundle_a / nombre["pdf"])
+        sha = (man.get("artefacto") or {}).get("content_sha256", "")
+        sumas = [round(float(v.get("suma", 0)), 2) for v in vistas]
+        faltan_p = [x for x in sumas if _fmt_es(x) not in pdf_txt]
+        checks.append(("PDF sellado: Sigma de cada vista + content_sha256 en el texto",
+                       not faltan_p and bool(sha) and sha in pdf_txt,
+                       "presentes" if not faltan_p and sha in pdf_txt
+                       else f"faltan sumas {faltan_p} / sha {'ok' if sha in pdf_txt else 'no'}"))
+
+        # 8 · manifiesto INTEGRO (Llave 1)
+        ok_int, det_int = _man.integridad(man, artefacto)
+        checks.append(("manifiesto integro (content_sha256 + modelo_md5 + versiones ancladas)",
+                       ok_int, det_int))
+        if "suma" in exp_export:
+            inv = (man.get("invariante") or {}).get("suma_declarada")
+            checks.append(("invariante suma declarada == esperado",
+                           inv is not None and abs(float(inv) - float(exp_export["suma"])) <= ia,
+                           f"{inv} (esperado {exp_export['suma']})"))
+
+        # 9 · isCertified (D-EX-5): bundle SIN firmar NO es verified-signed; hook Llave 2 presente
+        cert = adx.es_certificado(bundle_a)
+        estado = _firma.estado_firmable(bundle_a)
+        checks.append(("isCertified: bundle sin firmar NO es verified-signed",
+                       (not cert) and estado == "computed", f"estado={estado}, certificado={cert}"))
+        checks.append(("hook de firma Llave 2 presente (release-time, NO ejecutado en el gate)",
+                       callable(getattr(_firma, "firmar_detached", None)), "firmar_detached disponible"))
+
+        # 10 · DETERMINISMO por contenido (componer 2x)
+        bundle_b = adx.componer_export(artefacto, descriptor, {"salida": tdp / "b"})
+        det = ((paras, tablas) == _extraer_docx(bundle_b / nombre["word"])
+               and _xlsx_celdas(bundle_a / nombre["xlsx"]) == _xlsx_celdas(bundle_b / nombre["xlsx"])
+               and pdf_txt == _pdf_texto(bundle_b / nombre["pdf"])
+               and (bundle_a / adx.NOMBRE_MANIFIESTO).read_bytes() == (bundle_b / adx.NOMBRE_MANIFIESTO).read_bytes())
+        checks.append(("export determinista (2x = Word/XLSX/PDF/manifiesto identicos)", det,
+                       "contenido identico" if det else "difiere entre dos composiciones"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
 def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                 repo: Path = DEFAULT_REPO) -> bool:
     """C5: presupuesto trazable — modo ANCLADO (contract-first, Fase IV·h1 — ver ficha/DECISIONES).
@@ -1777,6 +2109,9 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     # Capa de documentos: GOL-PLI-01 (Pliego de Condiciones Tecnicas) — compositor determinista (E4.1).
     if expected.get("modo") == "pliego":
         return _run_c5_pliego(case_dir, contracts_dir, expected, tol, repo)
+    # Capa transversal de export firmable: GOL-EXP-01 (bundle firmable de la proyeccion) — E6.2.
+    if expected.get("modo") == "export":
+        return _run_c5_export(case_dir, contracts_dir, expected, tol, repo)
 
     checks: list[tuple[str, bool, str]] = []
     schemas = load_c5_schemas(contracts_dir)
