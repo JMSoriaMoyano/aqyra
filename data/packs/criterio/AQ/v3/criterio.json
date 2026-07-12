@@ -1,0 +1,122 @@
+{
+  "criterio": "AQ/v3",
+  "titulo": "Criterio de medicion Aqyra - corte nativo BCCA (E5.1b)",
+  "descripcion": "v3 = corte NATIVO: mismo mapeo de MEDICION que v1 (unidad, magnitud, descuento de huecos por umbral, factor de caras) pero cada clase IFC apunta al CODIGO BCCA NATIVO de la unidad de obra (sin alias del criterio). Prueba el banco nativo (banco/BCCA-nativo/v1) + el mapeo nativo end-to-end sobre el modelo de la demo. Corte de 4 clases (muro, losa, pilar, zapata); la puerta (IfcDoor -> 11MPP00151, m2 de hueco) queda como FORWARD (su base nativa m2-de-hueco exige el area del hueco, que el modelo neutro anclado no expone). Declara `capitulos` nativos (pack-overridable, forward-open) porque el catalogo DEFAULT del engine mapea los codigos alias. v1/v2 INTACTOS; [packs.criterio] sigue en v1; v3 se ancla por su content_sha256.",
+  "reglas_por_clase": [
+    {
+      "clase": "IfcWall",
+      "partidas": [
+        {
+          "codigo": "06LPC80000",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 1,
+          "nota": "Fabrica (BCCA 06LPC80000): area de una cara, con descuento de huecos de superficie > 1,00 m2"
+        },
+        {
+          "codigo": "10CEE00001",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 2,
+          "nota": "Enfoscado (BCCA 10CEE00001): dos caras (factor 2) sobre el area neta con descuento de huecos"
+        },
+        {
+          "codigo": "13IPP90016",
+          "unidad": "m2",
+          "magnitud": "NetSideArea",
+          "descuento_huecos": true,
+          "umbral_hueco_m2": 1.0,
+          "factor_caras": 2,
+          "nota": "Pintura (BCCA 13IPP90016): dos caras (factor 2) sobre el area neta"
+        }
+      ]
+    },
+    {
+      "clase": "IfcSlab",
+      "partidas": [
+        {
+          "codigo": "05HRL80010",
+          "unidad": "m3",
+          "magnitud": "NetVolume",
+          "nota": "Losa/forjado (BCCA 05HRL80010): volumen neto de hormigon"
+        }
+      ]
+    },
+    {
+      "clase": "IfcColumn",
+      "partidas": [
+        {
+          "codigo": "05HRP80010",
+          "unidad": "m3",
+          "magnitud": "NetVolume",
+          "nota": "Pilar (BCCA 05HRP80010): volumen neto de hormigon"
+        }
+      ]
+    },
+    {
+      "clase": "IfcFooting",
+      "partidas": [
+        {
+          "codigo": "03HRZ80000",
+          "unidad": "m3",
+          "magnitud": "NetVolume",
+          "nota": "Zapata (BCCA 03HRZ80000): volumen neto de hormigon"
+        }
+      ]
+    }
+  ],
+  "reglas_sin_geometria": [
+    {
+      "codigo": "SYS010",
+      "unidad": "PA",
+      "origen": "regla",
+      "base": "PEM_medible",
+      "ratio": 0.02,
+      "nota": "Seguridad y salud: partida alzada por ratio (2% del PEM de las partidas medibles). Codigo interno Aqyra (origen=regla, no exige banco)."
+    }
+  ],
+  "capitulos": [
+    [
+      "C01",
+      "Cimentacion",
+      [
+        "03HRZ80000"
+      ]
+    ],
+    [
+      "C02",
+      "Estructura",
+      [
+        "05HRP80010",
+        "05HRL80010"
+      ]
+    ],
+    [
+      "C03",
+      "Albanileria",
+      [
+        "06LPC80000"
+      ]
+    ],
+    [
+      "C04",
+      "Revestimientos",
+      [
+        "10CEE00001",
+        "13IPP90016"
+      ]
+    ],
+    [
+      "C06",
+      "Seguridad y Salud",
+      [
+        "SYS010"
+      ]
+    ]
+  ],
+  "_nota_puerta_forward": "IfcDoor -> 11MPP00151 (BCCA, m2 de hueco 125,37 EUR/m2) queda FUERA de v0 (D54): su medicion nativa exige el area del hueco (2,10 m2), que el modelo neutro anclado no expone (mide conteo + area de hoja 1,845). Forward explicito. Por eso el catalogo `capitulos` no incluye Carpinteria (C05)."
+}

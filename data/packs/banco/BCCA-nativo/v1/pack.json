@@ -1,0 +1,34 @@
+{
+  "id": "BCCA-nativo",
+  "familia": "banco",
+  "version": "v1",
+  "titulo": "Banco de costes Aqyra BCCA-nativo - subconjunto curado de unidades de obra BCCA nativas (E5.1b)",
+  "fuente": "derivado de BCCA - CC-BY 3.0 - Informacion obtenida del Portal de la Junta de Andalucia (edicion BCCA2023_V02, FIEBDC-3/2020, 01-11-2023). Fuente abierta ratificada (D49/N-04). Codigos NATIVOS BCCA (D53/E5.1b). NO deriva de BEDEC/CYPE/PREOC/IVE (licenciados).",
+  "vigencia": {
+    "desde": "2026-07-12",
+    "estado": "vigente (coste real, subconjunto nativo curado - 6 unidades)"
+  },
+  "metadatos": {
+    "autoria": "derivado por Aqyra de fuente abierta (BCCA, Junta de Andalucia)",
+    "licencia": "CC-BY 3.0",
+    "atribucion": "Informacion obtenida del Portal de la Junta de Andalucia",
+    "adaptador": "engines/bc3 (aqyra_bc3.ingerir_bc3) - FIEBDC-3, subset ~V/~C/~D/~T (D31); nucleo presupuestable materializado del .bc3 curado; provenance/descripcion aditivos (D52-B)",
+    "nota": "6 unidades de obra BCCA NATIVAS (codigo de partida = codigo BCCA) con precio y descomposicion reales (provenance por partida). costes_indirectos_pct=0. Consumido por criterio/AQ/v3 (nativo) y GOL-PRE-05. Puerta (11MPP00151, m2 de hueco) y base BCCA completa = forward (D54/D53)."
+  },
+  "contenido": {
+    "fichero": "banco.json",
+    "fuente_bc3": "fuente/BCCA-nativo.bc3",
+    "md5_banco": "6493618ce7f0ceb7e936ba2a60cf030b",
+    "md5_bc3": "b0390f906cbf10f56f0cebe1b01e9de7",
+    "moneda": "EUR",
+    "costes_indirectos_pct": 0.0,
+    "partidas": [
+      "06LPC80000",
+      "10CEE00001",
+      "13IPP90016",
+      "05HRL80010",
+      "05HRP80010",
+      "03HRZ80000"
+    ]
+  }
+}

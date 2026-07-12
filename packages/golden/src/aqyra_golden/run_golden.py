@@ -580,11 +580,31 @@ def _banco_anclado_en_lock(repo: Path, ref: dict) -> tuple[bool, str]:
     banco_bc3=AQ-BC3-DEMO, banco_bcca=BCCA). Busca la clave que ancla id+version del `banco_ref`
     del caso; el pointer [packs.banco] (=AQ-DEMO/v1) NO se re-mueve al anadir un banco real
     (D50/E5.1). Generaliza la comprobacion para servir AQ-DEMO y BCCA sin tocar las golden ancladas."""
-    for clave in ("banco", "banco_bc3", "banco_bcca"):
+    for clave in ("banco", "banco_bc3", "banco_bcca", "banco_bcca_nativo"):
         sec = _lock_packs(repo, clave)
         if sec.get("id") == ref.get("id") and sec.get("version") == ref.get("version"):
             return True, f"lock[{clave}]={sec.get('id')}/{sec.get('version')}"
     return False, f"sin ancla [packs.banco*] para {ref.get('id')}/{ref.get('version')}"
+
+
+def _criterio_anclado_por_sha(repo: Path, ref: dict) -> tuple[bool, str]:
+    """Un criterio que NO es la version anclada en [packs.criterio] (p. ej. AQ/v3 en GOL-PRE-05) se
+    ancla por su PROPIO content_sha256 (patron AQ/v2 en la ruta de carbono, E3.3): el pointer
+    [packs.criterio] NO se mueve (GOL-PRE-01..04 intactas). Compara content_hash(pack) contra el
+    golden de pack del criterio."""
+    pp = str(repo / "packages" / "packs" / "src")
+    if pp not in sys.path:
+        sys.path.insert(0, pp)
+    try:
+        import aqyra_packs as _packs
+        man = _packs.load_pack(repo / "data" / "packs", "criterio", ref.get("id"), ref.get("version"))
+        got = _packs.content_hash(man)
+        exp = json.loads((repo / "data" / "packs" / "criterio" / str(ref.get("id"))
+                          / str(ref.get("version")) / "golden" / "expected.json")
+                         .read_text(encoding="utf-8"))["content_sha256"]
+        return got == exp, f"content_sha256 {got[:12]}… (esperado {exp[:12]}…)"
+    except Exception as e:  # noqa: BLE001
+        return False, f"{type(e).__name__}: {e}"
 
 
 # Casa del engine C3 (Fase III·h3, D6): engines/cumplimiento — importado por path (patrón
@@ -1822,10 +1842,16 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     crit_ref = entrada.get("criterio_ref", {})
     banco_ref = entrada.get("banco_ref", {})
     lock_crit = _lock_packs(repo, "criterio")
-    checks.append(("criterio anclado en versions.lock",
-                   lock_crit.get("id") == crit_ref.get("id")
-                   and lock_crit.get("version") == crit_ref.get("version"),
-                   f"lock={lock_crit.get('id')}/{lock_crit.get('version')}"))
+    if (lock_crit.get("id") == crit_ref.get("id")
+            and lock_crit.get("version") == crit_ref.get("version")):
+        # criterio anclado por el POINTER [packs.criterio] (AQ/v1 en GOL-PRE-01..04)
+        checks.append(("criterio anclado en versions.lock", True,
+                       f"lock={lock_crit.get('id')}/{lock_crit.get('version')}"))
+    else:
+        # criterio que NO es el pointer (AQ/v3 en GOL-PRE-05): anclado por su content_sha256, como
+        # AQ/v2 en la ruta de carbono. [packs.criterio] NO se mueve (GOL-PRE-01..04 intactas, D54).
+        crit_ok, crit_detalle = _criterio_anclado_por_sha(repo, crit_ref)
+        checks.append(("criterio anclado (content_sha256)", crit_ok, crit_detalle))
     banco_ok, banco_detalle = _banco_anclado_en_lock(repo, banco_ref)
     checks.append(("banco anclado en versions.lock", banco_ok, banco_detalle))
 
@@ -1912,11 +1938,19 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     checks.append(("capítulos == Σ partidas y Σ capítulos == PEM",
                    cap_ok and approx(sum(float(c.get("importe", 0)) for c in caps), PEM),
                    f"{len(caps)} capítulos"))
-    gg = float(par.get("gg_pct", 0)) * PEM
-    bi = float(par.get("bi_pct", 0)) * PEM
-    base = PEM + gg + bi
-    iva = float(par.get("iva_pct", 0)) * base
-    pec = base + iva
+    # Espeja el redondeo POR PASOS del engine (mul2/r2, HALF_UP 2 dec): el presupuesto es
+    # traduccion determinista, no aritmetica en crudo. Un recompute en crudo (sin redondeo
+    # intermedio) puede divergir del engine >0,01 por acumulacion (GOL-PRE-05: PEC 14389.50 del
+    # engine vs 14389.51 en crudo) -> falso negativo. El engine es la fuente de verdad; este check
+    # valida SU aritmetica (D9: se investiga el emisor, no se afloja el oraculo).
+    from decimal import Decimal as _Dec, ROUND_HALF_UP as _HU
+    def _r2c(x): return float(_Dec(str(x)).quantize(_Dec("0.01"), rounding=_HU))
+    def _m2c(a, b): return float((_Dec(str(a)) * _Dec(str(b))).quantize(_Dec("0.01"), rounding=_HU))
+    gg = _m2c(par.get("gg_pct", 0), PEM)
+    bi = _m2c(par.get("bi_pct", 0), PEM)
+    base = _r2c(_Dec(str(PEM)) + _Dec(str(gg)) + _Dec(str(bi)))
+    iva = _m2c(par.get("iva_pct", 0), base)
+    pec = _r2c(_Dec(str(base)) + _Dec(str(iva)))
     econ_ok = (approx(res.get("gg"), gg) and approx(res.get("bi"), bi)
                and approx(res.get("base"), base) and approx(res.get("iva"), iva)
                and approx(res.get("PEC"), pec))

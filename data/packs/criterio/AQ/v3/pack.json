@@ -1,0 +1,28 @@
+{
+  "id": "AQ",
+  "familia": "criterio",
+  "version": "v3",
+  "titulo": "Criterio de medicion Aqyra - corte nativo BCCA (E5.1b)",
+  "fuente": "Criterio propio del despacho (Aqyra). Corte NATIVO: mapeo clase IFC -> codigo BCCA nativo, misma medicion que v1, con catalogo de capitulos nativo. Redactado para GOL-PRE-05 (banco/BCCA-nativo/v1). v1/v2 INTACTOS.",
+  "vigencia": {
+    "desde": "2026-07-12",
+    "estado": "vigente (corte nativo, 4 clases)"
+  },
+  "metadatos": {
+    "autoria": "propia (despacho)",
+    "nota": "v3 mapea IfcWall/IfcSlab/IfcColumn/IfcFooting a codigos BCCA nativos (06LPC80000, 10CEE00001, 13IPP90016, 05HRL80010, 05HRP80010, 03HRZ80000) con la MISMA medicion que v1 + capitulos nativos. [packs.criterio] sigue en v1 (GOL-PRE-01/02/03/04 intactas); v3 se ancla por su content_sha256. Puerta = forward (D54)."
+  },
+  "contenido": {
+    "fichero": "criterio.json",
+    "md5_criterio": "3e9e986cd623b23c1cf1e71df1f17dbf",
+    "partidas": [
+      "06LPC80000",
+      "10CEE00001",
+      "13IPP90016",
+      "05HRL80010",
+      "05HRP80010",
+      "03HRZ80000",
+      "SYS010"
+    ]
+  }
+}
