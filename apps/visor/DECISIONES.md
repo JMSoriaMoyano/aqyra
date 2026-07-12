@@ -297,3 +297,52 @@
   computed/proposal, nunca verified-signed por inferencia, respeta `explicito`, regla de
   `isCertified`); el chip en el panel, por revisión VISUAL de la demo (resalte ámbar `#ff8a3d`
   existente + chip por elemento). Zona anclada (fixtures, E2E, golden) intacta.
+
+## V12 · Dashboard de valor — skin de la proyección (E6.1) — 2026-07-11 · Firmante: JM (pendiente de firma en el merge)
+
+> Gobernado por la spec `openspec/changes/visor-dashboard-valor/` (SSD/test-first) y
+> `docs/frontend-standards.md` (visor `apps/`, TDD, Llave 1). Superficie `apps/visor` **propone puro**:
+> presenta la vista `proyectar(eje, corte)` (E2.2, anclada por `GOL-PRE-03`); **no dispara la Llave 2**.
+> **Consulta, no cálculo** (N-06): la skin **no** re-mide, **no** re-valora, **no** re-proyecta — lee un
+> índice de proyección **precomputado** por el engine. Referencias: backlog **E6.1**, `GOL-PRE-03`,
+> spec `c5-proyeccion-vista` (C5). Golden del visor/`core` intacta. Decisiones **ratificadas por JM el
+> 2026-07-11**.
+
+- **D-DV-1 · Casa: skin/vista del visor (`apps/visor`). RATIFICADO.** El dashboard de valor es una
+  piel más del visor (`dashboard.ts` puro + modo de demo `?valor`), espejo de coste 5D / cumplimiento
+  6D / skins de disciplina — no una app aparte. Un shell, varias pieles.
+
+- **D-DV-2 · Alcance v0. RATIFICADO.** Ejes {**coste, carbono**} × cortes {**espacial, funcional,
+  uniclass**}; **tabla + gráfica de barras** de la proyección; **selección de grupo → resaltado de sus
+  GUIDs** en 3D; pastilla del **invariante Σ** + **chip de fuente** (`ifc`/`criterio`/`regla`/`—`).
+  **Comparar dos ofertas** (dos presupuestos) y **cortes GuBIM/avanzados** = **post-v0** (forward).
+
+- **D-DV-3 · Fuente de datos: JSON de proyección PRECOMPUTADO. RATIFICADO (Opción A).** El visor
+  consume un índice de proyección emitido por el engine (`tools/emitir_proyeccion_visor.py`, junto al
+  engine — NO en el cliente), forma `{eje, corte, suma, grupos[{grupo, valor_total, unidad, n_partidas,
+  guids[], fuente}]}` = salida de `proyectar` serializada (la que ya especifica `c5-proyeccion-vista`) +
+  `totales` por eje. Patrón derivado/BCF («el visor consume, no genera»). Se descartó un service en vivo
+  (Opción B: acopla el visor a un runtime Python; contradice «consume, no genera» en v0). **No hace
+  falta contrato nuevo.**
+
+- **D-DV-4 · Aceptación: reproducir `GOL-PRE-03`. RATIFICADO.** La Llave 1 de la skin es un E2E TS
+  (Vitest, `test/dashboard.test.ts`) que, desde la **fixture emitida del engine**
+  (`fixtures/proyeccion_valor.json`), **reproduce** los grupos/`valor_total`/`fuente` de `GOL-PRE-03`
+  (coste × {espacial, uniclass, funcional}, incluido el `fuente=criterio` del *fallback*) y el
+  invariante Σ (±0,01) en las 6 vistas de v0. El eje carbono se muestra desde su propio índice
+  (emitido igual) con aceptación por invariante Σ (su golden de proyección = forward). **Sin golden
+  nuevo de engine** (`proyectar` ya está anclada). Un desajuste se corrige **re-emitiendo la fixture
+  del engine, NUNCA editando el cliente**.
+
+- **D-DV-5 · Muro de cobro = forward. RATIFICADO.** En v0 **sólo la vista** (se siente gratis). El
+  **export firmable** de la proyección (dos llaves) es **gancho forward**. La skin **no certifica**:
+  `ESTADO_PROYECCION = "proposal"` → `isCertified` es `false` (regla dura D-021). La barra de estado lo
+  deja explícito: «el motor proyecta · se siente gratis · el export firmable llega».
+
+- **Cómo se prueba.** Núcleo (`dashboard.ts`: `modeloVista`/`sumaVista`/`vistaDe`/`guidsDeGrupo`/
+  `ejesDe`/`cortesDe`) por tests puros headless (consumo sin alterar valores, invariante Σ, residuales
+  visibles, determinismo, reproducción de `GOL-PRE-03`, selección→GUIDs, regla `isCertified`); la UI
+  (panel eje×corte + tabla + barras + Σ + chip + resaltado 3D) por revisión VISUAL de la demo (`?valor`).
+  Zona intocable (motor, `proyectar`/`GOL-PRE-03`, esquema C5, packs, núcleo del visor y skins/golden
+  existentes) intacta. Fixture del visor: `fixtures/proyeccion_valor.json` (LF, md5 `7fc0a51d…`;
+  anclada por VALOR — reproduce `GOL-PRE-03` —, no por md5, para no repetir la fragilidad EOL de 5D).
