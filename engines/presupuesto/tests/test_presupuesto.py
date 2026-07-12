@@ -88,3 +88,37 @@ def test_num_a_letra():
     assert num_a_letra(178.19) == "CIENTO SETENTA Y OCHO CON DIECINUEVE CENTIMOS"
     assert num_a_letra(6.7) == "SEIS CON SETENTA CENTIMOS"
     assert num_a_letra(231.75) == "DOSCIENTOS TREINTA Y UNO CON SETENTA Y CINCO CENTIMOS"
+
+
+def test_descripciones_ricas_del_banco_viajan_a_la_partida():
+    """Slice A (D-RB-1): el banco gana `resumen` (corto) + `texto` (ampliado). El engine mapea
+    descripcion=resumen (fallback a la descripcion previa) y ARRASTRA `texto` a estado_mediciones
+    (aditivo). Coste intacto (PEM/PEC en el test de arriba); S&S (origen=regla) no tiene banco."""
+    pres, _ = _presupuesto()
+    banco = _cargar_pack("banco", "AQ-DEMO", "v1")
+    bd = {p["codigo"]: p for p in banco["partidas"]}
+    for p in pres["estado_mediciones"]:
+        if p["origen"] == "modelo":
+            b = bd[p["codigo"]]
+            assert p["descripcion"] == b["resumen"], p["codigo"]      # descripcion de tabla = resumen (corto)
+            assert p.get("texto") == b["texto"], p["codigo"]          # texto ampliado arrastrado literal
+            assert len(p["texto"]) > len(p["descripcion"]), p["codigo"]
+    sys010 = next(p for p in pres["estado_mediciones"] if p["codigo"] == "SYS010")
+    assert "texto" not in sys010                                       # origen=regla: sin banco, sin texto
+
+
+def test_descripcion_fallback_sin_resumen():
+    """Compatibilidad: un banco v0 SIN `resumen` sigue usando su `descripcion` (no rompe)."""
+    from aqyra_presupuesto import presupuestar
+    entrada = json.loads((GOLDEN / "entrada.json").read_text(encoding="utf-8"))
+    criterio = _cargar_pack("criterio", "AQ", "v1")
+    banco = _cargar_pack("banco", "AQ-DEMO", "v1")
+    for p in banco["partidas"]:
+        p.pop("resumen", None)
+        p.pop("texto", None)
+    pres = presupuestar(entrada["modelo"], criterio, banco, entrada["parametros"])
+    bd = {p["codigo"]: p for p in banco["partidas"]}
+    for p in pres["estado_mediciones"]:
+        if p["origen"] == "modelo":
+            assert p["descripcion"] == bd[p["codigo"]]["descripcion"], p["codigo"]
+            assert "texto" not in p, p["codigo"]

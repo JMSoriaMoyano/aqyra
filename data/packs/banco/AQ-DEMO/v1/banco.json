@@ -9,10 +9,28 @@
       "codigo": "FAB010",
       "unidad": "m2",
       "descripcion": "Fábrica de ladrillo cerámico perforado 1/2 pie, para revestir",
-      "clasificacion_uniclass": ["EF_25_10"],
+      "resumen": "Fábrica de ladrillo cerámico perforado 1/2 pie, para revestir",
+      "texto": "Fabrica de ladrillo ceramico perforado de 1/2 pie de espesor para revestir, recibida con mortero de cemento M-5. Comprende el suministro de las piezas ceramicas conformes a UNE-EN 771-1 con marcado CE, el mortero de cemento, el replanteo, la ejecucion del aparejo a soga con juntas llenas de 1 cm, el aplomado y nivelado por hiladas, los enjarjes y arriostramientos, y los medios auxiliares. Incluida parte proporcional de piezas especiales, mermas y limpieza. Medida en m2 de una cara realmente ejecutada, descontando huecos de superficie mayor de 1,00 m2.",
+      "clasificacion_uniclass": [
+        "EF_25_10"
+      ],
       "componentes": [
-        { "tipo": "mano_obra", "descripcion": "Oficial 1ª + peón albañilería", "unidad": "h", "rendimiento": 0.75, "precio": 24.0, "subtotal": 18.0 },
-        { "tipo": "material", "descripcion": "Ladrillo perforado + mortero de cemento", "unidad": "m2", "rendimiento": 1.0, "precio": 12.5, "subtotal": 12.5 }
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial 1ª + peón albañilería",
+          "unidad": "h",
+          "rendimiento": 0.75,
+          "precio": 24.0,
+          "subtotal": 18.0
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Ladrillo perforado + mortero de cemento",
+          "unidad": "m2",
+          "rendimiento": 1.0,
+          "precio": 12.5,
+          "subtotal": 12.5
+        }
       ],
       "costes_indirectos": 0.92,
       "precio": 31.42
@@ -21,11 +39,36 @@
       "codigo": "REV010",
       "unidad": "m2",
       "descripcion": "Enfoscado de cemento a buena vista sobre paramento vertical",
-      "clasificacion_uniclass": ["EF_25_10"],
+      "resumen": "Enfoscado de cemento a buena vista sobre paramento vertical",
+      "texto": "Enfoscado de mortero de cemento a buena vista, maestreado y fratasado, sobre paramento vertical interior o exterior. Comprende el suministro del mortero de cemento conforme a UNE-EN 998-1, la preparacion y humectado del soporte, la colocacion de maestras, la aplicacion y fratasado del mortero, la formacion de aristas y juntas de despiece, el curado y los medios auxiliares. Incluida parte proporcional de andamios de trabajo hasta 3 m. Medido en m2 de superficie realmente revestida por sus dos caras.",
+      "clasificacion_uniclass": [
+        "EF_25_10"
+      ],
       "componentes": [
-        { "tipo": "mano_obra", "descripcion": "Oficial 1ª revocos", "unidad": "h", "rendimiento": 0.35, "precio": 25.71, "subtotal": 9.0 },
-        { "tipo": "material", "descripcion": "Mortero de cemento M-5", "unidad": "m2", "rendimiento": 1.0, "precio": 3.2, "subtotal": 3.2 },
-        { "tipo": "maquinaria", "descripcion": "Hormigonera", "unidad": "h", "rendimiento": 0.02, "precio": 5.0, "subtotal": 0.1 }
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial 1ª revocos",
+          "unidad": "h",
+          "rendimiento": 0.35,
+          "precio": 25.71,
+          "subtotal": 9.0
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Mortero de cemento M-5",
+          "unidad": "m2",
+          "rendimiento": 1.0,
+          "precio": 3.2,
+          "subtotal": 3.2
+        },
+        {
+          "tipo": "maquinaria",
+          "descripcion": "Hormigonera",
+          "unidad": "h",
+          "rendimiento": 0.02,
+          "precio": 5.0,
+          "subtotal": 0.1
+        }
       ],
       "costes_indirectos": 0.37,
       "precio": 12.67
@@ -34,10 +77,28 @@
       "codigo": "PIN010",
       "unidad": "m2",
       "descripcion": "Pintura plástica lisa sobre paramento vertical enfoscado",
-      "clasificacion_uniclass": ["EF_25_10"],
+      "resumen": "Pintura plástica lisa sobre paramento vertical enfoscado",
+      "texto": "Pintura plastica lisa, mano de imprimacion selladora y dos manos de acabado, sobre paramento vertical enfoscado. Comprende el suministro de la imprimacion y la pintura plastica conformes a las especificaciones del fabricante, el lijado y limpieza del soporte, la aplicacion de las manos necesarias hasta cubricion uniforme respetando los tiempos de secado, las protecciones de elementos contiguos y los medios auxiliares. Medida en m2 de superficie realmente pintada por sus dos caras.",
+      "clasificacion_uniclass": [
+        "EF_25_10"
+      ],
       "componentes": [
-        { "tipo": "mano_obra", "descripcion": "Oficial 1ª pintura", "unidad": "h", "rendimiento": 0.2, "precio": 22.5, "subtotal": 4.5 },
-        { "tipo": "material", "descripcion": "Pintura plástica + imprimación", "unidad": "m2", "rendimiento": 1.0, "precio": 2.0, "subtotal": 2.0 }
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial 1ª pintura",
+          "unidad": "h",
+          "rendimiento": 0.2,
+          "precio": 22.5,
+          "subtotal": 4.5
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Pintura plástica + imprimación",
+          "unidad": "m2",
+          "rendimiento": 1.0,
+          "precio": 2.0,
+          "subtotal": 2.0
+        }
       ],
       "costes_indirectos": 0.2,
       "precio": 6.7
@@ -46,11 +107,36 @@
       "codigo": "EHL010",
       "unidad": "m3",
       "descripcion": "Losa/forjado de hormigón armado HA-25, incluso encofrado y acero B500S",
-      "clasificacion_uniclass": ["EF_30_20"],
+      "resumen": "Losa/forjado de hormigón armado HA-25, incluso encofrado y acero B500S",
+      "texto": "Losa o forjado de hormigon armado HA-25/B/20/IIa, incluido encofrado, desencofrado y acero corrugado B500S. Comprende el suministro del hormigon conforme al Codigo Estructural, el acero conforme a UNE-EN 10080, el sistema de encofrado, el montaje de apeos, la colocacion de armaduras con recubrimientos y separadores, el vertido y compactacion por vibrado, el curado y el descimbrado cuando el hormigon alcance la resistencia requerida. Incluidos vibrado, curado y medios auxiliares. Medida en m3 de volumen neto de hormigon realmente ejecutado.",
+      "clasificacion_uniclass": [
+        "EF_30_20"
+      ],
       "componentes": [
-        { "tipo": "mano_obra", "descripcion": "Oficial + peón ferralla/hormigón", "unidad": "h", "rendimiento": 3.5, "precio": 27.14, "subtotal": 95.0 },
-        { "tipo": "material", "descripcion": "Hormigón HA-25 + acero B500S + encofrado", "unidad": "m3", "rendimiento": 1.0, "precio": 110.0, "subtotal": 110.0 },
-        { "tipo": "maquinaria", "descripcion": "Bomba de hormigón + vibrador", "unidad": "h", "rendimiento": 0.5, "precio": 40.0, "subtotal": 20.0 }
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial + peón ferralla/hormigón",
+          "unidad": "h",
+          "rendimiento": 3.5,
+          "precio": 27.14,
+          "subtotal": 95.0
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Hormigón HA-25 + acero B500S + encofrado",
+          "unidad": "m3",
+          "rendimiento": 1.0,
+          "precio": 110.0,
+          "subtotal": 110.0
+        },
+        {
+          "tipo": "maquinaria",
+          "descripcion": "Bomba de hormigón + vibrador",
+          "unidad": "h",
+          "rendimiento": 0.5,
+          "precio": 40.0,
+          "subtotal": 20.0
+        }
       ],
       "costes_indirectos": 6.75,
       "precio": 231.75
@@ -59,11 +145,36 @@
       "codigo": "EHS010",
       "unidad": "m3",
       "descripcion": "Pilar de hormigón armado HA-25, incluso encofrado y acero B500S",
-      "clasificacion_uniclass": ["EF_20_10_30"],
+      "resumen": "Pilar de hormigón armado HA-25, incluso encofrado y acero B500S",
+      "texto": "Pilar de hormigon armado HA-25/B/20/IIa, incluido encofrado, desencofrado y acero corrugado B500S. Comprende el suministro del hormigon conforme al Codigo Estructural y del acero conforme a UNE-EN 10080, el encofrado estanco de pilar, el replanteo y aplomado, la ferralla armada con estribado y recubrimientos, el hormigonado por tongadas con vibrado, el curado y la continuidad de armaduras con los elementos concurrentes. Incluidos encofrado, vibrado, curado y medios auxiliares. Medido en m3 de volumen neto de hormigon realmente ejecutado.",
+      "clasificacion_uniclass": [
+        "EF_20_10_30"
+      ],
       "componentes": [
-        { "tipo": "mano_obra", "descripcion": "Oficial + peón ferralla/hormigón", "unidad": "h", "rendimiento": 4.8, "precio": 27.08, "subtotal": 130.0 },
-        { "tipo": "material", "descripcion": "Hormigón HA-25 + acero B500S + encofrado pilar", "unidad": "m3", "rendimiento": 1.0, "precio": 120.0, "subtotal": 120.0 },
-        { "tipo": "maquinaria", "descripcion": "Grúa + vibrador", "unidad": "h", "rendimiento": 0.6, "precio": 41.67, "subtotal": 25.0 }
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial + peón ferralla/hormigón",
+          "unidad": "h",
+          "rendimiento": 4.8,
+          "precio": 27.08,
+          "subtotal": 130.0
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Hormigón HA-25 + acero B500S + encofrado pilar",
+          "unidad": "m3",
+          "rendimiento": 1.0,
+          "precio": 120.0,
+          "subtotal": 120.0
+        },
+        {
+          "tipo": "maquinaria",
+          "descripcion": "Grúa + vibrador",
+          "unidad": "h",
+          "rendimiento": 0.6,
+          "precio": 41.67,
+          "subtotal": 25.0
+        }
       ],
       "costes_indirectos": 8.25,
       "precio": 283.25
@@ -72,11 +183,36 @@
       "codigo": "CSZ010",
       "unidad": "m3",
       "descripcion": "Zapata de cimentación de hormigón armado HA-25",
-      "clasificacion_uniclass": ["EF_20_05_30"],
+      "resumen": "Zapata de cimentación de hormigón armado HA-25",
+      "texto": "Zapata de cimentacion de hormigon armado HA-25/B/20/IIa sobre hormigon de limpieza, incluido acero corrugado B500S. Comprende el suministro del hormigon de limpieza y del hormigon estructural conforme al Codigo Estructural, el acero conforme a UNE-EN 10080, el refino del fondo de excavacion, la colocacion de la parrilla de armado con separadores que garanticen el recubrimiento, las esperas de arranque de pilares, el vertido, vibrado y curado. Incluidos hormigon de limpieza, armadura y medios auxiliares. Medida en m3 de volumen neto de hormigon realmente ejecutado.",
+      "clasificacion_uniclass": [
+        "EF_20_05_30"
+      ],
       "componentes": [
-        { "tipo": "mano_obra", "descripcion": "Oficial + peón", "unidad": "h", "rendimiento": 2.2, "precio": 27.27, "subtotal": 60.0 },
-        { "tipo": "material", "descripcion": "Hormigón HA-25 + acero B500S", "unidad": "m3", "rendimiento": 1.0, "precio": 95.0, "subtotal": 95.0 },
-        { "tipo": "maquinaria", "descripcion": "Retroexcavadora + vibrador", "unidad": "h", "rendimiento": 0.45, "precio": 40.0, "subtotal": 18.0 }
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial + peón",
+          "unidad": "h",
+          "rendimiento": 2.2,
+          "precio": 27.27,
+          "subtotal": 60.0
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Hormigón HA-25 + acero B500S",
+          "unidad": "m3",
+          "rendimiento": 1.0,
+          "precio": 95.0,
+          "subtotal": 95.0
+        },
+        {
+          "tipo": "maquinaria",
+          "descripcion": "Retroexcavadora + vibrador",
+          "unidad": "h",
+          "rendimiento": 0.45,
+          "precio": 40.0,
+          "subtotal": 18.0
+        }
       ],
       "costes_indirectos": 5.19,
       "precio": 178.19
@@ -85,10 +221,28 @@
       "codigo": "PPM010",
       "unidad": "ud",
       "descripcion": "Puerta de paso interior, hoja lisa, incluso herrajes y colocación",
-      "clasificacion_uniclass": ["EF_25_30"],
+      "resumen": "Puerta de paso interior, hoja lisa, incluso herrajes y colocación",
+      "texto": "Puerta de paso interior de hoja lisa, incluidos cerco, tapajuntas, herrajes de colgar y de seguridad y colocacion. Comprende el suministro de la hoja, el cerco y los tapajuntas y los herrajes conformes a las especificaciones del fabricante, el recibido del cerco a la fabrica, el aplomado y nivelado, el colgado de la hoja, el ajuste de holguras y la colocacion y regulacion de herrajes hasta su correcto funcionamiento. Incluidos herrajes, ajuste y medios auxiliares. Medida por unidad completamente colocada y en funcionamiento.",
+      "clasificacion_uniclass": [
+        "EF_25_30"
+      ],
       "componentes": [
-        { "tipo": "mano_obra", "descripcion": "Oficial 1ª carpintería", "unidad": "h", "rendimiento": 1.4, "precio": 25.0, "subtotal": 35.0 },
-        { "tipo": "material", "descripcion": "Hoja + cerco + herrajes", "unidad": "ud", "rendimiento": 1.0, "precio": 145.0, "subtotal": 145.0 }
+        {
+          "tipo": "mano_obra",
+          "descripcion": "Oficial 1ª carpintería",
+          "unidad": "h",
+          "rendimiento": 1.4,
+          "precio": 25.0,
+          "subtotal": 35.0
+        },
+        {
+          "tipo": "material",
+          "descripcion": "Hoja + cerco + herrajes",
+          "unidad": "ud",
+          "rendimiento": 1.0,
+          "precio": 145.0,
+          "subtotal": 145.0
+        }
       ],
       "costes_indirectos": 5.4,
       "precio": 185.4

@@ -4,16 +4,27 @@
   "version": "v1",
   "titulo": "Banco de precios Aqyra DEMO — propio, mínimo (piloto C5)",
   "fuente": "Banco de precios PROPIO del despacho (Aqyra), de DEMOSTRACIÓN. NO deriva de BEDEC/ITeC ni PREOC (licenciados). Precios redactados para el golden GOL-PRE-01 (Fase IV·h1); no son precios de mercado.",
-  "vigencia": { "desde": "2026-07-03", "estado": "vigente (demo)" },
+  "vigencia": {
+    "desde": "2026-07-03",
+    "estado": "vigente (demo)"
+  },
   "metadatos": {
     "autoria": "propia (despacho)",
     "nota": "Partidas descompuestas (MO/materiales/maquinaria + costes indirectos) + mapeo clasificación→partida. El banco real (licenciado o del despacho) entra como pack cuando el engine lo consuma. Consumidores: C5 (engines/presupuesto) y C7."
   },
   "contenido": {
     "fichero": "banco.json",
-    "md5_banco": "d63c5f4a628c89f595e65a3d57300009",
+    "md5_banco": "b538a0e8e20d491b706178fee574135a",
     "moneda": "EUR",
     "costes_indirectos_pct": 0.03,
-    "partidas": ["FAB010", "REV010", "PIN010", "EHL010", "EHS010", "CSZ010", "PPM010"]
+    "partidas": [
+      "FAB010",
+      "REV010",
+      "PIN010",
+      "EHL010",
+      "EHS010",
+      "CSZ010",
+      "PPM010"
+    ]
   }
 }

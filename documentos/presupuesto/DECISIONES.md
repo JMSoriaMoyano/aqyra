@@ -56,3 +56,37 @@ Este paquete solo **AÑADE** `documentos/presupuesto` + el caso `GOL-DOC-01` + e
 `run_golden.py` / `versions.lock` / `ci.yml` / `[tool.uv.workspace]`. **Nunca** toca el contrato ni
 los golden/packs del C5 (GOL-PRE-01/-02 y su `expected`), ni C1/C3/C4, `engines/*`,
 `services/federacion`, `packages/core`, `apps/visor`.
+
+---
+
+# DESCRIPCIONES RICAS — Slice A (D-RB-1..4, RATIFICADAS por JM 2026-07-12)
+
+> Namespace **D-RB** (Rico Banco). Sube la calidad del entregable contractual (E6.2): el banco gana
+> descripción rica y el motor la arrastra a la salida C5, que los compositores renderizan. Extensión
+> ADITIVA forward-open; el coste anclado NO se mueve. La IA propone; JM ratifica y firma (dos llaves).
+
+## D-RB-1 · Forma — `resumen` (corto) + `texto` (ampliado) separados
+El banco gana dos campos (patrón BEDEC/BCCA/CYPE): `resumen` para tablas/cuadro nº1 y `texto` para el
+detalle de mediciones. El engine mapea `descripcion = banco.get("resumen") or banco.get("descripcion")`
+(compatibilidad con bancos v0) y arrastra `texto` a `estado_mediciones` (aditivo, sólo `origen=modelo`).
+En `AQ-DEMO/v1`, `resumen` = copia LITERAL de la `descripcion` previa (cambio cero en campos existentes).
+
+## D-RB-2 · Descripciones propias del usuario — banco propio (v0)
+El usuario aporta sus textos por su propio banco `banco/<despacho>/vN` (mecanismo probado con BCCA). El
+override por proyecto = **forward**.
+
+## D-RB-3 · Especificaciones estructuradas + lectura del Pset — FORWARD
+El bloque `especificaciones` estructurado (HA-25/B/20/IIa…) y su composición desde el Pset del IFC =
+slice posterior. v0 = texto libre en el banco (viaja en el `~T` del BC3).
+
+## D-RB-4 · Compositor y release — bump v0.2 SIN release en el slice
+`componer_documento` sube a **0.2.0** (renderiza el `texto` bajo la partida) y `presupuesto_doc` (export,
+PDF) idem. `GOL-DOC-01`/`GOL-EXP-01` amplían el oráculo (texto ampliado presente + determinismo). El
+release firmado `documento-presupuesto-v0.2.0` (Llave 2) **no** se crea en este slice; lo decide JM.
+
+## Excepción explícita a la Zona anclada (D4) — con ratificación de JM
+Slice A **añade `texto`** a las 7 partidas `origen=modelo` del `presupuesto` de `GOL-PRE-01/expected.json`
+(la fuente que leen GOL-DOC-01/GOL-EXP-01) y enriquece el banco `AQ-DEMO/v1` (re-anclaje de `md5_banco` +
+`content_sha256`). Los **números no se tocan** (PEM 7 022,53 → PEC 10 111,74 idéntico; el comparador
+`_diff_presupuesto_c5` ignora `descripcion`/`resumen`/`texto`). Es la «decisión explícita con JM» que las
+fichas de GOL-DOC-01/GOL-PLI-01 exigen para cambiar el presupuesto fuente. Engine → **0.6.0**.

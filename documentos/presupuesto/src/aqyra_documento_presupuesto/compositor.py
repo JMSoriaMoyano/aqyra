@@ -93,6 +93,17 @@ def componer_documento(presupuesto: dict, parametros: dict | None = None) -> Pat
         filas.append([f"PARCIAL {cod_cap}", cap.get("descripcion", ""), "", "", "",
                       F.fmt_num(cap.get("importe", 0), 2)])
         F.tabla(doc, cab_med, filas, anchos_mm=anchos_med, alineaciones=alin_med)
+        # Slice A · v0.2 (D-RB-1/D-RB-4): TEXTO ampliado de la unidad de obra (especificación del
+        # banco, patrón BEDEC/BCCA/CYPE) bajo la partida, cuando el `presupuesto` fuente lo trae
+        # (forward-open: si la partida no tiene `texto`, no se imprime nada — GOL-DOC-01 previa intacta).
+        for cod in cap.get("partidas", []):
+            p = em.get(cod)
+            if not p or not p.get("texto"):
+                continue
+            enc = doc.add_paragraph()
+            renc = enc.add_run(f"{cod} · {p.get('descripcion', '')}")
+            renc.bold = True
+            F.P(doc, p["texto"])
 
     # ---------------------------------------------------------------- 2 · cuadro nº1
     doc.add_page_break()
