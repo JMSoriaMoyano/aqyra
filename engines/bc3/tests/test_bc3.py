@@ -89,3 +89,58 @@ def test_guarda_detecta_precio_incoherente(tmp_path):
     banco = ingerir_bc3(fake, banco="X/v1")
     assert "_avisos_ingesta" in banco
     assert any("FAB010" in a for a in banco["_avisos_ingesta"])
+
+
+# --- banco/BCCA/v1 (Ola 4·E5.1): golden del PARSER por la VIA LIMPIA (Opcion B, D52) -----------------
+# El .bc3 semilla (7 unidades BCCA reales recodificadas a los codigos del criterio) reproduce el NUCLEO
+# presupuestable (codigo/unidad/componentes/costes_indirectos/precio) del banco.json anclado. La
+# descripcion honesta y el bloque `provenance` (codigo BCCA + licencia CC-BY 3.0 + atribucion) son
+# metadatos ADITIVOS del pack (el adaptador no los emite): asi el determinismo del PRECIO -que sale del
+# .bc3, no se inventa- queda anclado sin tocar engines/bc3 (0.2.0 INTOCABLE). costes_indirectos_pct=0
+# (el precio BCCA declarado = suma de la descomposicion).
+BCCA = REPO / "data" / "packs" / "banco" / "BCCA" / "v1"
+BCCA_BC3 = BCCA / "fuente" / "BCCA.bc3"
+BCCA_BANCO = BCCA / "banco.json"
+_SUBSET_PRESUP = ("codigo", "unidad", "componentes", "costes_indirectos", "precio")
+
+
+def _ingerir_bcca():
+    return ingerir_bc3(BCCA_BC3, banco="BCCA/v1", costes_indirectos_pct="0")
+
+
+def _subset_presup(p):
+    return {k: p[k] for k in _SUBSET_PRESUP}
+
+
+def test_bcca_parser_reproduce_nucleo_presupuestable():
+    """ingerir_bc3(semilla) reproduce el nucleo presupuestable del banco.json anclado (Opcion B/D52)."""
+    got = _ingerir_bcca()
+    banco = json.loads(BCCA_BANCO.read_text(encoding="utf-8"))
+    assert [_subset_presup(p) for p in got["partidas"]] == [_subset_presup(p) for p in banco["partidas"]], \
+        "el parser no reproduce el nucleo presupuestable del banco BCCA (drift del adaptador o del .bc3)"
+
+
+def test_bcca_determinismo_2x():
+    assert serializar_banco(_ingerir_bcca()) == serializar_banco(_ingerir_bcca())
+
+
+def test_bcca_sin_avisos_de_ingesta():
+    got = _ingerir_bcca()
+    assert "_avisos_ingesta" not in got, got.get("_avisos_ingesta")
+
+
+def test_bcca_md5_casa_con_el_manifiesto():
+    import hashlib
+    manif = json.loads((BCCA / "pack.json").read_text(encoding="utf-8"))
+    assert hashlib.md5(BCCA_BANCO.read_bytes()).hexdigest() == manif["contenido"]["md5_banco"]
+    assert hashlib.md5(BCCA_BC3.read_bytes()).hexdigest() == manif["contenido"]["md5_bc3"]
+
+
+def test_bcca_provenance_trazable_por_partida():
+    banco = json.loads(BCCA_BANCO.read_text(encoding="utf-8"))
+    assert len(banco["partidas"]) == 7
+    for p in banco["partidas"]:
+        pr = p.get("provenance", {})
+        assert pr.get("licencia") == "CC-BY 3.0", f"{p['codigo']}: licencia != CC-BY 3.0"
+        assert pr.get("codigo_bcca"), f"{p['codigo']}: sin codigo_bcca de origen"
+        assert "Junta de Andalucia" in pr.get("atribucion", ""), f"{p['codigo']}: sin atribucion"
