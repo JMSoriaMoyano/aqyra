@@ -33,3 +33,9 @@ export type {
 } from "./compliance.js";
 export { SKINS, colorPorClase, leyendaSkin, aplicarSkin } from "./skins.js";
 export type { Disciplina, SkinDisciplina, EntradaLeyenda, ColorRGB, AplicadorSkin } from "./skins.js";
+export {
+  modeloVista, sumaVista, vistaDe, guidsDeGrupo, ejesDe, cortesDe, ESTADO_PROYECCION,
+} from "./dashboard.js";
+export type {
+  FuenteValor, GrupoProyeccion, VistaProyeccion, TotalEje, IndiceProyeccion, FilaVista, ModeloVista,
+} from "./dashboard.js";
