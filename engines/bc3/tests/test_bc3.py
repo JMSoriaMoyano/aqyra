@@ -144,3 +144,44 @@ def test_bcca_provenance_trazable_por_partida():
         assert pr.get("licencia") == "CC-BY 3.0", f"{p['codigo']}: licencia != CC-BY 3.0"
         assert pr.get("codigo_bcca"), f"{p['codigo']}: sin codigo_bcca de origen"
         assert "Junta de Andalucia" in pr.get("atribucion", ""), f"{p['codigo']}: sin atribucion"
+
+
+# --- banco/BCCA-nativo/v1 (E5.1b): golden del PARSER por la via NATIVA ---------------------------------
+# El .bc3 curado (6 unidades BCCA con codigo NATIVO, aplanadas sin AUX) reproduce el NUCLEO presupuestable
+# del banco.json anclado. provenance/descripcion aditivos (D52-B). engines/bc3 0.2.0 INTOCABLE.
+BCCA_NAT = REPO / "data" / "packs" / "banco" / "BCCA-nativo" / "v1"
+BCCA_NAT_BC3 = BCCA_NAT / "fuente" / "BCCA-nativo.bc3"
+BCCA_NAT_BANCO = BCCA_NAT / "banco.json"
+
+
+def _ingerir_bcca_nativo():
+    return ingerir_bc3(BCCA_NAT_BC3, banco="BCCA-nativo/v1", costes_indirectos_pct="0")
+
+
+def test_bcca_nativo_parser_reproduce_nucleo_presupuestable():
+    got = _ingerir_bcca_nativo()
+    banco = json.loads(BCCA_NAT_BANCO.read_text(encoding="utf-8"))
+    assert [_subset_presup(p) for p in got["partidas"]] == [_subset_presup(p) for p in banco["partidas"]], \
+        "el parser no reproduce el nucleo presupuestable del banco BCCA-nativo (drift del adaptador o del .bc3)"
+
+
+def test_bcca_nativo_determinismo_2x():
+    assert serializar_banco(_ingerir_bcca_nativo()) == serializar_banco(_ingerir_bcca_nativo())
+
+
+def test_bcca_nativo_sin_avisos_de_ingesta():
+    got = _ingerir_bcca_nativo()
+    assert "_avisos_ingesta" not in got, got.get("_avisos_ingesta")
+
+
+def test_bcca_nativo_codigos_son_nativos():
+    got = _ingerir_bcca_nativo()
+    assert [p["codigo"] for p in got["partidas"]] == \
+        ["06LPC80000", "10CEE00001", "13IPP90016", "05HRL80010", "05HRP80010", "03HRZ80000"]
+
+
+def test_bcca_nativo_md5_casa_con_el_manifiesto():
+    import hashlib
+    manif = json.loads((BCCA_NAT / "pack.json").read_text(encoding="utf-8"))
+    assert hashlib.md5(BCCA_NAT_BANCO.read_bytes()).hexdigest() == manif["contenido"]["md5_banco"]
+    assert hashlib.md5(BCCA_NAT_BC3.read_bytes()).hexdigest() == manif["contenido"]["md5_bc3"]

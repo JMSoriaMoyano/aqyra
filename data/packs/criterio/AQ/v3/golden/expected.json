@@ -1,0 +1,5 @@
+{
+  "pack": "criterio/AQ/v3",
+  "content_sha256": "ce852c22008f3b6dfc34f02e75051aec02d111c73dfa10a3d70edbb23351bef1",
+  "_nota": "Golden de pack: identidad del contenido por hash (md5 de criterio.json + partidas nativas). Cambiar sin bump + nuevo hash rompe el test. v3 mapea clases IFC a codigos BCCA nativos + capitulos nativos (E5.1b)."
+}

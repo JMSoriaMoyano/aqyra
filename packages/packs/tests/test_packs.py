@@ -371,3 +371,79 @@ def test_banco_bcca_no_toca_packs_anclados():
     md5 = lambda p: hashlib.md5((PACKS_ROOT / p).read_bytes()).hexdigest()
     assert md5("banco/AQ-DEMO/v1/banco.json") == "d63c5f4a628c89f595e65a3d57300009"
     assert md5("banco/AQ-BC3-DEMO/v1/banco.json") == "3d6c79494560ba9547e14a5a72b6d264"
+
+
+# --- pack banco/BCCA-nativo/v1 (Ola 4b·E5.1b: coste REAL NATIVO, codigos BCCA sin recodificar) --------
+# 6 unidades de obra BCCA con su CODIGO NATIVO (D53) + provenance. NUCLEO por aqyra_bc3.ingerir_bc3 del
+# .bc3 curado (golden del PARSER en engines/bc3). NUEVA clave [packs.banco_bcca_nativo]: NO mueve
+# [packs.banco]/[packs.banco_bc3]/[packs.banco_bcca]=BCCA/v1 (semilla). Golden por content_sha256 + md5s. D53-D55.
+
+def test_manifiesto_banco_bcca_nativo_valido():
+    m = packs.load_pack(PACKS_ROOT, "banco", "BCCA-nativo", "v1")
+    packs.validate_manifest(m, SCHEMA)
+    assert m["familia"] == "banco" and m["version"] == "v1" and m["id"] == "BCCA-nativo"
+
+
+def test_version_banco_bcca_nativo_anclada_en_lock():
+    m = packs.load_pack(PACKS_ROOT, "banco", "BCCA-nativo", "v1")
+    anclada = packs.version_anclada(LOCK, "banco_bcca_nativo")
+    assert anclada == m["version"], f"lock={anclada} != pack={m['version']}"
+
+
+def test_identidad_contenido_banco_bcca_nativo_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "banco", "BCCA-nativo", "v1")
+    got = packs.content_hash(m)
+    exp = json.loads((PACKS_ROOT / "banco/BCCA-nativo/v1/golden/expected.json").read_text(encoding="utf-8"))["content_sha256"]
+    assert got == exp, "el contenido del pack BCCA-nativo cambio sin actualizar la golden. Bump + nuevo hash."
+    banco_file = PACKS_ROOT / "banco/BCCA-nativo/v1" / m["contenido"]["fichero"]
+    assert hashlib.md5(banco_file.read_bytes()).hexdigest() == m["contenido"]["md5_banco"]
+    bc3_file = PACKS_ROOT / "banco/BCCA-nativo/v1" / m["contenido"]["fuente_bc3"]
+    assert hashlib.md5(bc3_file.read_bytes()).hexdigest() == m["contenido"]["md5_bc3"]
+
+
+def test_banco_bcca_nativo_codigos_son_bcca_nativos():
+    banco = json.loads((PACKS_ROOT / "banco/BCCA-nativo/v1/banco.json").read_text(encoding="utf-8"))
+    esperados = ["06LPC80000", "10CEE00001", "13IPP90016", "05HRL80010", "05HRP80010", "03HRZ80000"]
+    assert [p["codigo"] for p in banco["partidas"]] == esperados
+    for p in banco["partidas"]:
+        pr = p.get("provenance", {})
+        assert pr.get("licencia") == "CC-BY 3.0", f"{p['codigo']}: licencia"
+        assert pr.get("codigo_bcca") == p["codigo"], f"{p['codigo']}: el codigo de partida DEBE ser el codigo BCCA nativo"
+        assert "Junta de Andalucia" in pr.get("atribucion", ""), f"{p['codigo']}: atribucion"
+
+
+def test_banco_bcca_nativo_no_toca_semilla_ni_anclados():
+    assert packs.version_anclada(LOCK, "banco_bcca") == "v1"   # semilla BCCA (la ancla GOL-PRE-04)
+    assert packs.version_anclada(LOCK, "banco") == "v1"        # AQ-DEMO
+    assert packs.version_anclada(LOCK, "criterio") == "v1"     # pointer del criterio intacto
+
+
+# --- pack criterio/AQ/v3 (E5.1b: corte NATIVO clase IFC -> codigo BCCA) --------------------------------
+# v3 mapea 4 clases a codigos BCCA nativos + capitulos nativos; misma medicion que v1. [packs.criterio]
+# sigue en v1 (GOL-PRE-01..04 intactas); v3 se ancla por su content_sha256. Consumidor: GOL-PRE-05.
+
+def test_manifiesto_criterio_v3_valido():
+    m = packs.load_pack(PACKS_ROOT, "criterio", "AQ", "v3")
+    packs.validate_manifest(m, SCHEMA)
+    assert m["familia"] == "criterio" and m["version"] == "v3"
+
+
+def test_identidad_contenido_criterio_v3_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "criterio", "AQ", "v3")
+    got = packs.content_hash(m)
+    exp = json.loads((PACKS_ROOT / "criterio/AQ/v3/golden/expected.json").read_text(encoding="utf-8"))["content_sha256"]
+    assert got == exp, "el contenido del criterio v3 cambio sin actualizar la golden."
+    crit_file = PACKS_ROOT / "criterio/AQ/v3" / m["contenido"]["fichero"]
+    assert hashlib.md5(crit_file.read_bytes()).hexdigest() == m["contenido"]["md5_criterio"]
+
+
+def test_criterio_v3_es_nativo_sin_puerta():
+    crit = json.loads((PACKS_ROOT / "criterio/AQ/v3/criterio.json").read_text(encoding="utf-8"))
+    clases = {r["clase"] for r in crit["reglas_por_clase"]}
+    assert clases == {"IfcWall", "IfcSlab", "IfcColumn", "IfcFooting"}, "corte nativo de 4 clases (puerta=forward, D54)"
+    codigos = {p["codigo"] for r in crit["reglas_por_clase"] for p in r["partidas"]}
+    assert codigos == {"06LPC80000", "10CEE00001", "13IPP90016", "05HRL80010", "05HRP80010", "03HRZ80000"}
+    assert "IfcDoor" not in clases
+    assert crit.get("capitulos"), "v3 declara `capitulos` nativos (pack-overridable; el catalogo DEFAULT usa alias)"

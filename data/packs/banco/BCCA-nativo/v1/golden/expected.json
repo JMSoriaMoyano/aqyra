@@ -1,0 +1,5 @@
+{
+  "pack": "banco/BCCA-nativo/v1",
+  "content_sha256": "0dd57c3a6988754e82acd8ccce4ef80f11b6386b239294954f766c80503f0fd0",
+  "_nota": "Golden de pack: identidad del contenido por hash (md5 de banco.json + md5 del .bc3 curado + partidas nativas). El NUCLEO presupuestable de banco.json se REPRODUCE de fuente/BCCA-nativo.bc3 con aqyra_bc3.ingerir_bc3 (determinismo; golden del parser en engines/bc3). provenance/descripcion son aditivos (D52-B). Cambiar sin bump + nuevo hash rompe el test."
+}

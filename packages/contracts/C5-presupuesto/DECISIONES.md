@@ -740,3 +740,44 @@ descomposicion, sin CI a nivel de unidad). El adaptador engines/bc3 NO se toca. 
 (tocaria el adaptador anclado) y provenance solo en pack.json (dejaria la descripcion "sintetico" falsa dentro de
 banco.json, contra el diseno). La IA propuso; JM firmo (2026-07-11). Ref cruzada: Aqyra-Negocio/RECONCILIACION_
 licencias-coste.md.
+
+## D53 - Alcance e identidad del banco nativo: subconjunto NATIVO curado + banco/BCCA-nativo/v1 (Opcion A ratificada)
+
+E5.1b materializa el coste REAL con codigos BCCA NATIVOS. Hallazgo del Paso 0: ingerir el .bc3 completo de la BCCA
+(BCCA2023_V02, ~6.600 precios) con aqyra_bc3.ingerir_bc3 da 8.426 partidas pero el 34,5% NO cuadra (precio recompuesto
+!= declarado) + 845 sin componentes, porque el fichero completo usa registros FIEBDC (AUX#, parametricos, coeficientes)
+que el subset v0 del parser (~V/~C/~D/~T, un nivel) no resuelve. Un banco completo LIMPIO exigiria EXTENDER engines/bc3
+(INTOCABLE por guardarrail). Por tanto v0 = SUBCONJUNTO NATIVO CURADO (patron semilla): un .bc3 curado (aplanado, sin
+AUX, extraido verbatim del original) de las 6 unidades de obra BCCA nativas, cada precio verificado cuadra +-0,01;
+el codigo de partida ES el codigo BCCA (06LPC80000...). id/version: banco/BCCA-nativo/v1 con su propia fila
+[packs.banco_bcca_nativo] (NUEVA). La semilla banco/BCCA/v1 (alias del criterio) queda INTACTA bajo [packs.banco_bcca]
+(la ancla GOL-PRE-04 por su banco_ref explicito). El .bc3 curado se ancla en fuente/ (procedencia auditable). La base
+BCCA completa (~6.600 con codigos nativos) = FORWARD (exige extender engines/bc3 al subset FIEBDC de auxiliares/
+parametricos). Rechazadas: B (banco completo tal cual, sucio) y C (extender el engine ahora, rompe guardarrail). La IA
+propuso; JM firmo (2026-07-12).
+
+## D54 - Estrategia del criterio nativo: corte de 4 clases, puerta = forward (Opcion A ratificada)
+
+criterio/AQ/v3 (NUEVO) mapea IfcWall/IfcSlab/IfcColumn/IfcFooting a los codigos BCCA nativos (IfcWall->06LPC80000+
+10CEE00001+13IPP90016; IfcSlab->05HRL80010; IfcColumn->05HRP80010; IfcFooting->03HRZ80000) con la MISMA medicion que
+v1 (unidad, magnitud, descuento de huecos por umbral, factor de caras). Declara su propio bloque `capitulos` nativo
+(el motor es pack-overridable: criterio.get("capitulos"); el catalogo DEFAULT mapea los codigos alias). SYS010 (S&S por
+ratio, origen=regla) se conserva. La PUERTA (IfcDoor->11MPP00151) queda FUERA de v0: su unidad nativa BCCA es m2 de
+HUECO (125,37 EUR/m2) y el modelo neutro anclado no expone el area del hueco (2,10) - mide conteo + area de HOJA
+(1,845); una puerta nativa exige la medicion del hueco = forward explicito. v1/v2 INTACTOS; [packs.criterio] sigue en
+v1 (GOL-PRE-01/02/03/04 intactas); v3 se ancla por su content_sha256. Rechazadas: B (puerta nativa m2 con area de hoja,
+semanticamente la hoja no el hueco) y C (puerta con convencion ud x2,10, no nativa). La IA propuso; JM firmo (2026-07-12).
+
+## D55 - Golden GOL-PRE-05 + identidad de anclaje (Opcion A ratificada)
+
+GOL-PRE-05 (NUEVO) valora la MISMA medicion anclada de GOL-PRE-01 con criterio/AQ/v3 + banco/BCCA-nativo/v1 por
+run_case_c5 (modo coste), reusando las fixtures de GOL-PRE-01 (mismos entradas_md5). 6 partidas nativas (concreto/
+albanileria) + S&S; la puerta AUSENTE (D54). Oraculo calculado a mano y verificado x2 (coincide con el recompute del
+engine): importes = cantidad x precio del banco nativo (HALF_UP 2 dec); PEM medible 9.797,46; S&S 2% = 195,95;
+PEM 9.993,41 -> (+13% GG 1.299,14 +6% BI 599,60) base 11.892,15 -> (+21% IVA 2.497,35) PEC 14.389,50 EUR. Anclaje sin
+romper GOL-PRE-04: el banco nativo va en clave de lock NUEVA [packs.banco_bcca_nativo] (un bump de [packs.banco_bcca]->
+v2 romperia GOL-PRE-04, que casa por id+version exactos); el criterio v3, que NO es el pointer, se ancla por su
+content_sha256 (patron AQ/v2 de la ruta de carbono). Unico fichero de codigo tocado: run_golden.py (2 retoques
+aditivos: banco_bcca_nativo en la tupla de _banco_anclado_en_lock; criterio no-pointer por content_sha256). El recompute
+pasa por medir() (ifcopenshell) -> conda mcp-bim de JM + gate CI. GOL-PRE-01/02/03/04, GOL-CAR-01/02, GOL-DOC-01,
+GOL-PLI-01 INTACTAS. La IA propuso; JM firmo (2026-07-12).
