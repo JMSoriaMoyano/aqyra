@@ -1,0 +1,429 @@
+{
+  "proyecto": "GOL-PRE-04 - Presupuesto con banco de coste REAL BCCA sobre la medicion del Maestro (geometria C4-FED-06 + Qto)",
+  "modelo": {
+    "clase": "modelo-neutro-medicion",
+    "_nota": "Modelo neutro de medición: cantidades por objeto EXTRAÍDAS de los Qto (la medición nace del modelo, no se teclea). La geometría procede del Maestro C4-FED-06 (derivado dcb1e144...); las fixtures ARQ.ifc/EST.ifc de este golden son copias enriquecidas con Qto (md5 propios), sin tocar los originales anclados. En producción el parser (módulo 1 del engine) produce este modelo del IFC(+Qto); aquí se declara congelado.",
+    "fuente_maestro": {
+      "ifc_derivado_md5": "dcb1e14460f3556107ce35d6dade16c3",
+      "modelos": [
+        {
+          "id": "ARQ",
+          "disciplina": "ARQ",
+          "fichero": "entrada/ARQ.ifc",
+          "md5": "0b998513ab079b9ef0870e9a6c04ca84",
+          "qto_declarados": true
+        },
+        {
+          "id": "EST",
+          "disciplina": "EST",
+          "fichero": "entrada/EST.ifc",
+          "md5": "0d7e7f20fc42aa42214ad58de084322e",
+          "qto_declarados": true
+        }
+      ]
+    },
+    "objetos": [
+      {
+        "guid": "0EAm14JNX7Hu9QtYUgOaK4",
+        "clase": "IfcWall",
+        "nombre": "M-Fachada-Sur",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_25_10",
+            "titulo": "Walls"
+          },
+          "bsdd": {
+            "codigo": "IfcWall"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetSideArea",
+            "tipo": "m2",
+            "valor": 15.9,
+            "fuente_qto": "Qto_WallBaseQuantities.NetSideArea"
+          },
+          {
+            "magnitud": "GrossSideArea",
+            "tipo": "m2",
+            "valor": 18.0,
+            "fuente_qto": "Qto_WallBaseQuantities.GrossSideArea"
+          },
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 3.975,
+            "fuente_qto": "Qto_WallBaseQuantities.NetVolume"
+          },
+          {
+            "magnitud": "Length",
+            "tipo": "ml",
+            "valor": 6.0,
+            "fuente_qto": "Qto_WallBaseQuantities.Length"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Planta Baja",
+          "disciplina": "ARQ"
+        }
+      },
+      {
+        "guid": "2VyfKvXd12bOJLg7j2fUpO",
+        "clase": "IfcWall",
+        "nombre": "M-Interior-01",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_25_10",
+            "titulo": "Walls"
+          },
+          "bsdd": {
+            "codigo": "IfcWall"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetSideArea",
+            "tipo": "m2",
+            "valor": 18.0,
+            "fuente_qto": "Qto_WallBaseQuantities.NetSideArea"
+          },
+          {
+            "magnitud": "GrossSideArea",
+            "tipo": "m2",
+            "valor": 18.0,
+            "fuente_qto": "Qto_WallBaseQuantities.GrossSideArea"
+          },
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 2.7,
+            "fuente_qto": "Qto_WallBaseQuantities.NetVolume"
+          },
+          {
+            "magnitud": "Length",
+            "tipo": "ml",
+            "valor": 6.0,
+            "fuente_qto": "Qto_WallBaseQuantities.Length"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Planta Baja",
+          "disciplina": "ARQ"
+        }
+      },
+      {
+        "guid": "1Q0B8PGvD5jewwsbxyzt8T",
+        "clase": "IfcSlab",
+        "nombre": "Solado-PB",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_30_20",
+            "titulo": "Floors"
+          },
+          "bsdd": {
+            "codigo": "IfcSlab"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 5.4,
+            "fuente_qto": "Qto_SlabBaseQuantities.NetVolume"
+          },
+          {
+            "magnitud": "NetArea",
+            "tipo": "m2",
+            "valor": 36.0,
+            "fuente_qto": "Qto_SlabBaseQuantities.NetArea"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Planta Baja",
+          "disciplina": "ARQ"
+        }
+      },
+      {
+        "guid": "2cLOPCBwP0_uO$i8nSy_cu",
+        "clase": "IfcDoor",
+        "nombre": "M-Fachada-Sur_puerta",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_25_30",
+            "titulo": "Doors and windows"
+          },
+          "bsdd": {
+            "codigo": "IfcDoor"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "conteo",
+            "tipo": "ud",
+            "valor": 1,
+            "fuente_qto": "Qto_DoorBaseQuantities"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Planta Baja",
+          "disciplina": "ARQ"
+        }
+      },
+      {
+        "guid": "1cMUfNgQrEYxu1igEj3$ll",
+        "clase": "IfcTransportElement",
+        "nombre": "Ascensor-01",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_80_50",
+            "titulo": "Lifts"
+          },
+          "bsdd": {
+            "codigo": "IfcTransportElement"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "conteo",
+            "tipo": "ud",
+            "valor": 1,
+            "fuente_qto": "conteo"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Planta Baja",
+          "disciplina": "ARQ"
+        },
+        "_nota": "Fuera del corte mínimo del criterio v1 (sin partida en GOL-PRE-01); presente en el modelo neutro para no falsear la vista de medición."
+      },
+      {
+        "guid": "25L7QaZYvArhgaHyvmI_g5",
+        "clase": "IfcColumn",
+        "nombre": "P1",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_20_10_30",
+            "titulo": "Framed structures"
+          },
+          "bsdd": {
+            "codigo": "IfcColumn"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 0.48,
+            "fuente_qto": "Qto_ColumnBaseQuantities.NetVolume"
+          },
+          {
+            "magnitud": "Length",
+            "tipo": "ml",
+            "valor": 3.0,
+            "fuente_qto": "Qto_ColumnBaseQuantities.Length"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Nivel 00",
+          "disciplina": "EST"
+        }
+      },
+      {
+        "guid": "3HilqY$ZvBIA0bWeM4O$iP",
+        "clase": "IfcColumn",
+        "nombre": "P2",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_20_10_30",
+            "titulo": "Framed structures"
+          },
+          "bsdd": {
+            "codigo": "IfcColumn"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 0.48,
+            "fuente_qto": "Qto_ColumnBaseQuantities.NetVolume"
+          },
+          {
+            "magnitud": "Length",
+            "tipo": "ml",
+            "valor": 3.0,
+            "fuente_qto": "Qto_ColumnBaseQuantities.Length"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Nivel 00",
+          "disciplina": "EST"
+        }
+      },
+      {
+        "guid": "2FLDv$sybEvf81jmxyrRbq",
+        "clase": "IfcColumn",
+        "nombre": "P3",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_20_10_30",
+            "titulo": "Framed structures"
+          },
+          "bsdd": {
+            "codigo": "IfcColumn"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 0.48,
+            "fuente_qto": "Qto_ColumnBaseQuantities.NetVolume"
+          },
+          {
+            "magnitud": "Length",
+            "tipo": "ml",
+            "valor": 3.0,
+            "fuente_qto": "Qto_ColumnBaseQuantities.Length"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Nivel 00",
+          "disciplina": "EST"
+        }
+      },
+      {
+        "guid": "2FiwRIQJf8xBQigE4ZzGkN",
+        "clase": "IfcColumn",
+        "nombre": "P4",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_20_10_30",
+            "titulo": "Framed structures"
+          },
+          "bsdd": {
+            "codigo": "IfcColumn"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 0.48,
+            "fuente_qto": "Qto_ColumnBaseQuantities.NetVolume"
+          },
+          {
+            "magnitud": "Length",
+            "tipo": "ml",
+            "valor": 3.0,
+            "fuente_qto": "Qto_ColumnBaseQuantities.Length"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Nivel 00",
+          "disciplina": "EST"
+        }
+      },
+      {
+        "guid": "24Jmt2jgjAZwRs2QxmguJ2",
+        "clase": "IfcFooting",
+        "nombre": "Z1",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_20_05_30",
+            "titulo": "Foundations"
+          },
+          "bsdd": {
+            "codigo": "IfcFooting"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 0.064,
+            "fuente_qto": "Qto_FootingBaseQuantities.NetVolume"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Nivel 00",
+          "disciplina": "EST"
+        }
+      },
+      {
+        "guid": "3MEEe_PHvAROisLgr9UDFJ",
+        "clase": "IfcFooting",
+        "nombre": "Z2",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_20_05_30",
+            "titulo": "Foundations"
+          },
+          "bsdd": {
+            "codigo": "IfcFooting"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 0.064,
+            "fuente_qto": "Qto_FootingBaseQuantities.NetVolume"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Nivel 00",
+          "disciplina": "EST"
+        }
+      },
+      {
+        "guid": "28XHZj7n5DN9W6GSGXXm8A",
+        "clase": "IfcSlab",
+        "nombre": "Forjado-N01",
+        "clasificacion": {
+          "uniclass": {
+            "codigo": "EF_30_20",
+            "titulo": "Floors"
+          },
+          "bsdd": {
+            "codigo": "IfcSlab"
+          }
+        },
+        "cantidades": [
+          {
+            "magnitud": "NetVolume",
+            "tipo": "m3",
+            "valor": 10.8,
+            "fuente_qto": "Qto_SlabBaseQuantities.NetVolume"
+          },
+          {
+            "magnitud": "NetArea",
+            "tipo": "m2",
+            "valor": 36.0,
+            "fuente_qto": "Qto_SlabBaseQuantities.NetArea"
+          }
+        ],
+        "ubicacion": {
+          "planta": "Nivel 01",
+          "disciplina": "EST"
+        }
+      }
+    ]
+  },
+  "criterio_ref": {
+    "familia": "criterio",
+    "id": "AQ",
+    "version": "v1"
+  },
+  "banco_ref": {
+    "familia": "banco",
+    "id": "BCCA",
+    "version": "v1"
+  },
+  "parametros": {
+    "moneda": "EUR",
+    "iva_pct": 0.21,
+    "gg_pct": 0.13,
+    "bi_pct": 0.06
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "cantidad_rel": 0.005,
+  "importe_abs": 0.01,
+  "_nota": "Modo ANCLADO C5 (contract-first, sin engine): la aritmetica del expected se comprueba con redondeo a 2 decimales (importe_abs 0.01). cantidad_rel (±0.5%) es la tolerancia RELATIVA de las cantidades para cuando el engine de presupuesto anteponga el recompute (parser Qto + criterio): el mapeo clasificacion->partida y los importes derivados del banco se comparan EXACTOS; solo las cantidades medidas admiten ±0.5% (D3). El valor del golden es consistencia y no-regresion, no verdad fisica (FUNDACION_C6 §5)."
+}

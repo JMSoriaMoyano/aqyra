@@ -575,6 +575,18 @@ def _lock_packs(repo: Path, clave: str) -> dict:
     return lock.get("packs", {}).get(clave, {})
 
 
+def _banco_anclado_en_lock(repo: Path, ref: dict) -> tuple[bool, str]:
+    """El banco de coste se ancla por su PROPIA clave [packs.banco*] (banco=AQ-DEMO,
+    banco_bc3=AQ-BC3-DEMO, banco_bcca=BCCA). Busca la clave que ancla id+version del `banco_ref`
+    del caso; el pointer [packs.banco] (=AQ-DEMO/v1) NO se re-mueve al anadir un banco real
+    (D50/E5.1). Generaliza la comprobacion para servir AQ-DEMO y BCCA sin tocar las golden ancladas."""
+    for clave in ("banco", "banco_bc3", "banco_bcca"):
+        sec = _lock_packs(repo, clave)
+        if sec.get("id") == ref.get("id") and sec.get("version") == ref.get("version"):
+            return True, f"lock[{clave}]={sec.get('id')}/{sec.get('version')}"
+    return False, f"sin ancla [packs.banco*] para {ref.get('id')}/{ref.get('version')}"
+
+
 # Casa del engine C3 (Fase III·h3, D6): engines/cumplimiento — importado por path (patrón
 # engines/ifc y _recompute_c4). El runner regenera el Maestro y el engine da el veredicto (D7).
 DEFAULT_ENGINE_C3 = DEFAULT_REPO / "engines" / "cumplimiento" / "src"
@@ -1810,15 +1822,12 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     crit_ref = entrada.get("criterio_ref", {})
     banco_ref = entrada.get("banco_ref", {})
     lock_crit = _lock_packs(repo, "criterio")
-    lock_banco = _lock_packs(repo, "banco")
     checks.append(("criterio anclado en versions.lock",
                    lock_crit.get("id") == crit_ref.get("id")
                    and lock_crit.get("version") == crit_ref.get("version"),
                    f"lock={lock_crit.get('id')}/{lock_crit.get('version')}"))
-    checks.append(("banco anclado en versions.lock",
-                   lock_banco.get("id") == banco_ref.get("id")
-                   and lock_banco.get("version") == banco_ref.get("version"),
-                   f"lock={lock_banco.get('id')}/{lock_banco.get('version')}"))
+    banco_ok, banco_detalle = _banco_anclado_en_lock(repo, banco_ref)
+    checks.append(("banco anclado en versions.lock", banco_ok, banco_detalle))
 
     # cargar contenido de los packs (banco.json + criterio.json)
     banco = criterio = None

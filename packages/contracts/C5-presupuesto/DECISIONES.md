@@ -677,3 +677,66 @@ recompute pasa por `medir()` (ifcopenshell) -> corre en el conda `mcp-bim` de JM
 sandbox. `GOL-CAR-01` (sintetico v1) y `GOL-PRE-01/02/03` y `GOL-DOC-01` INTACTAS. **Rechazada por JM:** B (solo
 golden de pack, sin ejercitar el banco end-to-end). El MOTOR no se toca (`engines/presupuesto` 0.5.0 ya emite
 etapas); el esquema de salida C5 no se toca.
+
+
+## D49 - Fuente abierta ratificada: BCCA (Junta de Andalucia) CC-BY 3.0 (primaria); Extremadura fuera de v0
+
+El banco de coste REAL se deriva de la Base de Costes de la Construccion de Andalucia (BCCA), Consejeria de
+Fomento, Articulacion del Territorio y Vivienda (Junta de Andalucia), edicion BCCA2023_V02 (FIEBDC-3/2020,
+01-11-2023, ~6.600 precios), bajo Creative Commons Reconocimiento 3.0 (CC-BY 3.0) via el aviso legal del portal
+(la ficha de la BCCA no fija restriccion propia -> hereda el regimen general: uso comercial + obra derivada +
+redistribucion en producto, con atribucion). Atribucion a arrastrar en provenance/fuente: "Informacion obtenida
+del Portal de la Junta de Andalucia" (sin logotipos/escudos) + el codigo BCCA de origen de cada partida + su
+edicion/URI. Extremadura (GOBEX) = licencia por confirmar -> fuera de v0 (contraste/forward). BEDEC/CYPE/PREOC/IVE
+fuera (el cliente aporta). Registro: Aqyra-Negocio/RECONCILIACION_licencias-coste.md. Gobierna N-04/D-026 (via
+limpia). La IA propuso; JM firmo (2026-07-11).
+
+## D50 - id/version del pack real: banco/BCCA/v1 + fila [packs.banco_bcca] (Opcion A ratificada)
+
+El pack real es banco/BCCA/v1 (NUEVO), con su propia fila [packs.banco_bcca] en versions.lock (espejo de
+[packs.banco_bc3]). [packs.banco]=AQ-DEMO/v1 y [packs.banco_bc3]=AQ-BC3-DEMO/v1 INTOCABLES (los anclan
+GOL-PRE-01/02/03 + golden de pack). La fuente es un tercero (BCCA), no el despacho -> su propio id (BCCA) y su
+propia fila; el pointer de coste real explicito = esta fila. El motor elige el banco por banco_ref del caso, no
+por el pointer del lock -> anadir la fila no rompe ninguna golden anclada. Rechazada: B (AQ-DEMO/v2, mezcla banco
+propio con derivado de tercero bajo el mismo id). La IA propuso; JM firmo (2026-07-11).
+
+## D51 - Alcance: las 7 partidas del criterio con precio REAL BCCA + provenance (Opcion A ratificada)
+
+v0 ancla las 7 partidas del criterio (FAB010, REV010, PIN010, EHL010, EHS010, CSZ010, PPM010), cada una con el
+precio y la descomposicion REALES (MO/material/maquinaria + rendimientos + precios) de la unidad de obra BCCA
+equivalente, materializado el NUCLEO por ingerir_bc3 de un .bc3 semilla (7 unidades recodificadas a los codigos
+del criterio). Equivalencias ancladas: FAB010<-06LPC80000 (citara l/perf. para revestir, 28,94), REV010<-10CEE00001
+(enfoscado sin maestrear, 12,98), PIN010<-13IPP90016 (pintura plastica lisa, 4,60), EHL010<-05HRL80010 (losa HA-25
+i/enc.madera+acero, 418,01), EHS010<-05HRP80010 (pilar HA-25 i/enc.metalico+acero, 433,17), CSZ010<-03HRZ80000
+(zapata HA-25 armada B400S, 164,18), PPM010<-11MPP00151 (puerta paso pintar 1H, valorada por BCCA en m2 de hueco a
+125,37 EUR/m2; PPM010 es ud -> se adopta la superficie de hueco de la puerta del modelo 1,00x2,10=2,10 m2, con los
+rendimientos escalados x2,10 -> 263,29 EUR/ud). El criterio y el adaptador quedan INTACTOS; delta de spec NULO (el
+codigo del criterio es un alias documentado en provenance: derivacion por Aqyra, via limpia). La base BCCA completa
+con codigos nativos exige criterio/AQ/v3 = gancho FORWARD, no v0. Rechazada: B (base completa). La IA propuso; JM
+firmo (2026-07-11).
+
+## D52 - Golden: pack + parser (nucleo presupuestable) + GOL-PRE-04 (Opcion A; encaje provenance Opcion B)
+
+E5.1 ancla (i) el golden de pack de banco/BCCA/v1 (content_sha256 9c790ffe15f4f3751ee3a5b6dfdcdbfb7c326805ea0902f21a3c3fa6357045d1 + md5_banco 82e2a445e5daeb85878f401ee607d396 + md5_bc3 f9dededaaac14a3f75005dc1bffd118f, en
+test_packs.py), (ii) el golden del PARSER (engines/bc3/tests/test_bc3.py, texto puro, sandbox) y (iii) GOL-PRE-04:
+valora la MISMA medicion anclada de GOL-PRE-01 con banco/BCCA/v1 + criterio/AQ/v1 por run_case_c5 (modo coste),
+con el runner GENERALIZADO para anclar el banco_ref del caso contra su clave de lock correcta (busca en
+[packs.banco]/[packs.banco_bc3]/[packs.banco_bcca] la que casa id+version -> sirve AQ-DEMO y BCCA; unico fichero de
+codigo tocado; GOL-PRE-01/02/03 siguen verdes), reusando las fixtures de GOL-PRE-01 (mismos entradas_md5). Oraculo
+calculado a mano y verificado x2: importes = cantidad x precio del banco BCCA (HALF_UP 2 dec); PEM 10261.97 ->
+(+13% GG 1334.06 +6% BI 615.72) base 12211.75 -> (+21% IVA 2564.47) PEC 14776.22 EUR (S&S = 2% del PEM medible
+10060.75 = 201.22). El recompute pasa por medir() (ifcopenshell) -> corre en el conda mcp-bim de JM y en el gate CI.
+GOL-PRE-01/02/03, GOL-CAR-01/02, GOL-DOC-01, GOL-PLI-01 INTACTAS.
+
+Encaje provenance <-> golden del parser (Opcion B ratificada 2026-07-11): el tasks/design pedian provenance por
+partida EN banco.json + descripcion honesta, pero el adaptador ingerir_bc3 (0.2.0, INTOCABLE) NO emite provenance y
+codifica una descripcion fija ("de muestra, sintetico... demostracion"), falsa para un banco BCCA real. Resolucion:
+banco.json se REDACTA (forma AQ-DEMO + provenance por partida + descripcion honesta); el golden del parser verifica
+que ingerir_bc3(fuente/BCCA.bc3, costes_indirectos_pct=0) reproduce el SUBCONJUNTO PRESUPUESTABLE de cada partida
+(codigo/unidad/componentes/costes_indirectos/precio) -la sustancia determinista del numero, que sale del .bc3, no se
+inventa- mientras provenance/descripcion son metadatos aditivos (el motor solo lee codigo/unidad/componentes/precio
+-> son documentacion inerte para el engine). costes_indirectos_pct=0 (el precio BCCA declarado = suma de la
+descomposicion, sin CI a nivel de unidad). El adaptador engines/bc3 NO se toca. Rechazadas: extender ingerir_bc3
+(tocaria el adaptador anclado) y provenance solo en pack.json (dejaria la descripcion "sintetico" falsa dentro de
+banco.json, contra el diseno). La IA propuso; JM firmo (2026-07-11). Ref cruzada: Aqyra-Negocio/RECONCILIACION_
+licencias-coste.md.

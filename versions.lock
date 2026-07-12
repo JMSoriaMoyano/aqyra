@@ -250,3 +250,19 @@ familia         = "pliego-textos"
 version         = "v1"
 golden          = "identidad de contenido (hash: sha256 del contenido + md5 de textos.json)"
 estado          = "adoptado por documentos/pliego (E4.1): textos de prescripcion PROPIOS (Aqyra, demo), 7 partidas medibles + S&S, con condiciones de material/ejecucion/control/medicion y abono + clausulas generales. El texto normativo REAL (PG-3/PG-4, CTE DB) entra por la via limpia, licencia verificada por JM (N-04, E5.3)"
+
+# pack banco BCCA (Ola 4·E5.1): banco de coste REAL derivado por INGESTA de un .bc3 FIEBDC-3 SEMILLA
+# (7 unidades recodificadas a los codigos del criterio) desde la Base de Costes de la Construccion de
+# Andalucia (BCCA, Junta de Andalucia, edicion BCCA2023_V02 / FIEBDC-3/2020 / 01-11-2023), licencia
+# CC-BY 3.0 VERIFICADA (D49/N-04, Aqyra-Negocio/RECONCILIACION_licencias-coste.md). 7 partidas del
+# criterio con precio y descomposicion REALES de la unidad BCCA equivalente + provenance por partida
+# (D51). NUCLEO presupuestable materializado por aqyra_bc3.ingerir_bc3; provenance/descripcion aditivos
+# (D52-B). NO mueve [packs.banco]=AQ-DEMO/v1 ni [packs.banco_bc3]=AQ-BC3-DEMO/v1. Golden de pack por
+# content_sha256 + md5(banco.json) + md5(.bc3 semilla). Consumidor: GOL-PRE-04 (D52). NO deriva de
+# BEDEC/CYPE/PREOC/IVE (licenciados). Base BCCA completa con criterio nativo = forward (D51).
+[packs.banco_bcca]
+id              = "BCCA"
+familia         = "banco"
+version         = "v1"
+golden          = "identidad de contenido (hash: sha256 del contenido + md5 de banco.json + md5 del .bc3 semilla)"
+estado          = "adoptado por C5 (coste real, E5.1): banco de coste REAL derivado de la BCCA (Junta de Andalucia, CC-BY 3.0), 7 partidas del criterio (FAB010/REV010/PIN010/EHL010/EHS010/CSZ010/PPM010) con precio y descomposicion reales de la unidad BCCA equivalente + provenance (codigo BCCA + edicion + licencia + atribucion). costes_indirectos_pct=0 (el precio BCCA declarado = suma de la descomposicion). El pointer de coste real explicito; [packs.banco]/[packs.banco_bc3] intactos. Base BCCA completa con criterio nativo = forward (D51)"

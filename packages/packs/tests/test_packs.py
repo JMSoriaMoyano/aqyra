@@ -325,3 +325,49 @@ def test_identidad_contenido_pliego_textos_golden():
     textos_file = PACKS_ROOT / "pliego-textos/AQ-DEMO/v1" / m["contenido"]["fichero"]
     md5 = hashlib.md5(textos_file.read_bytes()).hexdigest()
     assert md5 == m["contenido"]["md5_textos"], "textos.json cambio sin actualizar el manifiesto"
+
+
+# --- pack banco/BCCA/v1 (Ola 4·E5.1: banco de coste REAL derivado de la BCCA, CC-BY 3.0) ---------------
+# 7 partidas del criterio con precio + descomposicion REALES de la unidad de obra BCCA equivalente
+# (Junta de Andalucia, edicion BCCA2023_V02 / FIEBDC-3/2020) + provenance por partida. El NUCLEO
+# presupuestable se materializa por aqyra_bc3.ingerir_bc3 del .bc3 semilla (golden del PARSER en
+# engines/bc3/tests/test_bc3.py, Opcion B/D52). NO mueve [packs.banco]=AQ-DEMO/v1 ni [packs.banco_bc3].
+# Golden de pack por content_sha256 + md5(banco.json) + md5(.bc3 semilla). D49-D52.
+
+def test_manifiesto_banco_bcca_valido():
+    m = packs.load_pack(PACKS_ROOT, "banco", "BCCA", "v1")
+    packs.validate_manifest(m, SCHEMA)  # lanza si no conforma
+    assert m["familia"] == "banco" and m["version"] == "v1" and m["id"] == "BCCA"
+
+
+def test_version_banco_bcca_anclada_en_lock():
+    m = packs.load_pack(PACKS_ROOT, "banco", "BCCA", "v1")
+    anclada = packs.version_anclada(LOCK, "banco_bcca")
+    assert anclada == m["version"], f"lock={anclada} != pack={m['version']}"
+
+
+def test_identidad_contenido_banco_bcca_golden():
+    import hashlib
+    m = packs.load_pack(PACKS_ROOT, "banco", "BCCA", "v1")
+    got = packs.content_hash(m)
+    exp = json.loads(
+        (PACKS_ROOT / "banco/BCCA/v1/golden/expected.json").read_text(encoding="utf-8")
+    )["content_sha256"]
+    assert got == exp, ("el contenido del pack BCCA cambio sin actualizar la golden. "
+                        "Bump de version + nuevo hash, nunca editar en silencio.")
+    banco_file = PACKS_ROOT / "banco/BCCA/v1" / m["contenido"]["fichero"]
+    assert hashlib.md5(banco_file.read_bytes()).hexdigest() == m["contenido"]["md5_banco"], \
+        "banco.json (BCCA) cambio sin actualizar el manifiesto"
+    bc3_file = PACKS_ROOT / "banco/BCCA/v1" / m["contenido"]["fuente_bc3"]
+    assert hashlib.md5(bc3_file.read_bytes()).hexdigest() == m["contenido"]["md5_bc3"], \
+        "el .bc3 semilla BCCA cambio sin actualizar el manifiesto"
+
+
+def test_banco_bcca_no_toca_packs_anclados():
+    # E5.1 solo ANADE banco/BCCA; los packs de coste anclados NO se mueven (zona anclada intacta)
+    assert packs.version_anclada(LOCK, "banco") == "v1"          # AQ-DEMO
+    assert packs.version_anclada(LOCK, "banco_bc3") == "v1"      # AQ-BC3-DEMO
+    import hashlib
+    md5 = lambda p: hashlib.md5((PACKS_ROOT / p).read_bytes()).hexdigest()
+    assert md5("banco/AQ-DEMO/v1/banco.json") == "d63c5f4a628c89f595e65a3d57300009"
+    assert md5("banco/AQ-BC3-DEMO/v1/banco.json") == "3d6c79494560ba9547e14a5a72b6d264"

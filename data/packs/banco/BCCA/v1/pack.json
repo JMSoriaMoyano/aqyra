@@ -1,0 +1,35 @@
+{
+  "id": "BCCA",
+  "familia": "banco",
+  "version": "v1",
+  "titulo": "Banco de costes Aqyra BCCA - derivado de la Base de Costes de la Construccion de Andalucia (E5.1)",
+  "fuente": "derivado de BCCA - CC-BY 3.0 - Informacion obtenida del Portal de la Junta de Andalucia (edicion BCCA2023_V02, FIEBDC-3/2020, 01-11-2023). Fuente abierta ratificada (D49/N-04). NO deriva de BEDEC/CYPE/PREOC/IVE (licenciados).",
+  "vigencia": {
+    "desde": "2026-07-11",
+    "estado": "vigente (coste real, semilla 7 partidas)"
+  },
+  "metadatos": {
+    "autoria": "derivado por Aqyra de fuente abierta (BCCA, Junta de Andalucia)",
+    "licencia": "CC-BY 3.0",
+    "atribucion": "Informacion obtenida del Portal de la Junta de Andalucia",
+    "adaptador": "engines/bc3 (aqyra_bc3.ingerir_bc3) - FIEBDC-3, subset ~V/~C/~D/~T (D31); nucleo presupuestable materializado del .bc3 semilla; provenance/descripcion aditivos (D52-B)",
+    "nota": "7 partidas del criterio con precio y descomposicion reales de la unidad BCCA equivalente (provenance por partida). costes_indirectos_pct=0 (el precio BCCA declarado = suma de la descomposicion). Base BCCA completa con criterio nativo = forward (D51)."
+  },
+  "contenido": {
+    "fichero": "banco.json",
+    "fuente_bc3": "fuente/BCCA.bc3",
+    "md5_banco": "82e2a445e5daeb85878f401ee607d396",
+    "md5_bc3": "f9dededaaac14a3f75005dc1bffd118f",
+    "moneda": "EUR",
+    "costes_indirectos_pct": 0.0,
+    "partidas": [
+      "FAB010",
+      "REV010",
+      "PIN010",
+      "EHL010",
+      "EHS010",
+      "CSZ010",
+      "PPM010"
+    ]
+  }
+}
