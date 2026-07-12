@@ -1,6 +1,6 @@
 [project]
 name = "aqyra-presupuesto"
-version = "0.6.0"
+version = "0.7.0"
 description = "Engine C5 — presupuesto trazable desde la medición: presupuestar(modelo, criterio, banco, parametros) → estado de mediciones (trazable al objeto) + cuadros de precios nº1/nº2 + resumen PEM→PEC. La medición NACE del modelo: medir(ifcs) abre el IFC(+Qto) y produce el modelo neutro (módulo 1, D7). El criterio es un PACK anclado — primitivas finitas seleccionadas por la forma del criterio (D8), no un `if`. Contract-first: reproduce la golden GOL-PRE-01 (PEM 7022.53 → PEC 10111.74)."
 requires-python = ">=3.10"
 dependencies = [

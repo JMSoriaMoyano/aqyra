@@ -35,12 +35,70 @@ CAPITULOS_DEFAULT = [
 ]
 _CAP_OTROS = ("C99", "Otros")
 
+# --------------------------------------------------------------------------- #
+# Slice B (D-RB-5/D-RB-6): estructura de capítulos POR CLASIFICACIÓN. El presupuesto puede         #
+# estructurarse por la clasificación que el MODELO ya porta (Uniclass / GuBIMClass) en vez de por  #
+# el catálogo del engine. Tabla código-de-grupo→título ANCLADA (semilla embebida, como             #
+# CAPITULOS_DEFAULT; la golden GOL-PRE-06 la ancla). El grupo Uniclass es el 2.º nivel EF; el grupo #
+# GuBIM es el 1.er segmento del código. FORWARD: mover a un pack `capitulos/<sistema>/vN` y el      #
+# nivel fino / Uniclass Ss cuando entre una tabla real completa (regla de tres).                    #
+# --------------------------------------------------------------------------- #
+_GRUPOS_TITULO = {
+    "uniclass": {
+        "EF_20": "Estructura",
+        "EF_25": "Cerramientos, particiones y carpinteria",
+        "EF_30": "Forjados y cubiertas",
+    },
+    "gubim": {
+        "10": "Cimentaciones",
+        "20": "Estructura",
+        "30": "Cerramientos y particiones",
+        "40": "Revestimientos y acabados",
+        "50": "Carpinteria y cerrajeria",
+    },
+}
+_CAP_SIN = ("SIN", "Sin clasificacion (seguridad y salud / partidas alzadas)")
+_CLAVE_CLASIF = {"uniclass": "clasificacion_uniclass", "gubim": "clasificacion_gubim"}
+
+
+def _grupo_clasif(codigos, estructura: str):
+    """Grupo de clasificación de una partida (2.º nivel EF en Uniclass; 1.er segmento en GuBIM).
+    `codigos`: lista de códigos de la partida (p. ej. ["EF_25_10"] o ["30.30.10"]). None si vacía."""
+    if not codigos:
+        return None
+    c = str(codigos[0])
+    if estructura == "uniclass":
+        parts = c.split("_")
+        return "_".join(parts[:2]) if len(parts) >= 2 else c
+    return c.split(".")[0] if "." in c else c  # gubim: 1.er segmento
+
 
 def _catalogo(criterio: dict) -> list:
     cap = criterio.get("capitulos")
     if cap:  # forward-open: el pack puede declararlo (lista de [codigo, descripcion, [partidas]])
         return [(c[0], c[1], list(c[2])) for c in cap]
     return [(c, d, list(p)) for c, d, p in CAPITULOS_DEFAULT]
+
+
+def _catalogo_por_clasificacion(banco: dict, criterio: dict, estructura: str) -> list:
+    """Slice B (D-RB-5): construye el catálogo AGRUPANDO las partidas por su grupo de clasificación
+    (Uniclass EF / GuBIM), con la tabla código→título anclada. Las partidas sin clasificación y las
+    partidas sin geometría (S&S, ratio) van al capítulo `_CAP_SIN`. El COSTE no cambia: cada partida
+    cae en un único capítulo, luego Σ capítulos == PEM (idéntico al modo `catalogo`)."""
+    clave = _CLAVE_CLASIF[estructura]
+    titulos = _GRUPOS_TITULO.get(estructura, {})
+    grupos: "OrderedDict[str, list]" = OrderedDict()
+    for p in banco.get("partidas", []):
+        g = _grupo_clasif(p.get(clave) or [], estructura) or _CAP_SIN[0]
+        grupos.setdefault(g, []).append(p["codigo"])
+    for r in criterio.get("reglas_sin_geometria", []):  # S&S y partidas alzadas: sin clasificación
+        cod = r.get("codigo")
+        if cod:
+            grupos.setdefault(_CAP_SIN[0], []).append(cod)
+    # orden determinista: grupos clasificados por su código; el capítulo sin clasificación, al final
+    orden = sorted(grupos.keys(), key=lambda g: (g == _CAP_SIN[0], g))
+    return [(g, (_CAP_SIN[1] if g == _CAP_SIN[0] else titulos.get(g, g)), list(grupos[g]))
+            for g in orden]
 
 
 # --------------------------------------------------------------------------- #
@@ -176,7 +234,14 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
     unidad_eje = banco.get("unidad_eje") or banco.get("moneda") or parametros.get("moneda", "EUR")
     banco_ref = banco.get("ref") or banco.get("banco")
 
-    catalogo = _catalogo(criterio)
+    # Slice B (D-RB-5): estructura de capítulos. `catalogo` (default) = WBS del engine/criterio; con
+    # `uniclass`/`gubim` se AGRUPA por el grupo de clasificación que el modelo porta (coste intacto:
+    # cada partida cae en un capítulo, Σ capítulos == PEM). Default -> salida byte-idéntica (GOL-PRE-01..05).
+    estructura = str(parametros.get("estructura_capitulos", "catalogo"))
+    if estructura in _CLAVE_CLASIF:
+        catalogo = _catalogo_por_clasificacion(banco, criterio, estructura)
+    else:
+        catalogo = _catalogo(criterio)
     cap_de_codigo: dict[str, str] = {}
     orden_partida: dict[str, int] = {}
     idx = 0

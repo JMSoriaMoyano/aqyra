@@ -2138,6 +2138,9 @@ def run_case_c5(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     # Capa transversal de export firmable: GOL-EXP-01 (bundle firmable de la proyeccion) — E6.2.
     if expected.get("modo") == "export":
         return _run_c5_export(case_dir, contracts_dir, expected, tol, repo)
+    # Estructura de capitulos por clasificacion (Slice B, D-RB-5..8): GOL-PRE-06.
+    if expected.get("modo") == "capitulos":
+        return _run_c5_capitulos(case_dir, contracts_dir, expected, tol, repo)
 
     checks: list[tuple[str, bool, str]] = []
     schemas = load_c5_schemas(contracts_dir)
@@ -2499,6 +2502,97 @@ def _run_c5_carbono(case_dir: Path, contracts_dir: Path, expected: dict, tol: di
                 mg.append(f"{grupo}:fuente {gg.get('fuente')}≠{ge['fuente']}")
         checks.append((f"[{vid}] valor_total + fuente por grupo", not mg,
                        "todos casan" if not mg else f"{len(mg)} — {mg[0]}"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
+def _run_c5_capitulos(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                      repo: Path = DEFAULT_REPO) -> bool:
+    """C5 · estructura de capítulos por CLASIFICACIÓN (Slice B, D-RB-5..8): GOL-PRE-06. El engine
+    estructura el presupuesto por la clasificación del modelo (Uniclass EF / GuBIM) vía
+    `parametros.estructura_capitulos`. Ancla, por cada eje: conformidad + PEM/PEC idénticos a
+    GOL-PRE-01 (el coste NO se mueve al reagrupar) + Σ capítulos == PEM + capítulos == grupos
+    esperados + determinismo. Corre SIN ifcopenshell: LEE el modelo pre-medido + packs anclados de
+    GOL-PRE-01 y PRESUPUESTA (presupuestar es puro). Un fallo se investiga en el ENGINE."""
+    checks: list[tuple[str, bool, str]] = []
+    schemas = load_c5_schemas(contracts_dir)
+    ia = float(tol.get("importe_abs", 0.01))
+
+    def approx(a, b) -> bool:
+        try:
+            return abs(float(a) - float(b)) <= ia
+        except (TypeError, ValueError):
+            return False
+
+    fuente = expected.get("fuente_presupuesto")
+    fuente_dir = case_dir.parent / str(fuente)
+    ent_path = fuente_dir / "entrada.json"
+    if not ent_path.exists():
+        print_checks([("fuente de presupuesto presente", False, f"{fuente} no encontrada")])
+        return False
+    entrada = json.loads(ent_path.read_text(encoding="utf-8"))
+
+    pe = str(DEFAULT_ENGINE_C5)
+    if pe not in sys.path:
+        sys.path.insert(0, pe)
+    try:
+        from aqyra_presupuesto import presupuestar
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import engine presupuestar", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    criterio = _pack_contenido_c5(repo, "criterio", entrada.get("criterio_ref", {}))
+    banco = _pack_contenido_c5(repo, "banco", entrada.get("banco_ref", {}))
+    modelo = dict(entrada.get("modelo", {}))
+    modelo["proyecto"] = entrada.get("proyecto")
+    par = entrada.get("parametros", {})
+    coste = expected.get("coste_ref", {})
+    esperado = expected.get("esperado", {})
+
+    # no-regresión: el modo `catalogo` (default) reproduce PEM/PEC de GOL-PRE-01
+    base = presupuestar(modelo, criterio, banco, par)
+    checks.append(("default (catalogo) reproduce PEM/PEC de GOL-PRE-01",
+                   approx(base["resumen"].get("PEM"), coste.get("PEM"))
+                   and approx(base["resumen"].get("PEC"), coste.get("PEC")),
+                   f"PEM {base['resumen'].get('PEM')} PEC {base['resumen'].get('PEC')}"))
+
+    for eje in expected.get("ejes", []):
+        params = {**par, "estructura_capitulos": eje}
+        pres = presupuestar(modelo, criterio, banco, params)
+        ok_s, det_s = validate_against_schema(pres, schemas["salida"])
+        checks.append((f"[{eje}] presupuesto conforma salida-presupuesto", ok_s, det_s))
+        res = pres.get("resumen", {})
+        # PEM/PEC idénticos a GOL-PRE-01 (el coste no se mueve al reagrupar)
+        checks.append((f"[{eje}] PEM/PEC idénticos a GOL-PRE-01",
+                       approx(res.get("PEM"), coste.get("PEM")) and approx(res.get("PEC"), coste.get("PEC")),
+                       f"PEM {res.get('PEM')} PEC {res.get('PEC')}"))
+        caps = res.get("capitulos", [])
+        suma = round(sum(float(c.get("importe", 0)) for c in caps), 2)
+        checks.append((f"[{eje}] Σ capítulos == PEM", approx(suma, res.get("PEM")),
+                       f"Σ {suma} vs PEM {res.get('PEM')}"))
+        # capítulos == grupos de clasificación esperados (código, título, importe, partidas)
+        got = {c.get("codigo"): c for c in caps}
+        exp_caps = {c.get("codigo"): c for c in esperado.get(eje, {}).get("capitulos", [])}
+        difs: list[str] = []
+        if set(got) != set(exp_caps):
+            difs.append(f"grupos {sorted(got)} != {sorted(exp_caps)}")
+        for cod, ec in exp_caps.items():
+            gc = got.get(cod)
+            if gc is None:
+                continue
+            if not approx(gc.get("importe"), ec.get("importe")):
+                difs.append(f"{cod}.importe {gc.get('importe')}!={ec.get('importe')}")
+            if set(gc.get("partidas", [])) != set(ec.get("partidas", [])):
+                difs.append(f"{cod}.partidas")
+            if gc.get("descripcion") != ec.get("descripcion"):
+                difs.append(f"{cod}.titulo")
+        checks.append((f"[{eje}] capítulos == grupos de clasificación", not difs,
+                       "; ".join(difs) if difs else f"{len(exp_caps)} grupos ({', '.join(sorted(exp_caps))})"))
+        # determinismo
+        pres2 = presupuestar(modelo, criterio, banco, params)
+        checks.append((f"[{eje}] determinista (presupuestar 2x)", pres == pres2, "idéntico"))
 
     print_checks(checks)
     return all(ok for _, ok, _ in checks)

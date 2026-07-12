@@ -122,3 +122,52 @@ def test_descripcion_fallback_sin_resumen():
         if p["origen"] == "modelo":
             assert p["descripcion"] == bd[p["codigo"]]["descripcion"], p["codigo"]
             assert "texto" not in p, p["codigo"]
+
+
+# ------------------------------------------------------------------ Slice B (D-RB-5..8): estructura_capitulos
+def _presupuesto_con(estructura):
+    entrada = json.loads((GOLDEN / "entrada.json").read_text(encoding="utf-8"))
+    criterio = _cargar_pack("criterio", "AQ", "v1")
+    banco = _cargar_pack("banco", "AQ-DEMO", "v1")
+    par = dict(entrada["parametros"])
+    if estructura:
+        par["estructura_capitulos"] = estructura
+    return presupuestar(entrada["modelo"], criterio, banco, par)
+
+
+def test_estructura_capitulos_default_es_catalogo():
+    """Sin estructura_capitulos (o 'catalogo'): WBS del engine (C01..C06) — GOL-PRE-01 byte-idéntico."""
+    caps = [c["codigo"] for c in _presupuesto_con(None)["resumen"]["capitulos"]]
+    assert caps == ["C01", "C02", "C03", "C04", "C05", "C06"]
+    assert [c["codigo"] for c in _presupuesto_con("catalogo")["resumen"]["capitulos"]] == caps
+
+
+def test_estructura_capitulos_uniclass():
+    """'uniclass' agrupa por grupo EF de 2.º nivel (D-RB-5/6); coste intacto; S&S -> SIN."""
+    pres = _presupuesto_con("uniclass")
+    caps = {c["codigo"]: c for c in pres["resumen"]["capitulos"]}
+    assert set(caps) == {"EF_20", "EF_25", "EF_30", "SIN"}
+    assert set(caps["EF_20"]["partidas"]) == {"EHS010", "CSZ010"}
+    assert set(caps["EF_25"]["partidas"]) == {"FAB010", "REV010", "PIN010", "PPM010"}
+    assert set(caps["EF_30"]["partidas"]) == {"EHL010"}
+    assert caps["SIN"]["partidas"] == ["SYS010"]
+    assert pres["resumen"]["PEM"] == 7022.53 and pres["resumen"]["PEC"] == 10111.74
+    assert round(sum(c["importe"] for c in caps.values()), 2) == 7022.53
+
+
+def test_estructura_capitulos_gubim():
+    """'gubim' agrupa por 1.er segmento del código GuBIM (D-RB-7); coste intacto."""
+    pres = _presupuesto_con("gubim")
+    caps = {c["codigo"]: c for c in pres["resumen"]["capitulos"]}
+    assert set(caps) == {"10", "20", "30", "40", "50", "SIN"}
+    assert pres["resumen"]["PEM"] == 7022.53 and pres["resumen"]["PEC"] == 10111.74
+    assert round(sum(c["importe"] for c in caps.values()), 2) == 7022.53
+
+
+def test_estructura_capitulos_no_mueve_el_coste():
+    """Reagrupar NO cambia importes de partida ni PEM/PEC (solo el capítulo asignado)."""
+    cat = _presupuesto_con("catalogo")
+    uni = _presupuesto_con("uniclass")
+    imp = lambda s: {p["codigo"]: p["importe"] for p in s["estado_mediciones"]}
+    assert imp(cat) == imp(uni)
+    assert cat["resumen"]["PEM"] == uni["resumen"]["PEM"] == 7022.53
