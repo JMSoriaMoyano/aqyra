@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aqyra.dev/schemas/documentos/descriptor-export.schema.json",
+  "title": "Descriptor de export firmable (vertical-agnostico, forward-open)",
+  "description": "Entrada del nucleo de export junto al artefacto autoritativo. Declara a que formatos se renderiza el artefacto y la procedencia a anclar. Forward-open: se pueden anadir claves; no se cambia la semantica de las existentes. Un consumidor futuro (cumplimiento/calculo/pliego/carbono) entra sin tocar el nucleo.",
+  "type": "object",
+  "required": ["artefacto", "formatos"],
+  "additionalProperties": true,
+  "properties": {
+    "artefacto": {
+      "type": "object",
+      "required": ["tipo"],
+      "additionalProperties": true,
+      "properties": {
+        "tipo": {"type": "string", "description": "clase del artefacto autoritativo, p.ej. 'proyeccion-valor'"},
+        "id": {"type": "string", "description": "identidad/procedencia del artefacto, p.ej. 'GOL-PRE-03'"},
+        "content_sha256": {"type": "string", "description": "opcional: hash esperado (el nucleo lo recomputa igualmente)"}
+      }
+    },
+    "formatos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "enum": ["word", "xlsx", "pdf", "bc3"]},
+      "description": "destinos de render. word/xlsx/pdf en v0; bc3 = forward (conecta emitir_bc3)"
+    },
+    "plantilla": {"type": "string"},
+    "destinatario": {"type": "string"},
+    "eje": {"type": ["string", "null"], "description": "selector opcional del eje (coste/carbono/...)"},
+    "corte": {"type": ["string", "null"], "description": "selector opcional del corte"},
+    "autor": {"type": "string"},
+    "sello_tiempo": {"type": "string", "description": "sello DETERMINISTA (AAAA-MM-DD). NUNCA now()."},
+    "versiones_ancladas": {
+      "type": "object",
+      "additionalProperties": {"type": "string"},
+      "description": "refs ancladas (de versions.lock) que el caller aporta: contrato/engine/criterio/banco/schema"
+    }
+  }
+}

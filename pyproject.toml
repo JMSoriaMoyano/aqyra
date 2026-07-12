@@ -9,7 +9,7 @@ requires-python = ">=3.10"
 package = false
 
 [tool.uv.workspace]
-members = ["packages/core", "packages/golden", "packages/packs", "services/federacion", "engines/cumplimiento", "engines/presupuesto", "engines/bc3", "documentos/presupuesto", "documentos/pliego"]
+members = ["packages/core", "packages/golden", "packages/packs", "services/federacion", "engines/cumplimiento", "engines/presupuesto", "engines/bc3", "documentos/presupuesto", "documentos/pliego", "documentos/comun", "documentos/export"]
 # engines/* se añaden como miembros cuando aterricen (services/federacion aterrizó en Fase II·h2;
 # engines/cumplimiento en Fase III·h3 y engines/presupuesto en Fase IV·h2 — engines C3/C5 versionados
 # y releasables, D6; engines/bc3 en Ola 1·E0.1 — adaptador FIEBDC-3 texto puro, releaseable, sin

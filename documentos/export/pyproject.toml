@@ -1,0 +1,30 @@
+[project]
+name = "aqyra-documento-export"
+version = "0.1.0"
+description = "Capa TRANSVERSAL de export firmable (el muro de cobro). Nucleo generico (descriptor + manifiesto de procedencia + sellado PDF + firma) + primer consumidor (la proyeccion de valor): componer_export(artefacto, descriptor) -> bundle firmable (Word + XLSX + PDF sellado + manifiesto.json). VERTICAL-AGNOSTICO: consume cualquier artefacto autoritativo anclado. Determinista, sin LLM (LEE el artefacto ya anclado; no recalcula). Dos llaves: integridad en el gate (Llave 1) + firma GPG de JM en el release (Llave 2). El PDF queda preparado para la firma cualificada/PAdES del cliente (forward)."
+requires-python = ">=3.10"
+dependencies = [
+  "python-docx>=1.1",
+  "openpyxl>=3.1",
+  "fpdf2>=2.7",
+  "pypdf>=4.0",
+  "jsonschema>=4.0",
+  "aqyra-documento-comun",
+  "aqyra-documento-presupuesto",
+  "aqyra-bc3",
+]
+
+[project.scripts]
+aqyra-documento-export = "aqyra_documento_export.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aqyra_documento_export"]
+
+[tool.uv.sources]
+aqyra-documento-comun = { workspace = true }
+aqyra-documento-presupuesto = { workspace = true }
+aqyra-bc3 = { workspace = true }
