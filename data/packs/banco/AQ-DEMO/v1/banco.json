@@ -1,7 +1,7 @@
 {
   "banco": "AQ-DEMO/v1",
   "titulo": "Banco de precios Aqyra DEMO — propio, mínimo (piloto C5)",
-  "descripcion": "Banco de precios PROPIO mínimo (NO BEDEC/PREOC, que son licenciados) para el golden GOL-PRE-01. Partidas descompuestas (MO/materiales/maquinaria + costes indirectos) + mapeo clasificación→partida. El banco real entra como pack cuando el engine lo consuma. Precios de demostración, no de mercado.",
+  "descripcion": "Banco de precios PROPIO mínimo (NO BEDEC/PREOC, que son licenciados) para el golden GOL-PRE-01. Partidas descompuestas (MO/materiales/maquinaria + costes indirectos) + mapeo clasificación→partida. El banco real entra como pack cuando el engine lo consuma. Precios de demostración, no de mercado. Slice B (D-RB-7): clasificacion_gubim DEMO (codigos representativos, no oficiales) para habilitar la ruta gubim de estructura_capitulos; no re-ancla el coste (PEM/PEC intactos).",
   "moneda": "EUR",
   "costes_indirectos_pct": 0.03,
   "partidas": [
@@ -13,6 +13,9 @@
       "texto": "Fabrica de ladrillo ceramico perforado de 1/2 pie de espesor para revestir, recibida con mortero de cemento M-5. Comprende el suministro de las piezas ceramicas conformes a UNE-EN 771-1 con marcado CE, el mortero de cemento, el replanteo, la ejecucion del aparejo a soga con juntas llenas de 1 cm, el aplomado y nivelado por hiladas, los enjarjes y arriostramientos, y los medios auxiliares. Incluida parte proporcional de piezas especiales, mermas y limpieza. Medida en m2 de una cara realmente ejecutada, descontando huecos de superficie mayor de 1,00 m2.",
       "clasificacion_uniclass": [
         "EF_25_10"
+      ],
+      "clasificacion_gubim": [
+        "30.30.10"
       ],
       "componentes": [
         {
@@ -43,6 +46,9 @@
       "texto": "Enfoscado de mortero de cemento a buena vista, maestreado y fratasado, sobre paramento vertical interior o exterior. Comprende el suministro del mortero de cemento conforme a UNE-EN 998-1, la preparacion y humectado del soporte, la colocacion de maestras, la aplicacion y fratasado del mortero, la formacion de aristas y juntas de despiece, el curado y los medios auxiliares. Incluida parte proporcional de andamios de trabajo hasta 3 m. Medido en m2 de superficie realmente revestida por sus dos caras.",
       "clasificacion_uniclass": [
         "EF_25_10"
+      ],
+      "clasificacion_gubim": [
+        "40.10.20"
       ],
       "componentes": [
         {
@@ -82,6 +88,9 @@
       "clasificacion_uniclass": [
         "EF_25_10"
       ],
+      "clasificacion_gubim": [
+        "40.30.10"
+      ],
       "componentes": [
         {
           "tipo": "mano_obra",
@@ -111,6 +120,9 @@
       "texto": "Losa o forjado de hormigon armado HA-25/B/20/IIa, incluido encofrado, desencofrado y acero corrugado B500S. Comprende el suministro del hormigon conforme al Codigo Estructural, el acero conforme a UNE-EN 10080, el sistema de encofrado, el montaje de apeos, la colocacion de armaduras con recubrimientos y separadores, el vertido y compactacion por vibrado, el curado y el descimbrado cuando el hormigon alcance la resistencia requerida. Incluidos vibrado, curado y medios auxiliares. Medida en m3 de volumen neto de hormigon realmente ejecutado.",
       "clasificacion_uniclass": [
         "EF_30_20"
+      ],
+      "clasificacion_gubim": [
+        "20.20.20"
       ],
       "componentes": [
         {
@@ -150,6 +162,9 @@
       "clasificacion_uniclass": [
         "EF_20_10_30"
       ],
+      "clasificacion_gubim": [
+        "20.10.10"
+      ],
       "componentes": [
         {
           "tipo": "mano_obra",
@@ -188,6 +203,9 @@
       "clasificacion_uniclass": [
         "EF_20_05_30"
       ],
+      "clasificacion_gubim": [
+        "10.10.10"
+      ],
       "componentes": [
         {
           "tipo": "mano_obra",
@@ -225,6 +243,9 @@
       "texto": "Puerta de paso interior de hoja lisa, incluidos cerco, tapajuntas, herrajes de colgar y de seguridad y colocacion. Comprende el suministro de la hoja, el cerco y los tapajuntas y los herrajes conformes a las especificaciones del fabricante, el recibido del cerco a la fabrica, el aplomado y nivelado, el colgado de la hoja, el ajuste de holguras y la colocacion y regulacion de herrajes hasta su correcto funcionamiento. Incluidos herrajes, ajuste y medios auxiliares. Medida por unidad completamente colocada y en funcionamiento.",
       "clasificacion_uniclass": [
         "EF_25_30"
+      ],
+      "clasificacion_gubim": [
+        "50.20.10"
       ],
       "componentes": [
         {

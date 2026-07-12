@@ -1,0 +1,111 @@
+{
+  "caso": "GOL-PRE-06",
+  "contrato": "C5-presupuesto",
+  "modo": "capitulos",
+  "_oraculo": "ESTRUCTURA DE CAPITULOS POR CLASIFICACION (Slice B, D-RB-5/6/7/8). El engine estructura el presupuesto por la CLASIFICACION que el modelo porta (Uniclass EF de 2 nivel / GuBIMClass), en vez de por el catalogo del engine, via parametros.estructura_capitulos in {catalogo, uniclass, gubim} (default catalogo, byte-identico -> GOL-PRE-01..05 intactas). El coste NO se mueve al reagrupar: cada partida cae en UN capitulo -> Sigma capitulos == PEM, y PEM/PEC identicos a GOL-PRE-01 (7022.53 -> 10111.74). Corre SIN ifcopenshell: LEE el modelo PRE-MEDIDO y los packs anclados de GOL-PRE-01 (criterio/AQ/v1 + banco/AQ-DEMO/v1) y PRESUPUESTA (presupuestar es puro; medir=parser lo ancla GOL-PRE-01). Ancla, por cada eje: (1) el presupuesto conforma salida-presupuesto; (2) PEM/PEC identicos a GOL-PRE-01; (3) Sigma capitulos == PEM; (4) los capitulos == los GRUPOS de clasificacion esperados (codigo, titulo, importe, partidas); (5) DETERMINISMO (presupuestar 2x identico). Uniclass agrupa por grupo EF (EF_20/EF_25/EF_30); GuBIM por 1er segmento (10/20/30/40/50); S&S (sin clasificacion) -> capitulo SIN. Tabla codigo->titulo = semilla embebida en el engine (forward: pack capitulos/<sistema>/vN).",
+  "fuente_presupuesto": "GOL-PRE-01",
+  "ejes": [
+    "uniclass",
+    "gubim"
+  ],
+  "coste_ref": {
+    "PEM": 7022.53,
+    "PEC": 10111.74
+  },
+  "esperado": {
+    "uniclass": {
+      "capitulos": [
+        {
+          "codigo": "EF_20",
+          "descripcion": "Estructura",
+          "partidas": [
+            "EHS010",
+            "CSZ010"
+          ],
+          "importe": 566.65
+        },
+        {
+          "codigo": "EF_25",
+          "descripcion": "Cerramientos, particiones y carpinteria",
+          "partidas": [
+            "FAB010",
+            "REV010",
+            "PIN010",
+            "PPM010"
+          ],
+          "importe": 2563.83
+        },
+        {
+          "codigo": "EF_30",
+          "descripcion": "Forjados y cubiertas",
+          "partidas": [
+            "EHL010"
+          ],
+          "importe": 3754.35
+        },
+        {
+          "codigo": "SIN",
+          "descripcion": "Sin clasificacion (seguridad y salud / partidas alzadas)",
+          "partidas": [
+            "SYS010"
+          ],
+          "importe": 137.7
+        }
+      ]
+    },
+    "gubim": {
+      "capitulos": [
+        {
+          "codigo": "10",
+          "descripcion": "Cimentaciones",
+          "partidas": [
+            "CSZ010"
+          ],
+          "importe": 22.81
+        },
+        {
+          "codigo": "20",
+          "descripcion": "Estructura",
+          "partidas": [
+            "EHL010",
+            "EHS010"
+          ],
+          "importe": 4298.19
+        },
+        {
+          "codigo": "30",
+          "descripcion": "Cerramientos y particiones",
+          "partidas": [
+            "FAB010"
+          ],
+          "importe": 1065.14
+        },
+        {
+          "codigo": "40",
+          "descripcion": "Revestimientos y acabados",
+          "partidas": [
+            "REV010",
+            "PIN010"
+          ],
+          "importe": 1313.29
+        },
+        {
+          "codigo": "50",
+          "descripcion": "Carpinteria y cerrajeria",
+          "partidas": [
+            "PPM010"
+          ],
+          "importe": 185.4
+        },
+        {
+          "codigo": "SIN",
+          "descripcion": "Sin clasificacion (seguridad y salud / partidas alzadas)",
+          "partidas": [
+            "SYS010"
+          ],
+          "importe": 137.7
+        }
+      ]
+    }
+  }
+}
