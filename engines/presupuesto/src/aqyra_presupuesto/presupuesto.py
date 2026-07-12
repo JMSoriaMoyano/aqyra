@@ -231,7 +231,9 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
         p = {
             "codigo": cod,
             "capitulo": cap_de_codigo.get(cod, _CAP_OTROS[0]),
-            "descripcion": banco_partida[cod].get("descripcion", cod),
+            # Slice A (D-RB-1): la descripcion de tabla = `resumen` del banco (corto); compatibilidad:
+            # si el banco no declara `resumen`, se usa la `descripcion` de siempre (bancos v0).
+            "descripcion": banco_partida[cod].get("resumen") or banco_partida[cod].get("descripcion", cod),
             "unidad": a["unidad"] or banco_partida[cod].get("unidad"),
             "cantidad": cantidad,
             "precio_unitario": precio,
@@ -240,6 +242,12 @@ def presupuestar(modelo: dict, criterio: dict, banco: dict, parametros: dict) ->
             "origen": "modelo",
             "trazabilidad": a["trazabilidad"],
         }
+        # Slice A (D-RB-1): el TEXTO ampliado de la unidad de obra (especificacion del banco, patron
+        # BEDEC/BCCA/CYPE) viaja a la partida (aditivo, forward-open). Los compositores lo renderizan
+        # bajo la partida; el ~T del BC3 ya lo transporta. Invisible al recompute (GOL-PRE-01 intacta).
+        texto = banco_partida[cod].get("texto")
+        if texto:
+            p["texto"] = texto
         # E2.2 (D26): desglose de cantidad por objeto (aditivo, forward-open). Habilita el reparto por
         # magnitud EXACTA de la proyección; Σ traza_cantidades == cantidad de la partida. GOL-PRE-01
         # sigue verde (el recompute compara claves nombradas — esta clave nueva le es invisible).

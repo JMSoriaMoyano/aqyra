@@ -20,7 +20,7 @@ from .presupuesto import CAPITULOS_DEFAULT, num_a_letra, presupuestar
 from .primitivas import PRIMITIVAS
 from .proyeccion import CORTES, proyectar, suma_proyeccion
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 __all__ = ["medir", "presupuestar", "escribir_coste", "proyectar", "suma_proyeccion", "CORTES",
            "PRIMITIVAS", "CAPITULOS_DEFAULT", "num_a_letra", "__version__"]

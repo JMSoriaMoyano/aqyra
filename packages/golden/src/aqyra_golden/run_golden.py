@@ -1384,6 +1384,12 @@ def _pdf_texto(path: Path) -> str:
     return "\n".join((pg.extract_text() or "") for pg in PdfReader(str(path)).pages)
 
 
+def _colapsa(s: str) -> str:
+    """Normaliza espacios en blanco (los saltos de linea del wrap del PDF -> un espacio) para
+    comparar TEXTO renderizado de forma robusta al ajuste de linea (Slice A, D-RB-1)."""
+    return " ".join(str(s).split())
+
+
 def _run_c5_documento(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
                       repo: Path) -> bool:
     """C5 · Documento de Presupuesto (capa de documentos, D1–D5): el compositor DETERMINISTA
@@ -1510,6 +1516,15 @@ def _run_c5_documento(case_dir: Path, contracts_dir: Path, expected: dict, tol: 
         checks.append(("precio en letra por partida (cuadro nº1)", not sin_letra,
                        f"{len(cp1)} partidas en letra" if not sin_letra
                        else f"sin letra: {sin_letra}"))
+
+        # 7b · Slice A (v0.2, D-RB-1/D-RB-4): TEXTO ampliado de la unidad de obra bajo cada partida.
+        # Forward-open: sólo se exige para las partidas que traen `texto` en el `presupuesto` fuente.
+        blob_doc = _colapsa(texto + "\n" + "\n".join(" ".join(c for f in t for c in f) for t in tablas))
+        con_txt = [p for p in presupuesto.get("estado_mediciones", []) if p.get("texto")]
+        falt_txt = [p["codigo"] for p in con_txt if _colapsa(p["texto"])[:60] not in blob_doc]
+        checks.append(("texto ampliado de la partida presente (v0.2)", not falt_txt,
+                       f"{len(con_txt)} partidas con texto ampliado" if not falt_txt
+                       else f"sin texto en el documento: {falt_txt}"))
 
         # 8 · DETERMINISMO por contenido (componer 2× = texto/tablas idénticos)
         salida_b = adp.componer_documento(presupuesto, {"salida": tdp / "b.docx", "fecha": fecha})
@@ -1890,6 +1905,17 @@ def _run_export_presupuesto(case_dir: Path, contracts_dir: Path, expected: dict,
             checks.append(("PDF firmable: partidas + PEC + justificacion (criterio+GUIDs) + sha256", ok_pdf,
                            "presentes" if ok_pdf else
                            f"partidas {'ok' if not falt_pp else falt_pp[:2]} PEC {pec_txt in pdf_txt} crit {crit_ok} guid {guid_ok} sha {sha in pdf_txt}"))
+
+        # 6b · Slice A (D-RB-1): TEXTO ampliado de la unidad de obra en el Word contractual + PDF sellado.
+        con_txt = [p for p in em.values() if p.get("texto")]
+        if con_txt:
+            falt_w = [p["codigo"] for p in con_txt
+                      if "word" in fmap and _colapsa(p["texto"])[:60] not in _colapsa(blob_w)]
+            falt_p = [p["codigo"] for p in con_txt
+                      if "pdf" in fmap and _colapsa(p["texto"])[:60] not in _colapsa(pdf_txt)]
+            checks.append(("texto ampliado (v0.2) en Word contractual + PDF sellado", not falt_w and not falt_p,
+                           f"{len(con_txt)} partidas con texto ampliado" if not falt_w and not falt_p
+                           else f"faltan Word {falt_w[:2]} / PDF {falt_p[:2]}"))
 
         # 7 · BC3 (licitacion): codigos de partida presentes
         if "bc3" in fmap:

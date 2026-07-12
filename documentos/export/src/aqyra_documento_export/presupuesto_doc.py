@@ -145,7 +145,14 @@ def presupuesto_pdf(artefacto: dict, descriptor: dict, manifiesto: dict, salida:
             just = f"    Criterio: {p.get('criterio_aplicado','-')} | Origen: {p.get('origen','-')}"
             if p.get("trazabilidad"):
                 just += f" | GUIDs: {', '.join(p['trazabilidad'])}"
-            pdf.multi_cell(0, 4, _txt(just), new_x="LMARGIN", new_y="NEXT"); pdf.set_text_color(0, 0, 0)
+            pdf.multi_cell(0, 4, _txt(just), new_x="LMARGIN", new_y="NEXT")
+            # Slice A (D-RB-1): TEXTO ampliado de la unidad de obra (especificacion del banco), cuando
+            # el salida-presupuesto lo trae (forward-open: sin `texto`, no se imprime). El ~T del BC3 ya
+            # lo transporta; aqui es la evidencia contractual en el PDF sellado.
+            if p.get("texto"):
+                pdf.set_font("Helvetica", "", 8)
+                pdf.multi_cell(0, 4, _txt(f"    {p['texto']}"), new_x="LMARGIN", new_y="NEXT")
+            pdf.set_text_color(0, 0, 0)
         _row(pdf, [f"PARCIAL {cap.get('codigo','')}", "", "", "", "", F.fmt_num(cap.get("importe", 0), 2)],
              [20, 58, 10, 20, 22, 22], bold=True, align=["L", "L", "L", "R", "R", "R"])
         pdf.ln(2)

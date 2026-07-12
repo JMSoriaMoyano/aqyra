@@ -1,5 +1,5 @@
 {
   "pack": "banco/AQ-DEMO/v1",
-  "content_sha256": "b4eace95706d2d61dace5f342860ef4fb514f06a44cfd9289b4ad6579af7fd23",
+  "content_sha256": "4fdd8e7000d13e5506a86e907477b5006e5d74c26c20ea327986c7b4e404d0c0",
   "_nota": "Golden de pack: identidad del contenido por hash (incluye md5 de banco.json y la lista de partidas). Cambiar banco.json o la lista sin bump de versión + nuevo hash rompe el test — no hay drift silencioso. Patrón packs.normativa/ids."
 }

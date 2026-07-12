@@ -369,7 +369,7 @@ def test_banco_bcca_no_toca_packs_anclados():
     assert packs.version_anclada(LOCK, "banco_bc3") == "v1"      # AQ-BC3-DEMO
     import hashlib
     md5 = lambda p: hashlib.md5((PACKS_ROOT / p).read_bytes()).hexdigest()
-    assert md5("banco/AQ-DEMO/v1/banco.json") == "d63c5f4a628c89f595e65a3d57300009"
+    assert md5("banco/AQ-DEMO/v1/banco.json") == "b538a0e8e20d491b706178fee574135a"  # Slice A (D-RB-1): resumen+texto ricos
     assert md5("banco/AQ-BC3-DEMO/v1/banco.json") == "3d6c79494560ba9547e14a5a72b6d264"
 
 
