@@ -1,0 +1,33 @@
+{
+  "caso": "GOL-EXP-03",
+  "contrato": "C5-presupuesto",
+  "modo": "export",
+  "consumidor": "pliego-obra",
+  "_oraculo": "CONFORMIDAD DEL EXPORT FIRMABLE DEL PLIEGO CONTRACTUAL (capa transversal documentos/export + consumidor CONTRACTUAL pliego-obra, Slice C, D-PL-1..3). El nucleo DETERMINISTA componer_export toma el `salida-presupuesto` AUTORITATIVO ANCLADO en GOL-PRE-01 (se LEE, no se re-ancla) + un DESCRIPTOR que PORTA (clave forward-open `pliego`) el criterio (AQ/v2) y el pack de textos de prescripcion (pliego-textos/AQ-DEMO/v1), y produce el BUNDLE contractual firmable del pliego: Word (ENVUELVE documentos/pliego.componer_pliego, el .docx del despacho) + PDF sellado (por partida: prescripcion + medicion trazable + coste + GUIDs + carbono forward-open + cuadro de trazabilidad + manifiesto embebido) + manifiesto.json. SIN BC3 ni XLSX (D-PL-1): el texto de prescripcion viaja en el ~T del BC3 del presupuesto. La golden ancla ESTRUCTURA + CONTENIDO (patron GOL-PLI-01/GOL-EXP-01/D3), no bytes ni pixeles: descriptor+manifiesto conforman sus esquemas; el bundle trae Word + PDF sellado + manifiesto (sin BC3); el Word del pliego trae las secciones (caratula, generales, particulares, trazabilidad), las 8 partidas cada una con su PRESCRIPCION (texto base no vacio, sin caer al fallback), su MEDICION (cantidad == JSON +-0,001) y su COSTE (importe == JSON +-0,01); el PDF sellado trae por partida el codigo, la prescripcion (sin fallback), la justificacion de medicion (criterio + GUIDs trazados al modelo) y el content_sha256; carbono forward-open (presente sii el presupuesto trae valores.carbono); manifiesto INTEGRO (content_sha256 == hash canonico del salida-presupuesto + versiones) = Llave 1; isCertified: bundle SIN firmar NO es verified-signed (computed); DETERMINISMO por contenido (componer 2x = Word/PDF/manifiesto identicos, sello fijo). No-regresion de GOL-PLI-01: el compositor de pliego NO cambia su comportamiento. Corre SIN ifcopenshell (LEE el salida-presupuesto anclado de GOL-PRE-01, no re-mide).",
+  "fuente_presupuesto": "GOL-PRE-01",
+  "descriptor": {
+    "artefacto": {"tipo": "pliego-obra", "id": "GOL-PRE-01"},
+    "formatos": ["word", "pdf"],
+    "plantilla": "pliego-contractual",
+    "sello_tiempo": "2026-07-12",
+    "pliego": {
+      "criterio_ref": "AQ/v2",
+      "pack_textos_ref": "pliego-textos/AQ-DEMO/v1"
+    },
+    "versiones_ancladas": {
+      "contrato_c5": "C5-presupuesto",
+      "engine": "documentos/pliego",
+      "criterio": "AQ/v2",
+      "pack_textos": "pliego-textos/AQ-DEMO/v1",
+      "schema": "salida-presupuesto"
+    }
+  },
+  "export": {
+    "sello_tiempo": "2026-07-12",
+    "formatos": ["word", "pdf"],
+    "n_partidas": 8,
+    "n_capitulos": 6,
+    "PEM": 7022.53,
+    "PEC": 10111.74
+  }
+}
