@@ -77,7 +77,40 @@ Como este hilo **ES la monetizacion**, se cierra **CON release firmado** `docume
 (Llave 2 natural), anadiendo `documento-export-v*` a `release.yml`. La IA deja **todo listo para
 firmar**; **la firma la aplica JM** (insustituible).
 
+## D-PL-1..3 · Pliego contractual firmable (Slice C, RATIFICADAS por JM 2026-07-12)
+> Namespace **D-PL**. Tercera pieza del conjunto contractual firmable (junto al presupuesto, E6.2). Cierra
+> coste + carbono + prescripcion por el MISMO rail de export. La IA propone; JM ratifica y firma (dos llaves).
+
+**D-PL-1 · Consumidor `pliego-obra`.** Consumidor NUEVO en `documentos/export` (espejo de `presupuesto-obra`):
+**Word** = ENVUELVE `documentos/pliego.componer_pliego` (no re-renderiza) + **PDF sellado** (por partida:
+prescripcion + medicion trazable + coste + GUIDs + carbono forward-open + cuadro de trazabilidad + manifiesto
+embebido) + **manifiesto**. **SIN BC3 ni XLSX** (el texto de prescripcion ya viaja en el `~T` del BC3 del
+presupuesto). El artefacto autoritativo = el `salida-presupuesto` (C5); el **descriptor los porta**: la clave
+**forward-open** `descriptor["pliego"] = {criterio, pack_textos}` (dicts resueltos por el caller —
+`descriptor-export.schema.json` es abierto). El manifiesto ancla sus refs en `versiones_ancladas` (criterio +
+pliego-textos). El nucleo (`componer_export`/manifiesto/firma/sellado) **NO se toca**: solo se registra
+`"pliego-obra": PL.FORMATOS` en `_CONSUMIDORES`.
+
+**D-PL-2 · Golden `GOL-EXP-03`.** Rama `modo=export`, `consumidor="pliego-obra"` (despacho en `_run_c5_export`
+-> `_run_export_pliego`): bundle {Word, PDF sellado, manifiesto}; 8 partidas con prescripcion SIN fallback
+(`criterio/AQ/v2` + `pliego-textos/AQ-DEMO/v1`, como `GOL-PLI-01`) + medicion (cantidad +-0,001) + coste
+(importe +-0,01) + trazabilidad (GUIDs); carbono forward-open; manifiesto INTEGRO (Llave 1); `isCertified`
+(sin firmar = `computed`); DETERMINISMO. **No-regresion de `GOL-PLI-01`** (el compositor de pliego no cambia
+su comportamiento). Corre SIN ifcopenshell (LEE el `salida-presupuesto` anclado de GOL-PRE-01).
+
+**D-PL-3 · Release.** El pliego firmable vive en `documento-export` (mismo paquete): **NO nuevo release**; lo
+cubre `documento-export-v0.1.0` (o el bump si JM lo agrupa). Version del paquete SIN cambiar en el slice
+(decision de JM en el cierre).
+
 ## Zona anclada (frontera dura)
+Slice C solo **AÑADE** `documentos/export/pliego_doc.py` (consumidor `pliego-obra`) + su registro en
+`export.py._CONSUMIDORES` (+ `__init__`) + el caso `GOL-EXP-03` + la rama `_run_export_pliego` (despacho por
+consumidor en `_run_c5_export`) + `openspec/changes/c5-pliego-firmable/` + esta seccion (D-PL) + nota en
+`versions.lock [documentos.export]`. **Nunca** toca `componer_pliego`/`GOL-PLI-01`, el nucleo de export
+(descriptor/manifiesto/sellado/firma), `presupuesto_doc`/`GOL-EXP-01`, `proyeccion`/`GOL-EXP-02`,
+`emitir_bc3`, el motor/esquema C5, los packs anclados (incl. `pliego-textos/AQ-DEMO/v1`) ni el dashboard.
+
+### Zona anclada del nucleo (E6.2, frontera original)
 Este paquete solo **AÑADE** `documentos/comun` + `documentos/export` (+ sus esquemas) + el caso
 `GOL-EXP-01` (rama `modo=export` en `run_case_c5`) + edicion quirurgica de `versions.lock`
 (`[documentos.comun]`, `[documentos.export]`), `[tool.uv.workspace]`, `ci.yml` (linea de pytest),

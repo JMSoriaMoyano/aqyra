@@ -1,0 +1,5 @@
+{
+  "importe_abs": 0.01,
+  "cantidad_abs": 0.001,
+  "_nota": "Tolerancias de GOL-EXP-03 (export firmable del PLIEGO contractual, Slice C). Conformidad por CONTENIDO extraido (python-docx/pypdf, NO bytes/pixeles): los importes casan con el `salida-presupuesto` de GOL-PRE-01 a +-0,01 y las cantidades a +-0,001. Sin tolerancia de pixeles ni de bytes (patron GOL-PLI-01/GOL-EXP-01/D3): se ancla contenido, no forma."
+}

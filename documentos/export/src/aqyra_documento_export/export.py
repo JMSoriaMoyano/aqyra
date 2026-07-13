@@ -9,9 +9,10 @@ Entrada VERTICAL-AGNOSTICA: un `artefacto` autoritativo (cualquier JSON anclado 
 determinista) y deja que el consumidor renderice los formatos declarados. Determinista, sin LLM: no
 recalcula, LEE el artefacto ya anclado.
 
-Consumidores (redireccion 2026-07-12, JM): el PRIMARIO es CONTRACTUAL — `presupuesto-obra` (presupuesto
-por partidas + cuadros + medicion + BC3). `proyeccion-valor` queda como export de GESTION (secundario).
-El pliego entra como slice siguiente (envolviendo componer_pliego, mismo patron).
+Consumidores (redireccion 2026-07-12, JM): los CONTRACTUALES son `presupuesto-obra` (presupuesto por
+partidas + cuadros + medicion + BC3) y `pliego-obra` (Slice C: envuelve componer_pliego -> Word + PDF
+sellado, sin BC3). `proyeccion-valor` queda como export de GESTION (secundario). Cada consumidor entra
+SIN tocar el nucleo (manifiesto/firma/sellado): solo se registra en `_CONSUMIDORES`.
 """
 from __future__ import annotations
 
@@ -19,6 +20,7 @@ from pathlib import Path
 
 from . import manifiesto as M
 from . import presupuesto_doc as PD
+from . import pliego_doc as PL
 from . import proyeccion as PR
 
 NOMBRE_MANIFIESTO = "manifiesto.json"
@@ -26,6 +28,7 @@ NOMBRE_MANIFIESTO = "manifiesto.json"
 # consumidor por tipo de artefacto. Cada consumidor: {formato: (nombre_fichero, fn(art,desc,man,salida))}.
 _CONSUMIDORES = {
     "presupuesto-obra": PD.FORMATOS,   # CONTRACTUAL (primario)
+    "pliego-obra":      PL.FORMATOS,   # CONTRACTUAL (Slice C: envuelve componer_pliego; Word + PDF sellado, sin BC3)
     "proyeccion-valor": PR.FORMATOS,   # gestion (secundario)
 }
 
