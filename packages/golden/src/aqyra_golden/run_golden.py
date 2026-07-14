@@ -2793,7 +2793,174 @@ def _run_c5_capitulos(case_dir: Path, contracts_dir: Path, expected: dict, tol: 
     return all(ok for _, ok, _ in checks)
 
 
-CASE_RUNNERS = {"C1": run_case_c1, "C4": run_case_c4, "C3": run_case_c3, "C5": run_case_c5}
+DEFAULT_ENTREGA = DEFAULT_REPO / "services" / "entrega" / "src"   # C7 · operador de entrega
+
+
+def _resolver_artefacto_ref(golden_root: Path, ref: str) -> dict:
+    """`C5/GOL-PRE-01` -> el `salida-presupuesto` ANCLADO en packages/golden/C5/GOL-PRE-01/expected.json
+    (clave `presupuesto`). El arnes juega el papel del companero IA: RESUELVE la ref a un artefacto
+    inline (el operador C7 no lee el repo). Se LEE, no se re-ancla."""
+    part = [p for p in str(ref).split("/") if p]
+    p = golden_root.joinpath(*part, "expected.json")
+    if not p.exists():
+        return {}
+    return json.loads(p.read_text(encoding="utf-8")).get("presupuesto", {})
+
+
+def run_case_c7(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
+                repo: Path = DEFAULT_REPO) -> bool:
+    """C7 · Operador de ENTREGA (services/entrega, D-C7-1..6): el operador DETERMINISTA componer_entrega
+    toma una `solicitud-entrega` YA CONFORMADA (paquete presupuesto + pliego sobre el MISMO
+    `salida-presupuesto` ANCLADO de C5/GOL-PRE-01 — se LEE) y, ENVOLVIENDO documentos/export.componer_export
+    sobre cada entregable, emite el PAQUETE (N bundles firmables) + UN manifiesto-entrega maestro con
+    roll-up. Ancla ESTRUCTURA + INTEGRIDAD (patron GOL-EXP-01/03/D3), no bytes ni pixeles. Corre SIN
+    ifcopenshell (LEE el salida-presupuesto anclado; los compositores son puros). No-regresion de
+    GOL-EXP-01/03 y GOL-PLI-01: el rail de export NO se toca. Un fallo se investiga en el OPERADOR."""
+    import tempfile
+    import hashlib
+
+    checks: list[tuple[str, bool, str]] = []
+    golden_root = case_dir.parents[1]
+    c7dir = contracts_dir / "C7-entrega"
+    exp_ent = expected.get("entrega", {})
+
+    # 0 · esquemas de C7 + solicitud almacenada
+    try:
+        import jsonschema
+        sol_schema = json.loads((c7dir / "solicitud-entrega.schema.json").read_text(encoding="utf-8"))
+        man_schema = json.loads((c7dir / "manifiesto-entrega.schema.json").read_text(encoding="utf-8"))
+    except Exception as e:  # noqa: BLE001
+        print_checks([("esquemas de C7-entrega presentes", False, f"{type(e).__name__}: {e}")])
+        return False
+
+    solicitud = json.loads((case_dir / str(expected.get("solicitud") or "entrada.json")).read_text(encoding="utf-8"))
+    try:
+        jsonschema.validate(solicitud, sol_schema)
+        checks.append(("solicitud almacenada conforma solicitud-entrega.schema.json", True, "forward-open"))
+    except Exception as e:  # noqa: BLE001
+        checks.append(("solicitud almacenada conforma solicitud-entrega.schema.json", False, f"{type(e).__name__}: {e}"))
+
+    # 1 · import del operador + del rail de export (comun + export + presupuesto + pliego + bc3 + entrega)
+    for pth in (DEFAULT_COMUN_DOC, DEFAULT_EXPORT_C5, DEFAULT_DOCUMENTO_C5, DEFAULT_PLIEGO_C5,
+                repo / "engines" / "bc3" / "src", DEFAULT_ENTREGA):
+        if str(pth) not in sys.path:
+            sys.path.insert(0, str(pth))
+    try:
+        import aqyra_entrega as ent
+        from aqyra_entrega import manifiesto_entrega as ME
+        import aqyra_documento_export as adx
+        from aqyra_documento_export import manifiesto as _man
+    except Exception as e:  # noqa: BLE001
+        checks.append(("import del operador services/entrega + rail de export", False, f"{type(e).__name__}: {e}"))
+        print_checks(checks)
+        return False
+
+    # 2 · el companero IA (arnes) RESUELVE: artefacto_ref -> artefacto inline; pliego refs -> dicts
+    schemas = load_c5_schemas(contracts_dir)
+    runtime = dict(solicitud)
+    runtime_ent = []
+    fuentes_sha = set()
+    src_conforma = True
+    for e in solicitud.get("entregables", []):
+        art = _resolver_artefacto_ref(golden_root, e.get("artefacto_ref", ""))
+        okc, _ = validate_against_schema(art, schemas["salida"])
+        src_conforma = src_conforma and okc
+        desc = json.loads(json.dumps(e.get("descriptor") or {}))  # copia profunda
+        pl = desc.get("pliego")
+        if isinstance(pl, dict) and ("criterio_ref" in pl or "pack_textos_ref" in pl):
+            desc["pliego"] = {"criterio": _cargar_pack_criterio(repo, pl.get("criterio_ref", "")),
+                              "pack_textos": _cargar_pack_textos(repo, pl.get("pack_textos_ref", ""))}
+        runtime_ent.append({"consumidor": e.get("consumidor"), "artefacto": art,
+                            "artefacto_ref": e.get("artefacto_ref"), "descriptor": desc})
+    runtime["entregables"] = runtime_ent
+    checks.append(("salida-presupuesto fuente (C5/GOL-PRE-01) conforma salida-presupuesto", src_conforma,
+                   "se LEE, no se re-ancla" if src_conforma else "el artefacto fuente no conforma"))
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        paquete_a = ent.componer_entrega(runtime, {"salida": tdp / "a"})
+        men = json.loads((paquete_a / ent.NOMBRE_MANIFIESTO_ENTREGA).read_text(encoding="utf-8"))
+
+        # 3 · manifiesto-entrega conforma su esquema
+        try:
+            jsonschema.validate(men, man_schema)
+            checks.append(("manifiesto-entrega conforma manifiesto-entrega.schema.json", True, "forward-open"))
+        except Exception as e:  # noqa: BLE001
+            checks.append(("manifiesto-entrega conforma manifiesto-entrega.schema.json", False, f"{type(e).__name__}: {e}"))
+
+        # 4 · el paquete trae los N bundles (formatos declarados + manifiesto.json) + manifiesto-entrega
+        faltan_fmt = []
+        for e in runtime_ent:
+            sub = e["consumidor"]
+            fmap = adx.consumidor_de(sub) or {}
+            fmts = list(e["descriptor"].get("formatos") or list(fmap))
+            for f in fmts:
+                if f in fmap and not (paquete_a / sub / fmap[f][0]).exists():
+                    faltan_fmt.append(f"{sub}/{f}")
+            if not (paquete_a / sub / adx.NOMBRE_MANIFIESTO).exists():
+                faltan_fmt.append(f"{sub}/manifiesto.json")
+        tiene_men = (paquete_a / ent.NOMBRE_MANIFIESTO_ENTREGA).exists()
+        n_ok = len(men.get("entregables", [])) == exp_ent.get("n_entregables", len(runtime_ent))
+        checks.append(("paquete: N bundles (formatos + manifiesto) + manifiesto-entrega",
+                       not faltan_fmt and tiene_men and n_ok,
+                       f"{len(runtime_ent)} bundles + manifiesto-entrega" if not faltan_fmt and tiene_men and n_ok
+                       else f"faltan {faltan_fmt[:4]} men={tiene_men} n={n_ok}"))
+
+        # 4b · pliego SIN BC3 (D-PL-1) — el paquete no rompe la regla del consumidor
+        sin_bc3 = not (paquete_a / "pliego-obra" / "Pliego.bc3").exists()
+        checks.append(("bundle pliego sin BC3 (D-PL-1 respetada por el paquete)", sin_bc3,
+                       "sin BC3" if sin_bc3 else "aparece BC3 en el pliego"))
+
+        # 5 · cada manifiesto individual INTEGRO (rail de export) + content_sha256_manifiesto casa
+        integros, sha_casa = [], []
+        for e in runtime_ent:
+            sub = e["consumidor"]
+            manb = json.loads((paquete_a / sub / adx.NOMBRE_MANIFIESTO).read_text(encoding="utf-8"))
+            oki, _ = _man.integridad(manb, e["artefacto"])
+            integros.append(oki)
+            got = hashlib.sha256((paquete_a / sub / adx.NOMBRE_MANIFIESTO).read_bytes()).hexdigest()
+            decl = next((x["content_sha256_manifiesto"] for x in men["entregables"]
+                         if x["nombre_bundle"] == sub), None)
+            sha_casa.append(got == decl)
+        checks.append(("cada manifiesto de bundle INTEGRO (content_sha256 == artefacto anclado)",
+                       all(integros), f"{sum(integros)}/{len(integros)} integros"))
+        checks.append(("content_sha256_manifiesto por entregable == sha256 del manifiesto.json del bundle",
+                       all(sha_casa), f"{sum(sha_casa)}/{len(sha_casa)} casan"))
+
+        # 6 · roll-up: paquete_sha256 == hash canonico de la lista ordenada (Llave 1)
+        ok_roll, det_roll = ME.integridad(men, ent.sha_por_bundle(paquete_a, men))
+        checks.append(("roll-up: paquete_sha256 == lista ordenada de sha256 (Llave 1)", ok_roll, det_roll))
+
+        # 7 · mismo Maestro: los N bundles anclan el MISMO artefacto.content_sha256
+        for e in runtime_ent:
+            manb = json.loads((paquete_a / e["consumidor"] / adx.NOMBRE_MANIFIESTO).read_text(encoding="utf-8"))
+            fuentes_sha.add((manb.get("artefacto") or {}).get("content_sha256"))
+        checks.append(("mismo Maestro: los N bundles anclan el mismo artefacto", len(fuentes_sha) == 1,
+                       f"{len(fuentes_sha)} content_sha256 distinto/s"))
+
+        # 8 · isCertified: paquete SIN firmar NO es verified-signed (bundles computed; sin .asc del maestro)
+        no_cert = all(not adx.es_certificado(paquete_a / e["consumidor"]) for e in runtime_ent)
+        sin_asc = not (paquete_a / (ent.NOMBRE_MANIFIESTO_ENTREGA + ".asc")).exists()
+        checks.append(("isCertified: paquete sin firmar NO es verified-signed", no_cert and sin_asc,
+                       f"bundles computed={no_cert}, sin .asc del manifiesto-entrega={sin_asc}"))
+
+        # 9 · DETERMINISMO: componer 2x = manifiesto-entrega + manifiestos de bundle identicos
+        paquete_b = ent.componer_entrega(runtime, {"salida": tdp / "b"})
+        det = ((paquete_a / ent.NOMBRE_MANIFIESTO_ENTREGA).read_bytes()
+               == (paquete_b / ent.NOMBRE_MANIFIESTO_ENTREGA).read_bytes())
+        for e in runtime_ent:
+            sub = e["consumidor"]
+            det = det and ((paquete_a / sub / adx.NOMBRE_MANIFIESTO).read_bytes()
+                           == (paquete_b / sub / adx.NOMBRE_MANIFIESTO).read_bytes())
+        checks.append(("entrega determinista (2x = manifiesto-entrega + manifiestos de bundle identicos)",
+                       det, "contenido identico" if det else "difiere entre dos composiciones"))
+
+    print_checks(checks)
+    return all(ok for _, ok, _ in checks)
+
+
+CASE_RUNNERS = {"C1": run_case_c1, "C4": run_case_c4, "C3": run_case_c3, "C5": run_case_c5,
+                "C7": run_case_c7}
 
 
 # --------------------------------------------------------------------------- #

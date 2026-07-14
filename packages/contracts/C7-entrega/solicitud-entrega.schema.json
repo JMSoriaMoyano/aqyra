@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/schemas/contracts/C7-entrega/solicitud-entrega.schema.json",
+  "title": "Solicitud de entrega (entrada de C7 · operador de entrega, forward-open)",
+  "description": "Encargo YA CONFORMADO que el companero IA (Cowork/skills/agentes, fuera del operador) PROPONE a C7. Declara un paquete de entregables firmables (proyecto + hito? + lista de entregables, cada uno {consumidor, artefacto|artefacto_ref, descriptor}). C7 es DETERMINISTA: valida esta solicitud contra este esquema y la ejecuta reproducible, envolviendo documentos/export.componer_export sobre cada entregable. C7 NO lee el repo ni versions.lock: recibe descriptores PRE-RESUELTOS (el companero IA resuelve las refs de packs antes de llamar). Forward-open: se pueden anadir claves; no se cambia la semantica de las existentes. El sello de tiempo es DETERMINISTA (parametro), NUNCA now().",
+  "type": "object",
+  "required": ["proyecto", "entregables", "sello_tiempo"],
+  "additionalProperties": true,
+  "properties": {
+    "proyecto": {"type": "string", "description": "identidad del proyecto/encargo (p.ej. 'GOL-PRE-01' o el codigo de obra)"},
+    "hito": {"type": "string", "description": "opcional: hito/estado de entrega (p.ej. 'proyecto-basico'). El estado ISO 19650 S0-S7 en el CDE es forward (C8)"},
+    "maestro_ref": {"type": "string", "description": "opcional: referencia al Maestro C4 (federacion) del que descienden los artefactos. v0: ausente (forward)"},
+    "entregables": {
+      "type": "array",
+      "minItems": 1,
+      "description": "los entregables firmables del paquete; cada uno se envuelve con componer_export por su `consumidor`.",
+      "items": {
+        "type": "object",
+        "required": ["consumidor", "descriptor"],
+        "additionalProperties": true,
+        "anyOf": [
+          {"required": ["artefacto"]},
+          {"required": ["artefacto_ref"]}
+        ],
+        "properties": {
+          "consumidor": {"type": "string", "description": "tipo de consumidor del rail de export, p.ej. 'presupuesto-obra' | 'pliego-obra'"},
+          "artefacto": {"type": "object", "description": "artefacto autoritativo INLINE (dict ya anclado). Lo que C7 pasa a componer_export. En v0 el operador compone SOLO desde `artefacto`."},
+          "artefacto_ref": {"type": "string", "description": "procedencia del artefacto (p.ej. 'C5/GOL-PRE-01'). Metadato de traza; el companero IA/el arnes lo resuelve a `artefacto` antes de invocar a C7"},
+          "descriptor": {
+            "type": "object",
+            "description": "descriptor-export YA CONFORMADO (patron documentos/export/esquemas/descriptor-export.schema.json). Para 'pliego-obra' porta la clave forward-open `pliego` con las refs o los dicts resueltos (criterio + pack_textos).",
+            "additionalProperties": true,
+            "required": ["artefacto", "formatos"],
+            "properties": {
+              "artefacto": {"type": "object", "required": ["tipo"], "additionalProperties": true},
+              "formatos": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    },
+    "sello_tiempo": {"type": "string", "description": "sello DETERMINISTA (AAAA-MM-DD) del paquete. NUNCA now(). Se propaga a cada entregable que no lo declare."},
+    "versiones_ancladas": {
+      "type": "object",
+      "additionalProperties": {"type": "string"},
+      "description": "refs ancladas del paquete (de versions.lock) que el caller aporta: contrato/service/esquema"
+    }
+  }
+}

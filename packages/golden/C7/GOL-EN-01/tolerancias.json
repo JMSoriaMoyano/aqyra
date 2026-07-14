@@ -1,0 +1,4 @@
+{
+  "importe_abs": 0.01,
+  "_nota": "Tolerancias de GOL-EN-01 (operador de entrega C7). Conformidad por ESTRUCTURA + INTEGRIDAD (roll-up de sha256), no bytes ni pixeles. El contenido profundo de cada bundle ya lo anclan GOL-EXP-01 (presupuesto) y GOL-EXP-03 (pliego); aqui C7 ancla que el PAQUETE ata los N bundles al mismo Maestro por un roll-up determinista, integro y sin firmar (dos llaves). importe_abs para las cifras del paquete."
+}

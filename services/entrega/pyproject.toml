@@ -1,0 +1,22 @@
+[project]
+name = "aqyra-entrega"
+version = "0.1.0"
+description = "Operador C7 — entrega: componer_entrega(solicitud) -> paquete. Orquestador DETERMINISTA de la ENTREGA de entregables firmables (presupuesto + pliego en v0): ENVUELVE documentos/export.componer_export sobre cada entregable y emite UN manifiesto-entrega maestro con roll-up (paquete_sha256). Sin LLM (el companero IA propone la solicitud desde fuera); no recalcula (LEE artefactos anclados); no lee el repo (descriptores pre-resueltos). Dos llaves: integridad/roll-up en el gate (Llave 1) + firma GPG de JM del manifiesto-entrega en el release (Llave 2). Contract-first: reproduce la golden GOL-EN-01."
+requires-python = ">=3.10"
+dependencies = [
+  "aqyra-documento-export",
+  "jsonschema>=4.0",
+]
+
+[project.scripts]
+aqyra-entrega = "aqyra_entrega.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aqyra_entrega"]
+
+[tool.uv.sources]
+aqyra-documento-export = { workspace = true }

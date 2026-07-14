@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aqyra.dev/schemas/contracts/C7-entrega/manifiesto-entrega.schema.json",
+  "title": "Manifiesto de entrega maestro (salida de C7 · operador de entrega, forward-open)",
+  "description": "Ata los N bundles firmables del paquete a un mismo proyecto/Maestro por un ROLL-UP determinista. Por cada entregable ancla el sha256 de su manifiesto.json individual (content_sha256_manifiesto); `paquete_sha256` es el hash canonico de la lista ORDENADA de esos sha256, de modo que el gate (Llave 1) pueda comprobar que el paquete entero no esta manipulado. Determinista: mismos artefactos + misma solicitud + mismo sello => manifiesto-entrega byte a byte. La firma GPG de JM (Llave 2) se aplica sobre este manifiesto en el release; el gate verifica su integridad, no certifica. Forward-open.",
+  "type": "object",
+  "required": ["esquema", "generador", "version_generador", "sello_tiempo", "proyecto", "entregables", "paquete_sha256", "versiones_ancladas"],
+  "additionalProperties": true,
+  "properties": {
+    "esquema": {"type": "string", "const": "manifiesto-entrega/v0"},
+    "generador": {"type": "string"},
+    "version_generador": {"type": "string"},
+    "sello_tiempo": {"type": "string"},
+    "proyecto": {"type": "string"},
+    "hito": {"type": ["string", "null"]},
+    "maestro_ref": {"type": ["string", "null"], "description": "referencia al Maestro C4 del que descienden los artefactos. v0: null/ausente (forward)"},
+    "entregables": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["consumidor", "nombre_bundle", "content_sha256_manifiesto"],
+        "additionalProperties": true,
+        "properties": {
+          "consumidor": {"type": "string"},
+          "nombre_bundle": {"type": "string", "description": "subcarpeta del bundle dentro del paquete"},
+          "artefacto_ref": {"type": "string", "description": "opcional: procedencia del artefacto (traza)"},
+          "content_sha256_manifiesto": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 del manifiesto.json individual del bundle (fichero entero, determinista)"}
+        }
+      }
+    },
+    "paquete_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "hash canonico de la lista ORDENADA de content_sha256_manifiesto (roll-up); ata los N bundles al mismo paquete"},
+    "versiones_ancladas": {"type": "object", "additionalProperties": {"type": "string"}}
+  }
+}
