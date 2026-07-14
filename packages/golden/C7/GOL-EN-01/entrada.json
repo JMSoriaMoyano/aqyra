@@ -1,0 +1,49 @@
+{
+  "_nota": "solicitud-entrega ALMACENADA (lo que el companero IA PROPONE a C7). Usa artefacto_ref (no inline) para no duplicar el salida-presupuesto anclado; el arnes run_case_c7 (que juega el papel del companero IA) resuelve el artefacto de C5/GOL-PRE-01 y las refs de packs del pliego, y construye la solicitud de ejecucion con el artefacto INLINE + los dicts resueltos antes de invocar a componer_entrega. Ambos entregables descienden del MISMO salida-presupuesto -> el roll-up los ata al mismo Maestro.",
+  "proyecto": "GOL-PRE-01",
+  "hito": "proyecto-basico",
+  "sello_tiempo": "2026-07-13",
+  "versiones_ancladas": {
+    "contrato_c7": "C7-entrega",
+    "service": "services/entrega",
+    "schema": "manifiesto-entrega"
+  },
+  "entregables": [
+    {
+      "consumidor": "presupuesto-obra",
+      "artefacto_ref": "C5/GOL-PRE-01",
+      "descriptor": {
+        "artefacto": {"tipo": "presupuesto-obra", "id": "GOL-PRE-01"},
+        "formatos": ["word", "pdf", "bc3", "xlsx"],
+        "plantilla": "presupuesto-contractual",
+        "versiones_ancladas": {
+          "contrato_c5": "C5-presupuesto",
+          "engine": "engines/presupuesto",
+          "banco": "AQ-DEMO/v1",
+          "criterio": "AQ/v1",
+          "schema": "salida-presupuesto"
+        }
+      }
+    },
+    {
+      "consumidor": "pliego-obra",
+      "artefacto_ref": "C5/GOL-PRE-01",
+      "descriptor": {
+        "artefacto": {"tipo": "pliego-obra", "id": "GOL-PRE-01"},
+        "formatos": ["word", "pdf"],
+        "plantilla": "pliego-contractual",
+        "pliego": {
+          "criterio_ref": "AQ/v2",
+          "pack_textos_ref": "pliego-textos/AQ-DEMO/v1"
+        },
+        "versiones_ancladas": {
+          "contrato_c5": "C5-presupuesto",
+          "engine": "documentos/pliego",
+          "criterio": "AQ/v2",
+          "pack_textos": "pliego-textos/AQ-DEMO/v1",
+          "schema": "salida-presupuesto"
+        }
+      }
+    }
+  ]
+}

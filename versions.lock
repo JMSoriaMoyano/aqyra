@@ -304,3 +304,28 @@ familia         = "banco"
 version         = "v1"
 golden          = "identidad de contenido (hash: sha256 del contenido + md5 de banco.json + md5 del .bc3 curado)"
 estado          = "adoptado por C5 (coste real nativo, E5.1b): 6 unidades de obra BCCA nativas (codigo=codigo BCCA) con precio+descomposicion reales + provenance (D53). Consumido por criterio/AQ/v3 + GOL-PRE-05. Base BCCA completa (~6.600) = forward (exige extender engines/bc3 a AUX/parametricos)."
+
+# --- contrato C7 (operador de ENTREGA): contract-first ---------------------------------------------
+# Decisiones D-C7-1..6 ratificadas por JM 2026-07-13, ancladas en packages/contracts/C7-entrega/DECISIONES.md.
+# C7 es un OPERADOR DETERMINISTA PURO (sin LLM): el companero IA (Cowork/skills/agentes) lo conduce
+# desde FUERA (interpreta la intencion y PROPONE la solicitud-entrega); C7 la valida y la ejecuta
+# reproducible. Reconciliacion con la ficha Aqyra-Raiz/C7_operador.md: el "operador IA" se realiza en
+# DOS capas (cerebro conversacional fuera + manos deterministas = este service); la certificabilidad y
+# el foso (entregable firmable) viven en C7-entrega. Contract-first: 2 esquemas forward-open + golden.
+[contracts.C7]
+nombre          = "entrega"
+schema_version  = "0.1.0"              # 2 esquemas: solicitud-entrega + manifiesto-entrega (forward-open, JSON Schema 2020-12)
+service         = "services/entrega"
+golden          = "GOL-EN-01"
+oraculo         = "conformidad por ESTRUCTURA + INTEGRIDAD (patron GOL-EXP-01/03/D3, sin ifcopenshell): componer_entrega toma la solicitud-entrega (paquete presupuesto+pliego sobre el MISMO salida-presupuesto ANCLADO de C5/GOL-PRE-01, se LEE) y ENVUELVE documentos/export.componer_export por entregable; run_case_c7 comprueba: solicitud + manifiesto-entrega conforman sus esquemas; el paquete trae los 2 bundles (formatos declarados + manifiesto.json) + el manifiesto-entrega; cada manifiesto individual INTEGRO (documentos/export.manifiesto.integridad); content_sha256_manifiesto por entregable == sha256 del manifiesto.json del bundle; paquete_sha256 == roll-up de la lista ordenada (Llave 1); los N bundles anclan el MISMO artefacto (mismo Maestro); isCertified: paquete sin firmar NO verified-signed (bundles computed, sin .asc); DETERMINISMO (componer 2x = manifiesto-entrega + manifiestos de bundle identicos, sello fijo). No-regresion GOL-EXP-01/03 + GOL-PLI-01"
+estado          = "contract-first (D-C7-1..6): 2 esquemas + operador services/entrega 0.1.0 (componer_entrega ENVUELVE componer_export, roll-up paquete_sha256) + golden GOL-EN-01. v0 = paquete contractual presupuesto+pliego; nuevos consumidores (cumplimiento/calculo/coordinacion/carbono), colocacion en el CDE por estado ISO 19650 (C8), maestro_ref explicito y firma cualificada/PAdES = FORWARD. Dos llaves: golden (Llave 1) + firma GPG de JM del manifiesto-entrega (Llave 2, release entrega-v0.1.0 = decision de JM; por defecto SIN release en el slice)"
+
+# service C7 (operador de entrega): orquestador DETERMINISTA que envuelve el rail de export.
+[services.entrega]
+nombre          = "aqyra-entrega"
+paquete         = "aqyra-entrega"
+version         = "0.1.0"                    # componer_entrega(solicitud) -> paquete + manifiesto-entrega (roll-up). SIN release en el slice (Llave 2 = decision JM)
+consume         = "solicitud-entrega (artefactos autoritativos INLINE ya anclados + descriptores PRE-RESUELTOS; C7 no lee el repo). ENVUELVE documentos/export.componer_export (aqyra-documento-export) por entregable; no reimplementa sellado/firma"
+esquemas        = "packages/contracts/C7-entrega/solicitud-entrega.schema.json + manifiesto-entrega.schema.json (forward-open, contract-first)"
+golden          = "GOL-EN-01 (rama run_case_c7, CASE_RUNNERS['C7'])"
+estado          = "operador v0.1 (D-C7-1..6): services/entrega vivo (componer_entrega + manifiesto_entrega con roll-up paquete_sha256 + integridad). Reusa el rail de export (no lo toca). Golden GOL-EN-01 VERDE en local (sin ifcopenshell); no-regresion GOL-EXP-01/03 + GOL-PLI-01. Firma GPG de JM (Llave 2) = decision de JM en el cierre"

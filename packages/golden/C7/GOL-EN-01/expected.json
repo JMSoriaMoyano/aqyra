@@ -1,0 +1,21 @@
+{
+  "caso": "GOL-EN-01",
+  "contrato": "C7-entrega",
+  "modo": "entrega",
+  "_oraculo": "CONFORMIDAD DEL OPERADOR DE ENTREGA C7 (services/entrega). El operador DETERMINISTA componer_entrega toma una `solicitud-entrega` YA CONFORMADA (el paquete contractual presupuesto + pliego, ambos sobre el MISMO `salida-presupuesto` AUTORITATIVO ANCLADO en C5/GOL-PRE-01 -- se LEE, no se re-ancla) y, ENVOLVIENDO documentos/export.componer_export sobre cada entregable (no reimplementa el sellado/firma), produce el PAQUETE: 2 bundles firmables (presupuesto-obra {Word+PDF+BC3+XLSX+manifiesto.json} y pliego-obra {Word+PDF sellado+manifiesto.json, sin BC3}) + UN manifiesto-entrega maestro. La golden ancla ESTRUCTURA + INTEGRIDAD (patron GOL-EXP-01/03/D3), no bytes ni pixeles: la solicitud almacenada conforma solicitud-entrega.schema.json; el manifiesto-entrega conforma manifiesto-entrega.schema.json; el paquete trae los 2 bundles (cada uno con sus formatos declarados + manifiesto.json) + el manifiesto-entrega; cada manifiesto individual es INTEGRO (documentos/export.manifiesto.integridad recomputa su content_sha256 contra el salida-presupuesto); el content_sha256_manifiesto de cada entregable == sha256 del manifiesto.json de su bundle; paquete_sha256 == roll-up (hash canonico de la lista ordenada de esos sha256) = Llave 1; los 2 bundles anclan el MISMO artefacto (mismo Maestro); isCertified: el paquete SIN firmar NO es verified-signed (los bundles quedan en computed y no hay .asc del manifiesto-entrega); DETERMINISMO por contenido (componer 2x = manifiesto-entrega + manifiestos de bundle identicos, sello fijo). Corre SIN ifcopenshell (LEE el salida-presupuesto anclado de GOL-PRE-01 + los compositores son puros). No-regresion de GOL-EXP-01/03 y GOL-PLI-01: el rail de export y los compositores NO cambian.",
+  "solicitud": "entrada.json",
+  "fuente_presupuesto": "C5/GOL-PRE-01",
+  "entrega": {
+    "sello_tiempo": "2026-07-13",
+    "proyecto": "GOL-PRE-01",
+    "hito": "proyecto-basico",
+    "n_entregables": 2,
+    "consumidores": ["presupuesto-obra", "pliego-obra"],
+    "bundles": {
+      "presupuesto-obra": ["word", "pdf", "bc3", "xlsx"],
+      "pliego-obra": ["word", "pdf"]
+    },
+    "PEM": 7022.53,
+    "PEC": 10111.74
+  }
+}
