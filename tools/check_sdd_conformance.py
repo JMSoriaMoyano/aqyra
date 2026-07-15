@@ -24,7 +24,7 @@ PREFIJOS_FEATURE = (
 PREFIJOS_EXENTOS = (
     "openspec/", "docs/", "tools/", ".github/", "_operativo/",
     "sdd-aqyra", "versions.lock", "README", "CODEOWNERS",
-    "AGENTS.md", "CLAUDE.md", "GEMINI.md", "codex.md",
+    "AGENTS.md", "CLAUDE.md", "GEMINI.md",
     "pnpm-lock.yaml", "uv.lock", "justfile", "pyproject.toml", "package.json",
     ".gitattributes", ".gitignore", ".gitmodules",
 )

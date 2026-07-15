@@ -6,7 +6,7 @@ alwaysApply: true
 # Aqyra — estándares de desarrollo (base)
 
 > Este documento es la **fuente única de verdad** del contexto técnico de Aqyra para los
-> agentes de IA. `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` y `codex.md` son copias de este
+> agentes de IA. `CLAUDE.md`, `AGENTS.md`, `GEMINI.md` son copias de este
 > archivo (en Windows se materializan como copias reales, no symlinks; ver §8). El diseño
 > del producto está cerrado aguas arriba (`Aqyra-Raiz`); este árbol lo construye.
 
