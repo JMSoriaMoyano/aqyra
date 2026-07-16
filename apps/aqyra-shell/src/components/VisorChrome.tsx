@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode, type PointerEvent as RPE } from "react";
-import { IfcLoader, Viewer, aplicarSkin, estadoDato, dataStateStyle } from "@aqyra/visor";
+import { IfcLoader, Viewer, aplicarSkin, estadoDato, dataStateStyle, costHeatColor, colorPorResultado } from "@aqyra/visor";
 import type { LoadedModel, SpatialNode, DataState, Disciplina } from "@aqyra/visor";
 
 /** Mapa de Psets tal como lo entrega `IfcLoader.getProperties().psets`: nombre de Pset → (clave → valor). */
 type Psets = Record<string, Record<string, unknown>>;
 import { AqyraMark } from "./AqyraMark";
 import type { Discipline } from "../disciplines";
+import { mapaColorPorElemento } from "../dock";
 
 /* ── iconos mínimos propios (sin CDN, D-CH-5) ─────────────────────────────── */
 const PATHS: Record<string, ReactNode> = {
@@ -220,12 +221,42 @@ export function VisorChrome({
     window.addEventListener("pointermove", move); window.addEventListener("pointerup", up);
   }
 
-  function tool(nombre: string) {
+  // volver a color categorico por clase (y reset del heatmap de coste/cumplimiento)
+  function volverColor() {
     const viewer = viewerRef.current;
     if (!viewer) return;
-    if (nombre === "Color por clase") {
-      if (ACTIVAS.has(discipline.id)) aplicarSkin(viewer, discipline.id as Disciplina);
-    }
+    viewer.resetColors();
+    if (ACTIVAS.has(discipline.id)) aplicarSkin(viewer, discipline.id as Disciplina);
+  }
+
+  // 5D: intenta colorear por coste (IfcCostSchedule) del modelo abierto; toast honesto si no lo trae.
+  function modoCoste() {
+    const viewer = viewerRef.current, model = modelRef.current, loader = loaderRef.current;
+    if (!viewer || !model || !loader) return;
+    const coste = loader.readCost(model.modelID);
+    if (!coste) { setNota("El modelo abierto no trae coste OpenBIM (IfcCostSchedule) - abre el Maestro 5D."); return; }
+    const exprPorGuid = new Map<string, number>(model.elements.map((e) => [e.globalId, e.expressId] as [string, number]));
+    const span = (coste.maxCoste - coste.minCoste) || 1;
+    const mapa = mapaColorPorElemento(coste.porElemento, exprPorGuid, (ec) => costHeatColor((ec.costeAsignado - coste.minCoste) / span));
+    viewer.setCostHeatmap(model.modelID, mapa);
+    const eur = (n?: number) => `${(n ?? 0).toFixed(2)} EUR`;
+    setNota(`Coste 5D - PEM ${eur(coste.totales.PEM)} -> PEC ${eur(coste.totales.PEC)} - ${mapa.size} elementos coloreados. "Color por clase" para volver.`);
+  }
+
+  // 6D: intenta colorear por cumplimiento (Pset_Aqyra_Cumplimiento); toast honesto si no lo trae.
+  function modoCumplimiento() {
+    const viewer = viewerRef.current, model = modelRef.current, loader = loaderRef.current;
+    if (!viewer || !model || !loader) return;
+    const cump = loader.readCompliance(model.modelID);
+    if (!cump) { setNota("El modelo abierto no trae cumplimiento (Pset_Aqyra_Cumplimiento) - abre el Maestro 6D."); return; }
+    const exprPorGuid = new Map<string, number>(model.elements.map((e) => [e.globalId, e.expressId] as [string, number]));
+    const mapa = mapaColorPorElemento(cump.porElemento, exprPorGuid, (ec) => colorPorResultado(ec.resultado));
+    viewer.setCumplimientoColors(model.modelID, mapa);
+    setNota(`Cumplimiento 6D - ${mapa.size} elementos coloreados por resultado. "Color por clase" para volver.`);
+  }
+
+  function tool(nombre: string) {
+    if (nombre === "Color por clase") { volverColor(); return; }
     // Describir / Medir / EC / Memoria / BCF: stubs honestos (la IA / motores llegan por olas)
   }
 
@@ -301,8 +332,8 @@ export function VisorChrome({
         <div className="vpbtns">
           <button className="vpbtn" onClick={() => fileInput.current?.click()}>Abrir IFC</button>
           <button className="vpbtn" onClick={() => viewerRef.current?.frameAll()}>Vista general</button>
-          <button className="vpbtn" onClick={() => setNota("El coste 5D requiere el Maestro federado 5D (IfcCostSchedule).")}>Coste 5D</button>
-          <button className="vpbtn" onClick={() => setNota("El cumplimiento 6D requiere el Maestro con Pset_Aqyra_Cumplimiento.")}>Cumplimiento 6D</button>
+          <button className="vpbtn" onClick={modoCoste}>Coste 5D</button>
+          <button className="vpbtn" onClick={modoCumplimiento}>Cumplimiento 6D</button>
         </div>
         {nota ? <div className="toast" onClick={() => setNota("")}>{nota}</div> : null}
 

@@ -71,3 +71,13 @@ Reconstrucción de la **vista de visor** (con modelo abierto) para casar con
   en `/federado.ifc` (solo dev, solo lectura, zona anclada intacta) y App la auto-carga; la Home queda
   accesible por el logo. Tematización `--acc` por disciplina conserva el comportamiento del commit 1.
   Sigue propone puro, Llave 1, sin Llave 2.
+
+### Slice C · dock cableado (conservador) — 2026-07-15
+
+F2.2 del Plan de Cierre. **Opción 1 (conservadora) ratificada por JM 2026-07-15:** se mantiene el
+dock del mockup tal cual; se cablean de verdad SOLO las capacidades que el visor YA expone. Botones
+**Coste 5D** y **Cumplimiento 6D** dejan de ser toast fijo: intentan `readCost`/`readCompliance` y
+colorean (`setCostHeatmap`/`setCumplimientoColors`) si el Maestro trae el dato, con **toast honesto**
+si no. **Color por clase** hace `resetColors()`+`aplicarSkin` (vuelve del modo coste/cumplimiento).
+Las herramientas dominio-IA/motor del dock siguen stub honesto (epics aparte). Helper puro
+`src/dock.ts` (`mapaColorPorElemento`) con test headless. Sigue propone puro, Llave 1, sin Llave 2.
