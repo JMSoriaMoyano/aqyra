@@ -1,0 +1,4 @@
+{
+  "_nota": "conteos y asignaciones EXACTOS (sin tolerancia); la cota de planta tolera el ruido decimal.",
+  "cota_m": 1e-6
+}

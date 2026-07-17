@@ -2959,8 +2959,134 @@ def run_case_c7(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict,
     return all(ok for _, ok, _ in checks)
 
 
+# --------------------------------------------------------------------------- #
+# CMEP · ingesta MEP (F3.1, D-MEP-1..5): recompute IFC→modelo neutro con el      #
+# engine real engines/ifc/ifc_to_model_mep.py + comparación contra el oráculo.  #
+# --------------------------------------------------------------------------- #
+def compute_metrics_mep(neutro: dict, esquema: str) -> dict:
+    """Agrega las métricas del oráculo desde el modelo neutro (vista instalaciones)."""
+    if str(DEFAULT_ENGINE) not in sys.path:
+        sys.path.insert(0, str(DEFAULT_ENGINE))
+    import ifc_to_model_mep as _mep  # engines/ifc/ifc_to_model_mep.py
+
+    inst = neutro.get("instalaciones", {})
+    elementos = inst.get("elementos", [])
+    sistemas = inst.get("sistemas", [])
+
+    conteo = {cls: 0 for cls in _mep.CLASES_MEP}
+    for e in elementos:
+        if e["clase"] in conteo:
+            conteo[e["clase"]] += 1
+
+    sin_sistema = sum(1 for e in elementos if e.get("sistema") is None)
+    sis_out = [
+        {
+            "GUID": s["GUID"],
+            "nombre": s.get("nombre"),
+            "predefinedType": s.get("predefinedType"),
+            "n_elementos": len(s.get("elementos", [])),
+            "edificios": sorted(s.get("edificios", [])),
+        }
+        for s in sorted(sistemas, key=lambda d: d["GUID"])
+    ]
+    plantas = sorted({e.get("planta") for e in elementos if e.get("planta") is not None})
+    cotas = sorted({e.get("elevationMetric") for e in elementos if e.get("elevationMetric") is not None})
+    return {
+        "esquema": esquema,
+        "conteo_por_clase": conteo,
+        "total_elementos": len(elementos),
+        "sistemas": sis_out,
+        "sin_sistema": sin_sistema,
+        "planta": {"plantas": plantas, "cotas_m": cotas},
+    }
+
+
+def compare_mep(expected: dict, got: dict, tol: dict) -> list[tuple[str, bool, str]]:
+    checks: list[tuple[str, bool, str]] = []
+
+    def chk(name, ok, detail):
+        checks.append((name, bool(ok), detail))
+
+    chk("esquema IFC", got["esquema"] == expected["esquema"],
+        f"{got['esquema']} (esperado {expected['esquema']})")
+
+    ec, gc = expected["conteo_por_clase"], got["conteo_por_clase"]
+    for cls in sorted(ec):
+        chk(f"conteo {cls}", gc.get(cls) == ec[cls], f"{gc.get(cls)} (esperado {ec[cls]})")
+    chk("total elementos MEP", got["total_elementos"] == expected["total_elementos"],
+        f"{got['total_elementos']} (esperado {expected['total_elementos']})")
+
+    chk("sin sistema (control bandejas)", got["sin_sistema"] == expected["sin_sistema"],
+        f"{got['sin_sistema']} (esperado {expected['sin_sistema']})")
+
+    es, gs = expected["sistemas"], got["sistemas"]
+    chk("nº de sistemas", len(gs) == len(es), f"{len(gs)} (esperado {len(es)})")
+    by_guid = {s["GUID"]: s for s in gs}
+    for esis in es:
+        g = by_guid.get(esis["GUID"])
+        if g is None:
+            chk(f"sistema {esis['GUID'][:8]} presente", False, "no reconocido")
+            continue
+        ok = (g["predefinedType"] == esis["predefinedType"]
+              and g["n_elementos"] == esis["n_elementos"]
+              and g["nombre"] == esis["nombre"]
+              and g["edificios"] == esis["edificios"])
+        chk(f"sistema {esis['nombre']} ({esis['predefinedType']})", ok,
+            f"{g['n_elementos']} elem, edif={g['edificios']} (esperado {esis['n_elementos']} elem, {esis['edificios']})")
+
+    chk("plantas", got["planta"]["plantas"] == expected["planta"]["plantas"],
+        f"{got['planta']['plantas']} (esperado {expected['planta']['plantas']})")
+    tolc = float(tol.get("cota_m", 1e-6))
+    ecs, gcs = expected["planta"]["cotas_m"], got["planta"]["cotas_m"]
+    ok_cota = len(gcs) == len(ecs) and all(abs(a - b) <= tolc for a, b in zip(gcs, ecs))
+    chk("cotas de planta (m)", ok_cota, f"{gcs} (esperado {ecs} ±{tolc})")
+    return checks
+
+
+def run_case_cmep(case_dir: Path, contracts_dir: Path, expected: dict, tol: dict) -> bool:
+    """CMEP (F3.1): ancla md5 del fixture + recompute IFC→modelo neutro con el engine
+    real + conformidad del neutro con el esquema C1 + comparación contra el oráculo.
+
+    Modo ANCLADO (contract-first): sin el engine, el recompute falla y el caso queda
+    ROJO adrede. Un fallo se corrige en el engine, NUNCA aflojando la golden."""
+    case_ok = True
+
+    fixture = case_dir.parent / "fixtures" / expected["fixture"]
+    if not fixture.exists():
+        print_checks([("fixture presente", False, f"no encontrado: {fixture}")])
+        return False
+    got_md5 = _md5(fixture)
+    ok_md5 = got_md5 == expected["fixture_md5"]
+    print_checks([("fixture md5 anclado", ok_md5,
+                   f"{got_md5} (esperado {expected['fixture_md5']})")])
+    case_ok &= ok_md5
+
+    try:
+        if str(DEFAULT_ENGINE) not in sys.path:
+            sys.path.insert(0, str(DEFAULT_ENGINE))
+        import ifc_to_model_mep as _mep  # engines/ifc/ifc_to_model_mep.py
+        neutro = _mep.parsear(fixture)
+        print_checks([("recompute IFC->modelo neutro (engine)", True, "engines/ifc/ifc_to_model_mep")])
+    except Exception as e:  # noqa: BLE001
+        print_checks([("recompute IFC->modelo neutro (engine)", False, f"{type(e).__name__}: {e}")])
+        return False
+
+    schemas = load_c1_schemas(contracts_dir)
+    ok, detail = validate_against_schema(neutro, schemas["neutro"])
+    print_checks([("modelo neutro conforma C1", ok, detail)])
+    case_ok &= ok
+
+    import ifcopenshell
+    esquema = ifcopenshell.open(str(fixture)).schema
+    got = compute_metrics_mep(neutro, esquema)
+    checks = compare_mep(expected, got, tol)
+    print_checks(checks)
+    case_ok &= all(o for _, o, _ in checks)
+    return case_ok
+
+
 CASE_RUNNERS = {"C1": run_case_c1, "C4": run_case_c4, "C3": run_case_c3, "C5": run_case_c5,
-                "C7": run_case_c7}
+                "C7": run_case_c7, "CMEP": run_case_cmep}
 
 
 # --------------------------------------------------------------------------- #
