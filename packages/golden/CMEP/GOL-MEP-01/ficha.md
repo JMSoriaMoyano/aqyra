@@ -8,7 +8,7 @@
 
 ## Fixture (recorte determinista, D-MEP-5)
 
-`fixtures/mep_min.ifc` — IFC4, anclado por **md5 `8d56937d87cb5b555e99fd3bb07785e2`**
+`fixtures/mep_min.ifc` — IFC4, anclado por **md5 `36108eab1a5ae64b4411812c1d3dadd0`**
 en `versions.lock` (patrón C4-FED-06: el fichero commiteado es el canónico; la
 golden verifica CONTENIDO leyéndolo con el engine, no el md5 de una regeneración —
 el writer de IfcOpenShell no reproduce bytes idénticos, D-MEP-5). Generado por

@@ -45,7 +45,7 @@ estado          = "service v0.5 (IFC federado derivado + cámara BCF — v0.x, F
 # engine, no el md5 de una regeneración (el writer de IfcOpenShell no reproduce bytes idénticos, D-MEP-5).
 [golden.cmep]
 fixture         = "packages/golden/CMEP/fixtures/mep_min.ifc"
-fixture_md5     = "8d56937d87cb5b555e99fd3bb07785e2"   # IFC4, 2 IfcDistributionSystem + 10 elementos MEP (7 clases) + asignaciones + contención de planta; ts de cabecera fijo a 1970 (tools/gen_fixture_mep.py)
+fixture_md5     = "36108eab1a5ae64b4411812c1d3dadd0"   # IFC4, 2 IfcDistributionSystem + 10 elementos MEP (7 clases) + asignaciones + contención de planta; ts de cabecera fijo a 1970 (tools/gen_fixture_mep.py)
 schema          = "C1-interoperabilidad/modelo-neutro.schema.json (vista 'instalaciones', forward-open)"
 engine          = "engines/ifc/ifc_to_model_mep.py"   # import de path (como compile_c1); reutiliza aqyra_core.ifc_utils SIN tocar el núcleo anclado
 golden          = "GOL-MEP-01"
