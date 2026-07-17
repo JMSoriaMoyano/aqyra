@@ -34,6 +34,24 @@ golden          = "C4-FED-01 + C4-FED-02 + C4-FED-03 + C4-FED-04 + C4-FED-05 + C
 oraculo         = "recompute (federar+validar contra el MISMO expected, tolerancias del caso) + modo anclado íntegro del 2.1 — D10: más checks, nunca menos; C4-FED-02 añade la EMISIÓN: árbol BCF 3.0 anclado por md5 de fichero (D12) con GUIDs uuid5 deterministas (D13) y generación inyectada (bcf_generacion); C4-FED-03 añade el IFC SUCIO (D18-D19): camino feliz-degradado con avisos_lectura anclados en el expected; C4-FED-04 añade la INTEGRACIÓN 1.2×1.3 (D21/D23): mixto sucio+limpio con avisos POR MODELO + emisión + estados heterogéneos min(S) + transformación no trivial; C4-FED-05 añade mantener-separada (D22): nodos por modelo sin fundir; C4-FED-06 añade el DERIVADO (D26/D27): .ifc federado anclado por md5 BYTE A BYTE (cabecera SPF determinista con time_stamp de derivado_generacion) + ifc_derivado en el manifiesto + CÁMARA perspectiva determinista en el viewpoint (D29, bbox de orígenes de placement)"
 estado          = "service v0.5 (IFC federado derivado + cámara BCF — v0.x, Fase II·h6, D26–D30; la decisión aplazada por D6, cerrada: el Maestro se puede ABRIR)"
 
+# --- ingesta MEP (F3.1, D-MEP-1..5): el Maestro reconoce instalaciones — engine ifc_to_model_mep ---
+# El engine engines/ifc/ifc_to_model_mep.py parsea IFC→vista MEP del modelo neutro C1 (clave
+# 'instalaciones', forward-open, sólo añade claves): 7 clases MEP por CLASE EXACTA (D-MEP-1;
+# IfcFireSuppressionTerminal ⊂ IfcFlowTerminal en IFC4 → is_a() exacto, no by_type) + sistemas por
+# IfcRelAssignsToGroup/IfcRelServicesBuildings con PredefinedType (D-MEP-2) + elevationMetric por planta
+# (D-MEP-3). El grafo de red por puertos (5.498 IfcDistributionPort) queda para un incremento posterior
+# (D-MEP-4, por aqyra_core.grafo_red). El fixture recortado determinista se ancla por md5 (patrón
+# C4-FED-06): el commiteado es el CANÓNICO; la golden GOL-MEP-01 verifica CONTENIDO leyéndolo con el
+# engine, no el md5 de una regeneración (el writer de IfcOpenShell no reproduce bytes idénticos, D-MEP-5).
+[golden.cmep]
+fixture         = "packages/golden/CMEP/fixtures/mep_min.ifc"
+fixture_md5     = "36108eab1a5ae64b4411812c1d3dadd0"   # IFC4, 2 IfcDistributionSystem + 10 elementos MEP (7 clases) + asignaciones + contención de planta; ts de cabecera fijo a 1970 (tools/gen_fixture_mep.py)
+schema          = "C1-interoperabilidad/modelo-neutro.schema.json (vista 'instalaciones', forward-open)"
+engine          = "engines/ifc/ifc_to_model_mep.py"   # import de path (como compile_c1); reutiliza aqyra_core.ifc_utils SIN tocar el núcleo anclado
+golden          = "GOL-MEP-01"
+oraculo         = "recompute IFC→modelo neutro con el engine real + conformidad C1 (vista instalaciones) + conteo por CLASE EXACTA (7 clases, 10 elem) + asignación elemento→sistema (PCI=5, fontanería=3, 2 bandejas sin sistema) + PredefinedType de los 2 sistemas + edificio servido + contención de planta (cota 0.0 m). Ancla por conteos+asignaciones, NO por md5 de salida (D-MEP-5). Modo anclado: sin el engine el recompute falla adrede"
+estado          = "F3.1 · ingesta MEP v0 (D-MEP-1..5 ratificadas JM 2026-07-16): esquema modelo-neutro (clave instalaciones) + golden GOL-MEP-01 + engine ifc_to_model_mep. Federación estructura_funcional y visor-skin Instalaciones (F5.1) = baby-steps siguientes (fuera de este change por la regla de zona anclada: el manifiesto C4 rechaza claves nuevas → rompería los 6 C4-FED)"
+
 # --- contrato C3 (Fase III·h2→h3): cumplimiento normativo multi-código — engine VIVO ---
 # Decisiones D1–D5 (contract-first, h2) + D6–D10 (engine, h3) en C3-cumplimiento/DECISIONES.md (OK JM 2026-07-03).
 # h2 (contract-first ESTRICTO, patrón C4·h1): 2 esquemas forward-open + pack CTE/2019 + golden GOL-CTE-01

@@ -15,10 +15,11 @@
     "superficies": { "type": "array", "items": { "$ref": "#/$defs/superficie" } },
     "cargas": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
     "sistema": { "$ref": "#/$defs/vista_red" },
+    "instalaciones": { "$ref": "#/$defs/vista_mep" },
     "elementos": { "type": "array", "items": { "$ref": "#/$defs/elemento_medicion" } },
     "alineacion": { "$ref": "#/$defs/vista_lineal" }
   },
-  "$comment": "Vistas hermanas: estructural (§2.2 · consume C9), red (§2.3 · C4/C10), medición (§2.4 · C5), lineal (§2.5 · C11+). No hay superconjunto único; cada dominio emite su vista con estas convenciones.",
+  "$comment": "Vistas hermanas: estructural (§2.2 · consume C9), red (§2.3 · C4/C10), medición (§2.4 · C5), lineal (§2.5 · C11+), MEP navegable (§2.6 · C4 F3.1, D-MEP-1..4). No hay superconjunto único; cada dominio emite su vista con estas convenciones.",
   "$defs": {
     "unidades": {
       "description": "Bloque de unidades SI declaradas (convención invariable §2.1).",
@@ -91,6 +92,42 @@
       "properties": {
         "tipo": { "type": "string", "enum": ["PCI", "clima", "electrico", "saneamiento", "abastecimiento"] },
         "nodos": {}, "tramos": {}, "terminales": {}, "fuentes": {}, "demanda": {}
+      }
+    },
+    "vista_mep": {
+      "description": "Vista MEP navegable v0 (§2.6 · F3.1, D-MEP-1..4): elementos MEP por clase EXACTA + sistemas (estructura funcional, D-CH-4), con PredefinedType y cota de planta. NO es el grafo de red por puertos (eso es 'sistema'/vista_red, incremento posterior por grafo_red). Forward-open: solo añade claves.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "elementos": { "type": "array", "items": { "$ref": "#/$defs/elemento_mep" } },
+        "sistemas": { "type": "array", "items": { "$ref": "#/$defs/sistema_mep" } }
+      }
+    },
+    "elemento_mep": {
+      "description": "Elemento MEP navegable (D-MEP-1): clase IFC exacta admitida + sistema al que pertenece (GUID o null) + cota de planta (D-MEP-3).",
+      "type": "object",
+      "required": ["clase", "GUID"],
+      "additionalProperties": true,
+      "properties": {
+        "clase": { "type": "string" },
+        "GUID": { "type": "string" },
+        "nombre": { "type": ["string", "null"] },
+        "sistema": { "type": ["string", "null"] },
+        "elevationMetric": { "type": ["number", "null"] },
+        "planta": { "type": ["string", "null"] }
+      }
+    },
+    "sistema_mep": {
+      "description": "Sistema de instalaciones (IfcDistributionSystem → «Estructura funcional», D-MEP-2): PredefinedType + elementos asignados (GUIDs) + edificios servidos.",
+      "type": "object",
+      "required": ["GUID"],
+      "additionalProperties": true,
+      "properties": {
+        "GUID": { "type": "string" },
+        "nombre": { "type": ["string", "null"] },
+        "predefinedType": { "type": ["string", "null"] },
+        "elementos": { "type": "array", "items": { "type": "string" } },
+        "edificios": { "type": "array", "items": { "type": "string" } }
       }
     },
     "elemento_medicion": {

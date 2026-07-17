@@ -1,0 +1,39 @@
+{
+  "caso": "GOL-MEP-01",
+  "contrato": "CMEP",
+  "_oraculo": "INGESTA MEP al Maestro federado (F3.1, D-MEP-1..5): sobre el fixture recortado determinista mep_min.ifc (IFC4, 2 IfcDistributionSystem + 10 elementos MEP de 7 clases + asignaciones + contencion de planta, ts de cabecera fijo a 1970), el runner EJERCITA el engine real engines/ifc/ifc_to_model_mep.py (recompute IFC->modelo neutro, vista 'instalaciones'). Verificado A MANO 2026-07-17: conteo por CLASE EXACTA -- OJO: IfcFireSuppressionTerminal es subtipo de IfcFlowTerminal en IFC4, by_type los sumaria; el engine cuenta por is_a() exacto -> IfcFlowTerminal=1 (no 2). Asignacion elemento->sistema por IfcRelAssignsToGroup: PCI-agua(FIREPROTECTION)=5, Fontaneria(DOMESTICCOLDWATER)=3, 2 bandejas (IfcCableCarrierSegment/Fitting) SIN sistema a proposito (caso de control). Ambos sistemas sirven al edificio 'Nave' (IfcRelServicesBuildings). Contencion: los 10 en 'Planta baja', cota 0.0 m. Ancla por conteos+asignaciones (determinismo), NO por md5 de salida; el fixture se ancla por md5 en versions.lock (patron C4-FED-06). Modo anclado: sin el engine el recompute falla adrede.",
+  "fixture": "mep_min.ifc",
+  "fixture_md5": "36108eab1a5ae64b4411812c1d3dadd0",
+  "esquema": "IFC4",
+  "conteo_por_clase": {
+    "IfcPipeSegment": 3,
+    "IfcPipeFitting": 2,
+    "IfcValve": 1,
+    "IfcCableCarrierSegment": 1,
+    "IfcCableCarrierFitting": 1,
+    "IfcFireSuppressionTerminal": 1,
+    "IfcFlowTerminal": 1
+  },
+  "total_elementos": 10,
+  "sin_sistema": 2,
+  "sistemas": [
+    {
+      "GUID": "2lM4n31Ag$a5mxKwYEtpK4",
+      "nombre": "Fontaneria",
+      "predefinedType": "DOMESTICCOLDWATER",
+      "n_elementos": 3,
+      "edificios": ["Nave"]
+    },
+    {
+      "GUID": "3Y$DCD8XBcuA0fS40uW3yt",
+      "nombre": "PCI-agua",
+      "predefinedType": "FIREPROTECTION",
+      "n_elementos": 5,
+      "edificios": ["Nave"]
+    }
+  ],
+  "planta": {
+    "plantas": ["Planta baja"],
+    "cotas_m": [0.0]
+  }
+}
